@@ -131,7 +131,7 @@ static void stats_print_headers(void)
 	/* clear screen */
 	printf("\033[2J");
 	printf("%-12s %-10s %-8s %-9s\n",
-	       "XDP_action", "pps ", "#packets", "period/sec2");
+	       "XDP_action", "pps ", "#packets", "period/sec");
 }
 
 static void stats_print(struct stats_record *record,
@@ -139,6 +139,7 @@ static void stats_print(struct stats_record *record,
 {
 	int i;
 	static int actionCounters[] = {0,0,0,0};
+	int total = 0;
 
 	for (i = 0; i < XDP_ACTION_MAX; i++) {
 		struct record *r = &record->xdp_action[i];
@@ -148,7 +149,7 @@ static void stats_print(struct stats_record *record,
 		double pps = 0;
 		double period_ = 0;
 
-
+		actionCounters[i]  = r->counter;
 		if (p->timestamp) {
 			packets = r->counter - p->counter;
 			period  = r->timestamp - p->timestamp;
@@ -159,10 +160,11 @@ static void stats_print(struct stats_record *record,
 			}
 		}
 		
-		actionCounters[i] = actionCounters[i]+packets;
+		total  = total +actionCounters[i];
 		printf("%-12s %-10.0f %'-18d %f\n",
 		       action2str(i), pps, actionCounters[i], period_);
 	}
+	printf("%-13s  %-9d\n","Total_Packets", total);
 }
 
 static void stats_collect(int fd, struct stats_record *rec)
