@@ -1,3 +1,0 @@
-The intent of this software requirements specification document is to provide the requirements and implementation plan for the project named \textbf{\textit{Defendr}}.  This document serves to clarify and communicate all stakeholder's understandings and expectations of \textbf{\textit{Defendr}}. \\
-    \\
-    This document is written for the perusal of the aforementioned stakeholders: our client and customer Advance, including the COS 301 module and Computer Science department of the University or Pretoria as clients too.  The final audience member is the development team itself, Dark nITes.
