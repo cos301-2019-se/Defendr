@@ -12,6 +12,7 @@ TARGETS += bpf_tail_calls01
 TARGETS += napi_monitor
 TARGETS += xdp_monitor
 TARGETS += xdp_redirect_err
+TARGETS += unitTest
 
 # Linking with libbpf and libpcap
 TARGETS_PCAP += xdp_tcpdump
