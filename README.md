@@ -203,16 +203,26 @@ I like playing Tennis and Squash.*
 > *[Sisa Khoza](https://www.linkedin.com/in/sisa-khoza-1b54a9100/)*
 
 ###### **Interests:**
-> **
+> - Music (playing and reading)
+> - Gaming
+> - Running and yoga
+> - Volunteer work
 
 ###### **Skills:**
-> **
+> - C++
+> - DBMS (MySQL, PostgreSQL, MongoDB, Neo4j)
+> - Java
+> - Organising and communicating
+> - Self-motivated
+
 
 ###### **Work Experience:**
-> **
+> - **
 
 ###### **Attitudes:**
-> **
+> ***"In every mistake is a nuggest of learning"***
+>
+> I am an energetic, determined character that conducts myself with courage and discipline. I have a creative, resilient mind that overcomes obstacles with a pragmatic solution. This is coupled by my need to see tasks to completion; one could perceive as insitent, yet it is a motivator that enables me to go to lengths. I am enthusiastic to learn, and have a sincere interest in software and technology.
 
 `
 `
