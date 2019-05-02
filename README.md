@@ -8,18 +8,17 @@ COS 301: Software Engineering
 
 ---
 
-### [Software Requirements and Design Specification]()
-
-
-`
-`
-
-### [Project Management Page](https://app.zenhub.com/workspaces/dark-nites-capstone-project-5cc616ec67dcfa43a66a40f3/board?repos=182156942)
+### <a href="https://drive.google.com/file/d/1YpIKjrMkexBQUJt1kwayPFfWzewIW0qs/view" target="_blank">Software Requirements Document</a>
 
 `
 `
 
-### [Git Repository](https://github.com/cos301-2019-se/Defendr)
+### <a href="https://app.zenhub.com/workspaces/dark-nites-capstone-project-5cc616ec67dcfa43a66a40f3/board?repos=182156942" target="_blank">Project Management Tool</a>
+
+`
+`
+
+### <a href="https://github.com/cos301-2019-se/Defendr" target="_blank">Git Repository</a>
 
 ---
 
@@ -203,16 +202,26 @@ I like playing Tennis and Squash.*
 > *[Sisa Khoza](https://www.linkedin.com/in/sisa-khoza-1b54a9100/)*
 
 ###### **Interests:**
-> **
+> - Music (playing and reading)
+> - Gaming
+> - Running and yoga
+> - Volunteer work
 
 ###### **Skills:**
-> **
+> - C++
+> - DBMS (MySQL, PostgreSQL, MongoDB, Neo4j)
+> - Java
+> - Organising and communicating
+> - Self-motivated
+
 
 ###### **Work Experience:**
-> **
+> - **
 
 ###### **Attitudes:**
-> **
+> ***"In every mistake is a nuggest of learning"***
+>
+> I am an energetic, determined character that conducts myself with courage and discipline. I have a creative, resilient mind that overcomes obstacles with a pragmatic solution. This is coupled by my need to see tasks to completion; one could perceive as insitent, yet it is a motivator that enables me to go to lengths. I am enthusiastic to learn, and have a sincere interest in software and technology.
 
 `
 `
@@ -230,28 +239,49 @@ I like playing Tennis and Squash.*
 `
 `
 
-![image]()
+![image](https://pbs.twimg.com/profile_images/780435453052870656/A9x2f9pa_400x400.jpg)
 
 ###### **Name and surname:**
 > *Ruslynn Appana*
 
 ###### **Student number:**
-> **
+> *u14016304*
 
 ###### **Link to LinkedIn account:**
-> *[Ruslynn Appana]()*
+> *[Ruslynn Appana](https://www.linkedin.com/in/ruslynn-appana-77a019155/)*
 
 ###### **Interests:**
->  **
+> - Gaming
+> - Football
+> - Anime
+> - Gym & MMA
+> - Cooking
+> - Tattoos
 
 ###### **Skills:**
-> **
+> - c++
+> - Java
+> - Database Management (SQL and MongoDB)
+> - HTML
+> - JavaScript
+> - PHP
+> - Accomplished communication skills, both written and verbal, developed through numerous essays and presentations given during my time at university and school
 
 ###### **Work Experience:**
-> **
+> - Pretoria Boys High School Tuckshop (unpaid work experience) 
+[2011-2012]
+
+> - Data capture for CND Commodities 
+[2017]
+
+> - University of Pretoria Student Lab Technician (Laptop Support)
+[2018-Current]
+
 
 ###### **Attitudes:**
-> **
+> A highly motivated and hardworking individual, who has matriculated and is currently in final year BSc Computer Science. 
+Mechanically minded, with a methodical approach to working and an eagerness to learn and develop personal skills in a practical setting. Eventual career goal is to become a fully-qualified and experienced software developer.    
+
 
 `
 `
