@@ -1,0 +1,22 @@
+\section{Functional Requirements}
+\subsection{DoS Protection}
+      \begin{itemize}
+        \item{R1.1. The subsystem must be able to detect and mitigate a DoS attack by dropping the offending packets from the source IP or IP ranges, and allow access after an exponential timeout.}
+        \item{R1.2. The subsystem must provide functionality to gather metrics.  These metrics packet success/failure rates, total \# of packets per pool/back-end.}
+        \item{R1.3. The subsystem rules that determine an incipient DoS should be able to be manually altered.}
+     \end{itemize}
+     
+\bigbreak
+\subsection{Load-Balancer}
+      \begin{itemize}
+        \item{R2.1. The subsystem needs to be configurable; applications/back-ends should be able to be dynamically added/removed}
+        \item{R2.2. The subsystem must have multiple load-balancing pools, where pools are defined by the back-ends.  Members of each pool are instances of the back-end that are to be load-balanced.}
+        \item{R2.3. The subsystem must support multiple load-balancing algorithms, of which Round Robin and Weighted Round Robin must be included, different per pool.  These algorithms should be changeable on-the-fly.  Network load anomaly detection, with an option of prediction, should also be included.}
+        \item{R2.4. The method of request response should be via a direct server response to the requesting client, that is responses should not return via the service.}
+     \end{itemize}
+\subsection{User Interface}
+      \begin{itemize}
+        \item{R3.1. The interface should show the metrics in a graphical medium, i.e. graphs and heat-maps.}
+        \item{R3.2. The interface should also provide a means of manually configuring the service, e.g. blacklisting/white-listing IPs/IP ranges, defining rules that govern network traffic}
+        \item{R3.3. The interface must be accessible from anywhere, and not from just a specific machine, i.e. the interface must be hosted somewhere accessible, but for demo purposes localhost will do}
+     \end{itemize}
