@@ -211,17 +211,15 @@ I like playing Tennis and Squash.*
 > - C++
 > - DBMS (MySQL, PostgreSQL, MongoDB, Neo4j)
 > - Java
-> - Organising and communicating across e-mediums
-> - Scripting: CSS/HTML/JS
+> - Organising and communicating
 > - Self-motivated
 
+
 ###### **Work Experience:**
-> - AV tech @ Outlook Church (Jan 2010 - Nov 2014): I was in charge of creating and displaying visual media, and control of sound equipment in children&#39;s ministry. I would set up equipment before, and manage it during and after the service. My duties also covered training related to AV in children&#39;s ministry.
-My duties were the same in the adult ministry, except my position was that of a junior technician in the committee.
-> - Camarero @ Aandklas (Feb 2017 - Jul 2017) - A small stint in the hospitality industry, whilst at university, to earn some extra pocket money as well as to try to take on new responsibilities, and experience a working world environment with duties and deadlines.  The responsibilities of a waiter included hosting and tending to guest needs by; ensuring the general seating areas were clean and tidy before, during and after shifts, reception of new patrons, bridging the bar, kitchen, and main guest areas as well as tending to performing artists or members that would require the venue for events.
+> - **
 
 ###### **Attitudes:**
-> ***"In every mistake I make is a nuggest of learning I can take"***
+> ***"In every mistake is a nuggest of learning"***
 >
 > I am an energetic, determined character that conducts myself with courage and discipline. I have a creative, resilient mind that overcomes obstacles with a pragmatic solution. This is coupled by my need to see tasks to completion; one could perceive as insitent, yet it is a motivator that enables me to go to lengths. I am enthusiastic to learn, and have a sincere interest in software and technology.
 
