@@ -1,0 +1,12 @@
+/home/darknites/Documents/Defendr/xdp_controller/xdp_controller/xdp_controller/bin/Debug/xdp_controller.exe
+/home/darknites/Documents/Defendr/xdp_controller/xdp_controller/xdp_controller/bin/Debug/xdp_controller.pdb
+/home/darknites/Documents/Defendr/xdp_controller/xdp_controller/xdp_controller/obj/x86/Debug/xdp_controller.csprojAssemblyReference.cache
+/home/darknites/Documents/Defendr/xdp_controller/xdp_controller/xdp_controller/obj/x86/Debug/xdp_controller.csproj.CoreCompileInputs.cache
+/home/darknites/Documents/Defendr/xdp_controller/xdp_controller/xdp_controller/obj/x86/Debug/xdp_controller.exe
+/home/darknites/Documents/Defendr/xdp_controller/xdp_controller/xdp_controller/obj/x86/Debug/xdp_controller.pdb
+/home/darknites/Documents/Defendr/src/xdp_controller/xdp_controller/xdp_controller/bin/Debug/xdp_controller.exe
+/home/darknites/Documents/Defendr/src/xdp_controller/xdp_controller/xdp_controller/bin/Debug/xdp_controller.pdb
+/home/darknites/Documents/Defendr/src/xdp_controller/xdp_controller/xdp_controller/obj/x86/Debug/xdp_controller.csprojAssemblyReference.cache
+/home/darknites/Documents/Defendr/src/xdp_controller/xdp_controller/xdp_controller/obj/x86/Debug/xdp_controller.csproj.CoreCompileInputs.cache
+/home/darknites/Documents/Defendr/src/xdp_controller/xdp_controller/xdp_controller/obj/x86/Debug/xdp_controller.exe
+/home/darknites/Documents/Defendr/src/xdp_controller/xdp_controller/xdp_controller/obj/x86/Debug/xdp_controller.pdb
