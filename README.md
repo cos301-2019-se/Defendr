@@ -230,28 +230,47 @@ I like playing Tennis and Squash.*
 `
 `
 
-![image]()
+![image](https://pbs.twimg.com/profile_images/780435453052870656/A9x2f9pa_400x400.jpg)
 
 ###### **Name and surname:**
 > *Ruslynn Appana*
 
 ###### **Student number:**
-> **
+> *u14016304*
 
 ###### **Link to LinkedIn account:**
-> *[Ruslynn Appana]()*
+> *[Ruslynn Appana](https://www.linkedin.com/in/ruslynn-appana-77a019155/)*
 
 ###### **Interests:**
->  **
+> - Gaming
+> - Football
+> - Anime
+> - Gym & MMA
+> - Cooking
+> - Tattoos
 
 ###### **Skills:**
-> **
+> - c++
+> - Java
+> - Database Management (SQL and MongoDB)
+> - HTML
+> - JavaScript
+> - PHP
+> - Accomplished communication skills, both written and verbal, developed through numerous essays and presentations given during my time at university and school
 
 ###### **Work Experience:**
-> **
+> - Pretoria Boys High School Tuckshop (unpaid work experience) 
+[2011-2012]
+
+> - Data capture for CND Commodities 
+[2017]
+
+> - University of Pretoria Student Lab Technician (Laptop Support)
+[2018-Current]
 
 ###### **Attitudes:**
-> **
+> A highly motivated and hardworking individual, who has matriculated and is currently in final year BSc Computer Science. 
+Mechanically minded, with a methodical approach to working and an eagerness to learn and develop personal skills in a practical setting. Eventual career goal is to become a fully-qualified and experienced software developer.   
 
 `
 `
