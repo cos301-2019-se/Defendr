@@ -262,7 +262,7 @@ I like playing Tennis and Squash.*
 > - Pretoria Boys High School Tuckshop (unpaid work experience) 
 [2011-2012]
 
-> - Data capture for CND Commodities 
+> - Data capturer for CND Commodities 
 [2017]
 
 > - University of Pretoria Student Lab Technician (Laptop Support)
