@@ -38,6 +38,7 @@ static const struct option long_options[] = {
 	{"list",	no_argument,		NULL, 'l' },
 	{"udp-dport",	required_argument,	NULL, 'u' },
 	{"tcp-dport",	required_argument,	NULL, 't' },
+	{"dynamic",	no_argument,		NULL, 'd' },
 	{0, 0, NULL,  0 }
 };
 
@@ -250,6 +251,7 @@ static void blacklist_list_all_ipv4(int fd)
 		prev_key = &key;
 	}
 	printf("%s", key ? "," : "");
+
 }
 
 static void blacklist_list_all_ports(int portfd, int countfds[])
@@ -274,6 +276,39 @@ static void blacklist_list_all_ports(int portfd, int countfds[])
 	}
 }
 
+static  void activate_dynamic_blacklist(){
+	    int fd_watchlist;		
+	    
+		while(1){
+			sleep(1);
+			fd_watchlist = open_bpf_map(file_ip_watchlist);
+		    __u32 key, *prev_key = NULL;
+	        __u64 *value;
+	        char* ipsToRemove[1000];
+			int numToRemove = 0;
+			while (bpf_map_get_next_key(fd_watchlist, prev_key, &key) == 0) {
+				printf("%s", key ? "," : "" );
+				value = get_key32_value64_percpu(fd_watchlist, key);
+				char ip_txt[INET_ADDRSTRLEN] = {0};
+				if (inet_ntop(AF_INET, &key, ip_txt, sizeof(ip_txt))) {	
+								
+					if(value >= 1){
+						int fd_blacklist = open_bpf_map(file_blacklist);
+						blacklist_modify(fd_blacklist,ip_txt, ACTION_ADD);
+						close(fd_blacklist);	
+					}	
+					ipsToRemove[numToRemove++] = ip_txt;	
+				}				
+				prev_key = &key;
+			}
+			for(int i = 0; i < numToRemove;++i){
+				watchlist_modify(fd_watchlist,ipsToRemove[i], ACTION_DEL);
+			}
+			close(fd_watchlist);
+		}
+		
+}
+
 int main(int argc, char **argv)
 {
 #	define STR_MAX 42 /* For trivial input validation */
@@ -289,6 +324,7 @@ int main(int argc, char **argv)
 	int fd_port_blacklist_count;
 	int longindex = 0;
 	bool do_list = false;
+	bool dynamic_blacklist = false;
 	int opt;
 	int dport = 0;
 	int proto = IPPROTO_TCP;
@@ -325,6 +361,9 @@ int main(int argc, char **argv)
 			break;
 		case 'l':
 			do_list = true;
+			break;
+		case 'd':
+			dynamic_blacklist = true;
 			break;
 		case 'h':
 		fail_opt:
@@ -391,6 +430,10 @@ int main(int argc, char **argv)
 	if (stats) {
 		stats_poll(interval);
 	}
+	
+	if(dynamic_blacklist){
+		activate_dynamic_blacklist();
+	}
 
 	// TODO: implement stats for verdicts
 	// Hack: keep it open to inspect /proc/pid/fdinfo/3
@@ -398,7 +441,7 @@ int main(int argc, char **argv)
 }
 
 static void display_all(){
-	        int fd_blacklist;
+	    int fd_blacklist;
 		fd_blacklist = open_bpf_map(file_blacklist);
 		blacklist_list_all_ipv4(fd_blacklist);
 		close(fd_blacklist);

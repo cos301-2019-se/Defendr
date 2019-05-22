@@ -26,6 +26,7 @@ static int verbose = 1;
  */
 static const char *file_blacklist = "/sys/fs/bpf/ddos_blacklist";
 static const char *file_verdict   = "/sys/fs/bpf/ddos_blacklist_stat_verdict";
+static const char *file_ip_watchlist   = "/sys/fs/bpf/ddos_blacklist_ip_watchlist";
 
 static const char *file_port_blacklist = "/sys/fs/bpf/ddos_port_blacklist";
 static const char *file_port_blacklist_count[] = {
@@ -73,6 +74,54 @@ static int blacklist_modify(int fd, char *ip_string, unsigned int action)
 
 	memset(values, 0, sizeof(__u64) * nr_cpus);
 
+	/* Convert IP-string into 32-bit network byte-order value */
+	res = inet_pton(AF_INET, ip_string, &key);
+	if (res <= 0) {
+		if (res == 0)
+			fprintf(stderr,
+				"ERR: IPv4 \"%s\" not in presentation format\n",
+				ip_string);
+		else
+			perror("inet_pton");
+		return EXIT_FAIL_IP;
+	}
+
+	if (action == ACTION_ADD) {
+		res = bpf_map_update_elem(fd, &key, values, BPF_NOEXIST);
+	} else if (action == ACTION_DEL) {
+		res = bpf_map_delete_elem(fd, &key);
+	} else {
+		fprintf(stderr, "ERR: %s() invalid action 0x%x\n",
+			__func__, action);
+		return EXIT_FAIL_OPTION;
+	}
+
+	if (res != 0) { /* 0 == success */
+		fprintf(stderr,
+			"%s() IP:%s key:0x%X errno(%d/%s)",
+			__func__, ip_string, key, errno, strerror(errno));
+
+		if (errno == 17) {
+			fprintf(stderr, ": Already in blacklist\n");
+			return EXIT_OK;
+		}
+		fprintf(stderr, "\n");
+		return EXIT_FAIL_MAP_KEY;
+	}
+	if (verbose)
+		fprintf(stderr,
+			"%s() IP:%s key:0x%X\n", __func__, ip_string, key);
+	return EXIT_OK;
+}
+
+static int watchlist_modify(int fd, char *ip_string, unsigned int action)
+{
+	unsigned int nr_cpus = bpf_num_possible_cpus();
+	__u64 values[nr_cpus];
+	__u32 key;
+	int res;
+
+	memset(values, 0, sizeof(__u64) * nr_cpus);
 	/* Convert IP-string into 32-bit network byte-order value */
 	res = inet_pton(AF_INET, ip_string, &key);
 	if (res <= 0) {

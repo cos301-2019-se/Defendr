@@ -33,6 +33,14 @@ struct bpf_map_def SEC("maps") blacklist = {
 	.map_flags   = BPF_F_NO_PREALLOC,
 };
 
+struct bpf_map_def SEC("maps") ip_watchlist = {
+	.type        = BPF_MAP_TYPE_PERCPU_HASH,
+	.key_size    = sizeof(u32),
+	.value_size  = sizeof(u64), 
+	.max_entries = 100000,
+	.map_flags   = BPF_F_NO_PREALLOC,
+};
+
 #define XDP_ACTION_MAX (XDP_TX + 1)
 
 /* Counter per XDP "action" verdict */
@@ -243,6 +251,13 @@ u32 parse_ipv4(struct xdp_md *ctx, u64 l3_offset)
 		/* Don't need __sync_fetch_and_add(); as percpu map */
 		*value += 1; /* Keep a counter for drop matches */
 		return XDP_DROP;
+	}else{
+		__u64 initialValue = 0;
+		bpf_map_update_elem(&ip_watchlist,&ip_src,&initialValue,0);
+		value = bpf_map_lookup_elem(&ip_watchlist,&ip_src);
+		if (value) {
+			*value += 1;
+		}
 	}
 
 	return parse_port(ctx, iph->protocol, iph + 1);

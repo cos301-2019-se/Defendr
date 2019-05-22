@@ -20,6 +20,7 @@ static const char *__doc__=
 #include <string.h>
 #include <unistd.h>
 
+
 #include <sys/types.h>
 #include <sys/stat.h>
 #include <fcntl.h>
@@ -45,8 +46,42 @@ static char ifname_buf[IF_NAMESIZE];
 static char *ifname = NULL;
 static int ifindex = -1;
 
-#define NR_MAPS 5
+#define NR_MAPS 6
 int maps_marked_for_export[MAX_MAPS] = { 0 };
+
+static __u64 get_key32_value64_percpu(int fd, __u32 key)
+{
+	/* For percpu maps, userspace gets a value per possible CPU */
+	unsigned int nr_cpus = bpf_num_possible_cpus();
+	__u64 values[nr_cpus];
+	__u64 sum = 0;
+	int i;
+
+	if ((bpf_map_lookup_elem(fd, &key, values)) != 0) {
+		fprintf(stderr,
+			"ERR: bpf_map_lookup_elem failed key:0x%X\n", key);
+		return 0;
+	}
+
+	/* Sum values from each CPU */
+	for (i = 0; i < nr_cpus; i++) {
+		sum += values[i];
+	}
+	return sum;
+}
+
+static void print_ipv4(__u32 ip, __u64 count)
+{
+	char ip_txt[INET_ADDRSTRLEN] = {0};
+
+	/* Convert IPv4 addresses from binary to text form */
+	if (!inet_ntop(AF_INET, &ip, ip_txt, sizeof(ip_txt))) {
+		fprintf(stderr,
+			"ERR: Cannot convert u32 IP:0x%X to IP-txt\n", ip);
+		exit(EXIT_FAIL_IP);
+	}
+	printf("\n \"%s\" : %llu", ip_txt, count);
+}
 
 static const char* map_idx_to_export_filename(int idx)
 {
@@ -57,16 +92,19 @@ static const char* map_idx_to_export_filename(int idx)
 	case 0: /* map_fd[0]: blacklist */
 		file =   file_blacklist;
 		break;
-	case 1: /* map_fd[1]: verdict_cnt */
+	case 1: /* map_fd[1]: ip_log */
+		file =   file_ip_watchlist;
+		break;
+	case 2: /* map_fd[2]: verdict_cnt */
 		file =   file_verdict;
 		break;
-	case 2: /* map_fd[2]: port_blacklist */
+	case 3: /* map_fd[3]: port_blacklist */
 		file =   file_port_blacklist;
 		break;
-	case 3: /* map_fd[3]: port_blacklist_drop_count_tcp */
+	case 4: /* map_fd[4]: port_blacklist_drop_count_tcp */
 		file =   file_port_blacklist_count[DDOS_FILTER_TCP];
 		break;
-	case 4: /* map_fd[4]: port_blacklist_drop_count_udp */
+	case 5: /* map_fd[5]: port_blacklist_drop_count_udp */
 		file =   file_port_blacklist_count[DDOS_FILTER_UDP];
 		break;
 	default:
@@ -264,7 +302,7 @@ void chown_maps(uid_t owner, gid_t group)
 }
 
 int main(int argc, char **argv)
-{
+{	
 	struct rlimit r = {RLIM_INFINITY, RLIM_INFINITY};
 	bool rm_xdp_prog = false;
 	struct passwd *pwd = NULL;
@@ -365,10 +403,6 @@ int main(int argc, char **argv)
 		printf("link set xdp fd failed\n");
 		return EXIT_FAIL_XDP;
 	}
-
-	/* Add something to the map as a test */
-	blacklist_modify(map_fd[0], "198.18.50.3", ACTION_ADD);
-	blacklist_port_modify(map_fd[2], map_fd[4], 80, ACTION_ADD, IPPROTO_UDP);
-
+	//blacklist_modify(map_fd[0], "198.18.50.3", ACTION_ADD);		
 	return EXIT_OK;
 }

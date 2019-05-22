@@ -5,11 +5,7 @@
 # Still depend on a kernel source tree.
 #
 TARGETS := xdp_ddos01_blacklist
-TARGETS += xdp_ttl
 TARGETS += bpf_tail_calls01
-TARGETS += napi_monitor
-TARGETS += xdp_monitor
-TARGETS += xdp_redirect_err
 TARGETS += unitTest
 
 
@@ -20,13 +16,11 @@ TARGETS += unitTest
 
 # Experimental targets
 ###TARGETS += xdp_rxhash
-TARGETS += xdp_redirect_cpu
 
 CMDLINE_TOOLS := xdp_ddos01_blacklist_cmdline
 COMMON_H      =  ${CMDLINE_TOOLS:_cmdline=_common.h}
 
 # Targets that use the library bpf/libbpf
-### TARGETS_USING_LIBBPF += xdp_monitor_user
 
 TOOLS_PATH = tools
 
