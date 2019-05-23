@@ -8,6 +8,26 @@ COS 301: Software Engineering
 
 ---
 
+Defendr is a blackbox implementation of a DoS protection service, as well as a net-work load-balancer for various back-end applications.The service is to be situated between the client and server where requests from the clients are to pass through the service, dropping/blacklisting offending packets/IPs.  The service should employ direct server return andresponses from the server are to be sent directly back to the client, and not routed back via the service
+
+`
+`
+
+### <a href="https://drive.google.com/open?id=1UAk2N9ZLeGox6dzq6b_dwOLdDoai-QAD" target="_blank">Architectural Designs Documentation</a>
+
+`
+`
+
+### <a href="" target="_blank">User Manual</a>
+
+`
+`
+
+### <a href="" target="_blank">Coding Standard Document</a>
+
+`
+`
+
 ### <a href="https://drive.google.com/file/d/1YpIKjrMkexBQUJt1kwayPFfWzewIW0qs/view" target="_blank">Software Requirements Document</a>
 
 `
