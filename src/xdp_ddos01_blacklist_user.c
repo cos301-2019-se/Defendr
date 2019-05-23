@@ -46,7 +46,7 @@ static char ifname_buf[IF_NAMESIZE];
 static char *ifname = NULL;
 static int ifindex = -1;
 
-#define NR_MAPS 6
+#define NR_MAPS 7
 int maps_marked_for_export[MAX_MAPS] = { 0 };
 
 static __u64 get_key32_value64_percpu(int fd, __u32 key)
@@ -95,16 +95,19 @@ static const char* map_idx_to_export_filename(int idx)
 	case 1: /* map_fd[1]: ip_log */
 		file =   file_ip_watchlist;
 		break;
-	case 2: /* map_fd[2]: verdict_cnt */
+	case 2: /* map_fd[6]: port_ip_logs */
+		file =   file_ip_logs;
+		break;
+	case 3: /* map_fd[2]: verdict_cnt */
 		file =   file_verdict;
 		break;
-	case 3: /* map_fd[3]: port_blacklist */
+	case 4: /* map_fd[3]: port_blacklist */
 		file =   file_port_blacklist;
 		break;
-	case 4: /* map_fd[4]: port_blacklist_drop_count_tcp */
+	case 5: /* map_fd[4]: port_blacklist_drop_count_tcp */
 		file =   file_port_blacklist_count[DDOS_FILTER_TCP];
 		break;
-	case 5: /* map_fd[5]: port_blacklist_drop_count_udp */
+	case 6: /* map_fd[5]: port_blacklist_drop_count_udp */
 		file =   file_port_blacklist_count[DDOS_FILTER_UDP];
 		break;
 	default:

@@ -39,6 +39,7 @@ static const struct option long_options[] = {
 	{"udp-dport",	required_argument,	NULL, 'u' },
 	{"tcp-dport",	required_argument,	NULL, 't' },
 	{"dynamic",	no_argument,		NULL, 'd' },
+	{"log",	no_argument,		NULL, 'g' },
 	{0, 0, NULL,  0 }
 };
 
@@ -283,17 +284,16 @@ static  void activate_dynamic_blacklist(){
 			sleep(1);
 			fd_watchlist = open_bpf_map(file_ip_watchlist);
 		    __u32 key, *prev_key = NULL;
-	        __u64 *value;
+	        __u64 value;
 	        char* ipsToRemove[1000];
 			int numToRemove = 0;
 			while (bpf_map_get_next_key(fd_watchlist, prev_key, &key) == 0) {
-				printf("%s", key ? "," : "" );
 				value = get_key32_value64_percpu(fd_watchlist, key);
 				char ip_txt[INET_ADDRSTRLEN] = {0};
-				if (inet_ntop(AF_INET, &key, ip_txt, sizeof(ip_txt))) {	
-								
+				if (inet_ntop(AF_INET, &key, ip_txt, sizeof(ip_txt))) {									
 					if(value >= 1){
 						int fd_blacklist = open_bpf_map(file_blacklist);
+						printf("%s %s","blacklisted ", ip_txt);
 						blacklist_modify(fd_blacklist,ip_txt, ACTION_ADD);
 						close(fd_blacklist);	
 					}	
@@ -305,8 +305,36 @@ static  void activate_dynamic_blacklist(){
 				watchlist_modify(fd_watchlist,ipsToRemove[i], ACTION_DEL);
 			}
 			close(fd_watchlist);
-		}
-		
+		}		
+}
+
+static  void start_logging(){
+	    int fd_packet_logs;		
+	    
+		while(1){
+			sleep(0.5);
+			fd_packet_logs = open_bpf_map(file_ip_logs);
+		    __u32 key, *prev_key = NULL;
+	        __u64 value;
+	        char* logtToRemove[1000];
+			int numToRemove = 0;
+			while (bpf_map_get_next_key(fd_packet_logs, prev_key, &key) == 0) {
+				value = get_key32_value64_percpu(fd_packet_logs, key);
+				char ip_txt[INET_ADDRSTRLEN] = {0};
+				if (inet_ntop(AF_INET, &key, ip_txt, sizeof(ip_txt))) {		
+					/**
+					 * @todo add logs to database
+					 */			
+					printf("\n \"%s\" : %llu","log ",value);				
+					logtToRemove[numToRemove++] = ip_txt;	
+				}				
+				prev_key = &key;
+			}
+			for(int i = 0; i < numToRemove;++i){
+				watchlist_modify(fd_packet_logs,logtToRemove[i], ACTION_DEL);
+			}
+			close(fd_packet_logs);
+		}		
 }
 
 int main(int argc, char **argv)
@@ -325,6 +353,7 @@ int main(int argc, char **argv)
 	int longindex = 0;
 	bool do_list = false;
 	bool dynamic_blacklist = false;
+	bool log = false;
 	int opt;
 	int dport = 0;
 	int proto = IPPROTO_TCP;
@@ -364,6 +393,9 @@ int main(int argc, char **argv)
 			break;
 		case 'd':
 			dynamic_blacklist = true;
+			break;
+		case 'g':
+			log = true;
 			break;
 		case 'h':
 		fail_opt:
@@ -435,6 +467,9 @@ int main(int argc, char **argv)
 		activate_dynamic_blacklist();
 	}
 
+	if(dynamic_blacklist){
+		start_logging();
+	}
 	// TODO: implement stats for verdicts
 	// Hack: keep it open to inspect /proc/pid/fdinfo/3
 	close(fd_verdict);

@@ -25,6 +25,13 @@ struct vlan_hdr {
 	__be16 h_vlan_encapsulated_proto;
 };
 
+struct ip_log {
+	__u32 source;
+	__u32 destination;
+    char log[2];
+
+};
+
 struct bpf_map_def SEC("maps") blacklist = {
 	.type        = BPF_MAP_TYPE_PERCPU_HASH,
 	.key_size    = sizeof(u32),
@@ -39,6 +46,14 @@ struct bpf_map_def SEC("maps") ip_watchlist = {
 	.value_size  = sizeof(u64), 
 	.max_entries = 100000,
 	.map_flags   = BPF_F_NO_PREALLOC,
+};
+
+struct bpf_map_def SEC("maps") ip_logs = {
+    .type        = BPF_MAP_TYPE_PERCPU_ARRAY,
+	.key_size    = sizeof(u32),
+	.value_size  = sizeof(u64), 
+	.max_entries = 100000,
+	//.map_flags   = BPF_F_NO_PREALLOC,
 };
 
 #define XDP_ACTION_MAX (XDP_TX + 1)
@@ -75,6 +90,7 @@ struct bpf_map_def SEC("maps") port_blacklist_drop_count_udp = {
 	.value_size  = sizeof(u64),
 	.max_entries = 65536,
 };
+
 
 static inline struct bpf_map_def *drop_count_by_fproto(int fproto) {
 
@@ -229,7 +245,7 @@ u32 parse_ipv4(struct xdp_md *ctx, u64 l3_offset)
 	struct iphdr *iph = data + l3_offset;
 	u64 *value;
 	u32 ip_src; /* type need to match map */
-
+	u32 ip_dest;
 	/* Hint: +1 is sizeof(struct iphdr) */
 	if (iph + 1 > data_end) {
 		bpf_debug("Invalid IPv4 packet: L3off:%llu\n", l3_offset);
@@ -237,19 +253,20 @@ u32 parse_ipv4(struct xdp_md *ctx, u64 l3_offset)
 	}
 	/* Extract key */
 	ip_src = iph->saddr;
-
+	ip_dest = iph->daddr;
 
 /**************************************************************/
 	ip_src = ntohl(ip_src);  // ntohl does not work for some reason!?!
-
+	ip_dest = ntohl(ip_dest);
 /****************************************************************/
 
 	bpf_debug("Valid IPv4 packet: raw saddr:0x%x\n", ip_src);
-
-	value = bpf_map_lookup_elem(&blacklist, &ip_src);
+	__u64 log_code = 0;
+	value = bpf_map_lookup_elem(&blacklist, &ip_src);;
 	if (value) {
 		/* Don't need __sync_fetch_and_add(); as percpu map */
 		*value += 1; /* Keep a counter for drop matches */
+		log_code = 1;		
 		return XDP_DROP;
 	}else{
 		__u64 initialValue = 0;
@@ -257,9 +274,10 @@ u32 parse_ipv4(struct xdp_md *ctx, u64 l3_offset)
 		value = bpf_map_lookup_elem(&ip_watchlist,&ip_src);
 		if (value) {
 			*value += 1;
+			log_code = 0;
 		}
 	}
-
+	bpf_map_update_elem(&ip_logs,&ip_src,&log_code,0);
 	return parse_port(ctx, iph->protocol, iph + 1);
 }
 

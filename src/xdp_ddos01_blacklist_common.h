@@ -27,6 +27,7 @@ static int verbose = 1;
 static const char *file_blacklist = "/sys/fs/bpf/ddos_blacklist";
 static const char *file_verdict   = "/sys/fs/bpf/ddos_blacklist_stat_verdict";
 static const char *file_ip_watchlist   = "/sys/fs/bpf/ddos_blacklist_ip_watchlist";
+static const char *file_ip_logs   = "/sys/fs/bpf/ddos_blacklist_ip_logs";
 
 static const char *file_port_blacklist = "/sys/fs/bpf/ddos_port_blacklist";
 static const char *file_port_blacklist_count[] = {
