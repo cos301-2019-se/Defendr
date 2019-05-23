@@ -281,7 +281,7 @@ static  void activate_dynamic_blacklist(){
 	    int fd_watchlist;		
 	    
 		while(1){
-			sleep(1);
+			sleep(0.8);
 			fd_watchlist = open_bpf_map(file_ip_watchlist);
 		    __u32 key, *prev_key = NULL;
 	        __u64 value;
@@ -290,51 +290,117 @@ static  void activate_dynamic_blacklist(){
 			while (bpf_map_get_next_key(fd_watchlist, prev_key, &key) == 0) {
 				value = get_key32_value64_percpu(fd_watchlist, key);
 				char ip_txt[INET_ADDRSTRLEN] = {0};
-				if (inet_ntop(AF_INET, &key, ip_txt, sizeof(ip_txt))) {									
-					if(value >= 1){
+				if (inet_ntop(AF_INET, &key, ip_txt, sizeof(ip_txt))) {								
+					if(value > 2){
 						int fd_blacklist = open_bpf_map(file_blacklist);
-						printf("%s %s","blacklisted ", ip_txt);
+						printf("%s %s %llu","blacklisted ", ip_txt,value);
 						blacklist_modify(fd_blacklist,ip_txt, ACTION_ADD);
 						close(fd_blacklist);	
 					}	
-					ipsToRemove[numToRemove++] = ip_txt;	
+					ipsToRemove[numToRemove] = malloc(strlen(ip_txt) + 1); 
+					strcpy(ipsToRemove[numToRemove], ip_txt);
+					++numToRemove;	
 				}				
 				prev_key = &key;
 			}
 			for(int i = 0; i < numToRemove;++i){
 				watchlist_modify(fd_watchlist,ipsToRemove[i], ACTION_DEL);
+				free(ipsToRemove[i]);
 			}
 			close(fd_watchlist);
 		}		
 }
 
 static  void start_logging(){
-	    int fd_packet_logs;		
+	    int fd_enter_logs;	
+	    int fd_pass_logs;
+	    int fd_drop_logs;	
 	    
 		while(1){
-			sleep(0.5);
-			fd_packet_logs = open_bpf_map(file_ip_logs);
+			sleep(0.1);
+			fd_enter_logs = open_bpf_map(file_enter_logs);
+			fd_pass_logs = open_bpf_map(file_pass_logs);
+			fd_drop_logs = open_bpf_map(file_drop_logs);
 		    __u32 key, *prev_key = NULL;
 	        __u64 value;
-	        char* logtToRemove[1000];
-			int numToRemove = 0;
-			while (bpf_map_get_next_key(fd_packet_logs, prev_key, &key) == 0) {
-				value = get_key32_value64_percpu(fd_packet_logs, key);
+	        
+	        char* enterLogsToRemove[1000];
+	        char* passLogsToRemove[1000];
+	        char* dropLogsToRemove[1000];
+	        
+			int numEnterLogsToRemove = 0;
+			int numDropLogsToRemove = 0;
+			int numPassLogsToRemove = 0;
+			
+			while (bpf_map_get_next_key(fd_enter_logs, prev_key, &key) == 0) {
+				value = get_key32_value64_percpu(fd_enter_logs, key);
 				char ip_txt[INET_ADDRSTRLEN] = {0};
-				if (inet_ntop(AF_INET, &key, ip_txt, sizeof(ip_txt))) {		
-					/**
-					 * @todo add logs to database
-					 */			
-					printf("\n \"%s\" : %llu","log ",value);				
-					logtToRemove[numToRemove++] = ip_txt;	
+				if (inet_ntop(AF_INET, &key, ip_txt, sizeof(ip_txt))) {	
+					value -= 1;			
+					printf("%s %s \n","entered ", ip_txt);						
+					if(value <= 0){		
+						enterLogsToRemove[numEnterLogsToRemove] = malloc(strlen(ip_txt) + 1); 
+						strcpy(enterLogsToRemove[numEnterLogsToRemove], ip_txt);
+						++numEnterLogsToRemove;					
+					}	
+
 				}				
 				prev_key = &key;
 			}
-			for(int i = 0; i < numToRemove;++i){
-				watchlist_modify(fd_packet_logs,logtToRemove[i], ACTION_DEL);
+			
+			key = NULL;
+			prev_key = NULL;
+			sleep(0.1);
+			while (bpf_map_get_next_key(fd_pass_logs, prev_key, &key) == 0) {
+				value = get_key32_value64_percpu(fd_pass_logs, key);
+				char ip_txt[INET_ADDRSTRLEN] = {0};
+				if (inet_ntop(AF_INET, &key, ip_txt, sizeof(ip_txt))) {	
+					value -= 1;
+					printf("%s %s \n","passed ", ip_txt);									
+					if(value <= 0){
+						passLogsToRemove[numPassLogsToRemove] = malloc(strlen(ip_txt) + 1); 
+						strcpy(passLogsToRemove[numPassLogsToRemove], ip_txt);
+						++numPassLogsToRemove;
+					}			
+				}				
+				prev_key = &key;
 			}
-			close(fd_packet_logs);
-		}		
+						
+			key = NULL;
+			prev_key = NULL;
+			sleep(0.1);
+			while (bpf_map_get_next_key(fd_drop_logs, prev_key, &key) == 0) {
+				value = get_key32_value64_percpu(fd_drop_logs, key);
+				char ip_txt[INET_ADDRSTRLEN] = {0};
+				if (inet_ntop(AF_INET, &key, ip_txt, sizeof(ip_txt))) {	
+					value -= 1;
+					printf("%s %s \n","dropped ", ip_txt);								
+					if(value <= 0){
+						dropLogsToRemove[numDropLogsToRemove] = malloc(strlen(ip_txt) + 1); 
+						strcpy(dropLogsToRemove[numDropLogsToRemove], ip_txt);
+						++numDropLogsToRemove;		
+					}	
+	
+				}				
+				prev_key = &key;
+			}
+			
+			for(int i = 0; i < numEnterLogsToRemove;++i){
+				log_modify(fd_enter_logs,enterLogsToRemove[i], ACTION_DEL);
+				free(enterLogsToRemove[i]);
+			}
+			for(int i = 0; i < numPassLogsToRemove;++i){
+				log_modify(fd_pass_logs,passLogsToRemove[i], ACTION_DEL);
+				free(passLogsToRemove[i]);
+			}
+			for(int i = 0; i < numDropLogsToRemove;++i){
+				log_modify(fd_drop_logs,dropLogsToRemove[i], ACTION_DEL);
+				free(dropLogsToRemove[i]);
+			}
+			close(fd_enter_logs);
+			close(fd_pass_logs);	
+			close(fd_drop_logs);	
+		}		    
 }
 
 int main(int argc, char **argv)
@@ -467,7 +533,7 @@ int main(int argc, char **argv)
 		activate_dynamic_blacklist();
 	}
 
-	if(dynamic_blacklist){
+	if(log){
 		start_logging();
 	}
 	// TODO: implement stats for verdicts

@@ -14,6 +14,10 @@
 #include <uapi/linux/udp.h>
 #include "bpf_helpers.h"
 
+#define BPF_ANY       0 /* create new element or update existing */
+#define BPF_NOEXIST   1 /* create new element only if it didn't exist */
+#define BPF_EXIST     2 /* only update existing element */
+
 enum {
 	DDOS_FILTER_TCP = 0,
 	DDOS_FILTER_UDP,
@@ -23,13 +27,6 @@ enum {
 struct vlan_hdr {
 	__be16 h_vlan_TCI;
 	__be16 h_vlan_encapsulated_proto;
-};
-
-struct ip_log {
-	__u32 source;
-	__u32 destination;
-    char log[2];
-
 };
 
 struct bpf_map_def SEC("maps") blacklist = {
@@ -48,12 +45,28 @@ struct bpf_map_def SEC("maps") ip_watchlist = {
 	.map_flags   = BPF_F_NO_PREALLOC,
 };
 
-struct bpf_map_def SEC("maps") ip_logs = {
-    .type        = BPF_MAP_TYPE_PERCPU_ARRAY,
+struct bpf_map_def SEC("maps") enter_logs = {
+    .type        = BPF_MAP_TYPE_PERCPU_HASH,
 	.key_size    = sizeof(u32),
 	.value_size  = sizeof(u64), 
 	.max_entries = 100000,
-	//.map_flags   = BPF_F_NO_PREALLOC,
+	.map_flags   = BPF_F_NO_PREALLOC,
+};
+
+struct bpf_map_def SEC("maps") drop_logs = {
+    .type        = BPF_MAP_TYPE_PERCPU_HASH,
+	.key_size    = sizeof(u32),
+	.value_size  = sizeof(u64), 
+	.max_entries = 100000,
+	.map_flags   = BPF_F_NO_PREALLOC,
+};
+
+struct bpf_map_def SEC("maps") pass_logs = {
+    .type        = BPF_MAP_TYPE_PERCPU_HASH,
+	.key_size    = sizeof(u32),
+	.value_size  = sizeof(u64), 
+	.max_entries = 100000,
+	.map_flags   = BPF_F_NO_PREALLOC,
 };
 
 #define XDP_ACTION_MAX (XDP_TX + 1)
@@ -245,7 +258,13 @@ u32 parse_ipv4(struct xdp_md *ctx, u64 l3_offset)
 	struct iphdr *iph = data + l3_offset;
 	u64 *value;
 	u32 ip_src; /* type need to match map */
-	u32 ip_dest;
+	
+    __u64 initialDrop = 0;
+	__u64 initialEnter = 0;
+	__u64 initialPass = 0;
+	__u64 initialValue = 0;
+	
+	
 	/* Hint: +1 is sizeof(struct iphdr) */
 	if (iph + 1 > data_end) {
 		bpf_debug("Invalid IPv4 packet: L3off:%llu\n", l3_offset);
@@ -253,31 +272,45 @@ u32 parse_ipv4(struct xdp_md *ctx, u64 l3_offset)
 	}
 	/* Extract key */
 	ip_src = iph->saddr;
-	ip_dest = iph->daddr;
+
 
 /**************************************************************/
-	ip_src = ntohl(ip_src);  // ntohl does not work for some reason!?!
-	ip_dest = ntohl(ip_dest);
+	ip_src = ntohl(ip_src);  
 /****************************************************************/
 
+	bpf_map_update_elem(&enter_logs,&ip_src,&initialEnter,BPF_NOEXIST);
+	value = bpf_map_lookup_elem(&enter_logs,&ip_src);
+	if (value) {
+		*value += 1;
+	}	
+
+
 	bpf_debug("Valid IPv4 packet: raw saddr:0x%x\n", ip_src);
-	__u64 log_code = 0;
-	value = bpf_map_lookup_elem(&blacklist, &ip_src);;
+	value = bpf_map_lookup_elem(&blacklist, &ip_src);
 	if (value) {
 		/* Don't need __sync_fetch_and_add(); as percpu map */
-		*value += 1; /* Keep a counter for drop matches */
-		log_code = 1;		
+		*value += 1; /* Keep a counter for drop matches */		
+		
+	    bpf_map_update_elem(&drop_logs,&ip_src,&initialDrop,BPF_NOEXIST);
+		value = bpf_map_lookup_elem(&drop_logs,&ip_src);
+		if (value) {
+			*value += 1;
+		}
+		
 		return XDP_DROP;
 	}else{
-		__u64 initialValue = 0;
-		bpf_map_update_elem(&ip_watchlist,&ip_src,&initialValue,0);
+		bpf_map_update_elem(&ip_watchlist,&ip_src,&initialValue,BPF_NOEXIST);
 		value = bpf_map_lookup_elem(&ip_watchlist,&ip_src);
 		if (value) {
 			*value += 1;
-			log_code = 0;
+		}
+		
+		bpf_map_update_elem(&pass_logs,&ip_src,&initialPass,BPF_NOEXIST);
+		value = bpf_map_lookup_elem(&pass_logs,&ip_src);
+		if (value) {
+			*value += 1;
 		}
 	}
-	bpf_map_update_elem(&ip_logs,&ip_src,&log_code,0);
 	return parse_port(ctx, iph->protocol, iph + 1);
 }
 
