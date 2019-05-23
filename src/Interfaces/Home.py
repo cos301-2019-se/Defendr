@@ -95,6 +95,7 @@ class win_Home:
         self.btnLogging.configure(image=self._img1)
         self.btnLogging.configure(state='active')
         self.btnLogging.configure(width=151)
+        self.btnLogging.configure(command=lambda: Home_support.createLogs())
 
         self.btnMetrics = tk.Button(top)
         self.btnMetrics.place(relx=0.708, rely=0.448, height=151, width=151)
