@@ -1,0 +1,12 @@
+Facebook Katran: https://code.fb.com/open-source/open-sourcing-katran-a-scalable-network-load-balancer/
+Equal Cost Multi Path Routing (Specifically for GitHub Director): https://en.wikipedia.org/wiki/Equal-cost_multi-path_routing
+GitHub Director: https://github.com/github/glb-director
+GoLang - testify() and assert(): https://godoc.org/github.com/stretchr/testify/assert
+Google Maglev: https://ai.google/research/pubs/pub44824 (download link of doc on page)
+Graphana support for Prometheus: https://prometheus.io/docs/visualization/grafana/
+K-Nearest Neighbour: https://www.analyticsvidhya.com/blog/2018/03/introduction-k-neighbours-algorithm-clustering/
+Machine Learning - Types of Classification: https://medium.com/@Mandysidana/machine-learning-types-of-classification-9497bd4f2e14
+Machine Learning Basics with the K-Nearest Neighbors Algorithm: https://towardsdatascience.com/machine-learning-basics-with-the-k-nearest-neighbors-algorithm-6a6e71d01761
+Prometheus Exporters tutorial: https://blog.alexellis.io/prometheus-monitoring/
+Prometheus setup document: https://prometheus.io/docs/prometheus/latest/getting_started/
+Regression v CLassificatoin - Machine learning: https://medium.com/quick-code/regression-versus-classification-machine-learning-whats-the-difference-345c56dd15f7
