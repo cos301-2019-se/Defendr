@@ -15,7 +15,7 @@ def connect():
 def findPackets(db, ip):
     col = db["packets_list"]
     query = {"Ip_source": ip}
-    doc = col.find(query).sort("Timestamp", -1)
+    doc = col.find(query,{ "_id": 0,"Server":0,"Ip_destination":0}).sort("Timestamp", -1)
     return doc
 
 
