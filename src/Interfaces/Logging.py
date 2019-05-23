@@ -6,6 +6,7 @@
 #    May 23, 2019 02:45:59 PM SAST  platform: Linux
 
 import sys
+import databaseCon
 
 try:
     import Tkinter as tk
@@ -61,6 +62,13 @@ def destroy_win_Logging():
 
 class win_Logging:
 
+    def search(self):
+        db = databaseCon.connect()
+        doc = databaseCon.findPackets(db, self.txtSearch.get())
+        for x in doc:
+            print(x)
+            self.txtbLogs.insert(tk.END,("{} {}".format(x, '\n')))
+
     def back(self):
         destroy_win_Logging()
         Home_support.root.deiconify()
@@ -79,26 +87,21 @@ class win_Logging:
         _compcolor = '#d9d9d9' # X11 color: 'gray85'
         _ana1color = '#d9d9d9' # X11 color: 'gray85'
         _ana2color = '#ececec' # Closest X11 color: 'gray92'
-        self.style = ttk.Style()
-        if sys.platform == "win32":
-            self.style.theme_use('winnative')
-        self.style.configure('.',background=_bgcolor)
-        self.style.configure('.',foreground=_fgcolor)
-        self.style.configure('.',font="TkDefaultFont")
-        self.style.map('.',background=
-            [('selected', _compcolor), ('active',_ana2color)])
 
         top.geometry("600x450+372+125")
         top.title("Logs")
+        top.configure(highlightcolor="black")
 
         self.btnLogout = tk.Button(top)
         self.btnLogout.place(relx=0.85, rely=0.044, height=31, width=72)
         self.btnLogout.configure(text='''Logout''')
+        self.btnLogout.configure(cursor="hand1")
         self.btnLogout.configure(command=lambda: self.logout())
 
         self.btnBack = tk.Button(top)
         self.btnBack.place(relx=0.017, rely=0.911, height=31, width=60)
         self.btnBack.configure(text='''Back''')
+        self.btnBack.configure(cursor="hand1")
         self.btnBack.configure(command=lambda: self.back())
 
         self.img_Defendr = tk.Label(top)
@@ -108,24 +111,13 @@ class win_Logging:
         self.img_Defendr.configure(image=self._img0)
         self.img_Defendr.configure(width=329)
 
-        self.style.configure('Treeview.Heading',  font="TkDefaultFont")
-        self.trvwLogs = ScrolledTreeView(top)
-        self.trvwLogs.place(relx=0.017, rely=0.422, relheight=0.469
-                , relwidth=0.967)
-        self.trvwLogs.configure(columns="Col1")
-        # build_treeview_support starting.
-        self.trvwLogs.heading("#0",text="Tree")
-        self.trvwLogs.heading("#0",anchor="center")
-        self.trvwLogs.column("#0",width="283")
-        self.trvwLogs.column("#0",minwidth="20")
-        self.trvwLogs.column("#0",stretch="1")
-        self.trvwLogs.column("#0",anchor="w")
-        self.trvwLogs.heading("Col1",text="Col1")
-        self.trvwLogs.heading("Col1",anchor="center")
-        self.trvwLogs.column("Col1",width="283")
-        self.trvwLogs.column("Col1",minwidth="20")
-        self.trvwLogs.column("Col1",stretch="1")
-        self.trvwLogs.column("Col1",anchor="w")
+        self.txtbLogs = tk.Text(top)
+        self.txtbLogs.place(relx=0.017, rely=0.422, relheight=0.476, relwidth = 0.96)
+        self.txtbLogs.configure(background="white")
+        self.txtbLogs.configure(font="TkTextFont")
+        self.txtbLogs.configure(selectbackground="#c4c4c4")
+        self.txtbLogs.configure(width=576)
+        self.txtbLogs.configure(wrap="word")
 
         self.txtSearch = tk.Entry(top)
         self.txtSearch.place(relx=0.55, rely=0.333,height=33, relwidth=0.277)
@@ -136,127 +128,8 @@ class win_Logging:
         self.btnSearch = tk.Button(top)
         self.btnSearch.place(relx=0.867, rely=0.333, height=31, width=72)
         self.btnSearch.configure(text='''Search''')
-
-# The following code is added to facilitate the Scrolled widgets you specified.
-class AutoScroll(object):
-    '''Configure the scrollbars for a widget.'''
-
-    def __init__(self, master):
-        #  Rozen. Added the try-except clauses so that this class
-        #  could be used for scrolled entry widget for which vertical
-        #  scrolling is not supported. 5/7/14.
-        try:
-            vsb = ttk.Scrollbar(master, orient='vertical', command=self.yview)
-        except:
-            pass
-        hsb = ttk.Scrollbar(master, orient='horizontal', command=self.xview)
-
-        #self.configure(yscrollcommand=_autoscroll(vsb),
-        #    xscrollcommand=_autoscroll(hsb))
-        try:
-            self.configure(yscrollcommand=self._autoscroll(vsb))
-        except:
-            pass
-        self.configure(xscrollcommand=self._autoscroll(hsb))
-
-        self.grid(column=0, row=0, sticky='nsew')
-        try:
-            vsb.grid(column=1, row=0, sticky='ns')
-        except:
-            pass
-        hsb.grid(column=0, row=1, sticky='ew')
-
-        master.grid_columnconfigure(0, weight=1)
-        master.grid_rowconfigure(0, weight=1)
-
-        # Copy geometry methods of master  (taken from ScrolledText.py)
-        if py3:
-            methods = tk.Pack.__dict__.keys() | tk.Grid.__dict__.keys() \
-                  | tk.Place.__dict__.keys()
-        else:
-            methods = tk.Pack.__dict__.keys() + tk.Grid.__dict__.keys() \
-                  + tk.Place.__dict__.keys()
-
-        for meth in methods:
-            if meth[0] != '_' and meth not in ('config', 'configure'):
-                setattr(self, meth, getattr(master, meth))
-
-    @staticmethod
-    def _autoscroll(sbar):
-        '''Hide and show scrollbar as needed.'''
-        def wrapped(first, last):
-            first, last = float(first), float(last)
-            if first <= 0 and last >= 1:
-                sbar.grid_remove()
-            else:
-                sbar.grid()
-            sbar.set(first, last)
-        return wrapped
-
-    def __str__(self):
-        return str(self.master)
-
-def _create_container(func):
-    '''Creates a ttk Frame with a given master, and use this new frame to
-    place the scrollbars and the widget.'''
-    def wrapped(cls, master, **kw):
-        container = ttk.Frame(master)
-        container.bind('<Enter>', lambda e: _bound_to_mousewheel(e, container))
-        container.bind('<Leave>', lambda e: _unbound_to_mousewheel(e, container))
-        return func(cls, container, **kw)
-    return wrapped
-
-class ScrolledTreeView(AutoScroll, ttk.Treeview):
-    '''A standard ttk Treeview widget with scrollbars that will
-    automatically show/hide as needed.'''
-    @_create_container
-    def __init__(self, master, **kw):
-        ttk.Treeview.__init__(self, master, **kw)
-        AutoScroll.__init__(self, master)
-
-import platform
-def _bound_to_mousewheel(event, widget):
-    child = widget.winfo_children()[0]
-    if platform.system() == 'Windows' or platform.system() == 'Darwin':
-        child.bind_all('<MouseWheel>', lambda e: _on_mousewheel(e, child))
-        child.bind_all('<Shift-MouseWheel>', lambda e: _on_shiftmouse(e, child))
-    else:
-        child.bind_all('<Button-4>', lambda e: _on_mousewheel(e, child))
-        child.bind_all('<Button-5>', lambda e: _on_mousewheel(e, child))
-        child.bind_all('<Shift-Button-4>', lambda e: _on_shiftmouse(e, child))
-        child.bind_all('<Shift-Button-5>', lambda e: _on_shiftmouse(e, child))
-
-def _unbound_to_mousewheel(event, widget):
-    if platform.system() == 'Windows' or platform.system() == 'Darwin':
-        widget.unbind_all('<MouseWheel>')
-        widget.unbind_all('<Shift-MouseWheel>')
-    else:
-        widget.unbind_all('<Button-4>')
-        widget.unbind_all('<Button-5>')
-        widget.unbind_all('<Shift-Button-4>')
-        widget.unbind_all('<Shift-Button-5>')
-
-def _on_mousewheel(event, widget):
-    if platform.system() == 'Windows':
-        widget.yview_scroll(-1*int(event.delta/120),'units')
-    elif platform.system() == 'Darwin':
-        widget.yview_scroll(-1*int(event.delta),'units')
-    else:
-        if event.num == 4:
-            widget.yview_scroll(-1, 'units')
-        elif event.num == 5:
-            widget.yview_scroll(1, 'units')
-
-def _on_shiftmouse(event, widget):
-    if platform.system() == 'Windows':
-        widget.xview_scroll(-1*int(event.delta/120), 'units')
-    elif platform.system() == 'Darwin':
-        widget.xview_scroll(-1*int(event.delta), 'units')
-    else:
-        if event.num == 4:
-            widget.xview_scroll(-1, 'units')
-        elif event.num == 5:
-            widget.xview_scroll(1, 'units')
+        self.btnSearch.configure(cursor="hand1")
+        self.btnSearch.configure(command=lambda: self.search())
 
 if __name__ == '__main__':
     vp_start_gui()

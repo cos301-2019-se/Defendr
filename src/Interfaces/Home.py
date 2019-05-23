@@ -85,6 +85,7 @@ class win_Home:
         photo_location = os.path.join(prog_location,"Images/iplist.png")
         self._img0 = tk.PhotoImage(file=photo_location)
         self.btnListIP.configure(image=self._img0)
+        self.btnListIP.configure(cursor="hand1")
         self.btnListIP.configure(command=lambda: Home_support.createIPList())
 
         self.btnLogging = tk.Button(top)
@@ -95,6 +96,7 @@ class win_Home:
         self.btnLogging.configure(image=self._img1)
         self.btnLogging.configure(state='active')
         self.btnLogging.configure(width=151)
+        self.btnLogging.configure(cursor="hand1")
         self.btnLogging.configure(command=lambda: Home_support.createLogs())
 
         self.btnMetrics = tk.Button(top)
@@ -104,11 +106,13 @@ class win_Home:
         self._img2 = tk.PhotoImage(file=photo_location)
         self.btnMetrics.configure(image=self._img2)
         self.btnMetrics.configure(width=151)
+        self.btnMetrics.configure(cursor="hand1")
 
         self.btnLogout = tk.Button(top)
         self.btnLogout.place(relx=0.843, rely=0.06, height=31, width=72)
         self.btnLogout.configure(activebackground="#f9f9f9")
         self.btnLogout.configure(text='''Logout''')
+        self.btnLogout.configure(cursor="hand1")
         self.btnLogout.configure(command=lambda: self.logout())
 
         self.menubar = tk.Menu(top,font="TkMenuFont",bg=_bgcolor,fg=_fgcolor)

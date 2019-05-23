@@ -26,7 +26,7 @@ except:
     import tkMessageBox as messagebox
 
 import Login_support
-import controller
+from controller import controller
 import os.path
 
 def vp_start_gui():
@@ -38,8 +38,8 @@ def vp_start_gui():
     root = tk.Tk()
     top = win_Login (root)
     Login_support.init(root, top)
-   # c = controller("../../Documents/Defendr/Defendr/src/")
-   # c.loadXdp()
+    c = controller("../../Documents/Defendr/Defendr/src/")
+    c.loadXdp()
     root.mainloop()
 
 w = None
@@ -63,7 +63,7 @@ def destroy_win_Login():
 class win_Login:
 
     def cancelLogin(self):
-        msg = messagebox.askyesno("Cancel Login", "Are you sure?");
+        msg = messagebox.askyesno("Exit", "Are you sure?");
         if(msg):
             exit()
 
@@ -141,11 +141,13 @@ class win_Login:
         self.btnLogin = tk.Button(self.Frame1)
         self.btnLogin.place(relx=0.684, rely=0.667, height=31, width=68)
         self.btnLogin.configure(text='''Login''')
+        self.btnLogin.configure(cursor="hand1")
         self.btnLogin.configure(command=lambda: self.loginUser())
 
         self.btnCancel = tk.Button(self.Frame1)
         self.btnCancel.place(relx=0.127, rely=0.667, height=31, width=76)
         self.btnCancel.configure(text='''Cancel''')
+        self.btnCancel.configure(cursor="hand1")
         self.btnCancel.configure(command=lambda: self.cancelLogin())
 
         self.menubar = tk.Menu(top,font="TkMenuFont",bg=_bgcolor,fg=_fgcolor)

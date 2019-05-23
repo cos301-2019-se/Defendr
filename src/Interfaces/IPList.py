@@ -93,11 +93,13 @@ class win_IPList:
         self.btnLogout = tk.Button(top)
         self.btnLogout.place(relx=0.857, rely=0.022, height=31, width=72)
         self.btnLogout.configure(text='''Logout''')
+        self.btnLogout.configure(cursor="hand1")
         self.btnLogout.configure(command=lambda: self.logout())
 
         self.btnBack = tk.Button(top)
         self.btnBack.place(relx=0.018, rely=0.913, height=31, width=60)
         self.btnBack.configure(text='''Back''')
+        self.btnBack.configure(cursor="hand1")
         self.btnBack.configure(command=lambda: self.back())
 
         self.lst_IPs = tk.Listbox(top)
@@ -119,11 +121,13 @@ class win_IPList:
         self.btnAdd = tk.Button(top)
         self.btnAdd.place(relx=0.357, rely=0.379, height=31, width=69)
         self.btnAdd.configure(text='''Add IP''')
+        self.btnAdd.configure(cursor="hand1")
 
         self.btnRemove = tk.Button(top)
         self.btnRemove.place(relx=0.821, rely=0.913, height=31, width=91)
         self.btnRemove.configure(text='''Remove IP''')
         self.btnRemove.configure(width=91)
+        self.btnRemove.configure(cursor="hand1")
 
         self.Label2 = tk.Label(top)
         self.Label2.place(relx=0.018, rely=0.512, height=151, width=349)
