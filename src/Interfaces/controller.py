@@ -10,12 +10,18 @@ class controller:
 		myCmd = os.popen("cd " + self.pathToSource + " && sudo mount -t bpf bpf /sys/fs/bpf/").read()
 		myCmd = os.popen("cd " + self.pathToSource + " && sudo ./xdp_ddos01_blacklist --dev enp0s3 --remove --owner $USER").read()
 		myCmd = os.popen("cd " + self.pathToSource + " && sudo ./xdp_ddos01_blacklist --dev enp0s3 --owner $USER").read()
-		print(myCmd)
-		return;
+		#print(myCmd)
+		os.popen("cd " + self.pathToSource + " && sudo ./xdp_ddos01_blacklist_cmdline --del --ip " + "198.18.50.3").read()
+		return "success";
 		
 	def blacklistIP(self,ip):
+		testIP = ip
 		myCmd = os.popen("cd " + self.pathToSource + " && sudo ./xdp_ddos01_blacklist_cmdline --add --ip " + ip).read()
-		return;
+		testData = self.getBlacklistedIpList()
+		if testIP in testData:
+			return "success"
+		else:
+			return "Failure"
 		
 	def whiteListIP(self,ip):
 		myCmd = os.popen("cd " + self.pathToSource + " && sudo ./xdp_ddos01_blacklist_cmdline --del --ip " + ip).read()
@@ -40,3 +46,4 @@ class controller:
 		if(dataString[len(dataString)-1]==','):
 			dataString = dataString[:-1]
 		return dataString.split(",")
+
