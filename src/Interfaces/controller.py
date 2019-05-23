@@ -34,6 +34,9 @@ class controller:
 		dataString = dataString.replace("{,","")
 		dataString = dataString.replace("}","")
 		dataString = dataString.replace(" ","")
+		if(len(dataString) == 0):
+			print("No IP's currently blacklisted")
+			return
 		if(dataString[len(dataString)-1]==','):
 			dataString = dataString[:-1]
-		return dataString.split(",");
+		return dataString.split(",")

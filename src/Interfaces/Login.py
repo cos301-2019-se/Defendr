@@ -38,7 +38,7 @@ def vp_start_gui():
     root = tk.Tk()
     top = win_Login (root)
     Login_support.init(root, top)
-    c = controller("../")
+    c = controller("../../Documents/Defendr/Defendr/src/")
     c.loadXdp()
     root.mainloop()
 
