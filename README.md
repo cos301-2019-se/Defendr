@@ -13,7 +13,7 @@ Defendr is a blackbox implementation of a DoS protection service, as well as a n
 `
 `
 
-### <a href="" target="_blank">Architectural Designs Documentation</a>
+### <a href="https://drive.google.com/open?id=1UAk2N9ZLeGox6dzq6b_dwOLdDoai-QAD" target="_blank">Architectural Designs Documentation</a>
 
 `
 `
