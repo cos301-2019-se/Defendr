@@ -8,20 +8,37 @@ COS 301: Software Engineering
 
 ---
 
-### [Software Requirements and Design Specification]()
-
-### [User manuel]()
-
-### [Testing policy](https://github.com/cos301-2019-se/Defendr/blob/documentation/SRS/Defendr%20-%20Testing%20Policy.pdf)
-`
-`
-
-### [Project Management Page](https://app.zenhub.com/workspaces/dark-nites-capstone-project-5cc616ec67dcfa43a66a40f3/board?repos=182156942)
+Defendr is a blackbox implementation of a DoS protection service, as well as a net-work load-balancer for various back-end applications.The service is to be situated between the client and server where requests from the clients are to pass through the service, dropping/blacklisting offending packets/IPs.  The service should employ direct server return andresponses from the server are to be sent directly back to the client, and not routed back via the service
 
 `
 `
 
-### [Git Repository](https://github.com/cos301-2019-se/Defendr)
+### <a href="https://drive.google.com/open?id=1UAk2N9ZLeGox6dzq6b_dwOLdDoai-QAD" target="_blank">Architectural Designs Documentation</a>
+
+`
+`
+
+### <a href="" target="https://github.com/cos301-2019-se/Defendr/blob/documentation/SRS/Defendr%20-%20User%20manual.pdf">User Manual</a>
+
+`
+`
+
+### <a href="" target="_blank">Coding Standard Document</a>
+
+`
+`
+
+### <a href="https://drive.google.com/file/d/1YpIKjrMkexBQUJt1kwayPFfWzewIW0qs/view" target="_blank">Software Requirements Document</a>
+
+`
+`
+
+### <a href="https://app.zenhub.com/workspaces/dark-nites-capstone-project-5cc616ec67dcfa43a66a40f3/board?repos=182156942" target="_blank">Project Management Tool</a>
+
+`
+`
+
+### <a href="https://github.com/cos301-2019-se/Defendr" target="_blank">Git Repository</a>
 
 ---
 
@@ -205,16 +222,28 @@ I like playing Tennis and Squash.*
 > *[Sisa Khoza](https://www.linkedin.com/in/sisa-khoza-1b54a9100/)*
 
 ###### **Interests:**
-> **
+> - Music (playing and reading)
+> - Gaming
+> - Running and yoga
+> - Volunteer work
 
 ###### **Skills:**
-> **
+> - C++
+> - DBMS (MySQL, PostgreSQL, MongoDB, Neo4j)
+> - Java
+> - Organising and communicating across e-mediums
+> - Scripting: CSS/HTML/JS
+> - Self-motivated
 
 ###### **Work Experience:**
-> **
+> - AV tech @ Outlook Church (Jan 2010 - Nov 2014): I was in charge of creating and displaying visual media, and control of sound equipment in children&#39;s ministry. I would set up equipment before, and manage it during and after the service. My duties also covered training related to AV in children&#39;s ministry.
+My duties were the same in the adult ministry, except my position was that of a junior technician in the committee.
+> - Camarero @ Aandklas (Feb 2017 - Jul 2017) - A small stint in the hospitality industry, whilst at university, to earn some extra pocket money as well as to try to take on new responsibilities, and experience a working world environment with duties and deadlines.  The responsibilities of a waiter included hosting and tending to guest needs by; ensuring the general seating areas were clean and tidy before, during and after shifts, reception of new patrons, bridging the bar, kitchen, and main guest areas as well as tending to performing artists or members that would require the venue for events.
 
 ###### **Attitudes:**
-> **
+> ***"In every mistake I make is a nuggest of learning I can take"***
+>
+> I am an energetic, determined character that conducts myself with courage and discipline. I have a creative, resilient mind that overcomes obstacles with a pragmatic solution. This is coupled by my need to see tasks to completion; one could perceive as insitent, yet it is a motivator that enables me to go to lengths. I am enthusiastic to learn, and have a sincere interest in software and technology.
 
 `
 `
@@ -264,15 +293,17 @@ I like playing Tennis and Squash.*
 > - Pretoria Boys High School Tuckshop (unpaid work experience) 
 [2011-2012]
 
-> - Data capturer for CND Commodities 
+> - Data capture for CND Commodities 
 [2017]
 
 > - University of Pretoria Student Lab Technician (Laptop Support)
 [2018-Current]
 
+
 ###### **Attitudes:**
 > A highly motivated and hardworking individual, who has matriculated and is currently in final year BSc Computer Science. 
-Mechanically minded, with a methodical approach to working and an eagerness to learn and develop personal skills in a practical setting. Eventual career goal is to become a fully-qualified and experienced software developer.   
+Mechanically minded, with a methodical approach to working and an eagerness to learn and develop personal skills in a practical setting. Eventual career goal is to become a fully-qualified and experienced software developer.    
+
 
 `
 `
