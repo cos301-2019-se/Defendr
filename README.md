@@ -10,7 +10,9 @@ COS 301: Software Engineering
 
 ### [Software Requirements and Design Specification]()
 
+### [User manuel]()
 
+### [Testing policy]()
 `
 `
 
