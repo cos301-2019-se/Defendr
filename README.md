@@ -12,7 +12,7 @@ COS 301: Software Engineering
 
 ### [User manuel]()
 
-### [Testing policy]()
+### [Testing policy](https://github.com/cos301-2019-se/Defendr/blob/documentation/SRS/Defendr%20-%20Testing%20Policy.pdf)
 `
 `
 
