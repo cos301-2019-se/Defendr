@@ -18,7 +18,7 @@ Defendr is a blackbox implementation of a DoS protection service, as well as a n
 `
 `
 
-### <a href="https://drive.google.com/file/d/1YpIKjrMkexBQUJt1kwayPFfWzewIW0qs/view" target="_blank">Software Requirements Document</a>
+### <a href="https://drive.google.com/file/d/1B6Gmf1MHBGiXjkEtr72huafVrVRB8GIU/view?usp=sharing" target="_blank">Software Requirements Document</a>
 
 `
 `
