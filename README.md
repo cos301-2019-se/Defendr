@@ -18,12 +18,12 @@ Defendr is a blackbox implementation of a DoS protection service, as well as a n
 `
 `
 
-### <a href="" target="https://github.com/cos301-2019-se/Defendr/blob/documentation/SRS/Defendr%20-%20User%20manual.pdf">User Manual</a>
+### <a href="" target="https://drive.google.com/open?id=13v03M2EJjveZ5kJ2wQrZVEa1zdxaNSje">User Manual</a>
 
 `
 `
 
-### <a href="" target="_blank">Coding Standard Document</a>
+### <a href="https://drive.google.com/open?id=1X57C6ZVK4GKI6u2tL48yrhN9x3t03o1H" target="_blank">Coding Standard Document</a>
 
 `
 `
