@@ -3,7 +3,7 @@ import urllib.parse
 
 def addIp(db,ip):
     col = db["blacklist"]
-    data = {"Adress": ip}
+    data = {"adress": ip}
     col.insert_one(data)
 
 def connect():
@@ -14,7 +14,7 @@ def connect():
 
 def findPackets(db, ip):
     col = db["packets_list"]
-    query = {"Ip_source": ip}
+    query = {"ip_source": ip}
     doc = col.find(query,{ "_id": 0,"Server":0,"Ip_destination":0}).sort("Timestamp", -1)
     return doc
 
