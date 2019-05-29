@@ -65,7 +65,7 @@ class win_Logging:
     def search(self):
         db = databaseCon.connect()
         doc = databaseCon.findPackets(db, self.txtSearch.get())
-        self.txtbLogs.delete(0, tk.END)
+        self.txtbLogs.delete(1.0, tk.END)
         line="-------------------------------------------------------------------------------------------------------------------------------  \n"
         self.txtbLogs.insert(tk.END,(line))
         line="| ip_source \t \t | status \t \t | timestamp \t \t | country_id \t \t | ip_destination \t \t | server \t \t |reason \t | \n"
@@ -102,7 +102,7 @@ class win_Logging:
         _ana1color = '#d9d9d9' # X11 color: 'gray85'
         _ana2color = '#ececec' # Closest X11 color: 'gray92'
 
-        top.geometry("600x450+372+125")
+        top.geometry("700x450+372+125")
         top.title("Logs")
         top.configure(highlightcolor="black")
 
