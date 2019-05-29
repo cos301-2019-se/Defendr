@@ -65,6 +65,7 @@ class win_Logging:
     def search(self):
         db = databaseCon.connect()
         doc = databaseCon.findPackets(db, self.txtSearch.get())
+        self.txtbLogs.delete(0, tk.END)
         line="-------------------------------------------------------------------------------------------------------------------------------  \n"
         self.txtbLogs.insert(tk.END,(line))
         line="| ip_source \t \t | status \t \t | timestamp \t \t | country_id \t \t | ip_destination \t \t | server \t \t |reason \t | \n"
