@@ -29,6 +29,7 @@ import IPList_support
 import Home_support
 import Login_support
 import os.path
+from controller import controller
 
 def vp_start_gui():
     '''Starting point when module is the main routine.'''
@@ -70,6 +71,21 @@ class win_IPList:
         if (msg):
             destroy_win_IPList()
             Login_support.root.deiconify()
+
+    def removeIP(self):
+        c = controller("../../Documents/Defendr/Defendr/src/")
+        c.whiteListIP(self.lst_IPs.get(self.lst_IPs.curselection()))
+
+    def addIP(self):
+        c = controller("../../Documents/Defendr/Defendr/src/")
+        c.blacklistIP(self.txtIp.get())
+
+    def listIPs(self):
+        self.lst_IPs.delete(0, tk.END)
+        c = controller("../../Documents/Defendr/Defendr/src/")
+        ipList = c.getBlacklistedIpList()
+        for x in ipList:
+            self.lst_IPs.insert(tk.END, x)
 
     def __init__(self, top=None):
         '''This class configures and populates the toplevel window.
@@ -122,12 +138,14 @@ class win_IPList:
         self.btnAdd.place(relx=0.357, rely=0.379, height=31, width=69)
         self.btnAdd.configure(text='''Add IP''')
         self.btnAdd.configure(cursor="hand1")
+        self.btnAdd.configure(command=lambda: self.addIP())
 
         self.btnRemove = tk.Button(top)
         self.btnRemove.place(relx=0.821, rely=0.913, height=31, width=91)
         self.btnRemove.configure(text='''Remove IP''')
         self.btnRemove.configure(width=91)
         self.btnRemove.configure(cursor="hand1")
+        self.btnRemove.configure(command=lambda: self.removeIP())
 
         self.Label2 = tk.Label(top)
         self.Label2.place(relx=0.018, rely=0.512, height=151, width=349)
@@ -138,6 +156,11 @@ class win_IPList:
 
         self.menubar = tk.Menu(top,font="TkMenuFont",bg=_bgcolor,fg=_fgcolor)
         top.configure(menu = self.menubar)
+
+        self.btnList = tk.Button(top)
+        self.btnList.place(relx=0.714, rely=0.257, height=31, width=127)
+        self.btnList.configure(text='''List Blacklisted''')
+        self.btnList.configure(command=lambda: self.listIPs())
 
 if __name__ == '__main__':
     vp_start_gui()
