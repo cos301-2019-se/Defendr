@@ -8,7 +8,37 @@ COS 301: Software Engineering
 
 ---
 
-### <a href="https://drive.google.com/file/d/1YpIKjrMkexBQUJt1kwayPFfWzewIW0qs/view" target="_blank">Software Requirements Document</a>
+Defendr is a blackbox implementation of a DoS protection service, as well as a net-work load-balancer for various back-end applications.The service is to be situated between the client and server where requests from the clients are to pass through the service, dropping/blacklisting offending packets/IPs.  The service should employ direct server return andresponses from the server are to be sent directly back to the client, and not routed back via the service
+
+`
+`
+
+### <a href="https://drive.google.com/open?id=1UAk2N9ZLeGox6dzq6b_dwOLdDoai-QAD" target="_blank">Architectural Designs Documentation</a>
+
+`
+`
+
+### <a href="https://drive.google.com/file/d/1fMIwpRDyUtKfDtv8XeYkiXImZehMifj0/view?usp=sharing" target="_blank">Software Requirements Document (Demo 1)</a>
+
+`
+`
+
+### <a href="https://drive.google.com/file/d/1WKwamosGjpFtSdBxqHCGeYpZcPguVPPV/view?usp=sharing" target="_blank">Software Requirements Document (Demo 2)</a>
+
+`
+`
+
+### <a href="https://drive.google.com/file/d/16HMLXNs6igLC9BK6u2KTkemjCk2Sd1z7/view?usp=sharing" target="_blank">Coding Standard Document</a>
+
+`
+`
+
+### <a href="https://drive.google.com/file/d/1gg-gwMBAtjV99CK1PoR5UQamc9A52H-Z/view?usp=sharing" target="_blank">Testing Policy Document</a>
+
+`
+`
+
+### <a href="https://drive.google.com/file/d/1VKU_DFrgGaSlJBkBHO6Yh30-303VOBFZ/view?usp=sharing" target="_blank">User Manual Document</a>
 
 `
 `
