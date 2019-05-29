@@ -259,10 +259,10 @@ u32 parse_ipv4(struct xdp_md *ctx, u64 l3_offset)
 	u64 *value;
 	u32 ip_src; /* type need to match map */
 	
-    __u64 initialDrop = 0;
-	__u64 initialEnter = 0;
-	__u64 initialPass = 0;
-	__u64 initialValue = 0;
+    __u64 initialDrop = 1;
+	__u64 initialEnter = 1;
+	__u64 initialPass = 1;
+	__u64 initialValue = 1;
 	
 	
 	/* Hint: +1 is sizeof(struct iphdr) */
@@ -277,11 +277,12 @@ u32 parse_ipv4(struct xdp_md *ctx, u64 l3_offset)
 /**************************************************************/
 	ip_src = ntohl(ip_src);  
 /****************************************************************/
-
-	bpf_map_update_elem(&enter_logs,&ip_src,&initialEnter,BPF_NOEXIST);
+	
 	value = bpf_map_lookup_elem(&enter_logs,&ip_src);
 	if (value) {
 		*value += 1;
+	}else{
+		bpf_map_update_elem(&enter_logs,&ip_src,&initialEnter,BPF_NOEXIST);
 	}	
 
 
@@ -290,25 +291,29 @@ u32 parse_ipv4(struct xdp_md *ctx, u64 l3_offset)
 	if (value) {
 		/* Don't need __sync_fetch_and_add(); as percpu map */
 		*value += 1; /* Keep a counter for drop matches */		
-		
-	    bpf_map_update_elem(&drop_logs,&ip_src,&initialDrop,BPF_NOEXIST);
+			    
 		value = bpf_map_lookup_elem(&drop_logs,&ip_src);
 		if (value) {
 			*value += 1;
+		}else{
+			bpf_map_update_elem(&drop_logs,&ip_src,&initialDrop,BPF_NOEXIST);
 		}
 		
 		return XDP_DROP;
 	}else{
-		bpf_map_update_elem(&ip_watchlist,&ip_src,&initialValue,BPF_NOEXIST);
+		
 		value = bpf_map_lookup_elem(&ip_watchlist,&ip_src);
 		if (value) {
 			*value += 1;
+		}else{
+			bpf_map_update_elem(&ip_watchlist,&ip_src,&initialValue,BPF_NOEXIST);
 		}
-		
-		bpf_map_update_elem(&pass_logs,&ip_src,&initialPass,BPF_NOEXIST);
+				
 		value = bpf_map_lookup_elem(&pass_logs,&ip_src);
 		if (value) {
 			*value += 1;
+		}else{
+			bpf_map_update_elem(&pass_logs,&ip_src,&initialPass,BPF_NOEXIST);
 		}
 	}
 	return parse_port(ctx, iph->protocol, iph + 1);
