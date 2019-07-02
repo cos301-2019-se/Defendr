@@ -40,6 +40,7 @@ static const struct option long_options[] = {
 	{"tcp-dport",	required_argument,	NULL, 't' },
 	{"dynamic",	no_argument,		NULL, 'd' },
 	{"log",	no_argument,		NULL, 'g' },
+	{"backend",	no_argument,		NULL, 'b' },
 	{0, 0, NULL,  0 }
 };
 
@@ -429,12 +430,24 @@ static  void start_logging(){
 		}		    
 }
 
+/*modify backends*/
+static void modifyBackends(char* ip,unsigned int action){
+	if(action == ACTION_ADD){
+		printf("adding backend with ip %s\n",ip);
+	}else{
+		printf("removing backend with ip %s\n",ip);
+	}
+	
+}
+
+/*Interface for interacting with bpf maps*/
 int main(int argc, char **argv)
 {
 #	define STR_MAX 42 /* For trivial input validation */
 	char _ip_string_buf[STR_MAX] = {};
 	char *ip_string = NULL;
-
+	/*char _backend_string_buf[STR_MAX] = {};
+	char *backend_name = NULL;*/
 	unsigned int action = 0;
 	bool stats = false;
 	int interval = 1;
@@ -450,7 +463,7 @@ int main(int argc, char **argv)
 	int dport = 0;
 	int proto = IPPROTO_TCP;
 	int filter = DDOS_FILTER_TCP;
-
+	bool backend = false;
 	while ((opt = getopt_long(argc, argv, "adshi:t:u:",
 				  long_options, &longindex)) != -1) {
 		switch (opt) {
@@ -462,11 +475,20 @@ int main(int argc, char **argv)
 			break;
 		case 'i':
 			if (!optarg || strlen(optarg) >= STR_MAX) {
-				printf("ERR: src ip too long or NULL\n");
+				printf("ERR:  ip too long or NULL\n");
 				goto fail_opt;
 			}
 			ip_string = (char *)&_ip_string_buf;
 			strncpy(ip_string, optarg, STR_MAX);
+			break;
+		case 'b':
+			/*if (!optarg || strlen(optarg) >= STR_MAX) {
+				printf("ERR: backend name too long or NULL\n");
+				goto fail_opt;
+			}
+			backend_name = (char *)&_backend_string_buf;
+			strncpy(backend_name, optarg, STR_MAX);*/
+			backend = true;
 			break;
 		case 'u':
 			proto = IPPROTO_UDP;
@@ -504,11 +526,12 @@ int main(int argc, char **argv)
 
 		if (!ip_string && !dport) {
 			fprintf(stderr,
-			  "ERR: action require type+data, e.g option --ip\n");
+			  "");
 			goto fail_opt;
 		}
-
-		if (ip_string) {
+		if(ip_string && backend){			
+			modifyBackends(ip_string,action);
+		}else if (ip_string) {
 			fd_blacklist = open_bpf_map(file_blacklist);
 			res = blacklist_modify(fd_blacklist, ip_string, action);
 			close(fd_blacklist);

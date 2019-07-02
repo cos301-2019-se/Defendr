@@ -17,6 +17,9 @@
 #define BPF_ANY       0 /* create new element or update existing */
 #define BPF_NOEXIST   1 /* create new element only if it didn't exist */
 #define BPF_EXIST     2 /* only update existing element */
+#define MAX_SERVERS 512
+#define JHASH_INITVAL	0xdeadbeef
+#define IP_FRAGMENTED 65343
 
 enum {
 	DDOS_FILTER_TCP = 0,
@@ -27,6 +30,23 @@ enum {
 struct vlan_hdr {
 	__be16 h_vlan_TCI;
 	__be16 h_vlan_encapsulated_proto;
+};
+
+struct pkt_meta {
+	__be32 src;
+	__be32 dst;
+	union {
+		__u32 ports;
+		__u16 port16[2];
+	};
+};
+
+struct dest_info {
+	__u32 saddr;
+	__u32 daddr;
+	__u64 bytes;
+	__u64 pkts;
+	__u8 dmac[6];
 };
 
 struct bpf_map_def SEC("maps") blacklist = {
@@ -69,6 +89,13 @@ struct bpf_map_def SEC("maps") pass_logs = {
 	.map_flags   = BPF_F_NO_PREALLOC,
 };
 
+struct bpf_map_def SEC("maps") servers = {
+	.type = BPF_MAP_TYPE_HASH,
+	.key_size = sizeof(__u32),
+	.value_size = sizeof(struct dest_info),
+	.max_entries = MAX_SERVERS,
+};
+
 #define XDP_ACTION_MAX (XDP_TX + 1)
 
 /* Counter per XDP "action" verdict */
@@ -104,6 +131,41 @@ struct bpf_map_def SEC("maps") port_blacklist_drop_count_udp = {
 	.max_entries = 65536,
 };
 
+static inline u32 hash(u32 a, u32 b, u32 initval){
+	initval += JHASH_INITVAL + (2 << 2);
+	a += initval;
+	b += initval;
+	u32 c = 0;
+	c += initval;
+
+    c ^= b; c -= rol32(b, 14);		
+	a ^= c; a -= rol32(c, 11);		
+	b ^= a; b -= rol32(a, 25);		
+	c ^= b; c -= rol32(b, 16);		
+	a ^= c; a -= rol32(c, 4);		
+	b ^= a; b -= rol32(a, 14);		
+	c ^= b; c -= rol32(b, 24); 
+
+	return c;
+}
+
+static __always_inline struct dest_info *hash_get_dest(struct pkt_meta *pkt)
+{
+	__u32 key;
+	struct dest_info *tnl;
+
+	/* hash packet source ip with both ports to obtain a destination */
+	key = hash(pkt->src, pkt->ports, MAX_SERVERS) % MAX_SERVERS;
+
+	/* get destination's network details from map */
+	tnl = bpf_map_lookup_elem(&servers, &key);
+	if (!tnl) {
+		/* if entry doesn't exist, use key 0 */
+		key = 0;
+		tnl = bpf_map_lookup_elem(&servers, &key);
+	}
+	return tnl;
+}
 
 static inline struct bpf_map_def *drop_count_by_fproto(int fproto) {
 
@@ -149,134 +211,94 @@ void stats_action_verdict(u32 action)
 		*value += 1;
 }
 
-/* Parse Ethernet layer 2, extract network layer 3 offset and protocol
- *
- * Returns false on error and non-supported ether-type
- */
-static __always_inline
-bool parse_eth(struct ethhdr *eth, void *data_end,
-	       u16 *eth_proto, u64 *l3_offset)
+/*Extracts source and destination udp ports*/
+static __always_inline bool parse_udp(void *data, __u64 off, void *data_end,
+				      struct pkt_meta *pkt)
 {
-	u16 eth_type;
-	u64 offset;
+	struct udphdr *udp;
 
-	offset = sizeof(*eth);
-	if ((void *)eth + offset > data_end)
+	udp = data + off;
+	if (udp + 1 > data_end)
 		return false;
 
-	eth_type = eth->h_proto;
-	bpf_debug("Debug: eth_type:0x%x\n", ntohs(eth_type));
+	pkt->port16[0] = udp->source;
+	pkt->port16[1] = udp->dest;
 
-	/* Skip non 802.3 Ethertypes */
-	if (unlikely(ntohs(eth_type) < ETH_P_802_3_MIN))
-		return false;
-
-	/* Handle VLAN tagged packet */
-	if (eth_type == htons(ETH_P_8021Q) || eth_type == htons(ETH_P_8021AD)) {
-		struct vlan_hdr *vlan_hdr;
-
-		vlan_hdr = (void *)eth + offset;
-		offset += sizeof(*vlan_hdr);
-		if ((void *)eth + offset > data_end)
-			return false;
-		eth_type = vlan_hdr->h_vlan_encapsulated_proto;
-	}
-	/* Handle double VLAN tagged packet */
-	if (eth_type == htons(ETH_P_8021Q) || eth_type == htons(ETH_P_8021AD)) {
-		struct vlan_hdr *vlan_hdr;
-
-		vlan_hdr = (void *)eth + offset;
-		offset += sizeof(*vlan_hdr);
-		if ((void *)eth + offset > data_end)
-			return false;
-		eth_type = vlan_hdr->h_vlan_encapsulated_proto;
-	}
-
-	*eth_proto = ntohs(eth_type);
-	*l3_offset = offset;
 	return true;
 }
 
-u32 parse_port(struct xdp_md *ctx, u8 proto, void *hdr)
+/*Extracts source and destination tcp ports*/
+static __always_inline bool parse_tcp(void *data, __u64 off, void *data_end,
+				      struct pkt_meta *pkt)
 {
-	void *data_end = (void *)(long)ctx->data_end;
-	struct udphdr *udph;
-	struct tcphdr *tcph;
-	u32 *value;
-	u32 *drops;
-	u32 dport;
-	u32 dport_idx;
-	u32 fproto;
+	struct tcphdr *tcp;
 
-	switch (proto) {
-	case IPPROTO_UDP:
-		udph = hdr;
-		if (udph + 1 > data_end) {
-			bpf_debug("Invalid UDPv4 packet: L4off:%llu\n",
-				  sizeof(struct iphdr) + sizeof(struct udphdr));
-			return XDP_ABORTED;
-		}
-		dport = ntohs(udph->dest);
-		fproto = DDOS_FILTER_UDP;
-		break;
-	case IPPROTO_TCP:
-		tcph = hdr;
-		if (tcph + 1 > data_end) {
-			bpf_debug("Invalid TCPv4 packet: L4off:%llu\n",
-				  sizeof(struct iphdr) + sizeof(struct tcphdr));
-			return XDP_ABORTED;
-		}
-		dport = ntohs(tcph->dest);
-		fproto = DDOS_FILTER_TCP;
-		break;
-	default:
-		return XDP_PASS;
-	}
+	tcp = data + off;
+	if (tcp + 1 > data_end)
+		return false;
 
-	dport_idx = dport;
-	value = bpf_map_lookup_elem(&port_blacklist, &dport_idx);
+	pkt->port16[0] = tcp->source;
+	pkt->port16[1] = tcp->dest;
 
-	if (value) {
-		if (*value & (1 << fproto)) {
-			struct bpf_map_def *drop_counter = drop_count_by_fproto(fproto);
-			if (drop_counter) {
-				drops = bpf_map_lookup_elem(drop_counter , &dport_idx);
-				if (drops)
-					*drops += 1; /* Keep a counter for drop matches */
-			}
-			return XDP_DROP;
-		}
-	}
-	return XDP_PASS;
+	return true;
 }
 
-static __always_inline
-u32 parse_ipv4(struct xdp_md *ctx, u64 l3_offset)
+/* sets new eth header for packet
+ */ 
+static __always_inline void set_ethhdr(struct ethhdr *new_eth,
+				       const struct ethhdr *old_eth,
+				       const struct dest_info *tnl,
+				       __be16 h_proto)
 {
-	void *data_end = (void *)(long)ctx->data_end;
-	void *data     = (void *)(long)ctx->data;
-	struct iphdr *iph = data + l3_offset;
+	memcpy(new_eth->h_source, old_eth->h_dest, sizeof(new_eth->h_source));
+	memcpy(new_eth->h_dest, tnl->dmac, sizeof(new_eth->h_dest));
+	new_eth->h_proto = h_proto;
+}
+
+
+/*function for processing and evaluating packet headers as wel as updating event stores
+ * @param ctx context for particular packet
+ * @param
+ * @return action to be taken for given packet
+ */
+static __always_inline int process_packet(struct xdp_md *ctx, __u64 off)
+{
 	u64 *value;
-	u32 ip_src; /* type need to match map */
-	
-    __u64 initialDrop = 1;
+	__u64 initialDrop = 1;
 	__u64 initialEnter = 1;
 	__u64 initialPass = 1;
 	__u64 initialValue = 1;
-	
-	
-	/* Hint: +1 is sizeof(struct iphdr) */
-	if (iph + 1 > data_end) {
-		bpf_debug("Invalid IPv4 packet: L3off:%llu\n", l3_offset);
-		return XDP_ABORTED;
-	}
-	/* Extract key */
+	void *data_end = (void *)(long)ctx->data_end;
+	void *data = (void *)(long)ctx->data;
+	//struct pkt_meta pkt = {};
+	//struct ethhdr *new_eth;
+	//struct ethhdr *old_eth;
+	//struct dest_info *tnl;
+	//struct iphdr iph_tnl;
+	struct iphdr *iph;
+	//__u16 *next_iph_u16;
+	//__u16 pkt_size;
+	__u16 payload_len;
+	__u8 protocol;
+	//u32 csum = 0;
+	u32 ip_src;
+
+	iph = data + off;
+	if (iph + 1 > data_end)
+		return XDP_DROP;
+	if (iph->ihl != 5)
+		return XDP_DROP;
+
+	protocol = iph->protocol;
+	payload_len = ntohs(iph->tot_len);
+	off += sizeof(struct iphdr);
+
+	/* do not support fragmented packets as L4 headers may be missing */
+	if (iph->frag_off & IP_FRAGMENTED)
+		return XDP_DROP;
+
 	ip_src = iph->saddr;
-
-
-/**************************************************************/
-	ip_src = ntohl(ip_src);  
-/****************************************************************/
+	ip_src = ntohl(ip_src); 
 	
 	value = bpf_map_lookup_elem(&enter_logs,&ip_src);
 	if (value) {
@@ -284,9 +306,7 @@ u32 parse_ipv4(struct xdp_md *ctx, u64 l3_offset)
 	}else{
 		bpf_map_update_elem(&enter_logs,&ip_src,&initialEnter,BPF_NOEXIST);
 	}	
-
-
-	bpf_debug("Valid IPv4 packet: raw saddr:0x%x\n", ip_src);
+	
 	value = bpf_map_lookup_elem(&blacklist, &ip_src);
 	if (value) {
 		/* Don't need __sync_fetch_and_add(); as percpu map */
@@ -316,44 +336,35 @@ u32 parse_ipv4(struct xdp_md *ctx, u64 l3_offset)
 			bpf_map_update_elem(&pass_logs,&ip_src,&initialPass,BPF_NOEXIST);
 		}
 	}
-	return parse_port(ctx, iph->protocol, iph + 1);
-}
 
-static __always_inline
-u32 handle_eth_protocol(struct xdp_md *ctx, u16 eth_proto, u64 l3_offset)
-{
-	switch (eth_proto) {
-	case ETH_P_IP:
-		return parse_ipv4(ctx, l3_offset);
-		break;
-	case ETH_P_IPV6: /* Not handler for IPv6 yet*/
-	case ETH_P_ARP:  /* Let OS handle ARP */
-		/* Fall-through */
-	default:
-		bpf_debug("Not handling eth_proto:0x%x\n", eth_proto);
-		return XDP_PASS;
-	}
 	return XDP_PASS;
 }
 
+/*Entry point for xdp program which gets packet data and keeps track of verdicts
+ *@param ctx given packet context to be evaluated
+ *@return action for given packet
+ */
 SEC("xdp_prog")
 int  xdp_program(struct xdp_md *ctx)
 {
 	void *data_end = (void *)(long)ctx->data_end;
-	void *data     = (void *)(long)ctx->data;
+	void *data = (void *)(long)ctx->data;
 	struct ethhdr *eth = data;
-	u16 eth_proto = 0;
-	u64 l3_offset = 0;
+	__u32 eth_proto;
+	__u32 nh_off;
 	u32 action;
 
-	if (!(parse_eth(eth, data_end, &eth_proto, &l3_offset))) {
-		bpf_debug("Cannot parse L2: L3off:%llu proto:0x%x\n",
-			  l3_offset, eth_proto);
-		return XDP_PASS; /* Skip */
-	}
-	bpf_debug("Reached L3: L3off:%llu proto:0x%x\n", l3_offset, eth_proto);
+	nh_off = sizeof(struct ethhdr);
+	if (data + nh_off > data_end)
+		return XDP_DROP;
+	eth_proto = eth->h_proto;
 
-	action = handle_eth_protocol(ctx, eth_proto, l3_offset);
+	/* program only evaluates ipv4 packets */
+	if (eth_proto == htons(ETH_P_IP))
+		action = process_packet(ctx, nh_off);
+	else
+		action = XDP_PASS;
+		
 	stats_action_verdict(action);
 	return action;
 }
