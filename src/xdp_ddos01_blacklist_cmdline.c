@@ -27,6 +27,11 @@ static const char *__doc__=
 #include "bpf_util.h"
 
 #include "xdp_ddos01_blacklist_common.h"
+#include "structs.h"
+
+#define BPF_ANY       0 /* create new element or update existing */
+#define BPF_NOEXIST   1 /* create new element only if it didn't exist */
+#define BPF_EXIST     2 /* only update existing element */
 
 static const struct option long_options[] = {
 	{"help",	no_argument,		NULL, 'h' },
@@ -40,7 +45,9 @@ static const struct option long_options[] = {
 	{"tcp-dport",	required_argument,	NULL, 't' },
 	{"dynamic",	no_argument,		NULL, 'd' },
 	{"log",	no_argument,		NULL, 'g' },
-	{"backend",	no_argument,		NULL, 'b' },
+	{"backend",	required_argument,		NULL, 'b' },
+	{"port",	required_argument,		NULL, 'p' },
+	{"service",	required_argument,		NULL, 'n' },
 	{0, 0, NULL,  0 }
 };
 
@@ -430,14 +437,60 @@ static  void start_logging(){
 		}		    
 }
 
-/*modify backends*/
-static void modifyBackends(char* ip,unsigned int action){
-	if(action == ACTION_ADD){
-		printf("adding backend with ip %s\n",ip);
-	}else{
-		printf("removing backend with ip %s\n",ip);
-	}
-	
+/*add backend server*/
+static void addBackend(char* service_ip,char* backend_ip,char* backend_port){
+	if (verbose) printf("adding backend with ip %s listening on port %s to service %s\n",backend_ip,backend_port,service_ip);
+    int fd_services = open_bpf_map(file_services); 
+    int fd_servers = open_bpf_map(file_servers);  
+	service_modify(fd_services,fd_servers, service_ip,backend_ip, atoi(backend_port),ACTION_ADD);
+	close(fd_services);
+	close(fd_servers);
+}
+
+/*remove backend server*/
+static void removeBackend(char* service_ip,char* backend_ip){
+	if (verbose) printf("removing backend with ip %s from service %s\n",backend_ip,service_ip);	
+	int fd_services = open_bpf_map(file_services); 
+    int fd_servers = open_bpf_map(file_servers);  
+	service_modify(fd_services,fd_servers, service_ip,backend_ip,0,ACTION_DEL);
+	close(fd_services);
+	close(fd_servers);
+}
+
+static void printServiceBackends(char* service_ip){
+	if(verbose) printf("Listing backends for service %s\n",service_ip);
+	 __u32 key,prev_key;
+	 int res = inet_pton(AF_INET, service_ip, &key);
+	 if (res <= 0) {
+		if (res == 0)
+			fprintf(stderr,
+				"ERR: IPv4 \"%s\" not in presentation format\n",
+				service_ip);
+		else
+			perror("inet_pton");
+		return EXIT_FAIL_IP;
+	 }
+	 
+	 struct service *value = (struct service*)malloc(sizeof(struct service));
+	 int fd_services = open_bpf_map(file_services);  
+	 int fd_servers = open_bpf_map(file_servers);  
+	 res = bpf_map_lookup_elem(fd_services,&key,value); 
+	 if(res == 0){
+		for(int i = 0;i < value->num_servers;++i){
+			 struct dest_info *backend =(struct dest_info*)malloc(sizeof(struct dest_info));
+			__u32 id = value->id+i+1;
+			res = bpf_map_lookup_elem(fd_servers,&id,backend); 
+			if(res==0){
+					char ip_txt[INET_ADDRSTRLEN] = {0};
+					if (inet_ntop(AF_INET, &(backend->daddr), ip_txt, sizeof(ip_txt))) {	
+						printf("server %s with id %d listening on port %d \n", ip_txt,id,backend->port);								
+					}			
+			}
+
+		 }	
+	 }
+	 close(fd_services);
+	 close(fd_servers);
 }
 
 /*Interface for interacting with bpf maps*/
@@ -446,8 +499,12 @@ int main(int argc, char **argv)
 #	define STR_MAX 42 /* For trivial input validation */
 	char _ip_string_buf[STR_MAX] = {};
 	char *ip_string = NULL;
-	/*char _backend_string_buf[STR_MAX] = {};
-	char *backend_name = NULL;*/
+	char _service_ip_buf[STR_MAX] = {};
+	char *service_ip = NULL;
+	/*char _backend_ip_buf[STR_MAX] = {};
+	char *backend_ip = NULL;*/
+	char _backend_port_buf[STR_MAX] = {};
+	char *backend_port = NULL;
 	unsigned int action = 0;
 	bool stats = false;
 	int interval = 1;
@@ -463,7 +520,6 @@ int main(int argc, char **argv)
 	int dport = 0;
 	int proto = IPPROTO_TCP;
 	int filter = DDOS_FILTER_TCP;
-	bool backend = false;
 	while ((opt = getopt_long(argc, argv, "adshi:t:u:",
 				  long_options, &longindex)) != -1) {
 		switch (opt) {
@@ -481,14 +537,21 @@ int main(int argc, char **argv)
 			ip_string = (char *)&_ip_string_buf;
 			strncpy(ip_string, optarg, STR_MAX);
 			break;
-		case 'b':
-			/*if (!optarg || strlen(optarg) >= STR_MAX) {
-				printf("ERR: backend name too long or NULL\n");
+		case 'p':
+			if (!optarg || strlen(optarg) >= STR_MAX) {
+				printf("ERR: port number too long or NULL\n");
 				goto fail_opt;
 			}
-			backend_name = (char *)&_backend_string_buf;
-			strncpy(backend_name, optarg, STR_MAX);*/
-			backend = true;
+			backend_port = (char *)&_backend_port_buf;
+			strncpy(backend_port, optarg, STR_MAX);
+			break;
+		case 'n':
+			if (!optarg || strlen(optarg) >= STR_MAX) {
+				printf("ERR: service ip too long or NULL\n");
+				goto fail_opt;
+			}
+			service_ip = (char *)&_service_ip_buf;
+			strncpy(service_ip, optarg, STR_MAX);
 			break;
 		case 'u':
 			proto = IPPROTO_UDP;
@@ -529,8 +592,13 @@ int main(int argc, char **argv)
 			  "");
 			goto fail_opt;
 		}
-		if(ip_string && backend){			
-			modifyBackends(ip_string,action);
+		
+		if(service_ip){			
+			if(action == ACTION_ADD){
+				addBackend(service_ip,ip_string,backend_port);
+			}else{
+				removeBackend(service_ip,ip_string);
+			}
 		}else if (ip_string) {
 			fd_blacklist = open_bpf_map(file_blacklist);
 			res = blacklist_modify(fd_blacklist, ip_string, action);
@@ -555,22 +623,26 @@ int main(int argc, char **argv)
 	}
 
 	if (do_list) {
-		printf("{");
-		int fd_port_blacklist_count_array[DDOS_FILTER_MAX];
-		int i;
+		if(service_ip){
+			printServiceBackends(service_ip);
+		}else{
+			printf("{");
+			int fd_port_blacklist_count_array[DDOS_FILTER_MAX];
+			int i;
 
-		fd_blacklist = open_bpf_map(file_blacklist);
-		blacklist_list_all_ipv4(fd_blacklist);
-		close(fd_blacklist);
+			fd_blacklist = open_bpf_map(file_blacklist);
+			blacklist_list_all_ipv4(fd_blacklist);
+			close(fd_blacklist);
 
-		fd_port_blacklist = open_bpf_map(file_port_blacklist);
-		for (i = 0; i < DDOS_FILTER_MAX; i++)
-			fd_port_blacklist_count_array[i] = open_bpf_map(file_port_blacklist_count[i]);
-		blacklist_list_all_ports(fd_port_blacklist, fd_port_blacklist_count_array);
-		close(fd_port_blacklist);
-		printf("\n}\n");
-		for (i = 0; i < DDOS_FILTER_MAX; i++)
+			fd_port_blacklist = open_bpf_map(file_port_blacklist);
+			for (i = 0; i < DDOS_FILTER_MAX; i++)
+				fd_port_blacklist_count_array[i] = open_bpf_map(file_port_blacklist_count[i]);
+			blacklist_list_all_ports(fd_port_blacklist, fd_port_blacklist_count_array);
+			close(fd_port_blacklist);
+			printf("\n}\n");
+			for (i = 0; i < DDOS_FILTER_MAX; i++)
 			close(fd_port_blacklist_count_array[i]);
+		}
 	}
 
 	/* Show statistics by polling */

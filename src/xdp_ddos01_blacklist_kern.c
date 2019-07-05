@@ -13,6 +13,7 @@
 #include <uapi/linux/tcp.h>
 #include <uapi/linux/udp.h>
 #include "bpf_helpers.h"
+#include "structs.h"
 
 #define BPF_ANY       0 /* create new element or update existing */
 #define BPF_NOEXIST   1 /* create new element only if it didn't exist */
@@ -39,14 +40,6 @@ struct pkt_meta {
 		__u32 ports;
 		__u16 port16[2];
 	};
-};
-
-struct dest_info {
-	__u32 saddr;
-	__u32 daddr;
-	__u64 bytes;
-	__u64 pkts;
-	__u8 dmac[6];
 };
 
 struct bpf_map_def SEC("maps") blacklist = {
@@ -91,10 +84,18 @@ struct bpf_map_def SEC("maps") pass_logs = {
 
 struct bpf_map_def SEC("maps") servers = {
 	.type = BPF_MAP_TYPE_HASH,
-	.key_size = sizeof(__u32),
+	.key_size = sizeof(u32),
 	.value_size = sizeof(struct dest_info),
 	.max_entries = MAX_SERVERS,
 };
+
+struct bpf_map_def SEC("maps") services = {
+	.type = BPF_MAP_TYPE_HASH,
+	.key_size = sizeof(u32),
+	.value_size = sizeof(struct service),
+	.max_entries = MAX_SERVERS,
+};
+
 
 #define XDP_ACTION_MAX (XDP_TX + 1)
 
@@ -245,7 +246,7 @@ static __always_inline bool parse_tcp(void *data, __u64 off, void *data_end,
 
 /* sets new eth header for packet
  */ 
-static __always_inline void set_ethhdr(struct ethhdr *new_eth,
+/*static __always_inline void set_ethhdr(struct ethhdr *new_eth,
 				       const struct ethhdr *old_eth,
 				       const struct dest_info *tnl,
 				       __be16 h_proto)
@@ -253,7 +254,7 @@ static __always_inline void set_ethhdr(struct ethhdr *new_eth,
 	memcpy(new_eth->h_source, old_eth->h_dest, sizeof(new_eth->h_source));
 	memcpy(new_eth->h_dest, tnl->dmac, sizeof(new_eth->h_dest));
 	new_eth->h_proto = h_proto;
-}
+}*/
 
 
 /*function for processing and evaluating packet headers as wel as updating event stores
