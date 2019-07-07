@@ -78,10 +78,11 @@ class win_Login:
         db = databaseCon.connect()
 
         if(databaseCon.checkPass(db,user,passw)):
-            messagebox.showinfo("Login Page", "Success")
+            roll =databaseCon.getRoll(db,user)
+            messagebox.showinfo("Login Page", "Successly log in as "+roll)
             self.txtUser.delete(0, 'end')
             self.txtPass.delete(0, 'end')
-            Login_support.createMain()
+            Login_support.createMain(roll)
         else:
             self.txtPass.delete(0, 'end')
             messagebox.showwarning("Login Page", "Incorrect Username or Password")

@@ -32,8 +32,8 @@ def destroy_window():
     top_level.destroy()
     top_level = None
 
-def createMain():
-    Home.create_win_Home(root)
+def createMain(roll):
+    Home.create_win_Home(root,roll)
     root.withdraw()
 
 if __name__ == '__main__':

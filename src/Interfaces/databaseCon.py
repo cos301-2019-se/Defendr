@@ -62,6 +62,19 @@ def removeUser(db,name,roll,salt, password):
     query = {"name": name, "roll": roll, "salt": salt, "password": password}
     col.delete_one(query)
 
+def printUsers(db):
+    mycol = db["user"]
+    lines = "---------------------\n"
+    for x in mycol.find({}, {"_id": 0, "salt": 0, "password": 0}):
+        temp = str(x)
+        name = temp.split('\'')[3]
+        if (len(name) < 7):
+            name = name + '\t'
+        roll = temp.split('\'')[7]
+        lines = lines + "|" + name + "\t|" + roll + "\t|" + '\n'
+    lines = lines + "---------------------"
+    return lines
+
 #sign in function class
 def checkPass(db, name, password):
     salt=getSalt(db,name)
@@ -84,21 +97,21 @@ def makeSalt():
 def remove(db,name):
     salt = getSalt(db,name)
     if salt=="notFond":
-        return salt
+        return name + " not removed"
     roll = getRoll(db,name)
     if roll=="notFond":
-        return roll
+        return name+" not removed"
     password = getPassword(db,name)
     if password=="notFond":
-        return password
+        return name+" not removed"
     removeUser(db, name, roll, salt, password)
-    return "removed"
+    return name+" removed"
 
 def makeNewUser(db, name, password, roll):
     # check if name is used
     check = getSalt(db, name)
     if check !="notFond":
-        return name+" is in use"
+        return name+" is an use"
     # make salt and hash
     salt = makeSalt()
     hashpassword = hashFunction(password, salt)
