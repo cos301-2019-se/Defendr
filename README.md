@@ -110,7 +110,7 @@ Defendr is a blackbox implementation of a DoS protection service, as well as a n
 `
 `
 
-![image](https://media.licdn.com/dms/image/C5603AQEcRaGu0KZwUg/profile-displayphoto-shrink_800_800/0?e=1562198400&v=beta&t=kv-s95xApHY9iEgiK4pzpJFORObmn_9qXCQN6VISBtE)
+![image](https://media.licdn.com/dms/image/C5603AQEcRaGu0KZwUg/profile-displayphoto-shrink_800_800/0?e=1568246400&v=beta&t=p--RAkds7f-HHZbdNsYkG22_fKuUjQtNebe51gyoah4)
 
 ###### **Name and surname:**
 > *Christiaan Opperman*
