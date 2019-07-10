@@ -58,7 +58,7 @@ Defendr is a blackbox implementation of a DoS protection service, as well as a n
  `
 
  
-![image](https://media.licdn.com/dms/image/C4D03AQFWIUl2J6e8wQ/profile-displayphoto-shrink_200_200/0?e=1562198400&v=beta&t=O83MvAzLuKANuQ5bpX6HocdqgED9dniiceO2emz6Ulk)
+![image](https://media.licdn.com/dms/image/C4D03AQFWIUl2J6e8wQ/profile-displayphoto-shrink_800_800/0?e=1568246400&v=beta&t=PRpolwWr9AKJhMN5BfrHZYuepV8JYWW6wXRAHQ8mMzI)
 
 ###### **Name and surname:**
 >   *Jeandre Botha*
@@ -174,7 +174,7 @@ stead. Negativity never accomplishes much.
 `
 `
 
-![image](https://media.licdn.com/dms/image/C4D03AQH8fDsAcRQH4w/profile-displayphoto-shrink_800_800/0?e=1557360000&v=beta&t=-Ob051JQyHnBh_km79iusE_eRnGIvRuawz0vm_wbkLU)
+![image](https://media.licdn.com/dms/image/C4D03AQFTSE8JZvAYxg/profile-displayphoto-shrink_800_800/0?e=1568246400&v=beta&t=Gkpn2YEJ0pipopHcOXVtECx8cVktZvoMvXCVS9vGbSI)
 
 ###### **Name and surname:**
 >*Muhammed Carrim*
