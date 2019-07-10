@@ -1,0 +1,26 @@
+﻿<Properties StartupConfiguration="{03E6D9E3-37B7-443A-B9BE-EBCD71E9E3F4}|Default">
+  <MonoDevelop.Ide.Workbench ActiveDocument="xdp_controller/Program.cs">
+    <Files>
+      <File FileName="xdp_controller/Program.cs" Line="38" Column="51" />
+      <File FileName="xdp_controller/XdpController.cs" Line="16" Column="71" />
+    </Files>
+    <Pads>
+      <Pad Id="ProjectPad">
+        <State name="__root__">
+          <Node name="xdp_controller" expanded="True">
+            <Node name="xdp_controller" expanded="True">
+              <Node name="Packages" expanded="True" />
+            </Node>
+          </Node>
+        </State>
+      </Pad>
+    </Pads>
+  </MonoDevelop.Ide.Workbench>
+  <MonoDevelop.Ide.DebuggingService.PinnedWatches />
+  <MonoDevelop.Ide.Workspace ActiveConfiguration="Release|x86" />
+  <MonoDevelop.Ide.ItemProperties.xdp__controller PreferredExecutionTarget="MonoDevelop.Default" />
+  <MonoDevelop.Ide.DebuggingService.Breakpoints>
+    <BreakpointStore />
+  </MonoDevelop.Ide.DebuggingService.Breakpoints>
+  <MultiItemStartupConfigurations />
+</Properties>
