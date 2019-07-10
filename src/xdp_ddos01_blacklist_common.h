@@ -33,6 +33,7 @@ static const char *file_drop_logs   = "/sys/fs/bpf/ddos_blacklist_drop_logs";
 static const char *file_pass_logs   = "/sys/fs/bpf/ddos_blacklist_pass_logs";
 static const char *file_servers   = "/sys/fs/bpf/ddos_blacklist_servers";
 static const char *file_services   = "/sys/fs/bpf/ddos_blacklist_services";
+static const char *file_destinations   = "/sys/fs/bpf/ddos_blacklist_destinations";
 
 
 static const char *file_port_blacklist = "/sys/fs/bpf/ddos_port_blacklist";
@@ -120,7 +121,7 @@ static int blacklist_modify(int fd, char *ip_string, unsigned int action)
 	return EXIT_OK;
 }
 
-static int service_modify(int fd_services,int fd_servers, char *service_ip,char *backend_ip,unsigned int port, unsigned int action)
+static int service_modify(int fd_services,int fd_servers, char *service_ip,char *backend_ip,unsigned int port,char* mac_addr, unsigned int action)
 {
 	int server_id;
    	FILE *fptr;
@@ -180,9 +181,34 @@ static int service_modify(int fd_services,int fd_servers, char *service_ip,char 
 		}
 		struct dest_info *backend = (struct dest_info*)malloc(sizeof(struct dest_info));
 		backend->daddr = backendIP;
+		backend->saddr = key;
 		backend->bytes = 0;
 		backend->pkts = 0;
-		backend->port = port;
+		backend->port = port;		
+
+		/*convert mac address into desired format*/
+		uint8_t bytes[6];
+		int values[6];
+		int i;
+
+		if( 6 == sscanf( mac_addr, "%x:%x:%x:%x:%x:%x%*c",
+			&values[0], &values[1], &values[2],
+			&values[3], &values[4], &values[5] ) )
+		{
+			/* convert to uint8_t */
+			for( i = 0; i < 6; ++i )
+				bytes[i] = (uint8_t) values[i];
+		}else{
+			printf("mac address in invalid format.\n");
+		}
+		
+		/*assign converted mac address to backend*/
+		backend->dmac[0] = bytes[0];
+		backend->dmac[1] = bytes[1];
+		backend->dmac[2] = bytes[2];
+		backend->dmac[3] = bytes[3];
+		backend->dmac[4] = bytes[4];
+		backend->dmac[5] = bytes[5];
 
 		key = NULL;
 		prev_key = NULL;

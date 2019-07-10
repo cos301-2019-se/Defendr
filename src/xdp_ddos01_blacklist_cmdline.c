@@ -48,6 +48,7 @@ static const struct option long_options[] = {
 	{"backend",	required_argument,		NULL, 'b' },
 	{"port",	required_argument,		NULL, 'p' },
 	{"service",	required_argument,		NULL, 'n' },
+	{"mac",	required_argument,		NULL, 'm' },
 	{0, 0, NULL,  0 }
 };
 
@@ -370,8 +371,9 @@ static  void start_logging(){
 				value = get_key32_value64_percpu(fd_enter_logs, key);
 				char ip_txt[INET_ADDRSTRLEN] = {0};
 				if (inet_ntop(AF_INET, &key, ip_txt, sizeof(ip_txt))) {	
-					value -= 1;			
-					printf("%s %s \n","entered ", ip_txt);						
+					//value -= 1;			
+					printf("%s %s \n","entered ", ip_txt);
+					//printf("c1 %d %s \n",value, ip_txt);						
 					//if(value <= 0){		
 						enterLogsToRemove[numEnterLogsToRemove] = malloc(strlen(ip_txt) + 1); 
 						strcpy(enterLogsToRemove[numEnterLogsToRemove], ip_txt);
@@ -389,8 +391,9 @@ static  void start_logging(){
 				value = get_key32_value64_percpu(fd_pass_logs, key);
 				char ip_txt[INET_ADDRSTRLEN] = {0};
 				if (inet_ntop(AF_INET, &key, ip_txt, sizeof(ip_txt))) {	
-					value -= 1;
-					printf("%s %s \n","passed ", ip_txt);									
+					//value -= 1;
+					printf("%s %s \n","passed ", ip_txt);		
+					//printf("c2 %d %s \n",value, ip_txt);							
 					//if(value <= 0){
 						passLogsToRemove[numPassLogsToRemove] = malloc(strlen(ip_txt) + 1); 
 						strcpy(passLogsToRemove[numPassLogsToRemove], ip_txt);
@@ -438,11 +441,11 @@ static  void start_logging(){
 }
 
 /*add backend server*/
-static void addBackend(char* service_ip,char* backend_ip,char* backend_port){
-	if (verbose) printf("adding backend with ip %s listening on port %s to service %s\n",backend_ip,backend_port,service_ip);
+static void addBackend(char* service_ip,char* backend_ip,char* backend_port,char* mac_addr){
+	if (verbose) printf("adding backend with ip %s and mac %s listening on port %s to service %s\n",backend_ip,mac_addr,backend_port,service_ip);
     int fd_services = open_bpf_map(file_services); 
     int fd_servers = open_bpf_map(file_servers);  
-	service_modify(fd_services,fd_servers, service_ip,backend_ip, atoi(backend_port),ACTION_ADD);
+	service_modify(fd_services,fd_servers, service_ip,backend_ip, atoi(backend_port),mac_addr,ACTION_ADD);
 	close(fd_services);
 	close(fd_servers);
 }
@@ -452,7 +455,7 @@ static void removeBackend(char* service_ip,char* backend_ip){
 	if (verbose) printf("removing backend with ip %s from service %s\n",backend_ip,service_ip);	
 	int fd_services = open_bpf_map(file_services); 
     int fd_servers = open_bpf_map(file_servers);  
-	service_modify(fd_services,fd_servers, service_ip,backend_ip,0,ACTION_DEL);
+	service_modify(fd_services,fd_servers, service_ip,backend_ip,0,"",ACTION_DEL);
 	close(fd_services);
 	close(fd_servers);
 }
@@ -503,6 +506,8 @@ int main(int argc, char **argv)
 	char *service_ip = NULL;
 	/*char _backend_ip_buf[STR_MAX] = {};
 	char *backend_ip = NULL;*/
+	char _mac_addr_buf[STR_MAX] = {};
+	char *mac_addr = NULL;
 	char _backend_port_buf[STR_MAX] = {};
 	char *backend_port = NULL;
 	unsigned int action = 0;
@@ -553,6 +558,14 @@ int main(int argc, char **argv)
 			service_ip = (char *)&_service_ip_buf;
 			strncpy(service_ip, optarg, STR_MAX);
 			break;
+		case 'm':
+			if (!optarg || strlen(optarg) >= STR_MAX) {
+				printf("ERR: mac address too long or NULL\n");
+				goto fail_opt;
+			}
+			mac_addr = (char *)&_mac_addr_buf;
+			strncpy(mac_addr, optarg, STR_MAX);
+			break;
 		case 'u':
 			proto = IPPROTO_UDP;
 			filter = DDOS_FILTER_UDP;
@@ -595,7 +608,7 @@ int main(int argc, char **argv)
 		
 		if(service_ip){			
 			if(action == ACTION_ADD){
-				addBackend(service_ip,ip_string,backend_port);
+				addBackend(service_ip,ip_string,backend_port,mac_addr);
 			}else{
 				removeBackend(service_ip,ip_string);
 			}
