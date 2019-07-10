@@ -73,11 +73,11 @@ Defendr is a blackbox implementation of a DoS protection service, as well as a n
 > *[Jeandre Botha](https://www.linkedin.com/in/jeandre-botha-654053b7/)*
 
 ###### **Interests:**
->  Exploring new technologies,
->  Programming,
->  Cooking,
->  Fantasy genre,
->  Video games
+>*  Exploring new technologies
+>*  Programming
+>*  Cooking
+>*  Fantasy genre
+>*  Video games
 
 ###### **Skills:**
 >*    Adaptable programmer
@@ -87,9 +87,9 @@ Defendr is a blackbox implementation of a DoS protection service, as well as a n
 > **
 
 ###### **Attitudes:**
->   diligent worker,
->   Up for any task,
->   Always willing to compromise
+>*   Diligent worker
+>*   Up for any task
+>*   Always willing to compromise
 
 
 `
@@ -192,13 +192,19 @@ Thereafter I became addicted to gaming and always wanted to know how they are cr
 I like playing Tennis and Squash.*
 
 ###### **Skills:**
-> *C++, C#, SQL, Web Development, Java*
+>* C++
+>* C#
+>* SQL
+>* Web Development
+>* Java
 
 ###### **Work Experience:**
-> *Part Time At an Accounting Firm*
+>* Part Time At an Accounting Firm
 
 ###### **Attitudes:**
-> *Dedicated, Calm, Outgoing and Reserved*
+>* Dedicated
+>* Calm
+>* Outgoing and reserved
 
 
 `
@@ -251,7 +257,7 @@ My duties were the same in the adult ministry, except my position was that of a 
 > - Camarero @ Aandklas (Feb 2017 - Jul 2017) - A small stint in the hospitality industry, whilst at university, to earn some extra pocket money as well as to try to take on new responsibilities, and experience a working world environment with duties and deadlines.  The responsibilities of a waiter included hosting and tending to guest needs by; ensuring the general seating areas were clean and tidy before, during and after shifts, reception of new patrons, bridging the bar, kitchen, and main guest areas as well as tending to performing artists or members that would require the venue for events.
 
 ###### **Attitudes:**
-> ***"In every mistake I make is a nuggest of learning I can take"***
+> ***"In every mistake I make is a nugget of learning I can take"***
 >
 > I am an energetic, determined character that conducts myself with courage and discipline. I have a creative, resilient mind that overcomes obstacles with a pragmatic solution. This is coupled by my need to see tasks to completion; one could perceive as insitent, yet it is a motivator that enables me to go to lengths. I am enthusiastic to learn, and have a sincere interest in software and technology.
 
@@ -291,7 +297,7 @@ My duties were the same in the adult ministry, except my position was that of a 
 > - Tattoos
 
 ###### **Skills:**
-> - c++
+> - C++
 > - Java
 > - Database Management (SQL and MongoDB)
 > - HTML
