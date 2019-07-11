@@ -41,10 +41,13 @@ def vp_start_gui():
     root.mainloop()
 
 w = None
-def create_win_Home(root, *args, **kwargs):
+
+def create_win_Home(root, roll, *args, **kwargs):
     '''Starting point when module is imported by another program.'''
     global w, w_win, rt
     global prog_location
+    global usertype
+    usertype = roll
     prog_call = sys.argv[0]
     prog_location = os.path.split(prog_call)[0]
     rt = root
@@ -65,6 +68,12 @@ class win_Home:
         if (msg):
             destroy_win_Home()
             Login_support.root.deiconify()
+
+    def users(self):
+        if(usertype=="user"):
+            messagebox.showinfo("Home Page", "You are log in as admin")
+        else:
+            Home_support.createUsers()
 
     def __init__(self, top=None):
         '''This class configures and populates the toplevel window.
@@ -114,6 +123,13 @@ class win_Home:
         self.btnLogout.configure(text='''Logout''')
         self.btnLogout.configure(cursor="hand1")
         self.btnLogout.configure(command=lambda: self.logout())
+
+        self.btnUsers = tk.Button(top)
+        self.btnUsers.place(relx=0.843, rely=0.18, height=31, width=72)
+        self.btnUsers.configure(activebackground="#f9f9f9")
+        self.btnUsers.configure(text='''Users''')
+        self.btnUsers.configure(cursor="hand1")
+        self.btnUsers.configure(command=lambda: self.users())
 
         self.menubar = tk.Menu(top,font="TkMenuFont",bg=_bgcolor,fg=_fgcolor)
         top.configure(menu = self.menubar)
