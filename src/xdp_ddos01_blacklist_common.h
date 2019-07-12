@@ -19,7 +19,7 @@
 #define EXIT_FAIL_BPF_ELF	41
 #define EXIT_FAIL_BPF_RELOCATE	42
 
-static int verbose = 1;
+static int verbose = 0;
 
 /* Export eBPF map for IPv4 blacklist as a file
  * Gotcha need to mount:
@@ -172,7 +172,7 @@ static int service_modify(int fd_services,int fd_servers, char *service_ip,char 
 	   		if(fptr != NULL){
 				fprintf(fptr,"%d",server_id); 
 				fclose(fptr);          
-	                }
+	        }
 
 			res = bpf_map_update_elem(fd_services, &key, value, BPF_NOEXIST);
 		}else{

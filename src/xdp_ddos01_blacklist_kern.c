@@ -80,7 +80,7 @@ struct bpf_map_def SEC("maps") drop_logs = {
 struct bpf_map_def SEC("maps") pass_logs = {
     .type        = BPF_MAP_TYPE_PERCPU_HASH,
 	.key_size    = sizeof(u32),
-	.value_size  = sizeof(u64), 
+	.value_size  = sizeof(u32), 
 	.max_entries = 100000,
 	.map_flags   = BPF_F_NO_PREALLOC,
 };
@@ -158,6 +158,20 @@ static inline u32 hash(u32 a, u32 b, u32 initval){
 
 	return c;
 }
+//#define DEBUG 1
+#ifdef  DEBUG
+/* Only use this for debug output. Notice output from bpf_trace_printk()
+ * end-up in /sys/kernel/debug/tracing/trace_pipe
+ */
+#define bpf_debug(fmt, ...)						\
+		({							\
+			char ____fmt[] = fmt;				\
+			bpf_trace_printk(____fmt, sizeof(____fmt),	\
+				     ##__VA_ARGS__);			\
+		})
+#else
+#define bpf_debug(fmt, ...) { } while (0)
+#endif
 
 static inline unsigned short checksumIP(unsigned short *buf, int bufsz) {
     unsigned long sum = 0;
@@ -183,7 +197,7 @@ static inline unsigned short checksumIP(unsigned short *buf, int bufsz) {
 static __always_inline void addDestination(struct pkt_meta *pkt){
 	struct dest_info *tnl;
 	__u32 hashKey = hash(pkt->src, pkt->ports, MAX_SERVERS) % MAX_SERVERS;
-	__u32 key = pkt->dst;
+	__u32 key = ntohl(pkt->dst);;
 	struct service *app = bpf_map_lookup_elem(&services, &key);
 	u32 server_id  = MAX_SERVERS+1;
 	u64 service_id = 10;
@@ -216,6 +230,7 @@ static __always_inline struct dest_info *hash_get_dest(struct pkt_meta *pkt){
 	tnl =NULL;
 	key =0;
 	app = NULL;
+	
 	// hash packet source ip with both ports to obtain a destination 
 	hashKey = hash(pkt->src, pkt->ports, MAX_SERVERS) % MAX_SERVERS;
 
@@ -247,33 +262,14 @@ static __always_inline struct dest_info *hash_get_dest(struct pkt_meta *pkt){
 			if(tnl){
 					bpf_map_update_elem(&destinations, &hashKey,&server_id,BPF_ANY);
 					app->last_used = server_id;
-					 return tnl;
+					return tnl;
 			}
 		}
+		
 	}
-	
-	//server_id = 1;
-	//return bpf_map_lookup_elem(&servers, &server_id);
 	return NULL; //no server to recieve packet
 
 }
-
-
-
-//#define DEBUG 1
-#ifdef  DEBUG
-/* Only use this for debug output. Notice output from bpf_trace_printk()
- * end-up in /sys/kernel/debug/tracing/trace_pipe
- */
-#define bpf_debug(fmt, ...)						\
-		({							\
-			char ____fmt[] = fmt;				\
-			bpf_trace_printk(____fmt, sizeof(____fmt),	\
-				     ##__VA_ARGS__);			\
-		})
-#else
-#define bpf_debug(fmt, ...) { } while (0)
-#endif
 
 /* Keeps stats of XDP_DROP vs XDP_PASS */
 static __always_inline
@@ -336,15 +332,13 @@ int  xdp_program(struct xdp_md *ctx)
     u64 *value;
 	__u64 initialDrop = 1;
 	__u64 initialEnter = 1;
-	__u64 initialPass = 1;
+	//__u64 initialPass = 1;
 	__u64 initialValue = 1;
 	u32 ip_src;
-	//u32 old_dest_ip,new_dest_ip;
 	__u16 payload_len;
 	struct pkt_meta pkt = {};
 	struct dest_info *tnl;
-	//__u16 pkt_size;
-	//
+	__u16 pkt_size;
 
 
     // Read data
@@ -417,16 +411,8 @@ int  xdp_program(struct xdp_md *ctx)
 			bpf_map_update_elem(&ip_watchlist,&ip_src,&initialValue,BPF_NOEXIST);
 		}
 		
-		/*if (protocol == IPPROTO_TCP) {
-			if (!parse_tcp(data, off, data_end, &pkt))
-				return XDP_DROP;
-		} else if (protocol == IPPROTO_UDP) {
-			if (!parse_udp(data, off, data_end, &pkt))
-				return XDP_DROP;
-		}*/
-		
-		pkt.dst = iph->saddr;
-		pkt.src = iph->daddr;
+		pkt.src = iph->saddr;
+		pkt.dst = iph->daddr;
 		pkt.port16[0] = tcph->source;
 		pkt.port16[1] = tcph->dest;		
 		
@@ -456,37 +442,14 @@ int  xdp_program(struct xdp_md *ctx)
 			eth->h_dest[3] = tnl->dmac[3];
 			eth->h_dest[4] = tnl->dmac[4];
 			eth->h_dest[5] = tnl->dmac[5];			
-			/*eth->h_dest[0] = 0x68;
-			eth->h_dest[1] = 0x14;
-			eth->h_dest[2] = 0x01;
-			eth->h_dest[3] = 0x4e;
-			eth->h_dest[4] = 0x43;
-			eth->h_dest[5] = 0x53;
-			u64 c1;
-			c1 =  0;
-			iph->daddr = htonl(167772183);
-			__u32 ip_src_key = iph->saddr;
-			iph->check = 0;
-			c1 = checksumIP((unsigned short *)(iph), sizeof(struct iphdr));
-			bpf_map_update_elem(&pass_logs,&ip_src_key,&c2,BPF_NOEXIST);
-			bpf_map_update_elem(&enter_logs,&ip_src_key,&c1,BPF_NOEXIST);
-			iph->check = (u16)c1;
-			unsigned long sum;
-			sum = old_daddr + (~ntohs(*(unsigned short *)&iph->daddr) & 0xffff);
-			sum += ntohs(tcph->check);
-			sum = (sum & 0xffff) + (sum>>16);
-			tcph->check = htons(sum + (sum>>16) - 2);*/
 			
-			value = bpf_map_lookup_elem(&pass_logs,&ip_src);
-			if (value) {
-				*value += 1;
-			}else{
-				bpf_map_update_elem(&pass_logs,&ip_src,&initialPass,BPF_NOEXIST);
-			}
+
+			__u32 destinationServer = ntohl(tnl->daddr);
+			bpf_map_update_elem(&pass_logs,&ip_src,&destinationServer,BPF_ANY);
 			
-			/*pkt_size = (__u16)(data_end - data);
+			pkt_size = (__u16)(data_end - data);
 			__sync_fetch_and_add(&tnl->pkts, 1);
-			__sync_fetch_and_add(&tnl->bytes, pkt_size);*/
+			__sync_fetch_and_add(&tnl->bytes, pkt_size);
 			return XDP_TX;
 		}
 		
