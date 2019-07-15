@@ -9,5 +9,4 @@ sudo apt install python3-pip
 sudo apt install python3-tk
 sudo pip3 install pymongo
 sudo pip3 install dnspython
-
-
+python3 Login.py
