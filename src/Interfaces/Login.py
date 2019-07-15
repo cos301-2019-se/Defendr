@@ -6,6 +6,7 @@
 #    May 22, 2019 05:47:56 PM SAST  platform: Linux
 
 import sys
+import databaseCon
 
 try:
     import Tkinter as tk
@@ -38,7 +39,7 @@ def vp_start_gui():
     root = tk.Tk()
     top = win_Login (root)
     Login_support.init(root, top)
-    c = controller("../../Documents/Defendr/Defendr/src/")
+    c = controller("../")
     c.loadXdp()
     root.mainloop()
 
@@ -69,34 +70,45 @@ class win_Login:
 
     def loginUser(self):
 
-        users = ["Jeandre", "Muhammed","Sisa","Christiaan","Ruslynn"]
-        passwds = ["jPass1","mPass1","sPass1","cPass1","rPass1"]
+      #  users = ["Jeandre", "Muhammed","Sisa","Christiaan","Ruslynn"]
+      #  passwds = ["jPass1","mPass1","sPass1","cPass1","rPass1"]
 
         user = self.txtUser.get()
         passw = self.txtPass.get()
+        db = databaseCon.connect()
 
-        for i in range(6):
-            if(i < 5):
-                if(user == users[i] and passw == passwds[i]):
-                    messagebox.showinfo("Login Page", "Success")
-                    self.txtUser.delete(0, 'end')
-                    self.txtPass.delete(0, 'end')
-                    Login_support.createMain()
-                    break
+        if(databaseCon.checkPass(db,user,passw)):
+            roll =databaseCon.getRoll(db,user)
+            messagebox.showinfo("Login Page", "Successly log in as "+roll)
+            self.txtUser.delete(0, 'end')
+            self.txtPass.delete(0, 'end')
+            Login_support.createMain(roll)
+        else:
+            self.txtPass.delete(0, 'end')
+            messagebox.showwarning("Login Page", "Incorrect Username or Password")
 
-                else:
-                    if(user != users[i]):
-                        continue
+       # for i in range(6):
+       #     if(i < 5):
+       #         if(user == users[i] and passw == passwds[i]):
+       #             messagebox.showinfo("Login Page", "Success")
+       #             self.txtUser.delete(0, 'end')
+       #             self.txtPass.delete(0, 'end')
+       #             Login_support.createMain()
+       #             break
 
-                    else:
-                        if(passw !=  passwds[i]):
-                            self.txtPass.delete(0, 'end')
-                            messagebox.showwarning("Login Page", "Incorrect Username or Password")
-                            break
-            else:
-                self.txtPass.delete(0, 'end')
-                messagebox.showwarning("Login Page", "Incorrect Username or Password")
-                break
+       #         else:
+       #             if(user != users[i]):
+       #                 continue
+
+       #             else:
+       #                 if(passw !=  passwds[i]):
+       #                     self.txtPass.delete(0, 'end')
+       #                     messagebox.showwarning("Login Page", "Incorrect Username or Password")
+       #                     break
+       #     else:
+       #         self.txtPass.delete(0, 'end')
+       #         messagebox.showwarning("Login Page", "Incorrect Username or Password")
+       #         break
 
     def __init__(self, top=None):
         '''This class configures and populates the toplevel window.

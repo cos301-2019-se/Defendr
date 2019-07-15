@@ -26,6 +26,14 @@ class controller:
 	def whiteListIP(self,ip):
 		myCmd = os.popen("cd " + self.pathToSource + " && sudo ./xdp_ddos01_blacklist_cmdline --del --ip " + ip).read()
 		return;
+
+	def addBackend(self,ip):
+		myCmd = os.popen("cd " + self.pathToSource + " && sudo ./xdp_ddos01_blacklist_cmdline --add --backend --ip " + ip).read()
+		return;
+
+	def removeBackend(self,ip):
+		myCmd = os.popen("cd " + self.pathToSource + " && sudo ./xdp_ddos01_blacklist_cmdline --del --backend --ip " + ip).read()
+		return;
 		
 	def getBlacklistedIpList(self):
 		dataString = os.popen("cd " + self.pathToSource + " && sudo ./xdp_ddos01_blacklist_cmdline --list ").read()

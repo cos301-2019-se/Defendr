@@ -8,6 +8,8 @@
 import sys
 import IPList
 import Logging
+import Users
+
 
 try:
     import Tkinter as tk
@@ -39,6 +41,10 @@ def createIPList():
 
 def createLogs():
     Logging.create_win_Logging(root)
+    root.withdraw()
+
+def createUsers():
+    Users.create_managementwindow(root)
     root.withdraw()
 
 if __name__ == '__main__':
