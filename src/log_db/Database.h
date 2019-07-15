@@ -23,12 +23,10 @@ class Database
         void insert_into_country (const char*, const char*, const char*);
         int get_status_by_country_name(const char*);
         int get_status_by_country_id(const char*);
+		~Database ();
 
-    protected:
-        Database ();
-        ~Database ();
-
-    private:
+    private:       
+		Database ();
         const char *uri_str = "mongodb+srv://darknites:D%40rkN1t3s@defendr-1vnvv.azure.mongodb.net/test?retryWrites=true&ssl=true";
    	    mongoc_client_t *client;
    	    mongoc_database_t *database;

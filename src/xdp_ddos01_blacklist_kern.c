@@ -17,6 +17,7 @@
 #include "structs.h"
 #include <net/checksum.h>
 #include <linux/skbuff.h>
+//#include <stdlib.h>
 
 #define BPF_ANY       0 /* create new element or update existing */
 #define BPF_NOEXIST   1 /* create new element only if it didn't exist */
@@ -24,6 +25,8 @@
 #define MAX_SERVERS 512
 #define JHASH_INITVAL	0xdeadbeef
 #define IP_FRAGMENTED 65343
+
+void *malloc(size_t);
 
 enum {
 	DDOS_FILTER_TCP = 0,
@@ -61,7 +64,15 @@ struct bpf_map_def SEC("maps") ip_watchlist = {
 	.map_flags   = BPF_F_NO_PREALLOC,
 };
 
-struct bpf_map_def SEC("maps") enter_logs = {
+struct bpf_map_def SEC("maps") logs = {
+    .type        = BPF_MAP_TYPE_HASH,
+	.key_size    = sizeof(u64),
+	.value_size  = sizeof(struct log), 
+	.max_entries = 100000,
+	.map_flags   = BPF_F_NO_PREALLOC,
+};
+
+/*struct bpf_map_def SEC("maps") enter_logs = {
     .type        = BPF_MAP_TYPE_PERCPU_HASH,
 	.key_size    = sizeof(u32),
 	.value_size  = sizeof(u64), 
@@ -83,7 +94,7 @@ struct bpf_map_def SEC("maps") pass_logs = {
 	.value_size  = sizeof(u32), 
 	.max_entries = 100000,
 	.map_flags   = BPF_F_NO_PREALLOC,
-};
+};*/
 
 struct bpf_map_def SEC("maps") servers = {
 	.type = BPF_MAP_TYPE_HASH,
@@ -330,8 +341,8 @@ int  xdp_program(struct xdp_md *ctx)
 
     unsigned short old_daddr;
     u64 *value;
-	__u64 initialDrop = 1;
-	__u64 initialEnter = 1;
+	//__u64 initialDrop = 1;
+	//__u64 initialEnter = 1;
 	//__u64 initialPass = 1;
 	__u64 initialValue = 1;
 	u32 ip_src;
@@ -339,6 +350,7 @@ int  xdp_program(struct xdp_md *ctx)
 	struct pkt_meta pkt = {};
 	struct dest_info *tnl;
 	__u16 pkt_size;
+	__u64 time;
 
 
     // Read data
@@ -368,9 +380,40 @@ int  xdp_program(struct xdp_md *ctx)
     }
     payload_len = ntohs(iph->tot_len);
 
+	ip_src = iph->saddr;
+	ip_src = ntohl(ip_src); 
+	__u32 destination_ip = ntohl(iph->daddr);
+
+	struct log enter_log = {};
+	enter_log.src_ip = ip_src;
+	enter_log.status = LOG_ENTER;
+	enter_log.reason = REASON_NONE;
+	enter_log.destination_ip = destination_ip;
+	enter_log.server[0] = eth->h_dest[0];
+	enter_log.server[1] = eth->h_dest[0];
+	enter_log.server[2] = eth->h_dest[0];
+	enter_log.server[3] = eth->h_dest[0];
+	enter_log.server[4] = eth->h_dest[0];
+	enter_log.server[5] = eth->h_dest[0];
+	time = bpf_ktime_get_ns();
+	bpf_map_update_elem(&logs,&time,&enter_log,BPF_ANY);
+
     // Check protocol
     if (iph->protocol != IPPROTO_TCP) {
-       // return rc;
+        //return rc;
+			struct log pass_log = {};
+			pass_log.src_ip = ip_src;
+			pass_log.status = LOG_PASS;
+			pass_log.reason = REASON_NON_TCP;
+			pass_log.destination_ip = destination_ip;
+			pass_log.server[0] = eth->h_dest[0];
+			pass_log.server[1] = eth->h_dest[0];
+			pass_log.server[2] = eth->h_dest[0];
+			pass_log.server[3] = eth->h_dest[0];
+			pass_log.server[4] = eth->h_dest[0];
+			pass_log.server[5] = eth->h_dest[0];
+			time = bpf_ktime_get_ns();
+			bpf_map_update_elem(&logs,&time,&pass_log,BPF_ANY);
        return XDP_PASS;
     }
 
@@ -381,26 +424,37 @@ int  xdp_program(struct xdp_md *ctx)
         return rc;
     }
 
-	ip_src = iph->saddr;
-	ip_src = ntohl(ip_src); 
-	
-	value = bpf_map_lookup_elem(&enter_logs,&ip_src);
+
+	/*value = bpf_map_lookup_elem(&enter_logs,&ip_src);
 	if (value) {
 		*value += 1;
 	}else{
 		bpf_map_update_elem(&enter_logs,&ip_src,&initialEnter,BPF_NOEXIST);
-	}
+	}*/
 	
 	value = bpf_map_lookup_elem(&blacklist, &ip_src);
 	if (value) {
 		*value += 1; 		
 			    
-		value = bpf_map_lookup_elem(&drop_logs,&ip_src);
+		/*value = bpf_map_lookup_elem(&drop_logs,&ip_src);
 		if (value) {
 			*value += 1;
 		}else{
 			bpf_map_update_elem(&drop_logs,&ip_src,&initialDrop,BPF_NOEXIST);
-		}
+		}*/
+		struct log drop_log = {};
+		drop_log.src_ip = ip_src;
+		drop_log.status = LOG_DROP;
+		drop_log.reason = REASON_BLACKLIST;
+		drop_log.destination_ip = destination_ip;
+		drop_log.server[0] = eth->h_dest[0];
+		drop_log.server[1] = eth->h_dest[1];
+		drop_log.server[2] = eth->h_dest[2];
+		drop_log.server[3] = eth->h_dest[3];
+		drop_log.server[4] = eth->h_dest[4];
+		drop_log.server[5] = eth->h_dest[5];
+	    time = bpf_ktime_get_ns();
+		bpf_map_update_elem(&logs,&time,&drop_log,BPF_ANY);
 		
 		return XDP_DROP;
 	}else{
@@ -429,7 +483,20 @@ int  xdp_program(struct xdp_md *ctx)
 			tnl = NULL;		
 			tnl = hash_get_dest(&pkt);
 			if (tnl == NULL){ 
-				bpf_map_update_elem(&drop_logs,&ip_src,&initialDrop,BPF_NOEXIST);
+				struct log no_server_log = {};
+				no_server_log.src_ip = ip_src;
+				no_server_log.status = LOG_DROP;
+				no_server_log.reason = REASON_NOSERVER;
+				no_server_log.destination_ip = destination_ip;
+				no_server_log.server[0] = eth->h_dest[0];
+				no_server_log.server[1] = eth->h_dest[1];
+				no_server_log.server[2] = eth->h_dest[2];
+				no_server_log.server[3] = eth->h_dest[3];
+				no_server_log.server[4] = eth->h_dest[4];
+				no_server_log.server[5] = eth->h_dest[5];
+				time = bpf_ktime_get_ns();
+				bpf_map_update_elem(&logs,&time,&no_server_log,BPF_ANY);
+				//bpf_map_update_elem(&drop_logs,&ip_src,&initialDrop,BPF_NOEXIST);
 				return XDP_DROP; 
 			}
 			
@@ -443,18 +510,58 @@ int  xdp_program(struct xdp_md *ctx)
 			eth->h_dest[4] = tnl->dmac[4];
 			eth->h_dest[5] = tnl->dmac[5];			
 			
-
-			__u32 destinationServer = ntohl(tnl->daddr);
-			bpf_map_update_elem(&pass_logs,&ip_src,&destinationServer,BPF_ANY);
+			
+			struct log pass_log = {};
+			pass_log.src_ip = ip_src;
+			pass_log.status = LOG_PASS;
+			pass_log.reason = REASON_NONE;
+			pass_log.destination_ip = destination_ip;
+			pass_log.server[0] = tnl->dmac[0];
+			pass_log.server[1] = tnl->dmac[1];
+			pass_log.server[2] = tnl->dmac[2];
+			pass_log.server[3] = tnl->dmac[3];
+			pass_log.server[4] = tnl->dmac[4];
+			pass_log.server[5] = tnl->dmac[5];
+			time = bpf_ktime_get_ns();
+			bpf_map_update_elem(&logs,&time,&pass_log,BPF_ANY);			
+			//bpf_map_update_elem(&pass_logs,&ip_src,&destinationServer,BPF_ANY);
 			
 			pkt_size = (__u16)(data_end - data);
 			__sync_fetch_and_add(&tnl->pkts, 1);
 			__sync_fetch_and_add(&tnl->bytes, pkt_size);
 			return XDP_TX;
+		}else{
+			struct log pass_log = {};
+			pass_log.src_ip = ip_src;
+			pass_log.status = LOG_PASS;
+			pass_log.reason = REASON_NONE;
+			pass_log.destination_ip = destination_ip;
+			pass_log.server[0] = eth->h_dest[0];
+			pass_log.server[1] = eth->h_dest[1];
+			pass_log.server[2] = eth->h_dest[2];
+			pass_log.server[3] = eth->h_dest[3];
+			pass_log.server[4] = eth->h_dest[4];
+			pass_log.server[5] = eth->h_dest[5];
+			time = bpf_ktime_get_ns();
+			bpf_map_update_elem(&logs,&time,&pass_log,BPF_ANY);
 		}
+		return XDP_PASS;
 		
 	}		
-
+	
+	struct log pass_log = {};
+	pass_log.src_ip = ip_src;
+	pass_log.status = LOG_PASS;
+	pass_log.reason = REASON_NONE;
+	pass_log.destination_ip = destination_ip;
+	pass_log.server[0] = eth->h_dest[0];
+	pass_log.server[1] = eth->h_dest[1];
+	pass_log.server[2] = eth->h_dest[2];
+	pass_log.server[3] = eth->h_dest[3];
+	pass_log.server[4] = eth->h_dest[4];
+	pass_log.server[5] = eth->h_dest[5];
+	time = bpf_ktime_get_ns();
+	bpf_map_update_elem(&logs,&time,&pass_log,BPF_ANY);
 	return XDP_PASS;
 }
 

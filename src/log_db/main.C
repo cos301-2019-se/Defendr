@@ -1,4 +1,3 @@
-#include "Database.h"
 #include <assert.h>
 #include <errno.h>
 #include <signal.h>
@@ -8,10 +7,12 @@
 #include <string.h>
 #include <unistd.h>
 #include <locale.h>
-
 #include <sys/resource.h>
 #include <getopt.h>
 #include <time.h>
+#include "Database.h"
+
+static const char *__doc__= " XDP ddos01: command line tool";
 
 static const struct option long_options[] = {
 	{"help",	no_argument,		NULL, 'h' },
@@ -51,9 +52,9 @@ static void usage(char *argv[])
 int main(int argc, char **argv)
 {
 #	define STR_MAX 42 /* For trivial input validation */
-	char _ip_buf[STR_MAX] = {};
+	char ip_buf[STR_MAX] = {};
 	char *ip = NULL;
-	char _destination_buf[STR_MAX] = {};
+	char destination_buf[STR_MAX] = {};
 	char *destination = NULL;
 	char country_buf[STR_MAX] = {};
 	char *country = NULL;
@@ -69,6 +70,7 @@ int main(int argc, char **argv)
 	int opt;
 	bool log;
 	char type;
+	Database db = Database::getInstance();
 
 	while ((opt = getopt_long(argc, argv, "adshi:t:u:",
 				  long_options, &longindex)) != -1) {
@@ -80,9 +82,6 @@ int main(int argc, char **argv)
 			type = 'p';
 			break;
 		case 'x':
-			action |= ACTION_DEL;
-			break;
-		case 's':
 			if (!optarg || strlen(optarg) >= STR_MAX) {
 				printf("ERR:  ip too long or NULL\n");
 				goto fail_opt;
@@ -120,7 +119,7 @@ int main(int argc, char **argv)
 				goto fail_opt;
 			}
 			status = (char *)&status_buf;
-			strncpy(status);
+			strncpy(status, optarg, STR_MAX);
 			break;
 		case 'd':
 			if (!optarg || strlen(optarg) >= STR_MAX) {
@@ -128,7 +127,7 @@ int main(int argc, char **argv)
 				goto fail_opt;
 			}
 			destination = (char *)&destination_buf;
-			strncpy(destination);
+			strncpy(destination, optarg, STR_MAX);
 			break;
 		case 'c':
 			if (!optarg || strlen(optarg) >= STR_MAX) {
@@ -136,21 +135,21 @@ int main(int argc, char **argv)
 				goto fail_opt;
 			}
 			country = (char *)&country_buf;
-			strncpy(country);
+			strncpy(country, optarg, STR_MAX);
 			break;
 		case 'h':
 		fail_opt:
 		default:
 			usage(argv);
-			return EXIT_FAIL_OPTION;
 		}
 	}
 	
 	if(log){
 		if(type = 'p'){
-			insert_into_packets_list(ip,status,time,country,destination,server,reason);
+			db.insert_into_packets_list(ip,status,time,country,destination,server,reason);
 		}
 	}
+	//db = NULL;
 
 
 }

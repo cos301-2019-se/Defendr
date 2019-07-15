@@ -60,7 +60,7 @@ CFLAGS := -g -O2 -Wall
 # Local copy of include/linux/bpf.h kept under ./kernel-usr-include
 #
 CFLAGS += -I./kernel-usr-include/
-##CFLAGS += -I$(KERNEL)/usr/include
+#CFLAGS += -I$(KERNEL)/usr/include
 #
 # Interacting with libbpf
 CFLAGS += -I$(TOOLS_PATH)/lib
