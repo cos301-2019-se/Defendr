@@ -22,9 +22,9 @@ def findPackets(db, ip):
         doc = col.find(query,{ "_id": 0}).sort("timestamp", -1)
     return doc
 
-def getSalt(db,name):
+def getSalt(db,email):
     col = db["user"]
-    doc = col.find({"name": name},{ "_id": 0, "name": 0, "roll": 0, "password": 0})
+    doc = col.find({"email": email},{ "_id": 0, "name": 0, "roll": 0, "password": 0, "lastname": 0,"email": 0})
     stringoutput = "notFond"
     for x in doc:
         stringoutput =str(x)
@@ -32,9 +32,9 @@ def getSalt(db,name):
         return stringoutput[10:len(stringoutput)-2]
     return stringoutput
 
-def getPassword(db,name):
+def getPassword(db,email):
     col = db["user"]
-    doc = col.find({"name": name},{ "_id": 0, "name": 0, "roll": 0, "salt": 0})
+    doc = col.find({"email": email},{ "_id": 0, "name": 0, "roll": 0, "salt": 0, "lastname": 0,"email": 0})
     stringoutput = "notFond"
     for x in doc:
         stringoutput = str(x)
@@ -42,9 +42,9 @@ def getPassword(db,name):
         return stringoutput[14:len(stringoutput)-2]
     return stringoutput
 
-def getRoll(db,name):
+def getRoll(db,email):
     col = db["user"]
-    doc = col.find({"name": name},{ "_id": 0, "name": 0, "salt": 0, "password": 0})
+    doc = col.find({"email": email},{ "_id": 0, "name": 0, "salt": 0, "password": 0, "lastname": 0,"email": 0})
     stringoutput="notFond"
     for x in doc:
         stringoutput = str(x)
@@ -52,34 +52,67 @@ def getRoll(db,name):
         return stringoutput[10:len(stringoutput) - 2]
     return stringoutput
 
-def saveUser(db,name,roll,salt, password):
+def getName(db,email):
     col = db["user"]
-    dict={"name": name, "roll": roll, "salt": salt, "password": password}
+    doc = col.find({"email": email},{ "_id": 0, "roll": 0, "salt": 0, "password": 0, "lastname": 0,"email": 0})
+    stringoutput="notFond"
+    for x in doc:
+        stringoutput = str(x)
+    if(stringoutput!="notFond"):
+        return stringoutput[10:len(stringoutput) - 2]
+    return stringoutput
+
+def getLastname(db,email):
+    col = db["user"]
+    doc = col.find({"email": email},{ "_id": 0, "name": 0, "salt": 0, "password": 0, "roll": 0,"email": 0})
+    stringoutput="notFond"
+    for x in doc:
+        stringoutput = str(x)
+    if(stringoutput!="notFond"):
+        return stringoutput[10:len(stringoutput) - 2]
+    return stringoutput
+
+def saveUser(db,name,lastName,roll,salt, password, email):
+    col = db["user"]
+    dict={"name": name, "lastname":lastName, "roll": roll, "salt": salt, "password": password, "email": email}
     col.insert_one(dict)
 
-def removeUser(db,name,roll,salt, password):
+def removeUser(db,name,roll,salt, password, lastname):
     col = db["user"]
-    query = {"name": name, "roll": roll, "salt": salt, "password": password}
-    col.delete_one(query)
+    query = {"name": name, "lastname": lastname, "roll": roll, "salt": salt, "password": password}
+    col.delete_many(query)
 
 def printUsers(db):
     mycol = db["user"]
     lines = "-------------------------\n"
     for x in mycol.find({}, {"_id": 0, "salt": 0, "password": 0}):
         temp = str(x)
-        name = temp.split('\'')[3]
-        roll = temp.split('\'')[7]
+        array =temp.split('\'')
+        name = array[3]
+        last = array[7]
+        roll = array[11]
+        email = array[15]
         if(roll=="user"):
             roll=roll+" "
-        lines = lines + "|" + name + " \t\t| " + roll + " |" + '\n'
+        lines = lines + "|" + name + " \t\t| " + last + " | "+ roll + " | "+email + '\n'
     lines = lines + "-------------------------"
     return lines
 
+def checkUsers(db):
+    mycol = db["user"]
+    counter =0
+    for x in mycol.find({}, {"_id": 0, "salt": 0, "password": 0}):
+        counter=counter+1
+    if(counter==0):
+        return False
+    else:
+        return True
+
 #sign in function class
-def checkPass(db, name, password):
-    salt=getSalt(db,name)
+def checkPass(db, email, password):
+    salt=getSalt(db,email)
     checkPwd=hashFunction(password,salt)
-    hashedPwd=getPassword(db,name)
+    hashedPwd=getPassword(db,email)
     if(checkPwd==hashedPwd):
         return True
     else:
@@ -94,26 +127,39 @@ def makeSalt():
     salt = uuid.uuid4().hex
     return salt
 
-def remove(db,name):
-    salt = getSalt(db,name)
+def remove(db,email):
+    salt = getSalt(db,email)
     if salt=="notFond":
-        return name + " not removed"
-    roll = getRoll(db,name)
+        return "Not removed"
+    roll = getRoll(db,email)
     if roll=="notFond":
-        return name+" not removed"
-    password = getPassword(db,name)
+        return "Not removed"
+    password = getPassword(db,email)
     if password=="notFond":
-        return name+" not removed"
-    removeUser(db, name, roll, salt, password)
+        return "Not removed"
+    name = getName(db,email)
+    if name=="notFond":
+        return "Not removed"
+    lastname = getLastname(db,email)
+    if lastname=="notFond":
+        return "Not removed"
+    removeUser(db, name, roll, salt, password,lastname)
     return name+" removed"
 
-def makeNewUser(db, name, password, roll):
+def makeNewUser(db, name, lastName, password, roll, email):
     # check if name is used
-    check = getSalt(db, name)
+    check = getSalt(db, email)
     if check !="notFond":
         return name+" is an use"
     # make salt and hash
     salt = makeSalt()
     hashpassword = hashFunction(password, salt)
-    saveUser(db, name , roll, salt, hashpassword)
+    saveUser(db, name,lastName, roll, salt, hashpassword, email)
     return name+" succefully added"
+
+#db= connect()
+#users = ["Jeandre", "Muhammed","Sisa","Christiaan","Ruslynn","Chris"]
+#passwds = ["jPass1","mPass1","sPass1","cPass1","rPass1","cPass1"]
+#last = ["Botha","Carrim","Khoza","Opperman","Appana","Osbrone"]
+#print(printUsers(db))
+#print(getRoll(db,"ChristoOpperman0@gmail.com"))
