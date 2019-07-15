@@ -21,8 +21,11 @@ const char* findIp(char ip[]){
     char command[50]="wget -O ";
     strcat(command, fileName);
     char url[]=" http://api.ipfind.com/?ip=";
+	char auth[] = "&auth=9e52dfbb-747b-44e1-b785-f5dfd12abc03";
     strcat(command, url);
     strcat(command, ip);
+	strcat(command, );
+	strcat(command,auth);
 
     system(command);
     system("reset");
