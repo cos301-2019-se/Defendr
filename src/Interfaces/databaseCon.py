@@ -64,15 +64,15 @@ def removeUser(db,name,roll,salt, password):
 
 def printUsers(db):
     mycol = db["user"]
-    lines = "---------------------\n"
+    lines = "-------------------------\n"
     for x in mycol.find({}, {"_id": 0, "salt": 0, "password": 0}):
         temp = str(x)
         name = temp.split('\'')[3]
-        if (len(name) < 7):
-            name = name + '\t'
         roll = temp.split('\'')[7]
-        lines = lines + "|" + name + "\t|" + roll + "\t|" + '\n'
-    lines = lines + "---------------------"
+        if(roll=="user"):
+            roll=roll+" "
+        lines = lines + "|" + name + " \t\t| " + roll + " |" + '\n'
+    lines = lines + "-------------------------"
     return lines
 
 #sign in function class
