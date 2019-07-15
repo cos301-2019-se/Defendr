@@ -46,9 +46,13 @@ static char ifname_buf[IF_NAMESIZE];
 static char *ifname = NULL;
 static int ifindex = -1;
 
-#define NR_MAPS 9
+#define NR_MAPS 12
 int maps_marked_for_export[MAX_MAPS] = { 0 };
 
+/* get syncronised value for percpu map
+ * @param fd file descriptor for map
+ * @param key of map element 
+ */
 static __u64 get_key32_value64_percpu(int fd, __u32 key)
 {
 	/* For percpu maps, userspace gets a value per possible CPU */
@@ -70,6 +74,10 @@ static __u64 get_key32_value64_percpu(int fd, __u32 key)
 	return sum;
 }
 
+/* print ip and count to terminal
+ * @param ip to print
+ * @ param count of ip
+ */
 static void print_ipv4(__u32 ip, __u64 count)
 {
 	char ip_txt[INET_ADDRSTRLEN] = {0};
@@ -105,15 +113,24 @@ static const char* map_idx_to_export_filename(int idx)
 		file =   file_pass_logs;
 		break;
 	case 5: /* map_fd[5]: verdict_cnt */
+		file =   file_servers;
+		break;
+	case 6: /* map_fd[5]: verdict_cnt */
+		file =   file_services;
+		break;
+	case 7: /* map_fd[5]: verdict_cnt */
+		file =   file_destinations;
+		break;
+	case 8: /* map_fd[5]: verdict_cnt */
 		file =   file_verdict;
 		break;
-	case 6: /* map_fd[6]: port_blacklist */
+	case 9: /* map_fd[6]: port_blacklist */
 		file =   file_port_blacklist;
 		break;
-	case 7: /* map_fd[7]: port_blacklist_drop_count_tcp */
+	case 10: /* map_fd[7]: port_blacklist_drop_count_tcp */
 		file =   file_port_blacklist_count[DDOS_FILTER_TCP];
 		break;
-	case 8: /* map_fd[8]: port_blacklist_drop_count_udp */
+	case 11: /* map_fd[8]: port_blacklist_drop_count_udp */
 		file =   file_port_blacklist_count[DDOS_FILTER_UDP];
 		break;
 	default:
