@@ -49,6 +49,10 @@ static int ifindex = -1;
 #define NR_MAPS 12
 int maps_marked_for_export[MAX_MAPS] = { 0 };
 
+/* get syncronised value for percpu map
+ * @param fd file descriptor for map
+ * @param key of map element 
+ */
 static __u64 get_key32_value64_percpu(int fd, __u32 key)
 {
 	/* For percpu maps, userspace gets a value per possible CPU */
@@ -70,6 +74,10 @@ static __u64 get_key32_value64_percpu(int fd, __u32 key)
 	return sum;
 }
 
+/* print ip and count to terminal
+ * @param ip to print
+ * @ param count of ip
+ */
 static void print_ipv4(__u32 ip, __u64 count)
 {
 	char ip_txt[INET_ADDRSTRLEN] = {0};

@@ -31,11 +31,7 @@ enum {
 	DDOS_FILTER_MAX,
 };
 
-/*struct vlan_hdr {
-	__be16 h_vlan_TCI;
-	__be16 h_vlan_encapsulated_proto;
-};*/
-
+/*struct that is used for storing the meta data of packets that is needed during processing*/
 struct pkt_meta {
 	__be32 src;
 	__be32 dst;
@@ -45,6 +41,7 @@ struct pkt_meta {
 	};
 };
 
+/*map containing blacklisted ips*/
 struct bpf_map_def SEC("maps") blacklist = {
 	.type        = BPF_MAP_TYPE_PERCPU_HASH,
 	.key_size    = sizeof(u32),
@@ -53,6 +50,7 @@ struct bpf_map_def SEC("maps") blacklist = {
 	.map_flags   = BPF_F_NO_PREALLOC,
 };
 
+/*map used dor tracking suspicious ips */
 struct bpf_map_def SEC("maps") ip_watchlist = {
 	.type        = BPF_MAP_TYPE_PERCPU_HASH,
 	.key_size    = sizeof(u32),
@@ -61,6 +59,7 @@ struct bpf_map_def SEC("maps") ip_watchlist = {
 	.map_flags   = BPF_F_NO_PREALLOC,
 };
 
+/*map that keeps track of packets recieved by the server*/
 struct bpf_map_def SEC("maps") enter_logs = {
     .type        = BPF_MAP_TYPE_PERCPU_HASH,
 	.key_size    = sizeof(u32),
@@ -69,6 +68,7 @@ struct bpf_map_def SEC("maps") enter_logs = {
 	.map_flags   = BPF_F_NO_PREALLOC,
 };
 
+/*map that keeps track of packets that have been droped*/
 struct bpf_map_def SEC("maps") drop_logs = {
     .type        = BPF_MAP_TYPE_PERCPU_HASH,
 	.key_size    = sizeof(u32),
@@ -77,6 +77,7 @@ struct bpf_map_def SEC("maps") drop_logs = {
 	.map_flags   = BPF_F_NO_PREALLOC,
 };
 
+/*map that keeps track of which packets have been forwarded to the backends*/
 struct bpf_map_def SEC("maps") pass_logs = {
     .type        = BPF_MAP_TYPE_PERCPU_HASH,
 	.key_size    = sizeof(u32),
@@ -85,6 +86,7 @@ struct bpf_map_def SEC("maps") pass_logs = {
 	.map_flags   = BPF_F_NO_PREALLOC,
 };
 
+/*map that stores configuration of back-end instances*/
 struct bpf_map_def SEC("maps") servers = {
 	.type = BPF_MAP_TYPE_HASH,
 	.key_size = sizeof(u32),
@@ -92,6 +94,7 @@ struct bpf_map_def SEC("maps") servers = {
 	.max_entries = MAX_SERVERS,
 };
 
+/*map that holds configuration info of back-end services*/
 struct bpf_map_def SEC("maps") services = {
 	.type = BPF_MAP_TYPE_HASH,
 	.key_size = sizeof(u32),
@@ -99,6 +102,7 @@ struct bpf_map_def SEC("maps") services = {
 	.max_entries = MAX_SERVERS,
 };
 
+/*map that keeps track of which server a particular tcp connection is established with*/
 struct bpf_map_def SEC("maps") destinations = {
 	.type = BPF_MAP_TYPE_HASH,
 	.key_size = sizeof(u32),
@@ -141,6 +145,7 @@ struct bpf_map_def SEC("maps") port_blacklist_drop_count_udp = {
 	.max_entries = 65536,
 };
 
+/*hash helper*/
 static inline u32 hash(u32 a, u32 b, u32 initval){
 	initval += JHASH_INITVAL + (2 << 2);
 	a += initval;
@@ -173,16 +178,21 @@ static inline u32 hash(u32 a, u32 b, u32 initval){
 #define bpf_debug(fmt, ...) { } while (0)
 #endif
 
-static inline unsigned short checksumIP(unsigned short *buf, int bufsz) {
+/* Calculates checksum for given ip header
+ * @param buf pointer to start of ip header
+ * @param buf_len length of ip header
+ * @return recalculated ip header checksum
+ */
+static inline unsigned short checksumIP(unsigned short *buf, int buf_len) {
     unsigned long sum = 0;
 
-    while (bufsz > 1) {
+    while (buf_len > 1) {
         sum += *buf;
         buf++;
-        bufsz -= 2;
+        buf_len -= 2;
     }
 
-    if (bufsz == 1) {
+    if (buf_len == 1) {
         sum += *(unsigned char *)buf;
     }
 
@@ -192,8 +202,9 @@ static inline unsigned short checksumIP(unsigned short *buf, int bufsz) {
     return ~sum;
 }
 
-
-
+/* Links new tcp session to spesific back-end
+ * @param pkt pointer to ip packet meta info
+ */
 static __always_inline void addDestination(struct pkt_meta *pkt){
 	struct dest_info *tnl;
 	__u32 hashKey = hash(pkt->src, pkt->ports, MAX_SERVERS) % MAX_SERVERS;
@@ -216,11 +227,18 @@ static __always_inline void addDestination(struct pkt_meta *pkt){
 	}
 }
 
+/* Unlinks terminated tcp session to spesific back-end
+ * @param pkt pointer to ip packet meta info  
+ */
 static __always_inline void removeDestination(struct pkt_meta *pkt){
 	__u32 hashKey = hash(pkt->src, pkt->ports, MAX_SERVERS) % MAX_SERVERS;
 	bpf_map_delete_elem(&destinations, &hashKey);
 }
 
+/* Looks up a back-end destination for the particular packet
+ * @param pkt pointer to ip packet meta info 
+ * @return back-end instance indo
+ */
 static __always_inline struct dest_info *hash_get_dest(struct pkt_meta *pkt){	
 	__u32 key,hashKey;
 	struct dest_info *tnl;	
@@ -271,7 +289,9 @@ static __always_inline struct dest_info *hash_get_dest(struct pkt_meta *pkt){
 
 }
 
-/* Keeps stats of XDP_DROP vs XDP_PASS */
+/* Keeps stats of XDP_DROP vs XDP_PASS 
+ * @param action to log
+ */
 static __always_inline
 void stats_action_verdict(u32 action)
 {
@@ -284,39 +304,6 @@ void stats_action_verdict(u32 action)
 	if (value)
 		*value += 1;
 }
-
-/*Extracts source and destination udp ports*/
-static __always_inline bool parse_udp(void *data, __u64 off, void *data_end,
-				      struct pkt_meta *pkt)
-{
-	struct udphdr *udp;
-
-	udp = data + off;
-	if (udp + 1 > data_end)
-		return false;
-
-	pkt->port16[0] = udp->source;
-	pkt->port16[1] = udp->dest;
-
-	return true;
-}
-
-/*Extracts source and destination tcp ports*/
-static __always_inline bool parse_tcp(void *data, __u64 off, void *data_end,
-				      struct pkt_meta *pkt)
-{
-	struct tcphdr *tcp;
-
-	tcp = data + off;
-	if (tcp + 1 > data_end)
-		return false;
-
-	pkt->port16[0] = tcp->source;
-	pkt->port16[1] = tcp->dest;
-
-	return true;
-}
-
 
 /*Entry point for xdp program which gets packet data and keeps track of verdicts
  *@param ctx given packet context to be evaluated
