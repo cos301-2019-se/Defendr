@@ -84,7 +84,7 @@ def removeUser(db,name,roll,salt, password, lastname):
 
 def printUsers(db):
     mycol = db["user"]
-    lines = "-------------------------------------------------\n"
+    lines = "-------------------------------------------------------------------------"
     for x in mycol.find({}, {"_id": 0, "salt": 0, "password": 0}):
         temp = str(x)
         array =temp.split('\'')
@@ -93,9 +93,9 @@ def printUsers(db):
         roll = array[11]
         email = array[15]
         if(roll=="user"):
-            roll=roll+" "
-        lines = lines + "|" + name + " \t\t| " + last + " | "+ roll + " | "+email + '\n'
-    lines = lines + "-------------------------------------------------"
+            roll=roll+"    "
+        lines = lines + "|" + name + " \t\t| " + last + "\t\t| "+ roll + " | "+email + '\t|\n'
+    lines = lines + "-------------------------------------------------------------------------"
     return lines
 
 def checkUsers(db):
@@ -156,7 +156,3 @@ def makeNewUser(db, name, lastName, password, roll, email):
     hashpassword = hashFunction(password, salt)
     saveUser(db, name,lastName, roll, salt, hashpassword, email)
     return True
-
-db= connect()
-
-print(printUsers(db))
