@@ -6,6 +6,7 @@
 #    May 22, 2019 05:47:56 PM SAST  platform: Linux
 
 import sys
+import databaseCon
 
 try:
     import Tkinter as tk
@@ -69,34 +70,73 @@ class win_Login:
 
     def loginUser(self):
 
-        users = ["Jeandre", "Muhammed","Sisa","Christiaan","Ruslynn"]
-        passwds = ["jPass1","mPass1","sPass1","cPass1","rPass1"]
+        # users = ["Jeandre", "Muhammed","Sisa","Christiaan","Ruslynn","Chris"]
+        # passwds = ["jPass1","mPass1","sPass1","cPass1","rPass1","cPass1"]
+        # last = ["Botha","Carrim","Khoza","Opperman","Appana","Osbrone"]
+        # email = ["u17094446@tuks.co.za","u15019854@tuks.co.za","u15034993@tuks.co.za","u17023239@tuks.co.za","u14016304@tuks.co.za","Chris@gmail.com"]
+
+        Email = self.txtEmail.get()
+        passw = self.txtPass.get()
+
+        if(not(Email=='') and not(passw=='')):
+            db = databaseCon.connect()
+            if(databaseCon.checkPass(db,Email,passw)):
+                roll =databaseCon.getRoll(db,Email)
+                messagebox.showinfo("Login Page", "Successly log in as "+roll)
+                self.txtEmail.delete(0, 'end')
+                self.txtPass.delete(0, 'end')
+                Login_support.createMain(roll)
+            else:
+                self.txtPass.delete(0, 'end')
+                messagebox.showwarning("Login Page", "Incorrect email or Password")
+        else:
+            self.txtPass.delete(0, 'end')
+            self.txtEmail.delete(0, 'end')
+            messagebox.showwarning("Login Page", "Please enter email or Password")
+
+
+    def register(self):
+        Login_support.createRegister()
+      #  users = ["Jeandre", "Muhammed","Sisa","Christiaan","Ruslynn"]
+      #  passwds = ["jPass1","mPass1","sPass1","cPass1","rPass1"]
 
         user = self.txtUser.get()
         passw = self.txtPass.get()
+        db = databaseCon.connect()
 
-        for i in range(6):
-            if(i < 5):
-                if(user == users[i] and passw == passwds[i]):
-                    messagebox.showinfo("Login Page", "Success")
-                    self.txtUser.delete(0, 'end')
-                    self.txtPass.delete(0, 'end')
-                    Login_support.createMain()
-                    break
+        if(databaseCon.checkPass(db,user,passw)):
+            roll =databaseCon.getRoll(db,user)
+            messagebox.showinfo("Login Page", "Successly log in as "+roll)
+            self.txtUser.delete(0, 'end')
+            self.txtPass.delete(0, 'end')
+            Login_support.createMain(roll)
+        else:
+            self.txtPass.delete(0, 'end')
+            messagebox.showwarning("Login Page", "Incorrect Username or Password")
 
-                else:
-                    if(user != users[i]):
-                        continue
 
-                    else:
-                        if(passw !=  passwds[i]):
-                            self.txtPass.delete(0, 'end')
-                            messagebox.showwarning("Login Page", "Incorrect Username or Password")
-                            break
-            else:
-                self.txtPass.delete(0, 'end')
-                messagebox.showwarning("Login Page", "Incorrect Username or Password")
-                break
+       # for i in range(6):
+       #     if(i < 5):
+       #         if(user == users[i] and passw == passwds[i]):
+       #             messagebox.showinfo("Login Page", "Success")
+       #             self.txtUser.delete(0, 'end')
+       #             self.txtPass.delete(0, 'end')
+       #             Login_support.createMain()
+       #             break
+
+       #         else:
+       #             if(user != users[i]):
+       #                 continue
+
+       #             else:
+       #                 if(passw !=  passwds[i]):
+       #                     self.txtPass.delete(0, 'end')
+       #                     messagebox.showwarning("Login Page", "Incorrect Username or Password")
+       #                     break
+       #     else:
+       #         self.txtPass.delete(0, 'end')
+       #         messagebox.showwarning("Login Page", "Incorrect Username or Password")
+       #         break
 
     def __init__(self, top=None):
         '''This class configures and populates the toplevel window.
@@ -119,6 +159,9 @@ class win_Login:
         self.Frame1.configure(relief="groove")
         self.Frame1.configure(width=395)
 
+        self.lblEmail = tk.Label(self.Frame1)
+        self.lblEmail.place(relx=0.051, rely=0.148, height=21, width=78)
+        self.lblEmail.configure(text='''Email:''')
         self.lblUser = tk.Label(self.Frame1)
         self.lblUser.place(relx=0.051, rely=0.148, height=21, width=78)
         self.lblUser.configure(text='''Username:''')
@@ -127,6 +170,10 @@ class win_Login:
         self.lblPass.place(relx=0.051, rely=0.444, height=21, width=73)
         self.lblPass.configure(text='''Password:''')
 
+        self.txtEmail = tk.Entry(self.Frame1)
+        self.txtEmail.place(relx=0.532, rely=0.148,height=23, relwidth=0.42)
+        self.txtEmail.configure(background="white")
+        self.txtEmail.configure(font="TkFixedFont")
         self.txtUser = tk.Entry(self.Frame1)
         self.txtUser.place(relx=0.532, rely=0.148,height=23, relwidth=0.42)
         self.txtUser.configure(background="white")
@@ -149,6 +196,12 @@ class win_Login:
         self.btnCancel.configure(text='''Cancel''')
         self.btnCancel.configure(cursor="hand1")
         self.btnCancel.configure(command=lambda: self.cancelLogin())
+
+        self.btnRegister = tk.Button(self.Frame1)
+        self.btnRegister.place(relx=0.406, rely=0.667, height=31, width=76)
+        self.btnRegister.configure(text='''Register''')
+        self.btnRegister.configure(cursor="hand1")
+        self.btnRegister.configure(command=lambda: self.register())
 
         self.menubar = tk.Menu(top,font="TkMenuFont",bg=_bgcolor,fg=_fgcolor)
         top.configure(menu = self.menubar)

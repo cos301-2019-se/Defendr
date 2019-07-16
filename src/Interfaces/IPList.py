@@ -73,16 +73,16 @@ class win_IPList:
             Login_support.root.deiconify()
 
     def removeIP(self):
-        c = controller("../../Documents/Defendr/Defendr/src/")
+        c = controller("../")
         c.whiteListIP(self.lst_IPs.get(self.lst_IPs.curselection()))
 
     def addIP(self):
-        c = controller("../../Documents/Defendr/Defendr/src/")
+        c = controller("../")
         c.blacklistIP(self.txtIp.get())
 
     def listIPs(self):
         self.lst_IPs.delete(0, tk.END)
-        c = controller("../../Documents/Defendr/Defendr/src/")
+        c = controller("../")
         ipList = c.getBlacklistedIpList()
         for x in ipList:
             self.lst_IPs.insert(tk.END, x)

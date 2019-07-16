@@ -4,6 +4,7 @@
 static const char *__doc__=
  " XDP ddos01: command line tool";
 
+#include <mongoc.h>
 #include <assert.h>
 #include <errno.h>
 #include <signal.h>
@@ -19,6 +20,17 @@ static const char *__doc__=
 #include <time.h>
 
 #include <arpa/inet.h>
+#include <netdb.h> 
+#include <sys/types.h> 
+#include <sys/socket.h> 
+#include <netinet/in.h> 
+#include <sys/ioctl.h>
+#include <net/if.h>
+#include <linux/unistd.h>     
+#include <linux/kernel.h>       
+#include <sys/sysinfo.h>
+#include "GeoIP.h"
+#include "IP2Location.h"
 
 /* libbpf.h defines bpf_* function helpers for syscalls,
  * indirectly via ./tools/lib/bpf/bpf.h */
@@ -101,6 +113,125 @@ static void usage(char *argv[])
 		printf("\n");
 	}
 	printf("\n");
+}
+
+const int LOW = 1;
+const int MED = 0;
+const int HIGH = -1;
+const char *uri_str = "mongodb+srv://darknites:D%40rkN1t3s@defendr-1vnvv.azure.mongodb.net/test?retryWrites=true&ssl=true";
+mongoc_client_t *client = NULL;
+mongoc_database_t *database = NULL;
+mongoc_collection_t *collection = NULL;
+mongoc_cursor_t *cursor = NULL;
+bson_t *bson, *query;
+bson_error_t error;
+char *str;
+bool retval;	    
+
+static void init_db(){
+		mongoc_init ();
+		client = mongoc_client_new (uri_str);
+		mongoc_client_set_appname (client, "defendr-logging");
+		database = mongoc_client_get_database (client, "Defendr");
+}
+
+static void close_db(){
+	mongoc_client_destroy (client);
+	mongoc_cleanup (); 
+}
+
+static void insert_into_packets_list ( char* ip_source,  char* status,  char* timestamp,  char* country_id,  char* ip_destination,  char* server,  char* reason)
+{
+    collection = mongoc_client_get_collection (client, "Defendr", "packets_list");
+	char *string;
+	char *json;
+	asprintf(&json,"{\"ip_source\":\"%s\",\"status\":\"%s\",\"timestamp\":\"%s\",\"country_id\":\"%s\",\"ip_destination\":\"%s\",\"server\":\"%s\",\"reason\":\"%s\"}", ip_source, status, timestamp, country_id, ip_destination, server, reason);
+	if(verbose) printf("%s\n", json);
+	bson = bson_new_from_json ((const uint8_t *)json, -1, &error);
+
+	if(!bson)
+	{
+		fprintf(stderr, "HERE: %s\n", error.message);
+		return;
+	}
+
+	string = bson_as_canonical_extended_json (bson, NULL);
+	printf("%s\n", string);
+
+	if(!mongoc_collection_insert_one(collection, bson, NULL, NULL, &error))
+		fprintf(stderr, "%s\n", error.message);
+
+	bson_free (string);
+	bson_free (json);
+	bson_destroy(bson);
+	mongoc_collection_destroy(collection);
+	return;
+}
+
+void insert_into_blacklist (const char *ip)
+{
+	collection = mongoc_client_get_collection (client, "Defendr", "blacklist");
+	char *string;
+	char* json;
+	asprintf(&json,"{\"ip\":\"%s\"}", ip);
+	if(verbose) printf("%s\n", json);
+	bson = bson_new_from_json ((const uint8_t *)json, -1, &error);
+
+	if(!bson)
+	{
+		fprintf(stderr, "HERE: %s\n", error.message);
+		return;
+	}
+
+	string = bson_as_canonical_extended_json (bson, NULL);
+	printf("%s\n", string);
+
+	if(!mongoc_collection_insert_one(collection, bson, NULL, NULL, &error))
+		fprintf(stderr, "%s\n", error.message);
+
+	bson_free (string);
+	bson_free (json);
+	bson_destroy(bson);
+	mongoc_collection_destroy(collection);
+
+	return;
+}
+
+int get_status_by_country_id(const char* country_id)
+{
+	collection = mongoc_client_get_collection (client, "Defendr", "country");
+	const bson_t *doc;
+	char *str;
+	int status = 0;
+	
+	query = bson_new ();
+	BSON_APPEND_UTF8 (query, "country_id", country_id);
+	cursor = mongoc_collection_find_with_opts (collection, query, NULL, NULL);
+	
+	mongoc_cursor_next (cursor, &doc);
+
+	if(!doc || !cursor)
+	{
+		printf("The id %s cannot be found.  Assigning status type HIGH", country_id);
+		return HIGH;
+	}
+
+	str = bson_as_canonical_extended_json (doc, NULL);
+	
+	if(strstr(str,"High"))
+	{
+		status = HIGH;
+	}
+	else if(strstr(str,"Low"))
+	{
+		status = LOW;
+	}
+
+	bson_free (str);
+	bson_destroy (query);
+	mongoc_cursor_destroy (cursor);
+	mongoc_collection_destroy (collection);
+	return status;
 }
 
 int open_bpf_map(const char *file)
@@ -287,6 +418,8 @@ static void blacklist_list_all_ports(int portfd, int countfds[])
 }
 
 static  void activate_dynamic_blacklist(){
+		IP2Location *IP2LocationObj = IP2Location_open("data/IP-COUNTRY.BIN");
+
 	    int fd_watchlist;		
 
 		//startup run
@@ -327,10 +460,38 @@ static  void activate_dynamic_blacklist(){
 				if (inet_ntop(AF_INET, &key, ip_txt, sizeof(ip_txt))) {	
 					printf("%s %s %llu \n","monitor ", ip_txt,value);							
 					if(value > 3){
-						int fd_blacklist = open_bpf_map(file_blacklist);						
-						blacklist_modify(fd_blacklist,ip_txt, ACTION_ADD);
-						close(fd_blacklist);	
-						printf("%s %s %llu \n","blacklisted ", ip_txt,value);
+						IP2LocationRecord *record = IP2Location_get_all(IP2LocationObj, "105.229.15.58");
+						char* country = record->country_short;
+						init_db();
+						int risk = get_status_by_country_id(country);
+						close_db();
+							if(risk == HIGH){
+							int fd_blacklist = open_bpf_map(file_blacklist);						
+							blacklist_modify(fd_blacklist,ip_txt, ACTION_ADD);
+							close(fd_blacklist);	
+							printf("blacklisted %s with count %llu and risk %d\n",ip_txt,value,risk);
+							init_db();
+							insert_into_blacklist(ip_string);
+							close_db();							
+						}else if (risk == MED && value > 5){
+							int fd_blacklist = open_bpf_map(file_blacklist);						
+							blacklist_modify(fd_blacklist,ip_txt, ACTION_ADD);
+							close(fd_blacklist);	
+							printf("blacklisted %s with count %llu and risk %d\n",ip_txt,value,risk);	
+							init_db();
+							insert_into_blacklist(ip_string);
+							close_db();							
+						}else if (risk == LOW && value > 10){
+							int fd_blacklist = open_bpf_map(file_blacklist);						
+							blacklist_modify(fd_blacklist,ip_txt, ACTION_ADD);
+							close(fd_blacklist);	
+							printf("blacklisted %s with count %llu and risk %d\n",ip_txt,value,risk);	
+							init_db();
+							insert_into_blacklist(ip_string);
+							close_db();						
+						}
+						IP2Location_free_record(record);
+
 					}	
 					ipsToRemove[numToRemove] = malloc(strlen(ip_txt) + 1); 
 					strcpy(ipsToRemove[numToRemove], ip_txt);
@@ -344,100 +505,90 @@ static  void activate_dynamic_blacklist(){
 			}
 			close(fd_watchlist);
 		}		
+		IP2Location_close(IP2LocationObj);
 }
 
-static  void start_logging(){
-	    int fd_enter_logs;	
-	    int fd_pass_logs;
-	    int fd_drop_logs;	
-	    
-		while(1){
-			//sleep(0.2);
-			fd_enter_logs = open_bpf_map(file_enter_logs);
-			fd_pass_logs = open_bpf_map(file_pass_logs);
-			fd_drop_logs = open_bpf_map(file_drop_logs);
-		    __u32 key, *prev_key = NULL;
-	        __u64 value;
-	        
-	        char* enterLogsToRemove[1000];
-	        char* passLogsToRemove[1000];
-	        char* dropLogsToRemove[1000];
-	        
-			int numEnterLogsToRemove = 0;
-			int numDropLogsToRemove = 0;
-			int numPassLogsToRemove = 0;
-			
-			while (bpf_map_get_next_key(fd_enter_logs, prev_key, &key) == 0) {
-				value = get_key32_value64_percpu(fd_enter_logs, key);
-				char ip_txt[INET_ADDRSTRLEN] = {0};
-				if (inet_ntop(AF_INET, &key, ip_txt, sizeof(ip_txt))) {	
-					//value -= 1;			
-					printf("%s %s \n","entered ", ip_txt);
-					//printf("c1 %d %s \n",value, ip_txt);						
-					//if(value <= 0){		
-						enterLogsToRemove[numEnterLogsToRemove] = malloc(strlen(ip_txt) + 1); 
-						strcpy(enterLogsToRemove[numEnterLogsToRemove], ip_txt);
-						++numEnterLogsToRemove;					
-					//}	
 
-				}				
-				prev_key = &key;
-			}
-			
+
+static  void start_logging(){
+	IP2Location *IP2LocationObj = IP2Location_open("data/IP-COUNTRY.BIN");	
+		init_db();
+	    struct sysinfo s_info;
+		int error = sysinfo(&s_info);
+		long boot_time =  (unsigned long)time(NULL)-s_info.uptime;
+		printf("time of boot is: %ld\n",boot_time);
+		while(1){
+			sleep(1);
+			int fd_logs = open_bpf_map(file_logs);
+			__u64 key, *prev_key = NULL;
+			__u64 logsToRemove[1000];
+			int numLogsToRemove = 0;
+			struct log *packet_log = (struct log*)malloc(sizeof(struct log));
+			int count = 0;
 			key = NULL;
 			prev_key = NULL;
-			//sleep(0.2);
-			while (bpf_map_get_next_key(fd_pass_logs, prev_key, &key) == 0) {
-				value = get_key32_value64_percpu(fd_pass_logs, key);
-				char ip_txt[INET_ADDRSTRLEN] = {0};
-				if (inet_ntop(AF_INET, &key, ip_txt, sizeof(ip_txt))) {	
-					//value -= 1;
-					printf("%s %s \n","passed ", ip_txt);		
-					//printf("c2 %d %s \n",value, ip_txt);							
-					//if(value <= 0){
-						passLogsToRemove[numPassLogsToRemove] = malloc(strlen(ip_txt) + 1); 
-						strcpy(passLogsToRemove[numPassLogsToRemove], ip_txt);
-						++numPassLogsToRemove;
-					//}			
-				}				
-				prev_key = &key;
+			while (bpf_map_get_next_key(fd_logs, prev_key, &key) == 0) {
+				count++;
+				 int res = bpf_map_lookup_elem(fd_logs,&key,packet_log); 
+				 if(res == 0){
+					char src_ip[INET_ADDRSTRLEN] = {0};
+					char dest_ip[INET_ADDRSTRLEN] = {0};
+					if (inet_ntop(AF_INET, &packet_log->src_ip, src_ip, sizeof(src_ip)) && inet_ntop(AF_INET, &packet_log->destination_ip, dest_ip, sizeof(dest_ip))) {		
+						long time = boot_time+ (key/1000000000);
+						char mac_str[18];
+						snprintf(mac_str, sizeof(mac_str), "%02x:%02x:%02x:%02x:%02x:%02x",packet_log->server[0], packet_log->server[1], packet_log->server[2], packet_log->server[3], packet_log->server[4], packet_log->server[5]);
+						char* reason;
+						char* status;
+						if(packet_log->reason == REASON_NONE) reason = "none";
+						else if(packet_log->reason == REASON_BLACKLIST) reason = "blacklisted";
+						else if(packet_log->reason == REASON_NOSERVER) reason = "no_available_server";
+						else if(packet_log->reason == REASON_NON_TCP) reason = "not_tcp";
+						else reason = "unknown";
+
+						if(packet_log->status == LOG_ENTER){
+							status= "enter";
+						}else if(packet_log->status == LOG_PASS){
+							status= "pass";
+						}else if(packet_log->status == LOG_DROP){
+							status= "drop";
+						}else{
+							status= "unknown";
+						}
+						char *country = "ZA";	
+						IP2LocationRecord *record = IP2Location_get_all(IP2LocationObj,src_ip);
+						if(record != NULL){
+							country = record->country_short;
+						}			
+						if(strlen(country)<= 1) country = "ZA";	
+		
+						char time_str[30];
+						snprintf(time_str, 10, "%ld", time);
+
+						if(verbose) printf("Packet( %s ):ip_src-%s, ip_dest-%s, server-%s, country-%s, reason-%s, time-%ld\n",status,src_ip,dest_ip,mac_str,country,reason,time);
+						insert_into_packets_list(src_ip,status,time_str,country,dest_ip,mac_str,reason);
+						logsToRemove[numLogsToRemove] = key; 
+						++numLogsToRemove;		
+						if(record != NULL) IP2Location_free_record(record);			
+					}else{
+						printf("conversion failed\n");
+					}									 
+				 }else{
+					fprintf(stderr,"ERR: bpf_map_lookup_elem failed key:0x%llX\n", key);
+				 }
+				 prev_key = &key;
 			}
-						
 			key = NULL;
 			prev_key = NULL;
-			//sleep(0.2);
-			while (bpf_map_get_next_key(fd_drop_logs, prev_key, &key) == 0) {
-				value = get_key32_value64_percpu(fd_drop_logs, key);
-				char ip_txt[INET_ADDRSTRLEN] = {0};
-				if (inet_ntop(AF_INET, &key, ip_txt, sizeof(ip_txt))) {	
-					value -= 1;
-					printf("%s %s \n","dropped ", ip_txt);								
-					//if(value <= 0){
-						dropLogsToRemove[numDropLogsToRemove] = malloc(strlen(ip_txt) + 1); 
-						strcpy(dropLogsToRemove[numDropLogsToRemove], ip_txt);
-						++numDropLogsToRemove;		
-					//}	
-	
-				}				
-				prev_key = &key;
+			packet_log = NULL;
+			for(int i = 0; i < numLogsToRemove;++i){
+				__u64 keyToDel = logsToRemove[i];
+				bpf_map_delete_elem(fd_logs,&keyToDel);
+				
 			}
-			
-			for(int i = 0; i < numEnterLogsToRemove;++i){
-				log_modify(fd_enter_logs,enterLogsToRemove[i], ACTION_DEL);
-				free(enterLogsToRemove[i]);
-			}
-			for(int i = 0; i < numPassLogsToRemove;++i){
-				log_modify(fd_pass_logs,passLogsToRemove[i], ACTION_DEL);
-				free(passLogsToRemove[i]);
-			}
-			for(int i = 0; i < numDropLogsToRemove;++i){
-				log_modify(fd_drop_logs,dropLogsToRemove[i], ACTION_DEL);
-				free(dropLogsToRemove[i]);
-			}
-			close(fd_enter_logs);
-			close(fd_pass_logs);	
-			close(fd_drop_logs);	
-		}		    
+			close(fd_logs);
+		}		  
+		close_db(); 
+		IP2Location_close(IP2LocationObj);
 }
 
 /*add backend server*/
@@ -616,6 +767,12 @@ int main(int argc, char **argv)
 			fd_blacklist = open_bpf_map(file_blacklist);
 			res = blacklist_modify(fd_blacklist, ip_string, action);
 			close(fd_blacklist);
+			if(action == ACTION_ADD){
+				init_db();
+				insert_into_blacklist(ip_string);
+				close_db();
+			}
+			
 		}
 
 		if (dport) {
