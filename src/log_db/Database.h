@@ -3,11 +3,10 @@
 
 #include <string.h>
 #include <time.h>
-#include <mongoc.h>
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
-
+#include <mongoc.h>
 
 class Database
 {

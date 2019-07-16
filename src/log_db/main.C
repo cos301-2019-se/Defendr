@@ -52,6 +52,9 @@ static void usage(char *argv[])
 int main(int argc, char **argv)
 {
 #	define STR_MAX 42 /* For trivial input validation */
+	/*for(int i = 0; i < argc;++i){
+		printf("%s\n",argv[i]);
+	}*/
 	char ip_buf[STR_MAX] = {};
 	char *ip = NULL;
 	char destination_buf[STR_MAX] = {};
@@ -70,7 +73,7 @@ int main(int argc, char **argv)
 	int opt;
 	bool log;
 	char type;
-	Database db = Database::getInstance();
+	Database *db = &(Database::getInstance());
 
 	while ((opt = getopt_long(argc, argv, "adshi:t:u:",
 				  long_options, &longindex)) != -1) {
@@ -146,10 +149,10 @@ int main(int argc, char **argv)
 	
 	if(log){
 		if(type = 'p'){
-			db.insert_into_packets_list(ip,status,time,country,destination,server,reason);
+			db->insert_into_packets_list(ip,status,time,country,destination,server,reason);
 		}
 	}
-	//db = NULL;
+	db = NULL;
 
 
 }

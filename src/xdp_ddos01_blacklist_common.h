@@ -28,13 +28,7 @@ static int verbose = 1;
 static const char *file_blacklist = "/sys/fs/bpf/ddos_blacklist";
 static const char *file_verdict   = "/sys/fs/bpf/ddos_blacklist_stat_verdict";
 static const char *file_ip_watchlist   = "/sys/fs/bpf/ddos_blacklist_ip_watchlist";
-static const char *file_enter_logs   = "/sys/fs/bpf/ddos_blacklist_enter_logs";
-static const char *file_drop_logs   = "/sys/fs/bpf/ddos_blacklist_drop_logs";
-static const char *file_pass_logs   = "/sys/fs/bpf/ddos_blacklist_pass_logs";
-<<<<<<< HEAD
-=======
 static const char *file_logs   = "/sys/fs/bpf/ddos_blacklist_logs";
->>>>>>> packet_dropper
 static const char *file_servers   = "/sys/fs/bpf/ddos_blacklist_servers";
 static const char *file_services   = "/sys/fs/bpf/ddos_blacklist_services";
 static const char *file_destinations   = "/sys/fs/bpf/ddos_blacklist_destinations";
