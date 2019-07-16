@@ -1,4 +1,3 @@
-<<<<<<< HEAD
 import pymongo
 import hashlib, uuid
 import urllib.parse
@@ -161,7 +160,6 @@ def makeNewUser(db, name, lastName, password, roll, email):
 db= connect()
 
 print(printUsers(db))
-=======
 import pymongo
 import hashlib, uuid
 import urllib.parse
@@ -281,4 +279,3 @@ def makeNewUser(db, name, password, roll):
     hashpassword = hashFunction(password, salt)
     saveUser(db, name , roll, salt, hashpassword)
     return name+" succefully added"
->>>>>>> packet_dropper
