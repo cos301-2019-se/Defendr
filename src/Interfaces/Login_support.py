@@ -7,7 +7,10 @@
 
 import sys
 import Home
+<<<<<<< HEAD
 import register
+=======
+>>>>>>> packet_dropper
 
 try:
     import Tkinter as tk
@@ -37,10 +40,13 @@ def createMain(roll):
     Home.create_win_Home(root,roll)
     root.withdraw()
 
+<<<<<<< HEAD
 def createRegister():
     register.create_register_window(root)
     root.withdraw()
 
+=======
+>>>>>>> packet_dropper
 if __name__ == '__main__':
     import Login
     Login.vp_start_gui()
