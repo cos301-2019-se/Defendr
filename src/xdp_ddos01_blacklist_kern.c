@@ -341,9 +341,6 @@ int  xdp_program(struct xdp_md *ctx)
 
     unsigned short old_daddr;
     u64 *value;
-	//__u64 initialDrop = 1;
-	//__u64 initialEnter = 1;
-	//__u64 initialPass = 1;
 	__u64 initialValue = 1;
 	u32 ip_src;
 	__u16 payload_len;
@@ -404,25 +401,11 @@ int  xdp_program(struct xdp_md *ctx)
     if (data + nh_off > data_end) {
         return rc;
     }
-
-
-	/*value = bpf_map_lookup_elem(&enter_logs,&ip_src);
-	if (value) {
-		*value += 1;
-	}else{
-		bpf_map_update_elem(&enter_logs,&ip_src,&initialEnter,BPF_NOEXIST);
-	}*/
 	
 	value = bpf_map_lookup_elem(&blacklist, &ip_src);
 	if (value) {
 		*value += 1; 		
 			    
-		/*value = bpf_map_lookup_elem(&drop_logs,&ip_src);
-		if (value) {
-			*value += 1;
-		}else{
-			bpf_map_update_elem(&drop_logs,&ip_src,&initialDrop,BPF_NOEXIST);
-		}*/
 		struct log drop_log = {};
 		drop_log.src_ip = ip_src;
 		drop_log.status = LOG_DROP;
@@ -474,11 +457,11 @@ int  xdp_program(struct xdp_md *ctx)
 		value = bpf_map_lookup_elem(&services,&ip_dest);
 		if(value){
 			
-			if(tcph->syn == 1){
+			/*if(tcph->syn == 1){
 				addDestination(&pkt);
 			}else if (tcph->fin == 1){
 				removeDestination(&pkt);
-			}
+			}*/
 			
 			tnl = NULL;		
 			tnl = hash_get_dest(&pkt);
@@ -524,12 +507,12 @@ int  xdp_program(struct xdp_md *ctx)
 			pass_log.server[5] = tnl->dmac[5];
 			time = bpf_ktime_get_ns();
 			bpf_map_update_elem(&logs,&time,&pass_log,BPF_ANY);			
-			//bpf_map_update_elem(&pass_logs,&ip_src,&destinationServer,BPF_ANY);
 			
 			pkt_size = (__u16)(data_end - data);
 			__sync_fetch_and_add(&tnl->pkts, 1);
 			__sync_fetch_and_add(&tnl->bytes, pkt_size);
 			return XDP_TX;
+			
 		}else{
 			struct log pass_log = {};
 			pass_log.src_ip = ip_src;

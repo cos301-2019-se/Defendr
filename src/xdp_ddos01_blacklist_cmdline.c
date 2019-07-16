@@ -471,7 +471,7 @@ static  void activate_dynamic_blacklist(){
 							close(fd_blacklist);	
 							printf("blacklisted %s with count %llu and risk %d\n",ip_txt,value,risk);
 							init_db();
-							insert_into_blacklist(ip_string);
+							insert_into_blacklist(ip_txt);
 							close_db();							
 						}else if (risk == MED && value > 5){
 							int fd_blacklist = open_bpf_map(file_blacklist);						
@@ -479,7 +479,7 @@ static  void activate_dynamic_blacklist(){
 							close(fd_blacklist);	
 							printf("blacklisted %s with count %llu and risk %d\n",ip_txt,value,risk);	
 							init_db();
-							insert_into_blacklist(ip_string);
+							insert_into_blacklist(ip_txt);
 							close_db();							
 						}else if (risk == LOW && value > 10){
 							int fd_blacklist = open_bpf_map(file_blacklist);						
@@ -487,7 +487,7 @@ static  void activate_dynamic_blacklist(){
 							close(fd_blacklist);	
 							printf("blacklisted %s with count %llu and risk %d\n",ip_txt,value,risk);	
 							init_db();
-							insert_into_blacklist(ip_string);
+							insert_into_blacklist(ip_txt);
 							close_db();						
 						}
 						IP2Location_free_record(record);
@@ -565,7 +565,7 @@ static  void start_logging(){
 						snprintf(time_str, 10, "%ld", time);
 
 						if(verbose) printf("Packet( %s ):ip_src-%s, ip_dest-%s, server-%s, country-%s, reason-%s, time-%ld\n",status,src_ip,dest_ip,mac_str,country,reason,time);
-						insert_into_packets_list(src_ip,status,time_str,country,dest_ip,mac_str,reason);
+						//insert_into_packets_list(src_ip,status,time_str,country,dest_ip,mac_str,reason);
 						logsToRemove[numLogsToRemove] = key; 
 						++numLogsToRemove;		
 						if(record != NULL) IP2Location_free_record(record);			
