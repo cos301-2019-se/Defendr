@@ -9,5 +9,8 @@ sudo apt install python3-pip
 sudo apt install python3-tk
 sudo pip3 install pymongo
 sudo pip3 install dnspython
+sudo apt install gradle
+sudo apt install net-tools
+sudo apt install apache2
 cd src/Interfaces/
 python3 Login.py
