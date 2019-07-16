@@ -70,27 +70,29 @@ class win_Login:
 
     def loginUser(self):
 
-      #  users = ["Jeandre", "Muhammed","Sisa","Christiaan","Ruslynn","Chris"]
-      #  passwds = ["jPass1","mPass1","sPass1","cPass1","rPass1","1234"]
+        # users = ["Jeandre", "Muhammed","Sisa","Christiaan","Ruslynn","Chris"]
+        # passwds = ["jPass1","mPass1","sPass1","cPass1","rPass1","cPass1"]
+        # last = ["Botha","Carrim","Khoza","Opperman","Appana","Osbrone"]
+        # email = ["u17094446@tuks.co.za","u15019854@tuks.co.za","u15034993@tuks.co.za","u17023239@tuks.co.za","u14016304@tuks.co.za","Chris@gmail.com"]
 
-        user = self.txtUser.get()
+        Email = self.txtEmail.get()
         passw = self.txtPass.get()
 
-        if(not(user=='') and not(passw=='')):
+        if(not(Email=='') and not(passw=='')):
             db = databaseCon.connect()
-            if(databaseCon.checkPass(db,user,passw)):
-                roll =databaseCon.getRoll(db,user)
+            if(databaseCon.checkPass(db,Email,passw)):
+                roll =databaseCon.getRoll(db,Email)
                 messagebox.showinfo("Login Page", "Successly log in as "+roll)
-                self.txtUser.delete(0, 'end')
+                self.txtEmail.delete(0, 'end')
                 self.txtPass.delete(0, 'end')
                 Login_support.createMain(roll)
             else:
                 self.txtPass.delete(0, 'end')
-                messagebox.showwarning("Login Page", "Incorrect Username or Password")
+                messagebox.showwarning("Login Page", "Incorrect email or Password")
         else:
             self.txtPass.delete(0, 'end')
-            self.txtUser.delete(0, 'end')
-            messagebox.showwarning("Login Page", "Please enter Username or Password")
+            self.txtEmail.delete(0, 'end')
+            messagebox.showwarning("Login Page", "Please enter email or Password")
 
 
     def register(self):
@@ -140,18 +142,18 @@ class win_Login:
         self.Frame1.configure(relief="groove")
         self.Frame1.configure(width=395)
 
-        self.lblUser = tk.Label(self.Frame1)
-        self.lblUser.place(relx=0.051, rely=0.148, height=21, width=78)
-        self.lblUser.configure(text='''Username:''')
+        self.lblEmail = tk.Label(self.Frame1)
+        self.lblEmail.place(relx=0.051, rely=0.148, height=21, width=78)
+        self.lblEmail.configure(text='''Email:''')
 
         self.lblPass = tk.Label(self.Frame1)
         self.lblPass.place(relx=0.051, rely=0.444, height=21, width=73)
         self.lblPass.configure(text='''Password:''')
 
-        self.txtUser = tk.Entry(self.Frame1)
-        self.txtUser.place(relx=0.532, rely=0.148,height=23, relwidth=0.42)
-        self.txtUser.configure(background="white")
-        self.txtUser.configure(font="TkFixedFont")
+        self.txtEmail = tk.Entry(self.Frame1)
+        self.txtEmail.place(relx=0.532, rely=0.148,height=23, relwidth=0.42)
+        self.txtEmail.configure(background="white")
+        self.txtEmail.configure(font="TkFixedFont")
 
         self.txtPass = tk.Entry(self.Frame1)
         self.txtPass.place(relx=0.532, rely=0.444,height=23, relwidth=0.42)
