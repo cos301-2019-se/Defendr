@@ -26,8 +26,8 @@ def init(top, gui, *args, **kwargs):
     top_level = top
     root = top
 
-def createChangeUser(email):
-    ChangeUser.create_UserChange(root,email)
+def createChangeUser(email, db):
+    ChangeUser.create_UserChange(root,email, db)
     root.withdraw()
 
 def destroy_window():
