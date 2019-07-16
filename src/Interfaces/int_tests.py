@@ -6,7 +6,7 @@ import IPList
 
 import random
 
-#c = controller("../")
+c = controller("../")
 
 
 # def test_load():
@@ -26,10 +26,9 @@ import random
 
 class Test_Unit(unittest.TestCase):
     def test_XDPController_Blacklist_Integration_Interface(self):
+        c = controller("../")
         self.assertEqual(IPList.addIP("192.168.43.252"), "Success", "Failed to blacklist IP")
 
-        ip_List = c.getBlacklistedIpList()
-        c = controller("../")
         ipList = c.getBlacklistedIpList()
         for x in ipList:
             self.assertEqual(x, "192.168.43.252", "Success", "Failed to Blacklist IP")
