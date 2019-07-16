@@ -70,7 +70,6 @@ class win_Login:
 
     def loginUser(self):
 
-<<<<<<< HEAD
         # users = ["Jeandre", "Muhammed","Sisa","Christiaan","Ruslynn","Chris"]
         # passwds = ["jPass1","mPass1","sPass1","cPass1","rPass1","cPass1"]
         # last = ["Botha","Carrim","Khoza","Opperman","Appana","Osbrone"]
@@ -98,7 +97,6 @@ class win_Login:
 
     def register(self):
         Login_support.createRegister()
-=======
       #  users = ["Jeandre", "Muhammed","Sisa","Christiaan","Ruslynn"]
       #  passwds = ["jPass1","mPass1","sPass1","cPass1","rPass1"]
 
@@ -115,7 +113,7 @@ class win_Login:
         else:
             self.txtPass.delete(0, 'end')
             messagebox.showwarning("Login Page", "Incorrect Username or Password")
->>>>>>> packet_dropper
+
 
        # for i in range(6):
        #     if(i < 5):
@@ -161,31 +159,25 @@ class win_Login:
         self.Frame1.configure(relief="groove")
         self.Frame1.configure(width=395)
 
-<<<<<<< HEAD
         self.lblEmail = tk.Label(self.Frame1)
         self.lblEmail.place(relx=0.051, rely=0.148, height=21, width=78)
         self.lblEmail.configure(text='''Email:''')
-=======
         self.lblUser = tk.Label(self.Frame1)
         self.lblUser.place(relx=0.051, rely=0.148, height=21, width=78)
         self.lblUser.configure(text='''Username:''')
->>>>>>> packet_dropper
 
         self.lblPass = tk.Label(self.Frame1)
         self.lblPass.place(relx=0.051, rely=0.444, height=21, width=73)
         self.lblPass.configure(text='''Password:''')
 
-<<<<<<< HEAD
         self.txtEmail = tk.Entry(self.Frame1)
         self.txtEmail.place(relx=0.532, rely=0.148,height=23, relwidth=0.42)
         self.txtEmail.configure(background="white")
         self.txtEmail.configure(font="TkFixedFont")
-=======
         self.txtUser = tk.Entry(self.Frame1)
         self.txtUser.place(relx=0.532, rely=0.148,height=23, relwidth=0.42)
         self.txtUser.configure(background="white")
         self.txtUser.configure(font="TkFixedFont")
->>>>>>> packet_dropper
 
         self.txtPass = tk.Entry(self.Frame1)
         self.txtPass.place(relx=0.532, rely=0.444,height=23, relwidth=0.42)
@@ -205,15 +197,12 @@ class win_Login:
         self.btnCancel.configure(cursor="hand1")
         self.btnCancel.configure(command=lambda: self.cancelLogin())
 
-<<<<<<< HEAD
         self.btnRegister = tk.Button(self.Frame1)
         self.btnRegister.place(relx=0.406, rely=0.667, height=31, width=76)
         self.btnRegister.configure(text='''Register''')
         self.btnRegister.configure(cursor="hand1")
         self.btnRegister.configure(command=lambda: self.register())
 
-=======
->>>>>>> packet_dropper
         self.menubar = tk.Menu(top,font="TkMenuFont",bg=_bgcolor,fg=_fgcolor)
         top.configure(menu = self.menubar)
 
