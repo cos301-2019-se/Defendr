@@ -302,6 +302,7 @@ static  void activate_dynamic_blacklist(){
 
 		//startup run
 			sleep(1);
+<<<<<<< HEAD
 			fd_watchlist = open_bpf_map(file_ip_watchlist);
 		    __u32 key, *prev_key = NULL;
 	        __u64 value;
@@ -327,6 +328,8 @@ static  void activate_dynamic_blacklist(){
 
 		while(1){
 			sleep(1);
+=======
+>>>>>>> packet_dropper
 			fd_watchlist = open_bpf_map(file_ip_watchlist);
 		    __u32 key, *prev_key = NULL;
 	        __u64 value;
@@ -336,6 +339,59 @@ static  void activate_dynamic_blacklist(){
 				value = get_key32_value64_percpu(fd_watchlist, key);
 				char ip_txt[INET_ADDRSTRLEN] = {0};
 				if (inet_ntop(AF_INET, &key, ip_txt, sizeof(ip_txt))) {	
+<<<<<<< HEAD
+					printf("%s %s %llu \n","monitor ", ip_txt,value);							
+					if(value > 3){
+						int fd_blacklist = open_bpf_map(file_blacklist);						
+						blacklist_modify(fd_blacklist,ip_txt, ACTION_ADD);
+						close(fd_blacklist);	
+						printf("%s %s %llu \n","blacklisted ", ip_txt,value);
+					}	
+=======
+>>>>>>> packet_dropper
+					ipsToRemove[numToRemove] = malloc(strlen(ip_txt) + 1); 
+					strcpy(ipsToRemove[numToRemove], ip_txt);
+					++numToRemove;	
+				}				
+				prev_key = &key;
+			}
+			for(int i = 0; i < numToRemove;++i){
+				watchlist_modify(fd_watchlist,ipsToRemove[i], ACTION_DEL);
+				free(ipsToRemove[i]);
+			}
+			close(fd_watchlist);
+
+		// continous monitor
+
+		while(1){
+<<<<<<< HEAD
+			//sleep(0.2);
+			fd_enter_logs = open_bpf_map(file_enter_logs);
+			fd_pass_logs = open_bpf_map(file_pass_logs);
+			fd_drop_logs = open_bpf_map(file_drop_logs);
+=======
+			sleep(1);
+			fd_watchlist = open_bpf_map(file_ip_watchlist);
+>>>>>>> packet_dropper
+		    __u32 key, *prev_key = NULL;
+	        __u64 value;
+	        char* ipsToRemove[1000];
+			int numToRemove = 0;
+			while (bpf_map_get_next_key(fd_watchlist, prev_key, &key) == 0) {
+				value = get_key32_value64_percpu(fd_watchlist, key);
+				char ip_txt[INET_ADDRSTRLEN] = {0};
+				if (inet_ntop(AF_INET, &key, ip_txt, sizeof(ip_txt))) {	
+<<<<<<< HEAD
+					//value -= 1;			
+					printf("%s %s \n","entered ", ip_txt);
+					//printf("c1 %d %s \n",value, ip_txt);						
+					//if(value <= 0){		
+						enterLogsToRemove[numEnterLogsToRemove] = malloc(strlen(ip_txt) + 1); 
+						strcpy(enterLogsToRemove[numEnterLogsToRemove], ip_txt);
+						++numEnterLogsToRemove;					
+					//}	
+
+=======
 					printf("%s %s %llu \n","monitor ", ip_txt,value);							
 					if(value > 3){
 						int fd_blacklist = open_bpf_map(file_blacklist);						
@@ -346,6 +402,7 @@ static  void activate_dynamic_blacklist(){
 					ipsToRemove[numToRemove] = malloc(strlen(ip_txt) + 1); 
 					strcpy(ipsToRemove[numToRemove], ip_txt);
 					++numToRemove;	
+>>>>>>> packet_dropper
 				}				
 				prev_key = &key;
 			}
@@ -372,6 +429,23 @@ static  void start_logging(){
 			int count = 0;
 			key = NULL;
 			prev_key = NULL;
+<<<<<<< HEAD
+			//sleep(0.2);
+			while (bpf_map_get_next_key(fd_pass_logs, prev_key, &key) == 0) {
+				value = get_key32_value64_percpu(fd_pass_logs, key);
+				char ip_txt[INET_ADDRSTRLEN] = {0};
+				if (inet_ntop(AF_INET, &key, ip_txt, sizeof(ip_txt))) {	
+					//value -= 1;
+					printf("%s %s \n","passed ", ip_txt);		
+					//printf("c2 %d %s \n",value, ip_txt);							
+					//if(value <= 0){
+						passLogsToRemove[numPassLogsToRemove] = malloc(strlen(ip_txt) + 1); 
+						strcpy(passLogsToRemove[numPassLogsToRemove], ip_txt);
+						++numPassLogsToRemove;
+					//}			
+				}				
+				prev_key = &key;
+=======
 			while (bpf_map_get_next_key(fd_logs, prev_key, &key) == 0) {
 				count++;
 				 int res = bpf_map_lookup_elem(fd_logs,&key,packet_log); 
@@ -412,14 +486,46 @@ static  void start_logging(){
 					fprintf(stderr,"ERR: bpf_map_lookup_elem failed key:0x%X\n", key);
 				 }
 				 prev_key = &key;
+>>>>>>> packet_dropper
 			}
 			key = NULL;
 			prev_key = NULL;
+<<<<<<< HEAD
+			//sleep(0.2);
+			while (bpf_map_get_next_key(fd_drop_logs, prev_key, &key) == 0) {
+				value = get_key32_value64_percpu(fd_drop_logs, key);
+				char ip_txt[INET_ADDRSTRLEN] = {0};
+				if (inet_ntop(AF_INET, &key, ip_txt, sizeof(ip_txt))) {	
+					value -= 1;
+					printf("%s %s \n","dropped ", ip_txt);								
+					//if(value <= 0){
+						dropLogsToRemove[numDropLogsToRemove] = malloc(strlen(ip_txt) + 1); 
+						strcpy(dropLogsToRemove[numDropLogsToRemove], ip_txt);
+						++numDropLogsToRemove;		
+					//}	
+	
+				}				
+				prev_key = &key;
+			}
+			
+			for(int i = 0; i < numEnterLogsToRemove;++i){
+				log_modify(fd_enter_logs,enterLogsToRemove[i], ACTION_DEL);
+				free(enterLogsToRemove[i]);
+			}
+			for(int i = 0; i < numPassLogsToRemove;++i){
+				log_modify(fd_pass_logs,passLogsToRemove[i], ACTION_DEL);
+				free(passLogsToRemove[i]);
+			}
+			for(int i = 0; i < numDropLogsToRemove;++i){
+				log_modify(fd_drop_logs,dropLogsToRemove[i], ACTION_DEL);
+				free(dropLogsToRemove[i]);
+=======
 			packet_log = NULL;
 			for(int i = 0; i < numLogsToRemove;++i){
 				__u64 keyToDel = logsToRemove[i];
 				bpf_map_delete_elem(fd_logs,&keyToDel);
 				
+>>>>>>> packet_dropper
 			}
 			close(fd_logs);
 		}		    

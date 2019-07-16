@@ -7,6 +7,7 @@
 
 import sys
 import Home
+import register
 
 try:
     import Tkinter as tk
@@ -34,6 +35,10 @@ def destroy_window():
 
 def createMain(roll):
     Home.create_win_Home(root,roll)
+    root.withdraw()
+
+def createRegister():
+    register.create_register_window(root)
     root.withdraw()
 
 if __name__ == '__main__':
