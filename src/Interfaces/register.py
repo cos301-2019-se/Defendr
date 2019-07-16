@@ -86,16 +86,16 @@ class register_window:
                         if(self.checkEmail(email)):
                             db = databaseCon.connect()
                             roll="user"
-                            if(not db.checkUsers()):
+                            if(not databaseCon.checkUsers(db)):
                                 roll="admin"
-                            answer=db.makeNewUser(db, name, lastName, password, roll, email)
-                            if(answer==(name+" is an use")):
-                                messagebox.showinfo("Register",answer)
+                            answer=databaseCon.makeNewUser(db, name, surename, password, roll, email)
+                            if(answer):
+                                messagebox.showinfo("Register",name+" succefully added")
                                 self.Ent_password.delete(0, 'end')
                                 self.ent_reenter.delete(0, 'end')
-                                register_support.createMain("admin")
+                                register_support.createMain(roll)
                             else:
-                                messagebox.showwarning("Warning",answer)
+                                messagebox.showwarning("Register","Email is in use")
 
     #check if the email is correct
     def checkEmail(self, email):
@@ -107,7 +107,6 @@ class register_window:
             messagebox.showwarning("Email","Invalid email.")
             self.Ent_email.delete(0, 'end')
             return False
-
 
     #check if the email is correct
     def checkPassword(self, psw):

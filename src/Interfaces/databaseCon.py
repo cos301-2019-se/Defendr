@@ -69,7 +69,7 @@ def getLastname(db,email):
     for x in doc:
         stringoutput = str(x)
     if(stringoutput!="notFond"):
-        return stringoutput[10:len(stringoutput) - 2]
+        return stringoutput[14:len(stringoutput) - 2]
     return stringoutput
 
 def saveUser(db,name,lastName,roll,salt, password, email):
@@ -84,7 +84,7 @@ def removeUser(db,name,roll,salt, password, lastname):
 
 def printUsers(db):
     mycol = db["user"]
-    lines = "-------------------------\n"
+    lines = "-------------------------------------------------\n"
     for x in mycol.find({}, {"_id": 0, "salt": 0, "password": 0}):
         temp = str(x)
         array =temp.split('\'')
@@ -95,7 +95,7 @@ def printUsers(db):
         if(roll=="user"):
             roll=roll+" "
         lines = lines + "|" + name + " \t\t| " + last + " | "+ roll + " | "+email + '\n'
-    lines = lines + "-------------------------"
+    lines = lines + "-------------------------------------------------"
     return lines
 
 def checkUsers(db):
@@ -150,16 +150,13 @@ def makeNewUser(db, name, lastName, password, roll, email):
     # check if name is used
     check = getSalt(db, email)
     if check !="notFond":
-        return name+" is an use"
+        return False
     # make salt and hash
     salt = makeSalt()
     hashpassword = hashFunction(password, salt)
     saveUser(db, name,lastName, roll, salt, hashpassword, email)
-    return name+" succefully added"
+    return True
 
-#db= connect()
-#users = ["Jeandre", "Muhammed","Sisa","Christiaan","Ruslynn","Chris"]
-#passwds = ["jPass1","mPass1","sPass1","cPass1","rPass1","cPass1"]
-#last = ["Botha","Carrim","Khoza","Opperman","Appana","Osbrone"]
-#print(printUsers(db))
-#print(getRoll(db,"ChristoOpperman0@gmail.com"))
+db= connect()
+
+print(printUsers(db))
