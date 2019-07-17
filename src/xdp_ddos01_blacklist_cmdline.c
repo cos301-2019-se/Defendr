@@ -453,7 +453,7 @@ static  void activate_dynamic_blacklist(){
 				if (inet_ntop(AF_INET, &key, ip_txt, sizeof(ip_txt))) {	
 					printf("%s %s %llu \n","monitor ", ip_txt,value);							
 					if(value > 3){
-						IP2LocationRecord *record = IP2Location_get_all(IP2LocationObj, "105.229.15.58");
+						IP2LocationRecord *record = IP2Location_get_all(IP2LocationObj,ip_txt);
 						char* country = record->country_short;
 						init_db();
 						int risk = get_status_by_country_id(country);
