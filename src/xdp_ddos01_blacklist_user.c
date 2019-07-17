@@ -49,9 +49,10 @@ static int ifindex = -1;
 #define NR_MAPS 10
 int maps_marked_for_export[MAX_MAPS] = { 0 };
 
+
 static __u64 get_key32_value64_percpu(int fd, __u32 key)
 {
-	/* For percpu maps, userspace gets a value per possible CPU */
+
 	unsigned int nr_cpus = bpf_num_possible_cpus();
 	__u64 values[nr_cpus];
 	__u64 sum = 0;
@@ -133,7 +134,6 @@ static void remove_xdp_program(int ifindex, const char *ifname, __u32 xdp_flags)
 	if (ifindex > -1)
 		set_link_xdp_fd(ifindex, -1, xdp_flags);
 
-	/* Remove all exported map file */
 	for (i = 0; i < NR_MAPS; i++) {
 		const char *file = map_idx_to_export_filename(i);
 
@@ -248,7 +248,7 @@ int load_map_file(const char *file, struct bpf_map_data *map_data)
  */
 void pre_load_maps_via_fs(struct bpf_map_data *map_data, int idx)
 {
-	/* This callback gets invoked for every map in ELF file */
+	// Callback invoked for every map in ELF file.
 	const char *file;
 	int fd;
 
@@ -256,13 +256,8 @@ void pre_load_maps_via_fs(struct bpf_map_data *map_data, int idx)
 	fd = load_map_file(file, map_data);
 
 	if (fd > 0) {
-		/* Makes bpf_load.c skip creating map */
 		map_data->fd = fd;
 	} else {
-		/* When map was NOT loaded from filesystem, then
-		 * bpf_load.c will create it. Mark map idx to get
-		 * it exported later
-		 */
 		maps_marked_for_export[idx] = 1;
 	}
 }
@@ -273,7 +268,6 @@ int export_map_idx(int map_idx)
 
 	file = map_idx_to_export_filename(map_idx);
 
-	/* Export map as a file */
 	if (bpf_obj_pin(map_fd[map_idx], file) != 0) {
 		fprintf(stderr, "ERR: Cannot pin map(%s) file:%s err(%d):%s\n",
 			map_data[map_idx].name, file, errno, strerror(errno));
@@ -303,9 +297,6 @@ void chown_maps(uid_t owner, gid_t group)
 	for (i = 0; i < NR_MAPS; i++) {
 		file = map_idx_to_export_filename(i);
 
-		/* Change permissions and user for the map file, as this allow
-		 * an unpriviliged user to operate the cmdline tool.
-		 */
 		if (chown(file, owner, group) < 0)
 			fprintf(stderr,
 				"WARN: Cannot chown file:%s err(%d):%s\n",
@@ -321,13 +312,12 @@ int main(int argc, char **argv)
 	__u32 xdp_flags = 0;
 	char filename[256];
 	int longindex = 0;
-	uid_t owner = -1; /* -1 result in no-change of owner */
+	uid_t owner = -1;
 	gid_t group = -1;
 	int opt;
 
 	snprintf(filename, sizeof(filename), "%s_kern.o", argv[0]);
 
-	/* Parse commands line args */
 	while ((opt = getopt_long(argc, argv, "hSrqd:",
 				  long_options, &longindex)) != -1) {
 		switch (opt) {
@@ -337,7 +327,7 @@ int main(int argc, char **argv)
 		case 'r':
 			rm_xdp_prog = true;
 			break;
-		case 'o': /* extract owner and group from username */
+		case 'o': 
 			if (!(pwd = getpwnam(optarg))) {
 				fprintf(stderr,
 					"ERR: unknown owner:%s err(%d):%s\n",
@@ -372,7 +362,7 @@ int main(int argc, char **argv)
 			return EXIT_FAIL_OPTION;
 		}
 	}
-	/* Required options */
+	// Required options.
 	if (ifindex == -1) {
 		printf("ERR: required option --dev missing");
 		usage(argv);
@@ -388,13 +378,13 @@ int main(int argc, char **argv)
 		       ifname, ifindex);
 	}
 
-	/* Increase resource limits */
+	// Increase resource limits.
 	if (setrlimit(RLIMIT_MEMLOCK, &r)) {
 		perror("setrlimit(RLIMIT_MEMLOCK, RLIM_INFINITY)");
 		return 1;
 	}
 
-	/* Load bpf-ELF file with callback for loading maps via filesystem */
+	// Load bpf-ELF file with callback for loading maps via filesystem.
 	if (load_bpf_file_fixup_map(filename, pre_load_maps_via_fs)) {
 		fprintf(stderr, "ERR in load_bpf_file(): %s", bpf_log_buf);
 		return EXIT_FAIL;
@@ -405,7 +395,7 @@ int main(int argc, char **argv)
 		return 1;
 	}
 
-	/* Export maps that were not loaded from filesystem */
+	// Export maps not loaded from filesystem.
 	export_maps();
 
 	if (owner >= 0)
@@ -414,7 +404,6 @@ int main(int argc, char **argv)
 	if (set_link_xdp_fd(ifindex, prog_fd[0], xdp_flags) < 0) {
 		printf("link set xdp fd failed\n");
 		return EXIT_FAIL_XDP;
-	}
-	//blacklist_modify(map_fd[0], "198.18.50.3", ACTION_ADD);		
+	}		
 	return EXIT_OK;
 }

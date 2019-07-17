@@ -5,7 +5,6 @@
 # Still depend on a kernel source tree.
 #
 TARGETS := xdp_ddos01_blacklist
-TARGETS += bpf_tail_calls01
 TARGETS += unitTest
 
 

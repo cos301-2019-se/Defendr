@@ -1,6 +1,5 @@
-/* Copyright(c) 2017 Jesper Dangaard Brouer, Red Hat, Inc.
-   Copyright(c) 2017 Andy Gospodarek, Broadcom Limited, Inc.
- */
+/* Commandline tool for managing defender configurations*/
+
 static const char *__doc__=
  " XDP ddos01: command line tool";
 
@@ -29,15 +28,9 @@ static const char *__doc__=
 #include <linux/unistd.h>     
 #include <linux/kernel.h>       
 #include <sys/sysinfo.h>
-#include "GeoIP.h"
 #include "IP2Location.h"
-
-/* libbpf.h defines bpf_* function helpers for syscalls,
- * indirectly via ./tools/lib/bpf/bpf.h */
 #include "libbpf.h"
-
 #include "bpf_util.h"
-
 #include "xdp_ddos01_blacklist_common.h"
 #include "structs.h"
 
@@ -509,89 +502,102 @@ static  void activate_dynamic_blacklist(){
 }
 
 
-
+/* Function used for logging incoming traffic in database*/
 static  void start_logging(){
 	IP2Location *IP2LocationObj = IP2Location_open("data/IP-COUNTRY.BIN");	
-		init_db();
-	    struct sysinfo s_info;
-		int error = sysinfo(&s_info);
-		long boot_time =  (unsigned long)time(NULL)-s_info.uptime;
-		printf("time of boot is: %ld\n",boot_time);
-		while(1){
-			sleep(1);
-			int fd_logs = open_bpf_map(file_logs);
-			__u64 key, *prev_key = NULL;
-			__u64 logsToRemove[1000];
-			int numLogsToRemove = 0;
-			struct log *packet_log = (struct log*)malloc(sizeof(struct log));
-			int count = 0;
-			key = NULL;
-			prev_key = NULL;
-			while (bpf_map_get_next_key(fd_logs, prev_key, &key) == 0) {
-				count++;
-				 int res = bpf_map_lookup_elem(fd_logs,&key,packet_log); 
-				 if(res == 0){
-					char src_ip[INET_ADDRSTRLEN] = {0};
-					char dest_ip[INET_ADDRSTRLEN] = {0};
-					if (inet_ntop(AF_INET, &packet_log->src_ip, src_ip, sizeof(src_ip)) && inet_ntop(AF_INET, &packet_log->destination_ip, dest_ip, sizeof(dest_ip))) {		
-						long time = boot_time+ (key/1000000000);
-						char mac_str[18];
-						snprintf(mac_str, sizeof(mac_str), "%02x:%02x:%02x:%02x:%02x:%02x",packet_log->server[0], packet_log->server[1], packet_log->server[2], packet_log->server[3], packet_log->server[4], packet_log->server[5]);
-						char* reason;
-						char* status;
-						if(packet_log->reason == REASON_NONE) reason = "none";
-						else if(packet_log->reason == REASON_BLACKLIST) reason = "blacklisted";
-						else if(packet_log->reason == REASON_NOSERVER) reason = "no_available_server";
-						else if(packet_log->reason == REASON_NON_TCP) reason = "not_tcp";
-						else reason = "unknown";
-
-						if(packet_log->status == LOG_ENTER){
-							status= "enter";
-						}else if(packet_log->status == LOG_PASS){
-							status= "pass";
-						}else if(packet_log->status == LOG_DROP){
-							status= "drop";
-						}else{
-							status= "unknown";
-						}
-						char *country = "ZA";	
-						IP2LocationRecord *record = IP2Location_get_all(IP2LocationObj,src_ip);
-						if(record != NULL){
-							country = record->country_short;
-						}			
-						if(strlen(country)<= 1) country = "ZA";	
+	init_db();
+	struct sysinfo s_info;
+	int error = sysinfo(&s_info);
+	long boot_time =  (unsigned long)time(NULL)-s_info.uptime;
+	if(verbose) printf("time of boot is: %ld\n",boot_time);
+	
+	while(1){
+		sleep(1);
+		int fd_logs = open_bpf_map(file_logs);
+		__u64 key, *prev_key = NULL;
+		__u64 logsToRemove[1000];
+		int numLogsToRemove = 0;
+		struct log *packet_log = (struct log*)malloc(sizeof(struct log));
+		int count = 0;
+		key = NULL;
+		prev_key = NULL;
 		
-						char time_str[30];
-						snprintf(time_str, 10, "%ld", time);
-
-						if(verbose) printf("Packet( %s ):ip_src-%s, ip_dest-%s, server-%s, country-%s, reason-%s, time-%ld\n",status,src_ip,dest_ip,mac_str,country,reason,time);
-						//insert_into_packets_list(src_ip,status,time_str,country,dest_ip,mac_str,reason);
-						logsToRemove[numLogsToRemove] = key; 
-						++numLogsToRemove;		
-						if(record != NULL) IP2Location_free_record(record);			
-					}else{
-						printf("conversion failed\n");
-					}									 
-				 }else{
-					fprintf(stderr,"ERR: bpf_map_lookup_elem failed key:0x%llX\n", key);
-				 }
-				 prev_key = &key;
-			}
-			key = NULL;
-			prev_key = NULL;
-			packet_log = NULL;
-			for(int i = 0; i < numLogsToRemove;++i){
-				__u64 keyToDel = logsToRemove[i];
-				bpf_map_delete_elem(fd_logs,&keyToDel);
+		while (bpf_map_get_next_key(fd_logs, prev_key, &key) == 0) {
+			count++;
+			 int res = bpf_map_lookup_elem(fd_logs,&key,packet_log); 
+			 if(res == 0){
+				 
+				char src_ip[INET_ADDRSTRLEN] = {0};
+				char dest_ip[INET_ADDRSTRLEN] = {0};
 				
+				if (inet_ntop(AF_INET, &packet_log->src_ip, src_ip, sizeof(src_ip)) && inet_ntop(AF_INET, &packet_log->destination_ip, dest_ip, sizeof(dest_ip))) {		
+					long time = boot_time+ (key/1000000000);
+					char mac_str[18];
+					snprintf(mac_str, sizeof(mac_str), "%02x:%02x:%02x:%02x:%02x:%02x",packet_log->server[0], packet_log->server[1], packet_log->server[2], packet_log->server[3], packet_log->server[4], packet_log->server[5]);
+					char* reason;
+					char* status;
+					
+					if(packet_log->reason == REASON_NONE) reason = "none";
+					else if(packet_log->reason == REASON_BLACKLIST) reason = "blacklisted";
+					else if(packet_log->reason == REASON_NOSERVER) reason = "no_available_server";
+					else if(packet_log->reason == REASON_NON_TCP) reason = "not_tcp";
+					else reason = "unknown";
+
+					if(packet_log->status == LOG_ENTER){
+						status= "enter";
+					}else if(packet_log->status == LOG_PASS){
+						status= "pass";
+					}else if(packet_log->status == LOG_DROP){
+						status= "drop";
+					}else{
+						status= "unknown";
+					}
+					char *country = "ZA";	
+					IP2LocationRecord *record = IP2Location_get_all(IP2LocationObj,src_ip);
+					
+					if(record != NULL){
+						country = record->country_short;
+					}			
+					
+					if(strlen(country)<= 1){
+						 country = "ZA";	
+					}
+					 
+					char time_str[30];
+					snprintf(time_str, 10, "%ld", time);
+
+					if(verbose) printf("Packet( %s ):ip_src-%s, ip_dest-%s, server-%s, country-%s, reason-%s, time-%ld\n",status,src_ip,dest_ip,mac_str,country,reason,time);
+					insert_into_packets_list(src_ip,status,time_str,country,dest_ip,mac_str,reason);
+					logsToRemove[numLogsToRemove] = key; 
+					++numLogsToRemove;		
+					
+					if(record != NULL){ 
+						IP2Location_free_record(record);
+					}	
+				}else{
+					printf("conversion failed\n");
+				}									 
+			}else{
+				fprintf(stderr,"ERR: bpf_map_lookup_elem failed key:0x%llX\n", key);
 			}
-			close(fd_logs);
-		}		  
-		close_db(); 
-		IP2Location_close(IP2LocationObj);
+			prev_key = &key;
+		}
+			
+		key = NULL;
+		prev_key = NULL;
+		packet_log = NULL;
+		for(int i = 0; i < numLogsToRemove;++i){
+			__u64 keyToDel = logsToRemove[i];
+			bpf_map_delete_elem(fd_logs,&keyToDel);		
+		}
+		
+		close(fd_logs);
+	}		  
+	close_db(); 
+	IP2Location_close(IP2LocationObj);
 }
 
-/*add backend server*/
+/* Add backend server*/
 static void addBackend(char* service_ip,char* backend_ip,char* backend_port,char* mac_addr){
 	if (verbose) printf("adding backend with ip %s and mac %s listening on port %s to service %s\n",backend_ip,mac_addr,backend_port,service_ip);
     int fd_services = open_bpf_map(file_services); 
@@ -601,7 +607,7 @@ static void addBackend(char* service_ip,char* backend_ip,char* backend_port,char
 	close(fd_servers);
 }
 
-/*remove backend server*/
+/* Remove backend server*/
 static void removeBackend(char* service_ip,char* backend_ip){
 	if (verbose) printf("removing backend with ip %s from service %s\n",backend_ip,service_ip);	
 	int fd_services = open_bpf_map(file_services); 
@@ -611,6 +617,7 @@ static void removeBackend(char* service_ip,char* backend_ip){
 	close(fd_servers);
 }
 
+/* Print all back-end instanses for particular service */
 static void printServiceBackends(char* service_ip){
 	if(verbose) printf("Listing backends for service %s\n",service_ip);
 	 __u32 key,prev_key;
@@ -747,7 +754,7 @@ int main(int argc, char **argv)
 	}
 	fd_verdict = open_bpf_map(file_verdict);
 
-	/* Update blacklist */
+	// Update blacklist
 	if (action) {
 		int res = 0;
 
@@ -815,7 +822,7 @@ int main(int argc, char **argv)
 		}
 	}
 
-	/* Show statistics by polling */
+	// Show statistics by polling
 	if (stats) {
 		stats_poll(interval);
 	}
@@ -828,7 +835,6 @@ int main(int argc, char **argv)
 		start_logging();
 	}
 	// TODO: implement stats for verdicts
-	// Hack: keep it open to inspect /proc/pid/fdinfo/3
 	close(fd_verdict);
 }
 
