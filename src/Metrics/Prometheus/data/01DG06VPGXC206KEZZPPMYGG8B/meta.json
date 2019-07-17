@@ -1,0 +1,17 @@
+{
+	"ulid": "01DG06VPGXC206KEZZPPMYGG8B",
+	"minTime": 1563357600000,
+	"maxTime": 1563364800000,
+	"stats": {
+		"numSamples": 44614,
+		"numSeries": 942,
+		"numChunks": 942
+	},
+	"compaction": {
+		"level": 1,
+		"sources": [
+			"01DG06VPGXC206KEZZPPMYGG8B"
+		]
+	},
+	"version": 1
+}

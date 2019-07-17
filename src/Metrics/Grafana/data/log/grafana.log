@@ -895,3 +895,607 @@ t=2019-07-17T13:18:04+0200 lvl=info msg="Stopped provisioningServiceImpl" logger
 t=2019-07-17T13:18:04+0200 lvl=info msg="Stopped AlertingService" logger=server reason="context canceled"
 t=2019-07-17T13:18:04+0200 lvl=info msg="Stopped HTTPServer" logger=server reason=nil
 t=2019-07-17T13:18:04+0200 lvl=eror msg="Server shutdown" logger=server reason="System signal: terminated"
+t=2019-07-17T16:54:40+0200 lvl=info msg="Starting Grafana" logger=server version=6.2.5 commit=6082d19 branch=HEAD compiled=2019-06-25T19:56:19+0200
+t=2019-07-17T16:54:40+0200 lvl=info msg="Config loaded from" logger=settings file=/home/darknites/Desktop/Defendr/src/Metrics/Grafana/conf/defaults.ini
+t=2019-07-17T16:54:40+0200 lvl=info msg="Path Home" logger=settings path=/home/darknites/Desktop/Defendr/src/Metrics/Grafana
+t=2019-07-17T16:54:40+0200 lvl=info msg="Path Data" logger=settings path=/home/darknites/Desktop/Defendr/src/Metrics/Grafana/data
+t=2019-07-17T16:54:40+0200 lvl=info msg="Path Logs" logger=settings path=/home/darknites/Desktop/Defendr/src/Metrics/Grafana/data/log
+t=2019-07-17T16:54:40+0200 lvl=info msg="Path Plugins" logger=settings path=/home/darknites/Desktop/Defendr/src/Metrics/Grafana/data/plugins
+t=2019-07-17T16:54:40+0200 lvl=info msg="Path Provisioning" logger=settings path=/home/darknites/Desktop/Defendr/src/Metrics/Grafana/conf/provisioning
+t=2019-07-17T16:54:40+0200 lvl=info msg="App mode production" logger=settings
+t=2019-07-17T16:54:40+0200 lvl=info msg="Initializing SqlStore" logger=server
+t=2019-07-17T16:54:40+0200 lvl=info msg="Connecting to DB" logger=sqlstore dbtype=sqlite3
+t=2019-07-17T16:54:40+0200 lvl=info msg="Starting DB migration" logger=migrator
+t=2019-07-17T16:54:40+0200 lvl=info msg="Initializing HTTPServer" logger=server
+t=2019-07-17T16:54:40+0200 lvl=info msg="Initializing InternalMetricsService" logger=server
+t=2019-07-17T16:54:40+0200 lvl=info msg="Initializing RemoteCache" logger=server
+t=2019-07-17T16:54:40+0200 lvl=info msg="Initializing QuotaService" logger=server
+t=2019-07-17T16:54:40+0200 lvl=info msg="Initializing LoginService" logger=server
+t=2019-07-17T16:54:40+0200 lvl=info msg="Initializing PluginManager" logger=server
+t=2019-07-17T16:54:40+0200 lvl=info msg="Starting plugin search" logger=plugins
+t=2019-07-17T16:54:41+0200 lvl=info msg="Initializing RenderingService" logger=server
+t=2019-07-17T16:54:41+0200 lvl=info msg="Initializing AlertingService" logger=server
+t=2019-07-17T16:54:41+0200 lvl=info msg="Initializing DatasourceCacheService" logger=server
+t=2019-07-17T16:54:41+0200 lvl=info msg="Initializing HooksService" logger=server
+t=2019-07-17T16:54:41+0200 lvl=info msg="Initializing SearchService" logger=server
+t=2019-07-17T16:54:41+0200 lvl=info msg="Initializing ServerLockService" logger=server
+t=2019-07-17T16:54:41+0200 lvl=info msg="Initializing TracingService" logger=server
+t=2019-07-17T16:54:41+0200 lvl=info msg="Initializing UsageStatsService" logger=server
+t=2019-07-17T16:54:41+0200 lvl=info msg="Initializing UserAuthTokenService" logger=server
+t=2019-07-17T16:54:41+0200 lvl=info msg="Initializing CleanUpService" logger=server
+t=2019-07-17T16:54:41+0200 lvl=info msg="Initializing NotificationService" logger=server
+t=2019-07-17T16:54:41+0200 lvl=info msg="Initializing provisioningServiceImpl" logger=server
+t=2019-07-17T16:54:41+0200 lvl=info msg="Initializing Stream Manager"
+t=2019-07-17T16:54:41+0200 lvl=info msg="HTTP Server Listen" logger=http.server address=0.0.0.0:3000 protocol=http subUrl= socket=
+t=2019-07-17T16:55:20+0200 lvl=eror msg="failed to look up user based on cookie" logger=context error="user token not found"
+t=2019-07-17T16:55:20+0200 lvl=info msg="Request Completed" logger=context userId=0 orgId=0 uname= method=GET path=/ status=302 remote_addr=127.0.0.1 time_ms=1947 size=29 referer=
+t=2019-07-17T16:55:41+0200 lvl=eror msg="Invalid username or password" logger=context userId=0 orgId=0 uname= error="Invalid Username or Password"
+t=2019-07-17T16:55:41+0200 lvl=info msg="Request Completed" logger=context userId=0 orgId=0 uname= method=POST path=/login status=401 remote_addr=127.0.0.1 time_ms=1329 size=42 referer=http://localhost:3000/login
+t=2019-07-17T16:58:15+0200 lvl=info msg="Request Completed" logger=context userId=0 orgId=0 uname= method=GET path=/ status=302 remote_addr=127.0.0.1 time_ms=0 size=29 referer=
+t=2019-07-17T16:58:36+0200 lvl=info msg="Shutdown started" logger=server reason="System signal: terminated"
+t=2019-07-17T16:58:36+0200 lvl=info msg="Stopped UsageStatsService" logger=server reason="context canceled"
+t=2019-07-17T16:58:36+0200 lvl=info msg="Stopped PluginManager" logger=server reason="context canceled"
+t=2019-07-17T16:58:36+0200 lvl=info msg="Stopped UserAuthTokenService" logger=server reason="context canceled"
+t=2019-07-17T16:58:36+0200 lvl=info msg="Stopped Stream Manager"
+t=2019-07-17T16:58:36+0200 lvl=info msg="Stopped NotificationService" logger=server reason="context canceled"
+t=2019-07-17T16:58:36+0200 lvl=info msg="Stopped CleanUpService" logger=server reason="context canceled"
+t=2019-07-17T16:58:36+0200 lvl=info msg="Stopped TracingService" logger=server reason=nil
+t=2019-07-17T16:58:36+0200 lvl=info msg="Stopped RenderingService" logger=server reason=nil
+t=2019-07-17T16:58:36+0200 lvl=info msg="Stopped RemoteCache" logger=server reason="context canceled"
+t=2019-07-17T16:58:36+0200 lvl=info msg="Stopped InternalMetricsService" logger=server reason="context canceled"
+t=2019-07-17T16:58:36+0200 lvl=info msg="Stopped provisioningServiceImpl" logger=server reason="context canceled"
+t=2019-07-17T16:58:36+0200 lvl=info msg="Stopped AlertingService" logger=server reason="context canceled"
+t=2019-07-17T16:58:36+0200 lvl=info msg="Stopped HTTPServer" logger=server reason=nil
+t=2019-07-17T16:58:36+0200 lvl=eror msg="Server shutdown" logger=server reason="System signal: terminated"
+t=2019-07-17T16:58:46+0200 lvl=info msg="Starting Grafana" logger=server version=6.2.5 commit=6082d19 branch=HEAD compiled=2019-06-25T19:56:19+0200
+t=2019-07-17T16:58:46+0200 lvl=info msg="Config loaded from" logger=settings file=/home/darknites/Desktop/Defendr/src/Metrics/Grafana/conf/defaults.ini
+t=2019-07-17T16:58:46+0200 lvl=info msg="Path Home" logger=settings path=/home/darknites/Desktop/Defendr/src/Metrics/Grafana
+t=2019-07-17T16:58:46+0200 lvl=info msg="Path Data" logger=settings path=/home/darknites/Desktop/Defendr/src/Metrics/Grafana/data
+t=2019-07-17T16:58:46+0200 lvl=info msg="Path Logs" logger=settings path=/home/darknites/Desktop/Defendr/src/Metrics/Grafana/data/log
+t=2019-07-17T16:58:46+0200 lvl=info msg="Path Plugins" logger=settings path=/home/darknites/Desktop/Defendr/src/Metrics/Grafana/data/plugins
+t=2019-07-17T16:58:46+0200 lvl=info msg="Path Provisioning" logger=settings path=/home/darknites/Desktop/Defendr/src/Metrics/Grafana/conf/provisioning
+t=2019-07-17T16:58:46+0200 lvl=info msg="App mode production" logger=settings
+t=2019-07-17T16:58:46+0200 lvl=info msg="Initializing SqlStore" logger=server
+t=2019-07-17T16:58:46+0200 lvl=info msg="Connecting to DB" logger=sqlstore dbtype=sqlite3
+t=2019-07-17T16:58:46+0200 lvl=info msg="Starting DB migration" logger=migrator
+t=2019-07-17T16:58:46+0200 lvl=info msg="Initializing HTTPServer" logger=server
+t=2019-07-17T16:58:46+0200 lvl=info msg="Initializing InternalMetricsService" logger=server
+t=2019-07-17T16:58:46+0200 lvl=info msg="Initializing RemoteCache" logger=server
+t=2019-07-17T16:58:46+0200 lvl=info msg="Initializing QuotaService" logger=server
+t=2019-07-17T16:58:46+0200 lvl=info msg="Initializing LoginService" logger=server
+t=2019-07-17T16:58:46+0200 lvl=info msg="Initializing PluginManager" logger=server
+t=2019-07-17T16:58:46+0200 lvl=info msg="Starting plugin search" logger=plugins
+t=2019-07-17T16:58:46+0200 lvl=info msg="Initializing RenderingService" logger=server
+t=2019-07-17T16:58:46+0200 lvl=info msg="Initializing AlertingService" logger=server
+t=2019-07-17T16:58:46+0200 lvl=info msg="Initializing DatasourceCacheService" logger=server
+t=2019-07-17T16:58:46+0200 lvl=info msg="Initializing HooksService" logger=server
+t=2019-07-17T16:58:46+0200 lvl=info msg="Initializing SearchService" logger=server
+t=2019-07-17T16:58:46+0200 lvl=info msg="Initializing ServerLockService" logger=server
+t=2019-07-17T16:58:46+0200 lvl=info msg="Initializing TracingService" logger=server
+t=2019-07-17T16:58:46+0200 lvl=info msg="Initializing UsageStatsService" logger=server
+t=2019-07-17T16:58:46+0200 lvl=info msg="Initializing UserAuthTokenService" logger=server
+t=2019-07-17T16:58:46+0200 lvl=info msg="Initializing CleanUpService" logger=server
+t=2019-07-17T16:58:46+0200 lvl=info msg="Initializing NotificationService" logger=server
+t=2019-07-17T16:58:46+0200 lvl=info msg="Initializing provisioningServiceImpl" logger=server
+t=2019-07-17T16:58:46+0200 lvl=info msg="Initializing Stream Manager"
+t=2019-07-17T16:58:46+0200 lvl=info msg="HTTP Server Listen" logger=http.server address=0.0.0.0:3000 protocol=http subUrl= socket=
+t=2019-07-17T16:59:09+0200 lvl=info msg="Shutdown started" logger=server reason="System signal: terminated"
+t=2019-07-17T16:59:09+0200 lvl=info msg="Stopped PluginManager" logger=server reason="context canceled"
+t=2019-07-17T16:59:09+0200 lvl=info msg="Stopped Stream Manager"
+t=2019-07-17T16:59:09+0200 lvl=info msg="Stopped NotificationService" logger=server reason="context canceled"
+t=2019-07-17T16:59:09+0200 lvl=info msg="Stopped CleanUpService" logger=server reason="context canceled"
+t=2019-07-17T16:59:09+0200 lvl=info msg="Stopped UserAuthTokenService" logger=server reason="context canceled"
+t=2019-07-17T16:59:09+0200 lvl=info msg="Stopped UsageStatsService" logger=server reason="context canceled"
+t=2019-07-17T16:59:09+0200 lvl=info msg="Stopped TracingService" logger=server reason=nil
+t=2019-07-17T16:59:09+0200 lvl=info msg="Stopped RenderingService" logger=server reason=nil
+t=2019-07-17T16:59:09+0200 lvl=info msg="Stopped RemoteCache" logger=server reason="context canceled"
+t=2019-07-17T16:59:09+0200 lvl=info msg="Stopped InternalMetricsService" logger=server reason="context canceled"
+t=2019-07-17T16:59:09+0200 lvl=info msg="Stopped provisioningServiceImpl" logger=server reason="context canceled"
+t=2019-07-17T16:59:09+0200 lvl=info msg="Stopped AlertingService" logger=server reason="context canceled"
+t=2019-07-17T16:59:09+0200 lvl=info msg="Stopped HTTPServer" logger=server reason=nil
+t=2019-07-17T16:59:09+0200 lvl=eror msg="Server shutdown" logger=server reason="System signal: terminated"
+t=2019-07-17T17:00:34+0200 lvl=info msg="Starting Grafana" logger=server version=6.2.5 commit=6082d19 branch=HEAD compiled=2019-06-25T19:56:19+0200
+t=2019-07-17T17:00:34+0200 lvl=info msg="Config loaded from" logger=settings file=/home/darknites/Desktop/Defendr/src/Metrics/Grafana/conf/defaults.ini
+t=2019-07-17T17:00:34+0200 lvl=info msg="Path Home" logger=settings path=/home/darknites/Desktop/Defendr/src/Metrics/Grafana
+t=2019-07-17T17:00:34+0200 lvl=info msg="Path Data" logger=settings path=/home/darknites/Desktop/Defendr/src/Metrics/Grafana/data
+t=2019-07-17T17:00:34+0200 lvl=info msg="Path Logs" logger=settings path=/home/darknites/Desktop/Defendr/src/Metrics/Grafana/data/log
+t=2019-07-17T17:00:34+0200 lvl=info msg="Path Plugins" logger=settings path=/home/darknites/Desktop/Defendr/src/Metrics/Grafana/data/plugins
+t=2019-07-17T17:00:34+0200 lvl=info msg="Path Provisioning" logger=settings path=/home/darknites/Desktop/Defendr/src/Metrics/Grafana/conf/provisioning
+t=2019-07-17T17:00:34+0200 lvl=info msg="App mode production" logger=settings
+t=2019-07-17T17:00:34+0200 lvl=info msg="Initializing SqlStore" logger=server
+t=2019-07-17T17:00:34+0200 lvl=info msg="Connecting to DB" logger=sqlstore dbtype=sqlite3
+t=2019-07-17T17:00:34+0200 lvl=info msg="Starting DB migration" logger=migrator
+t=2019-07-17T17:00:34+0200 lvl=info msg="Initializing HTTPServer" logger=server
+t=2019-07-17T17:00:34+0200 lvl=info msg="Initializing InternalMetricsService" logger=server
+t=2019-07-17T17:00:34+0200 lvl=info msg="Initializing RemoteCache" logger=server
+t=2019-07-17T17:00:34+0200 lvl=info msg="Initializing QuotaService" logger=server
+t=2019-07-17T17:00:34+0200 lvl=info msg="Initializing LoginService" logger=server
+t=2019-07-17T17:00:34+0200 lvl=info msg="Initializing PluginManager" logger=server
+t=2019-07-17T17:00:34+0200 lvl=info msg="Starting plugin search" logger=plugins
+t=2019-07-17T17:00:34+0200 lvl=info msg="Initializing RenderingService" logger=server
+t=2019-07-17T17:00:34+0200 lvl=info msg="Initializing AlertingService" logger=server
+t=2019-07-17T17:00:34+0200 lvl=info msg="Initializing DatasourceCacheService" logger=server
+t=2019-07-17T17:00:34+0200 lvl=info msg="Initializing HooksService" logger=server
+t=2019-07-17T17:00:34+0200 lvl=info msg="Initializing SearchService" logger=server
+t=2019-07-17T17:00:34+0200 lvl=info msg="Initializing ServerLockService" logger=server
+t=2019-07-17T17:00:34+0200 lvl=info msg="Initializing TracingService" logger=server
+t=2019-07-17T17:00:34+0200 lvl=info msg="Initializing UsageStatsService" logger=server
+t=2019-07-17T17:00:34+0200 lvl=info msg="Initializing UserAuthTokenService" logger=server
+t=2019-07-17T17:00:34+0200 lvl=info msg="Initializing CleanUpService" logger=server
+t=2019-07-17T17:00:34+0200 lvl=info msg="Initializing NotificationService" logger=server
+t=2019-07-17T17:00:34+0200 lvl=info msg="Initializing provisioningServiceImpl" logger=server
+t=2019-07-17T17:00:34+0200 lvl=info msg="Initializing Stream Manager"
+t=2019-07-17T17:00:34+0200 lvl=info msg="HTTP Server Listen" logger=http.server address=0.0.0.0:3000 protocol=http subUrl= socket=
+t=2019-07-17T17:02:15+0200 lvl=info msg="Shutdown started" logger=server reason="System signal: interrupt"
+t=2019-07-17T17:02:15+0200 lvl=info msg="Stopped UsageStatsService" logger=server reason="context canceled"
+t=2019-07-17T17:02:15+0200 lvl=info msg="Stopped PluginManager" logger=server reason="context canceled"
+t=2019-07-17T17:02:15+0200 lvl=info msg="Stopped Stream Manager"
+t=2019-07-17T17:02:15+0200 lvl=info msg="Stopped NotificationService" logger=server reason="context canceled"
+t=2019-07-17T17:02:15+0200 lvl=info msg="Stopped CleanUpService" logger=server reason="context canceled"
+t=2019-07-17T17:02:15+0200 lvl=info msg="Stopped UserAuthTokenService" logger=server reason="context canceled"
+t=2019-07-17T17:02:15+0200 lvl=info msg="Stopped TracingService" logger=server reason=nil
+t=2019-07-17T17:02:15+0200 lvl=info msg="Stopped RenderingService" logger=server reason=nil
+t=2019-07-17T17:02:15+0200 lvl=info msg="Stopped RemoteCache" logger=server reason="context canceled"
+t=2019-07-17T17:02:15+0200 lvl=info msg="Stopped InternalMetricsService" logger=server reason="context canceled"
+t=2019-07-17T17:02:15+0200 lvl=info msg="Stopped provisioningServiceImpl" logger=server reason="context canceled"
+t=2019-07-17T17:02:15+0200 lvl=info msg="Stopped AlertingService" logger=server reason="context canceled"
+t=2019-07-17T17:02:15+0200 lvl=info msg="Stopped HTTPServer" logger=server reason=nil
+t=2019-07-17T17:02:15+0200 lvl=eror msg="Server shutdown" logger=server reason="System signal: interrupt"
+t=2019-07-17T17:03:08+0200 lvl=info msg="Starting Grafana" logger=server version=6.2.5 commit=6082d19 branch=HEAD compiled=2019-06-25T19:56:19+0200
+t=2019-07-17T17:03:08+0200 lvl=info msg="Config loaded from" logger=settings file=/home/darknites/Desktop/Defendr/src/Metrics/Grafana/conf/defaults.ini
+t=2019-07-17T17:03:08+0200 lvl=info msg="Path Home" logger=settings path=/home/darknites/Desktop/Defendr/src/Metrics/Grafana
+t=2019-07-17T17:03:08+0200 lvl=info msg="Path Data" logger=settings path=/home/darknites/Desktop/Defendr/src/Metrics/Grafana/data
+t=2019-07-17T17:03:08+0200 lvl=info msg="Path Logs" logger=settings path=/home/darknites/Desktop/Defendr/src/Metrics/Grafana/data/log
+t=2019-07-17T17:03:08+0200 lvl=info msg="Path Plugins" logger=settings path=/home/darknites/Desktop/Defendr/src/Metrics/Grafana/data/plugins
+t=2019-07-17T17:03:08+0200 lvl=info msg="Path Provisioning" logger=settings path=/home/darknites/Desktop/Defendr/src/Metrics/Grafana/conf/provisioning
+t=2019-07-17T17:03:08+0200 lvl=info msg="App mode production" logger=settings
+t=2019-07-17T17:03:08+0200 lvl=info msg="Initializing SqlStore" logger=server
+t=2019-07-17T17:03:08+0200 lvl=info msg="Connecting to DB" logger=sqlstore dbtype=sqlite3
+t=2019-07-17T17:03:08+0200 lvl=info msg="Starting DB migration" logger=migrator
+t=2019-07-17T17:03:08+0200 lvl=info msg="Initializing HTTPServer" logger=server
+t=2019-07-17T17:03:08+0200 lvl=info msg="Initializing InternalMetricsService" logger=server
+t=2019-07-17T17:03:08+0200 lvl=info msg="Initializing RemoteCache" logger=server
+t=2019-07-17T17:03:08+0200 lvl=info msg="Initializing QuotaService" logger=server
+t=2019-07-17T17:03:08+0200 lvl=info msg="Initializing LoginService" logger=server
+t=2019-07-17T17:03:08+0200 lvl=info msg="Initializing PluginManager" logger=server
+t=2019-07-17T17:03:08+0200 lvl=info msg="Starting plugin search" logger=plugins
+t=2019-07-17T17:03:08+0200 lvl=info msg="Initializing RenderingService" logger=server
+t=2019-07-17T17:03:08+0200 lvl=info msg="Initializing AlertingService" logger=server
+t=2019-07-17T17:03:08+0200 lvl=info msg="Initializing DatasourceCacheService" logger=server
+t=2019-07-17T17:03:08+0200 lvl=info msg="Initializing HooksService" logger=server
+t=2019-07-17T17:03:08+0200 lvl=info msg="Initializing SearchService" logger=server
+t=2019-07-17T17:03:08+0200 lvl=info msg="Initializing ServerLockService" logger=server
+t=2019-07-17T17:03:08+0200 lvl=info msg="Initializing TracingService" logger=server
+t=2019-07-17T17:03:08+0200 lvl=info msg="Initializing UsageStatsService" logger=server
+t=2019-07-17T17:03:08+0200 lvl=info msg="Initializing UserAuthTokenService" logger=server
+t=2019-07-17T17:03:08+0200 lvl=info msg="Initializing CleanUpService" logger=server
+t=2019-07-17T17:03:08+0200 lvl=info msg="Initializing NotificationService" logger=server
+t=2019-07-17T17:03:08+0200 lvl=info msg="Initializing provisioningServiceImpl" logger=server
+t=2019-07-17T17:03:08+0200 lvl=info msg="Initializing Stream Manager"
+t=2019-07-17T17:03:08+0200 lvl=info msg="HTTP Server Listen" logger=http.server address=0.0.0.0:3000 protocol=http subUrl= socket=
+t=2019-07-17T17:05:01+0200 lvl=info msg="Shutdown started" logger=server reason="System signal: terminated"
+t=2019-07-17T17:05:01+0200 lvl=info msg="Stopped UsageStatsService" logger=server reason="context canceled"
+t=2019-07-17T17:05:01+0200 lvl=info msg="Stopped PluginManager" logger=server reason="context canceled"
+t=2019-07-17T17:05:01+0200 lvl=info msg="Stopped Stream Manager"
+t=2019-07-17T17:05:01+0200 lvl=info msg="Stopped NotificationService" logger=server reason="context canceled"
+t=2019-07-17T17:05:01+0200 lvl=info msg="Stopped CleanUpService" logger=server reason="context canceled"
+t=2019-07-17T17:05:01+0200 lvl=info msg="Stopped UserAuthTokenService" logger=server reason="context canceled"
+t=2019-07-17T17:05:01+0200 lvl=info msg="Stopped TracingService" logger=server reason=nil
+t=2019-07-17T17:05:01+0200 lvl=info msg="Stopped RenderingService" logger=server reason=nil
+t=2019-07-17T17:05:01+0200 lvl=info msg="Stopped RemoteCache" logger=server reason="context canceled"
+t=2019-07-17T17:05:01+0200 lvl=info msg="Stopped InternalMetricsService" logger=server reason="context canceled"
+t=2019-07-17T17:05:01+0200 lvl=info msg="Stopped provisioningServiceImpl" logger=server reason="context canceled"
+t=2019-07-17T17:05:01+0200 lvl=info msg="Stopped AlertingService" logger=server reason="context canceled"
+t=2019-07-17T17:05:01+0200 lvl=info msg="Stopped HTTPServer" logger=server reason=nil
+t=2019-07-17T17:05:01+0200 lvl=eror msg="Server shutdown" logger=server reason="System signal: terminated"
+t=2019-07-17T17:05:15+0200 lvl=info msg="Starting Grafana" logger=server version=6.2.5 commit=6082d19 branch=HEAD compiled=2019-06-25T19:56:19+0200
+t=2019-07-17T17:05:15+0200 lvl=info msg="Config loaded from" logger=settings file=/home/darknites/Desktop/Defendr/src/Metrics/Grafana/conf/defaults.ini
+t=2019-07-17T17:05:15+0200 lvl=info msg="Path Home" logger=settings path=/home/darknites/Desktop/Defendr/src/Metrics/Grafana
+t=2019-07-17T17:05:15+0200 lvl=info msg="Path Data" logger=settings path=/home/darknites/Desktop/Defendr/src/Metrics/Grafana/data
+t=2019-07-17T17:05:15+0200 lvl=info msg="Path Logs" logger=settings path=/home/darknites/Desktop/Defendr/src/Metrics/Grafana/data/log
+t=2019-07-17T17:05:15+0200 lvl=info msg="Path Plugins" logger=settings path=/home/darknites/Desktop/Defendr/src/Metrics/Grafana/data/plugins
+t=2019-07-17T17:05:15+0200 lvl=info msg="Path Provisioning" logger=settings path=/home/darknites/Desktop/Defendr/src/Metrics/Grafana/conf/provisioning
+t=2019-07-17T17:05:15+0200 lvl=info msg="App mode production" logger=settings
+t=2019-07-17T17:05:15+0200 lvl=info msg="Initializing SqlStore" logger=server
+t=2019-07-17T17:05:15+0200 lvl=info msg="Connecting to DB" logger=sqlstore dbtype=sqlite3
+t=2019-07-17T17:05:15+0200 lvl=info msg="Starting DB migration" logger=migrator
+t=2019-07-17T17:05:15+0200 lvl=info msg="Initializing HTTPServer" logger=server
+t=2019-07-17T17:05:15+0200 lvl=info msg="Initializing InternalMetricsService" logger=server
+t=2019-07-17T17:05:15+0200 lvl=info msg="Initializing RemoteCache" logger=server
+t=2019-07-17T17:05:15+0200 lvl=info msg="Initializing QuotaService" logger=server
+t=2019-07-17T17:05:15+0200 lvl=info msg="Initializing LoginService" logger=server
+t=2019-07-17T17:05:15+0200 lvl=info msg="Initializing PluginManager" logger=server
+t=2019-07-17T17:05:15+0200 lvl=info msg="Starting plugin search" logger=plugins
+t=2019-07-17T17:05:15+0200 lvl=info msg="Initializing RenderingService" logger=server
+t=2019-07-17T17:05:15+0200 lvl=info msg="Initializing AlertingService" logger=server
+t=2019-07-17T17:05:15+0200 lvl=info msg="Initializing DatasourceCacheService" logger=server
+t=2019-07-17T17:05:15+0200 lvl=info msg="Initializing HooksService" logger=server
+t=2019-07-17T17:05:15+0200 lvl=info msg="Initializing SearchService" logger=server
+t=2019-07-17T17:05:15+0200 lvl=info msg="Initializing ServerLockService" logger=server
+t=2019-07-17T17:05:15+0200 lvl=info msg="Initializing TracingService" logger=server
+t=2019-07-17T17:05:15+0200 lvl=info msg="Initializing UsageStatsService" logger=server
+t=2019-07-17T17:05:15+0200 lvl=info msg="Initializing UserAuthTokenService" logger=server
+t=2019-07-17T17:05:15+0200 lvl=info msg="Initializing CleanUpService" logger=server
+t=2019-07-17T17:05:15+0200 lvl=info msg="Initializing NotificationService" logger=server
+t=2019-07-17T17:05:15+0200 lvl=info msg="Initializing provisioningServiceImpl" logger=server
+t=2019-07-17T17:05:15+0200 lvl=info msg="Initializing Stream Manager"
+t=2019-07-17T17:05:15+0200 lvl=info msg="HTTP Server Listen" logger=http.server address=0.0.0.0:3000 protocol=http subUrl= socket=
+t=2019-07-17T17:05:29+0200 lvl=info msg="Shutdown started" logger=server reason="System signal: terminated"
+t=2019-07-17T17:05:29+0200 lvl=info msg="Stopped PluginManager" logger=server reason="context canceled"
+t=2019-07-17T17:05:29+0200 lvl=info msg="Stopped Stream Manager"
+t=2019-07-17T17:05:29+0200 lvl=info msg="Stopped NotificationService" logger=server reason="context canceled"
+t=2019-07-17T17:05:29+0200 lvl=info msg="Stopped CleanUpService" logger=server reason="context canceled"
+t=2019-07-17T17:05:29+0200 lvl=info msg="Stopped UserAuthTokenService" logger=server reason="context canceled"
+t=2019-07-17T17:05:29+0200 lvl=info msg="Stopped UsageStatsService" logger=server reason="context canceled"
+t=2019-07-17T17:05:29+0200 lvl=info msg="Stopped TracingService" logger=server reason=nil
+t=2019-07-17T17:05:29+0200 lvl=info msg="Stopped RenderingService" logger=server reason=nil
+t=2019-07-17T17:05:29+0200 lvl=info msg="Stopped RemoteCache" logger=server reason="context canceled"
+t=2019-07-17T17:05:29+0200 lvl=info msg="Stopped InternalMetricsService" logger=server reason="context canceled"
+t=2019-07-17T17:05:29+0200 lvl=info msg="Stopped provisioningServiceImpl" logger=server reason="context canceled"
+t=2019-07-17T17:05:29+0200 lvl=info msg="Stopped AlertingService" logger=server reason="context canceled"
+t=2019-07-17T17:05:29+0200 lvl=info msg="Stopped HTTPServer" logger=server reason=nil
+t=2019-07-17T17:05:29+0200 lvl=eror msg="Server shutdown" logger=server reason="System signal: terminated"
+t=2019-07-17T17:06:00+0200 lvl=info msg="Starting Grafana" logger=server version=6.2.5 commit=6082d19 branch=HEAD compiled=2019-06-25T19:56:19+0200
+t=2019-07-17T17:06:00+0200 lvl=info msg="Config loaded from" logger=settings file=/home/darknites/Desktop/Defendr/src/Metrics/Grafana/conf/defaults.ini
+t=2019-07-17T17:06:00+0200 lvl=info msg="Path Home" logger=settings path=/home/darknites/Desktop/Defendr/src/Metrics/Grafana
+t=2019-07-17T17:06:00+0200 lvl=info msg="Path Data" logger=settings path=/home/darknites/Desktop/Defendr/src/Metrics/Grafana/data
+t=2019-07-17T17:06:00+0200 lvl=info msg="Path Logs" logger=settings path=/home/darknites/Desktop/Defendr/src/Metrics/Grafana/data/log
+t=2019-07-17T17:06:00+0200 lvl=info msg="Path Plugins" logger=settings path=/home/darknites/Desktop/Defendr/src/Metrics/Grafana/data/plugins
+t=2019-07-17T17:06:00+0200 lvl=info msg="Path Provisioning" logger=settings path=/home/darknites/Desktop/Defendr/src/Metrics/Grafana/conf/provisioning
+t=2019-07-17T17:06:00+0200 lvl=info msg="App mode production" logger=settings
+t=2019-07-17T17:06:00+0200 lvl=info msg="Initializing SqlStore" logger=server
+t=2019-07-17T17:06:00+0200 lvl=info msg="Connecting to DB" logger=sqlstore dbtype=sqlite3
+t=2019-07-17T17:06:00+0200 lvl=info msg="Starting DB migration" logger=migrator
+t=2019-07-17T17:06:00+0200 lvl=info msg="Initializing HTTPServer" logger=server
+t=2019-07-17T17:06:00+0200 lvl=info msg="Initializing InternalMetricsService" logger=server
+t=2019-07-17T17:06:00+0200 lvl=info msg="Initializing RemoteCache" logger=server
+t=2019-07-17T17:06:00+0200 lvl=info msg="Initializing QuotaService" logger=server
+t=2019-07-17T17:06:00+0200 lvl=info msg="Initializing LoginService" logger=server
+t=2019-07-17T17:06:00+0200 lvl=info msg="Initializing PluginManager" logger=server
+t=2019-07-17T17:06:00+0200 lvl=info msg="Starting plugin search" logger=plugins
+t=2019-07-17T17:06:00+0200 lvl=info msg="Initializing RenderingService" logger=server
+t=2019-07-17T17:06:00+0200 lvl=info msg="Initializing AlertingService" logger=server
+t=2019-07-17T17:06:00+0200 lvl=info msg="Initializing DatasourceCacheService" logger=server
+t=2019-07-17T17:06:00+0200 lvl=info msg="Initializing HooksService" logger=server
+t=2019-07-17T17:06:00+0200 lvl=info msg="Initializing SearchService" logger=server
+t=2019-07-17T17:06:00+0200 lvl=info msg="Initializing ServerLockService" logger=server
+t=2019-07-17T17:06:00+0200 lvl=info msg="Initializing TracingService" logger=server
+t=2019-07-17T17:06:00+0200 lvl=info msg="Initializing UsageStatsService" logger=server
+t=2019-07-17T17:06:00+0200 lvl=info msg="Initializing UserAuthTokenService" logger=server
+t=2019-07-17T17:06:00+0200 lvl=info msg="Initializing CleanUpService" logger=server
+t=2019-07-17T17:06:00+0200 lvl=info msg="Initializing NotificationService" logger=server
+t=2019-07-17T17:06:00+0200 lvl=info msg="Initializing provisioningServiceImpl" logger=server
+t=2019-07-17T17:06:00+0200 lvl=info msg="Initializing Stream Manager"
+t=2019-07-17T17:06:00+0200 lvl=info msg="HTTP Server Listen" logger=http.server address=0.0.0.0:3000 protocol=http subUrl= socket=
+t=2019-07-17T17:06:23+0200 lvl=info msg="Shutdown started" logger=server reason="System signal: terminated"
+t=2019-07-17T17:06:23+0200 lvl=info msg="Stopped PluginManager" logger=server reason="context canceled"
+t=2019-07-17T17:06:23+0200 lvl=info msg="Stopped Stream Manager"
+t=2019-07-17T17:06:23+0200 lvl=info msg="Stopped NotificationService" logger=server reason="context canceled"
+t=2019-07-17T17:06:23+0200 lvl=info msg="Stopped CleanUpService" logger=server reason="context canceled"
+t=2019-07-17T17:06:23+0200 lvl=info msg="Stopped UserAuthTokenService" logger=server reason="context canceled"
+t=2019-07-17T17:06:23+0200 lvl=info msg="Stopped UsageStatsService" logger=server reason="context canceled"
+t=2019-07-17T17:06:23+0200 lvl=info msg="Stopped TracingService" logger=server reason=nil
+t=2019-07-17T17:06:23+0200 lvl=info msg="Stopped RenderingService" logger=server reason=nil
+t=2019-07-17T17:06:23+0200 lvl=info msg="Stopped RemoteCache" logger=server reason="context canceled"
+t=2019-07-17T17:06:23+0200 lvl=info msg="Stopped InternalMetricsService" logger=server reason="context canceled"
+t=2019-07-17T17:06:23+0200 lvl=info msg="Stopped provisioningServiceImpl" logger=server reason="context canceled"
+t=2019-07-17T17:06:23+0200 lvl=info msg="Stopped AlertingService" logger=server reason="context canceled"
+t=2019-07-17T17:06:24+0200 lvl=info msg="Stopped HTTPServer" logger=server reason=nil
+t=2019-07-17T17:06:24+0200 lvl=eror msg="Server shutdown" logger=server reason="System signal: terminated"
+t=2019-07-17T17:06:43+0200 lvl=info msg="Starting Grafana" logger=server version=6.2.5 commit=6082d19 branch=HEAD compiled=2019-06-25T19:56:19+0200
+t=2019-07-17T17:06:43+0200 lvl=info msg="Config loaded from" logger=settings file=/home/darknites/Desktop/Defendr/src/Metrics/Grafana/conf/defaults.ini
+t=2019-07-17T17:06:43+0200 lvl=info msg="Path Home" logger=settings path=/home/darknites/Desktop/Defendr/src/Metrics/Grafana
+t=2019-07-17T17:06:43+0200 lvl=info msg="Path Data" logger=settings path=/home/darknites/Desktop/Defendr/src/Metrics/Grafana/data
+t=2019-07-17T17:06:43+0200 lvl=info msg="Path Logs" logger=settings path=/home/darknites/Desktop/Defendr/src/Metrics/Grafana/data/log
+t=2019-07-17T17:06:43+0200 lvl=info msg="Path Plugins" logger=settings path=/home/darknites/Desktop/Defendr/src/Metrics/Grafana/data/plugins
+t=2019-07-17T17:06:43+0200 lvl=info msg="Path Provisioning" logger=settings path=/home/darknites/Desktop/Defendr/src/Metrics/Grafana/conf/provisioning
+t=2019-07-17T17:06:43+0200 lvl=info msg="App mode production" logger=settings
+t=2019-07-17T17:06:43+0200 lvl=info msg="Initializing SqlStore" logger=server
+t=2019-07-17T17:06:43+0200 lvl=info msg="Connecting to DB" logger=sqlstore dbtype=sqlite3
+t=2019-07-17T17:06:43+0200 lvl=info msg="Starting DB migration" logger=migrator
+t=2019-07-17T17:06:43+0200 lvl=info msg="Initializing HTTPServer" logger=server
+t=2019-07-17T17:06:43+0200 lvl=info msg="Initializing InternalMetricsService" logger=server
+t=2019-07-17T17:06:43+0200 lvl=info msg="Initializing RemoteCache" logger=server
+t=2019-07-17T17:06:43+0200 lvl=info msg="Initializing QuotaService" logger=server
+t=2019-07-17T17:06:43+0200 lvl=info msg="Initializing LoginService" logger=server
+t=2019-07-17T17:06:43+0200 lvl=info msg="Initializing PluginManager" logger=server
+t=2019-07-17T17:06:43+0200 lvl=info msg="Starting plugin search" logger=plugins
+t=2019-07-17T17:06:43+0200 lvl=info msg="Initializing RenderingService" logger=server
+t=2019-07-17T17:06:43+0200 lvl=info msg="Initializing AlertingService" logger=server
+t=2019-07-17T17:06:43+0200 lvl=info msg="Initializing DatasourceCacheService" logger=server
+t=2019-07-17T17:06:43+0200 lvl=info msg="Initializing HooksService" logger=server
+t=2019-07-17T17:06:43+0200 lvl=info msg="Initializing SearchService" logger=server
+t=2019-07-17T17:06:43+0200 lvl=info msg="Initializing ServerLockService" logger=server
+t=2019-07-17T17:06:43+0200 lvl=info msg="Initializing TracingService" logger=server
+t=2019-07-17T17:06:43+0200 lvl=info msg="Initializing UsageStatsService" logger=server
+t=2019-07-17T17:06:43+0200 lvl=info msg="Initializing UserAuthTokenService" logger=server
+t=2019-07-17T17:06:43+0200 lvl=info msg="Initializing CleanUpService" logger=server
+t=2019-07-17T17:06:43+0200 lvl=info msg="Initializing NotificationService" logger=server
+t=2019-07-17T17:06:43+0200 lvl=info msg="Initializing provisioningServiceImpl" logger=server
+t=2019-07-17T17:06:43+0200 lvl=info msg="Initializing Stream Manager"
+t=2019-07-17T17:06:43+0200 lvl=info msg="HTTP Server Listen" logger=http.server address=0.0.0.0:3000 protocol=http subUrl= socket=
+t=2019-07-17T17:06:46+0200 lvl=info msg="Request Completed" logger=context userId=0 orgId=0 uname= method=GET path=/ status=302 remote_addr=127.0.0.1 time_ms=0 size=29 referer=
+t=2019-07-17T18:52:16+0200 lvl=info msg="Starting Grafana" logger=server version=6.2.5 commit=6082d19 branch=HEAD compiled=2019-06-25T19:56:19+0200
+t=2019-07-17T18:52:16+0200 lvl=info msg="Config loaded from" logger=settings file=/home/darknites/Desktop/Defendr/src/Metrics/Grafana/conf/defaults.ini
+t=2019-07-17T18:52:16+0200 lvl=info msg="Path Home" logger=settings path=/home/darknites/Desktop/Defendr/src/Metrics/Grafana
+t=2019-07-17T18:52:16+0200 lvl=info msg="Path Data" logger=settings path=/home/darknites/Desktop/Defendr/src/Metrics/Grafana/data
+t=2019-07-17T18:52:16+0200 lvl=info msg="Path Logs" logger=settings path=/home/darknites/Desktop/Defendr/src/Metrics/Grafana/data/log
+t=2019-07-17T18:52:16+0200 lvl=info msg="Path Plugins" logger=settings path=/home/darknites/Desktop/Defendr/src/Metrics/Grafana/data/plugins
+t=2019-07-17T18:52:16+0200 lvl=info msg="Path Provisioning" logger=settings path=/home/darknites/Desktop/Defendr/src/Metrics/Grafana/conf/provisioning
+t=2019-07-17T18:52:16+0200 lvl=info msg="App mode production" logger=settings
+t=2019-07-17T18:52:16+0200 lvl=info msg="Initializing SqlStore" logger=server
+t=2019-07-17T18:52:16+0200 lvl=info msg="Connecting to DB" logger=sqlstore dbtype=sqlite3
+t=2019-07-17T18:52:16+0200 lvl=info msg="Starting DB migration" logger=migrator
+t=2019-07-17T18:52:16+0200 lvl=info msg="Initializing HTTPServer" logger=server
+t=2019-07-17T18:52:16+0200 lvl=info msg="Initializing InternalMetricsService" logger=server
+t=2019-07-17T18:52:16+0200 lvl=info msg="Initializing RemoteCache" logger=server
+t=2019-07-17T18:52:16+0200 lvl=info msg="Initializing QuotaService" logger=server
+t=2019-07-17T18:52:16+0200 lvl=info msg="Initializing LoginService" logger=server
+t=2019-07-17T18:52:16+0200 lvl=info msg="Initializing PluginManager" logger=server
+t=2019-07-17T18:52:16+0200 lvl=info msg="Starting plugin search" logger=plugins
+t=2019-07-17T18:52:17+0200 lvl=info msg="Initializing RenderingService" logger=server
+t=2019-07-17T18:52:17+0200 lvl=info msg="Initializing AlertingService" logger=server
+t=2019-07-17T18:52:17+0200 lvl=info msg="Initializing DatasourceCacheService" logger=server
+t=2019-07-17T18:52:17+0200 lvl=info msg="Initializing HooksService" logger=server
+t=2019-07-17T18:52:17+0200 lvl=info msg="Initializing SearchService" logger=server
+t=2019-07-17T18:52:17+0200 lvl=info msg="Initializing ServerLockService" logger=server
+t=2019-07-17T18:52:17+0200 lvl=info msg="Initializing TracingService" logger=server
+t=2019-07-17T18:52:17+0200 lvl=info msg="Initializing UsageStatsService" logger=server
+t=2019-07-17T18:52:17+0200 lvl=info msg="Initializing UserAuthTokenService" logger=server
+t=2019-07-17T18:52:17+0200 lvl=info msg="Initializing CleanUpService" logger=server
+t=2019-07-17T18:52:17+0200 lvl=info msg="Initializing NotificationService" logger=server
+t=2019-07-17T18:52:17+0200 lvl=info msg="Initializing provisioningServiceImpl" logger=server
+t=2019-07-17T18:52:17+0200 lvl=info msg="Initializing Stream Manager"
+t=2019-07-17T18:52:17+0200 lvl=info msg="HTTP Server Listen" logger=http.server address=0.0.0.0:3000 protocol=http subUrl= socket=
+t=2019-07-17T18:52:40+0200 lvl=info msg="Request Completed" logger=context userId=0 orgId=0 uname= method=GET path=/ status=302 remote_addr=127.0.0.1 time_ms=28 size=29 referer=
+t=2019-07-17T18:53:15+0200 lvl=info msg="Shutdown started" logger=server reason="System signal: terminated"
+t=2019-07-17T18:53:16+0200 lvl=info msg="Stopped PluginManager" logger=server reason="context canceled"
+t=2019-07-17T18:53:16+0200 lvl=info msg="Stopped UserAuthTokenService" logger=server reason="context canceled"
+t=2019-07-17T18:53:16+0200 lvl=info msg="Stopped CleanUpService" logger=server reason="context canceled"
+t=2019-07-17T18:53:16+0200 lvl=info msg="Stopped RenderingService" logger=server reason=nil
+t=2019-07-17T18:53:16+0200 lvl=info msg="Stopped RemoteCache" logger=server reason="context canceled"
+t=2019-07-17T18:53:16+0200 lvl=info msg="Stopped InternalMetricsService" logger=server reason="context canceled"
+t=2019-07-17T18:53:16+0200 lvl=info msg="Stopped provisioningServiceImpl" logger=server reason="context canceled"
+t=2019-07-17T18:53:16+0200 lvl=info msg="Stopped AlertingService" logger=server reason="context canceled"
+t=2019-07-17T18:53:16+0200 lvl=info msg="Stopped Stream Manager"
+t=2019-07-17T18:53:16+0200 lvl=info msg="Stopped UsageStatsService" logger=server reason="context canceled"
+t=2019-07-17T18:53:16+0200 lvl=info msg="Stopped NotificationService" logger=server reason="context canceled"
+t=2019-07-17T18:53:16+0200 lvl=info msg="Stopped TracingService" logger=server reason=nil
+t=2019-07-17T18:53:16+0200 lvl=info msg="Stopped HTTPServer" logger=server reason=nil
+t=2019-07-17T18:53:16+0200 lvl=eror msg="Server shutdown" logger=server reason="System signal: terminated"
+t=2019-07-17T18:53:24+0200 lvl=info msg="Starting Grafana" logger=server version=6.2.5 commit=6082d19 branch=HEAD compiled=2019-06-25T19:56:19+0200
+t=2019-07-17T18:53:24+0200 lvl=info msg="Config loaded from" logger=settings file=/home/darknites/Desktop/Defendr/src/Metrics/Grafana/conf/defaults.ini
+t=2019-07-17T18:53:24+0200 lvl=info msg="Path Home" logger=settings path=/home/darknites/Desktop/Defendr/src/Metrics/Grafana
+t=2019-07-17T18:53:24+0200 lvl=info msg="Path Data" logger=settings path=/home/darknites/Desktop/Defendr/src/Metrics/Grafana/data
+t=2019-07-17T18:53:24+0200 lvl=info msg="Path Logs" logger=settings path=/home/darknites/Desktop/Defendr/src/Metrics/Grafana/data/log
+t=2019-07-17T18:53:24+0200 lvl=info msg="Path Plugins" logger=settings path=/home/darknites/Desktop/Defendr/src/Metrics/Grafana/data/plugins
+t=2019-07-17T18:53:24+0200 lvl=info msg="Path Provisioning" logger=settings path=/home/darknites/Desktop/Defendr/src/Metrics/Grafana/conf/provisioning
+t=2019-07-17T18:53:24+0200 lvl=info msg="App mode production" logger=settings
+t=2019-07-17T18:53:24+0200 lvl=info msg="Initializing SqlStore" logger=server
+t=2019-07-17T18:53:24+0200 lvl=info msg="Connecting to DB" logger=sqlstore dbtype=sqlite3
+t=2019-07-17T18:53:24+0200 lvl=info msg="Starting DB migration" logger=migrator
+t=2019-07-17T18:53:24+0200 lvl=info msg="Initializing HTTPServer" logger=server
+t=2019-07-17T18:53:24+0200 lvl=info msg="Initializing InternalMetricsService" logger=server
+t=2019-07-17T18:53:24+0200 lvl=info msg="Initializing RemoteCache" logger=server
+t=2019-07-17T18:53:24+0200 lvl=info msg="Initializing QuotaService" logger=server
+t=2019-07-17T18:53:24+0200 lvl=info msg="Initializing LoginService" logger=server
+t=2019-07-17T18:53:24+0200 lvl=info msg="Initializing PluginManager" logger=server
+t=2019-07-17T18:53:24+0200 lvl=info msg="Starting plugin search" logger=plugins
+t=2019-07-17T18:53:24+0200 lvl=info msg="Initializing RenderingService" logger=server
+t=2019-07-17T18:53:24+0200 lvl=info msg="Initializing AlertingService" logger=server
+t=2019-07-17T18:53:24+0200 lvl=info msg="Initializing DatasourceCacheService" logger=server
+t=2019-07-17T18:53:24+0200 lvl=info msg="Initializing HooksService" logger=server
+t=2019-07-17T18:53:24+0200 lvl=info msg="Initializing SearchService" logger=server
+t=2019-07-17T18:53:24+0200 lvl=info msg="Initializing ServerLockService" logger=server
+t=2019-07-17T18:53:24+0200 lvl=info msg="Initializing TracingService" logger=server
+t=2019-07-17T18:53:24+0200 lvl=info msg="Initializing UsageStatsService" logger=server
+t=2019-07-17T18:53:24+0200 lvl=info msg="Initializing UserAuthTokenService" logger=server
+t=2019-07-17T18:53:24+0200 lvl=info msg="Initializing CleanUpService" logger=server
+t=2019-07-17T18:53:24+0200 lvl=info msg="Initializing NotificationService" logger=server
+t=2019-07-17T18:53:24+0200 lvl=info msg="Initializing provisioningServiceImpl" logger=server
+t=2019-07-17T18:53:24+0200 lvl=info msg="Initializing Stream Manager"
+t=2019-07-17T18:53:24+0200 lvl=info msg="HTTP Server Listen" logger=http.server address=0.0.0.0:3000 protocol=http subUrl= socket=
+t=2019-07-17T18:53:52+0200 lvl=info msg="Shutdown started" logger=server reason="System signal: terminated"
+t=2019-07-17T18:53:52+0200 lvl=info msg="Stopped PluginManager" logger=server reason="context canceled"
+t=2019-07-17T18:53:52+0200 lvl=info msg="Stopped UserAuthTokenService" logger=server reason="context canceled"
+t=2019-07-17T18:53:52+0200 lvl=info msg="Stopped Stream Manager"
+t=2019-07-17T18:53:52+0200 lvl=info msg="Stopped NotificationService" logger=server reason="context canceled"
+t=2019-07-17T18:53:52+0200 lvl=info msg="Stopped UsageStatsService" logger=server reason="context canceled"
+t=2019-07-17T18:53:52+0200 lvl=info msg="Stopped TracingService" logger=server reason=nil
+t=2019-07-17T18:53:52+0200 lvl=info msg="Stopped RenderingService" logger=server reason=nil
+t=2019-07-17T18:53:52+0200 lvl=info msg="Stopped RemoteCache" logger=server reason="context canceled"
+t=2019-07-17T18:53:52+0200 lvl=info msg="Stopped provisioningServiceImpl" logger=server reason="context canceled"
+t=2019-07-17T18:53:52+0200 lvl=info msg="Stopped AlertingService" logger=server reason="context canceled"
+t=2019-07-17T18:53:52+0200 lvl=info msg="Stopped CleanUpService" logger=server reason="context canceled"
+t=2019-07-17T18:53:52+0200 lvl=info msg="Stopped InternalMetricsService" logger=server reason="context canceled"
+t=2019-07-17T18:53:52+0200 lvl=info msg="Stopped HTTPServer" logger=server reason=nil
+t=2019-07-17T18:53:52+0200 lvl=eror msg="Server shutdown" logger=server reason="System signal: terminated"
+t=2019-07-17T18:53:58+0200 lvl=info msg="Starting Grafana" logger=server version=6.2.5 commit=6082d19 branch=HEAD compiled=2019-06-25T19:56:19+0200
+t=2019-07-17T18:53:58+0200 lvl=info msg="Config loaded from" logger=settings file=/home/darknites/Desktop/Defendr/src/Metrics/Grafana/conf/defaults.ini
+t=2019-07-17T18:53:58+0200 lvl=info msg="Path Home" logger=settings path=/home/darknites/Desktop/Defendr/src/Metrics/Grafana
+t=2019-07-17T18:53:58+0200 lvl=info msg="Path Data" logger=settings path=/home/darknites/Desktop/Defendr/src/Metrics/Grafana/data
+t=2019-07-17T18:53:58+0200 lvl=info msg="Path Logs" logger=settings path=/home/darknites/Desktop/Defendr/src/Metrics/Grafana/data/log
+t=2019-07-17T18:53:58+0200 lvl=info msg="Path Plugins" logger=settings path=/home/darknites/Desktop/Defendr/src/Metrics/Grafana/data/plugins
+t=2019-07-17T18:53:58+0200 lvl=info msg="Path Provisioning" logger=settings path=/home/darknites/Desktop/Defendr/src/Metrics/Grafana/conf/provisioning
+t=2019-07-17T18:53:58+0200 lvl=info msg="App mode production" logger=settings
+t=2019-07-17T18:53:58+0200 lvl=info msg="Initializing SqlStore" logger=server
+t=2019-07-17T18:53:58+0200 lvl=info msg="Connecting to DB" logger=sqlstore dbtype=sqlite3
+t=2019-07-17T18:53:58+0200 lvl=info msg="Starting DB migration" logger=migrator
+t=2019-07-17T18:53:58+0200 lvl=info msg="Initializing HTTPServer" logger=server
+t=2019-07-17T18:53:58+0200 lvl=info msg="Initializing InternalMetricsService" logger=server
+t=2019-07-17T18:53:58+0200 lvl=info msg="Initializing RemoteCache" logger=server
+t=2019-07-17T18:53:58+0200 lvl=info msg="Initializing QuotaService" logger=server
+t=2019-07-17T18:53:58+0200 lvl=info msg="Initializing LoginService" logger=server
+t=2019-07-17T18:53:58+0200 lvl=info msg="Initializing PluginManager" logger=server
+t=2019-07-17T18:53:58+0200 lvl=info msg="Starting plugin search" logger=plugins
+t=2019-07-17T18:53:58+0200 lvl=info msg="Initializing RenderingService" logger=server
+t=2019-07-17T18:53:58+0200 lvl=info msg="Initializing AlertingService" logger=server
+t=2019-07-17T18:53:58+0200 lvl=info msg="Initializing DatasourceCacheService" logger=server
+t=2019-07-17T18:53:58+0200 lvl=info msg="Initializing HooksService" logger=server
+t=2019-07-17T18:53:58+0200 lvl=info msg="Initializing SearchService" logger=server
+t=2019-07-17T18:53:58+0200 lvl=info msg="Initializing ServerLockService" logger=server
+t=2019-07-17T18:53:58+0200 lvl=info msg="Initializing TracingService" logger=server
+t=2019-07-17T18:53:58+0200 lvl=info msg="Initializing UsageStatsService" logger=server
+t=2019-07-17T18:53:58+0200 lvl=info msg="Initializing UserAuthTokenService" logger=server
+t=2019-07-17T18:53:58+0200 lvl=info msg="Initializing CleanUpService" logger=server
+t=2019-07-17T18:53:58+0200 lvl=info msg="Initializing NotificationService" logger=server
+t=2019-07-17T18:53:58+0200 lvl=info msg="Initializing provisioningServiceImpl" logger=server
+t=2019-07-17T18:53:58+0200 lvl=info msg="Initializing Stream Manager"
+t=2019-07-17T18:53:58+0200 lvl=info msg="HTTP Server Listen" logger=http.server address=0.0.0.0:3000 protocol=http subUrl= socket=
+t=2019-07-17T18:54:55+0200 lvl=info msg="Shutdown started" logger=server reason="System signal: terminated"
+t=2019-07-17T18:54:55+0200 lvl=info msg="Stopped PluginManager" logger=server reason="context canceled"
+t=2019-07-17T18:54:55+0200 lvl=info msg="Stopped UserAuthTokenService" logger=server reason="context canceled"
+t=2019-07-17T18:54:55+0200 lvl=info msg="Stopped UsageStatsService" logger=server reason="context canceled"
+t=2019-07-17T18:54:55+0200 lvl=info msg="Stopped Stream Manager"
+t=2019-07-17T18:54:55+0200 lvl=info msg="Stopped NotificationService" logger=server reason="context canceled"
+t=2019-07-17T18:54:55+0200 lvl=info msg="Stopped CleanUpService" logger=server reason="context canceled"
+t=2019-07-17T18:54:55+0200 lvl=info msg="Stopped TracingService" logger=server reason=nil
+t=2019-07-17T18:54:55+0200 lvl=info msg="Stopped RenderingService" logger=server reason=nil
+t=2019-07-17T18:54:55+0200 lvl=info msg="Stopped RemoteCache" logger=server reason="context canceled"
+t=2019-07-17T18:54:55+0200 lvl=info msg="Stopped InternalMetricsService" logger=server reason="context canceled"
+t=2019-07-17T18:54:55+0200 lvl=info msg="Stopped provisioningServiceImpl" logger=server reason="context canceled"
+t=2019-07-17T18:54:55+0200 lvl=info msg="Stopped AlertingService" logger=server reason="context canceled"
+t=2019-07-17T18:54:55+0200 lvl=info msg="Stopped HTTPServer" logger=server reason=nil
+t=2019-07-17T18:54:55+0200 lvl=eror msg="Server shutdown" logger=server reason="System signal: terminated"
+t=2019-07-17T18:57:11+0200 lvl=info msg="Starting Grafana" logger=server version=6.2.5 commit=6082d19 branch=HEAD compiled=2019-06-25T19:56:19+0200
+t=2019-07-17T18:57:11+0200 lvl=info msg="Config loaded from" logger=settings file=/home/darknites/Desktop/Defendr/src/Metrics/Grafana/conf/defaults.ini
+t=2019-07-17T18:57:11+0200 lvl=info msg="Path Home" logger=settings path=/home/darknites/Desktop/Defendr/src/Metrics/Grafana
+t=2019-07-17T18:57:11+0200 lvl=info msg="Path Data" logger=settings path=/home/darknites/Desktop/Defendr/src/Metrics/Grafana/data
+t=2019-07-17T18:57:11+0200 lvl=info msg="Path Logs" logger=settings path=/home/darknites/Desktop/Defendr/src/Metrics/Grafana/data/log
+t=2019-07-17T18:57:11+0200 lvl=info msg="Path Plugins" logger=settings path=/home/darknites/Desktop/Defendr/src/Metrics/Grafana/data/plugins
+t=2019-07-17T18:57:11+0200 lvl=info msg="Path Provisioning" logger=settings path=/home/darknites/Desktop/Defendr/src/Metrics/Grafana/conf/provisioning
+t=2019-07-17T18:57:11+0200 lvl=info msg="App mode production" logger=settings
+t=2019-07-17T18:57:11+0200 lvl=info msg="Initializing SqlStore" logger=server
+t=2019-07-17T18:57:11+0200 lvl=info msg="Connecting to DB" logger=sqlstore dbtype=sqlite3
+t=2019-07-17T18:57:11+0200 lvl=info msg="Starting DB migration" logger=migrator
+t=2019-07-17T18:57:11+0200 lvl=info msg="Initializing HTTPServer" logger=server
+t=2019-07-17T18:57:11+0200 lvl=info msg="Initializing InternalMetricsService" logger=server
+t=2019-07-17T18:57:11+0200 lvl=info msg="Initializing RemoteCache" logger=server
+t=2019-07-17T18:57:11+0200 lvl=info msg="Initializing QuotaService" logger=server
+t=2019-07-17T18:57:11+0200 lvl=info msg="Initializing LoginService" logger=server
+t=2019-07-17T18:57:11+0200 lvl=info msg="Initializing PluginManager" logger=server
+t=2019-07-17T18:57:11+0200 lvl=info msg="Starting plugin search" logger=plugins
+t=2019-07-17T18:57:11+0200 lvl=info msg="Initializing RenderingService" logger=server
+t=2019-07-17T18:57:11+0200 lvl=info msg="Initializing AlertingService" logger=server
+t=2019-07-17T18:57:11+0200 lvl=info msg="Initializing DatasourceCacheService" logger=server
+t=2019-07-17T18:57:11+0200 lvl=info msg="Initializing HooksService" logger=server
+t=2019-07-17T18:57:11+0200 lvl=info msg="Initializing SearchService" logger=server
+t=2019-07-17T18:57:11+0200 lvl=info msg="Initializing ServerLockService" logger=server
+t=2019-07-17T18:57:11+0200 lvl=info msg="Initializing TracingService" logger=server
+t=2019-07-17T18:57:11+0200 lvl=info msg="Initializing UsageStatsService" logger=server
+t=2019-07-17T18:57:11+0200 lvl=info msg="Initializing UserAuthTokenService" logger=server
+t=2019-07-17T18:57:11+0200 lvl=info msg="Initializing CleanUpService" logger=server
+t=2019-07-17T18:57:11+0200 lvl=info msg="Initializing NotificationService" logger=server
+t=2019-07-17T18:57:11+0200 lvl=info msg="Initializing provisioningServiceImpl" logger=server
+t=2019-07-17T18:57:11+0200 lvl=info msg="Initializing Stream Manager"
+t=2019-07-17T18:57:11+0200 lvl=info msg="HTTP Server Listen" logger=http.server address=0.0.0.0:3000 protocol=http subUrl= socket=
+t=2019-07-17T19:10:19+0200 lvl=info msg="Shutdown started" logger=server reason="System signal: interrupt"
+t=2019-07-17T19:10:19+0200 lvl=info msg="Stopped UsageStatsService" logger=server reason="context canceled"
+t=2019-07-17T19:10:19+0200 lvl=info msg="Stopped PluginManager" logger=server reason="context canceled"
+t=2019-07-17T19:10:19+0200 lvl=info msg="Stopped CleanUpService" logger=server reason="context canceled"
+t=2019-07-17T19:10:19+0200 lvl=info msg="Stopped RemoteCache" logger=server reason="context canceled"
+t=2019-07-17T19:10:19+0200 lvl=info msg="Stopped Stream Manager"
+t=2019-07-17T19:10:19+0200 lvl=info msg="Stopped NotificationService" logger=server reason="context canceled"
+t=2019-07-17T19:10:19+0200 lvl=info msg="Stopped UserAuthTokenService" logger=server reason="context canceled"
+t=2019-07-17T19:10:19+0200 lvl=info msg="Stopped TracingService" logger=server reason=nil
+t=2019-07-17T19:10:19+0200 lvl=info msg="Stopped RenderingService" logger=server reason=nil
+t=2019-07-17T19:10:19+0200 lvl=info msg="Stopped InternalMetricsService" logger=server reason="context canceled"
+t=2019-07-17T19:10:19+0200 lvl=info msg="Stopped provisioningServiceImpl" logger=server reason="context canceled"
+t=2019-07-17T19:10:19+0200 lvl=info msg="Stopped AlertingService" logger=server reason="context canceled"
+t=2019-07-17T19:10:19+0200 lvl=info msg="Stopped HTTPServer" logger=server reason=nil
+t=2019-07-17T19:10:19+0200 lvl=eror msg="Server shutdown" logger=server reason="System signal: interrupt"
+t=2019-07-17T19:11:19+0200 lvl=info msg="Starting Grafana" logger=server version=6.2.5 commit=6082d19 branch=HEAD compiled=2019-06-25T19:56:19+0200
+t=2019-07-17T19:11:19+0200 lvl=info msg="Config loaded from" logger=settings file=/home/darknites/Desktop/Defendr/src/Metrics/Grafana/conf/defaults.ini
+t=2019-07-17T19:11:19+0200 lvl=info msg="Path Home" logger=settings path=/home/darknites/Desktop/Defendr/src/Metrics/Grafana
+t=2019-07-17T19:11:19+0200 lvl=info msg="Path Data" logger=settings path=/home/darknites/Desktop/Defendr/src/Metrics/Grafana/data
+t=2019-07-17T19:11:19+0200 lvl=info msg="Path Logs" logger=settings path=/home/darknites/Desktop/Defendr/src/Metrics/Grafana/data/log
+t=2019-07-17T19:11:19+0200 lvl=info msg="Path Plugins" logger=settings path=/home/darknites/Desktop/Defendr/src/Metrics/Grafana/data/plugins
+t=2019-07-17T19:11:19+0200 lvl=info msg="Path Provisioning" logger=settings path=/home/darknites/Desktop/Defendr/src/Metrics/Grafana/conf/provisioning
+t=2019-07-17T19:11:19+0200 lvl=info msg="App mode production" logger=settings
+t=2019-07-17T19:11:19+0200 lvl=info msg="Initializing SqlStore" logger=server
+t=2019-07-17T19:11:19+0200 lvl=info msg="Connecting to DB" logger=sqlstore dbtype=sqlite3
+t=2019-07-17T19:11:19+0200 lvl=info msg="Starting DB migration" logger=migrator
+t=2019-07-17T19:11:19+0200 lvl=info msg="Initializing HTTPServer" logger=server
+t=2019-07-17T19:11:19+0200 lvl=info msg="Initializing InternalMetricsService" logger=server
+t=2019-07-17T19:11:19+0200 lvl=info msg="Initializing RemoteCache" logger=server
+t=2019-07-17T19:11:19+0200 lvl=info msg="Initializing QuotaService" logger=server
+t=2019-07-17T19:11:19+0200 lvl=info msg="Initializing LoginService" logger=server
+t=2019-07-17T19:11:19+0200 lvl=info msg="Initializing PluginManager" logger=server
+t=2019-07-17T19:11:19+0200 lvl=info msg="Starting plugin search" logger=plugins
+t=2019-07-17T19:11:19+0200 lvl=info msg="Initializing RenderingService" logger=server
+t=2019-07-17T19:11:19+0200 lvl=info msg="Initializing AlertingService" logger=server
+t=2019-07-17T19:11:19+0200 lvl=info msg="Initializing DatasourceCacheService" logger=server
+t=2019-07-17T19:11:19+0200 lvl=info msg="Initializing HooksService" logger=server
+t=2019-07-17T19:11:19+0200 lvl=info msg="Initializing SearchService" logger=server
+t=2019-07-17T19:11:19+0200 lvl=info msg="Initializing ServerLockService" logger=server
+t=2019-07-17T19:11:19+0200 lvl=info msg="Initializing TracingService" logger=server
+t=2019-07-17T19:11:19+0200 lvl=info msg="Initializing UsageStatsService" logger=server
+t=2019-07-17T19:11:19+0200 lvl=info msg="Initializing UserAuthTokenService" logger=server
+t=2019-07-17T19:11:19+0200 lvl=info msg="Initializing CleanUpService" logger=server
+t=2019-07-17T19:11:19+0200 lvl=info msg="Initializing NotificationService" logger=server
+t=2019-07-17T19:11:19+0200 lvl=info msg="Initializing provisioningServiceImpl" logger=server
+t=2019-07-17T19:11:19+0200 lvl=info msg="Initializing Stream Manager"
+t=2019-07-17T19:11:19+0200 lvl=info msg="HTTP Server Listen" logger=http.server address=0.0.0.0:3000 protocol=http subUrl= socket=
+t=2019-07-17T19:11:22+0200 lvl=info msg="Shutdown started" logger=server reason="System signal: interrupt"
+t=2019-07-17T19:11:22+0200 lvl=info msg="Stopped Stream Manager"
+t=2019-07-17T19:11:22+0200 lvl=info msg="Stopped NotificationService" logger=server reason="context canceled"
+t=2019-07-17T19:11:22+0200 lvl=info msg="Stopped CleanUpService" logger=server reason="context canceled"
+t=2019-07-17T19:11:22+0200 lvl=info msg="Stopped UserAuthTokenService" logger=server reason="context canceled"
+t=2019-07-17T19:11:22+0200 lvl=info msg="Stopped UsageStatsService" logger=server reason="context canceled"
+t=2019-07-17T19:11:22+0200 lvl=info msg="Stopped TracingService" logger=server reason=nil
+t=2019-07-17T19:11:22+0200 lvl=info msg="Stopped RenderingService" logger=server reason=nil
+t=2019-07-17T19:11:22+0200 lvl=info msg="Stopped RemoteCache" logger=server reason="context canceled"
+t=2019-07-17T19:11:22+0200 lvl=info msg="Stopped InternalMetricsService" logger=server reason="context canceled"
+t=2019-07-17T19:11:22+0200 lvl=info msg="Stopped provisioningServiceImpl" logger=server reason="context canceled"
+t=2019-07-17T19:11:22+0200 lvl=info msg="Stopped AlertingService" logger=server reason="context canceled"
+t=2019-07-17T19:11:22+0200 lvl=info msg="Stopped HTTPServer" logger=server reason=nil
+t=2019-07-17T19:11:24+0200 lvl=info msg="Stopped PluginManager" logger=server reason="context canceled"
+t=2019-07-17T19:11:24+0200 lvl=info msg="Shutdown started" logger=server reason="System signal: interrupt"
+t=2019-07-17T19:11:24+0200 lvl=eror msg="Server shutdown" logger=server reason="System signal: interrupt"
+t=2019-07-17T19:27:28+0200 lvl=info msg="Starting Grafana" logger=server version=6.2.5 commit=6082d19 branch=HEAD compiled=2019-06-25T19:56:19+0200
+t=2019-07-17T19:27:28+0200 lvl=info msg="Config loaded from" logger=settings file=/home/darknites/Desktop/Defendr/src/Metrics/Grafana/conf/defaults.ini
+t=2019-07-17T19:27:28+0200 lvl=info msg="Path Home" logger=settings path=/home/darknites/Desktop/Defendr/src/Metrics/Grafana
+t=2019-07-17T19:27:28+0200 lvl=info msg="Path Data" logger=settings path=/home/darknites/Desktop/Defendr/src/Metrics/Grafana/data
+t=2019-07-17T19:27:28+0200 lvl=info msg="Path Logs" logger=settings path=/home/darknites/Desktop/Defendr/src/Metrics/Grafana/data/log
+t=2019-07-17T19:27:28+0200 lvl=info msg="Path Plugins" logger=settings path=/home/darknites/Desktop/Defendr/src/Metrics/Grafana/data/plugins
+t=2019-07-17T19:27:28+0200 lvl=info msg="Path Provisioning" logger=settings path=/home/darknites/Desktop/Defendr/src/Metrics/Grafana/conf/provisioning
+t=2019-07-17T19:27:28+0200 lvl=info msg="App mode production" logger=settings
+t=2019-07-17T19:27:28+0200 lvl=info msg="Initializing SqlStore" logger=server
+t=2019-07-17T19:27:28+0200 lvl=info msg="Connecting to DB" logger=sqlstore dbtype=sqlite3
+t=2019-07-17T19:27:28+0200 lvl=info msg="Starting DB migration" logger=migrator
+t=2019-07-17T19:27:29+0200 lvl=info msg="Initializing HTTPServer" logger=server
+t=2019-07-17T19:27:29+0200 lvl=info msg="Initializing InternalMetricsService" logger=server
+t=2019-07-17T19:27:29+0200 lvl=info msg="Initializing RemoteCache" logger=server
+t=2019-07-17T19:27:29+0200 lvl=info msg="Initializing QuotaService" logger=server
+t=2019-07-17T19:27:29+0200 lvl=info msg="Initializing LoginService" logger=server
+t=2019-07-17T19:27:29+0200 lvl=info msg="Initializing PluginManager" logger=server
+t=2019-07-17T19:27:29+0200 lvl=info msg="Starting plugin search" logger=plugins
+t=2019-07-17T19:27:30+0200 lvl=info msg="Initializing RenderingService" logger=server
+t=2019-07-17T19:27:30+0200 lvl=info msg="Initializing AlertingService" logger=server
+t=2019-07-17T19:27:30+0200 lvl=info msg="Initializing DatasourceCacheService" logger=server
+t=2019-07-17T19:27:30+0200 lvl=info msg="Initializing HooksService" logger=server
+t=2019-07-17T19:27:30+0200 lvl=info msg="Initializing SearchService" logger=server
+t=2019-07-17T19:27:30+0200 lvl=info msg="Initializing ServerLockService" logger=server
+t=2019-07-17T19:27:30+0200 lvl=info msg="Initializing TracingService" logger=server
+t=2019-07-17T19:27:30+0200 lvl=info msg="Initializing UsageStatsService" logger=server
+t=2019-07-17T19:27:30+0200 lvl=info msg="Initializing UserAuthTokenService" logger=server
+t=2019-07-17T19:27:30+0200 lvl=info msg="Initializing CleanUpService" logger=server
+t=2019-07-17T19:27:30+0200 lvl=info msg="Initializing NotificationService" logger=server
+t=2019-07-17T19:27:30+0200 lvl=info msg="Initializing provisioningServiceImpl" logger=server
+t=2019-07-17T19:27:30+0200 lvl=info msg="Initializing Stream Manager"
+t=2019-07-17T19:27:30+0200 lvl=info msg="HTTP Server Listen" logger=http.server address=0.0.0.0:3000 protocol=http subUrl= socket=
+t=2019-07-17T19:27:33+0200 lvl=info msg="Shutdown started" logger=server reason="System signal: terminated"
+t=2019-07-17T19:27:33+0200 lvl=info msg="Stopped Stream Manager"
+t=2019-07-17T19:27:33+0200 lvl=info msg="Stopped UsageStatsService" logger=server reason="context canceled"
+t=2019-07-17T19:27:33+0200 lvl=info msg="Stopped UserAuthTokenService" logger=server reason="context canceled"
+t=2019-07-17T19:27:33+0200 lvl=info msg="Stopped NotificationService" logger=server reason="context canceled"
+t=2019-07-17T19:27:33+0200 lvl=info msg="Stopped CleanUpService" logger=server reason="context canceled"
+t=2019-07-17T19:27:33+0200 lvl=info msg="Stopped TracingService" logger=server reason=nil
+t=2019-07-17T19:27:33+0200 lvl=info msg="Stopped RenderingService" logger=server reason=nil
+t=2019-07-17T19:27:33+0200 lvl=info msg="Stopped RemoteCache" logger=server reason="context canceled"
+t=2019-07-17T19:27:33+0200 lvl=info msg="Stopped InternalMetricsService" logger=server reason="context canceled"
+t=2019-07-17T19:27:33+0200 lvl=info msg="Stopped provisioningServiceImpl" logger=server reason="context canceled"
+t=2019-07-17T19:27:33+0200 lvl=info msg="Stopped AlertingService" logger=server reason="context canceled"
+t=2019-07-17T19:27:33+0200 lvl=info msg="Stopped HTTPServer" logger=server reason=nil
+t=2019-07-17T19:27:37+0200 lvl=info msg="Stopped PluginManager" logger=server reason="context canceled"
+t=2019-07-17T19:27:37+0200 lvl=eror msg="Server shutdown" logger=server reason="System signal: terminated"

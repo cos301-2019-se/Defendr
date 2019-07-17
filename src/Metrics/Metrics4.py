@@ -1,6 +1,7 @@
 import subprocess
 import sys
 import webbrowser
+#from prometheus_client import ProcessCollector
 
 def install(package):
 	subprocess.call([sys.executable, "-m", "pip", "install", package])
@@ -20,7 +21,7 @@ def process_request(t):
     time.sleep(t)
 
 if __name__ == '__main__':
-    webbrowser.open("http://localhost:3000/d/L7frhkNWk/defendr-system-load?orgId=1",new=2);
+    #webbrowser.open("http://localhost:3000/d/L7frhkNWk/defendr-system-load?orgId=1",new=2);
     # Start up the server to expose the metrics.
     start_http_server(8000)
     # Generate some requests.
