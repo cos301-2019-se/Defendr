@@ -10,29 +10,15 @@ class controller:
 		myCmd = os.popen("cd " + self.pathToSource + " && sudo mount -t bpf bpf /sys/fs/bpf/").read()
 		myCmd = os.popen("cd " + self.pathToSource + " && sudo ./xdp_ddos01_blacklist --dev enp0s3 --remove --owner $USER").read()
 		myCmd = os.popen("cd " + self.pathToSource + " && sudo ./xdp_ddos01_blacklist --dev enp0s3 --owner $USER").read()
-		#print(myCmd)
-		os.popen("cd " + self.pathToSource + " && sudo ./xdp_ddos01_blacklist_cmdline --del --ip " + "198.18.50.3").read()
-		return "success";
+		print(myCmd)
+		return;
 		
 	def blacklistIP(self,ip):
-		testIP = ip
 		myCmd = os.popen("cd " + self.pathToSource + " && sudo ./xdp_ddos01_blacklist_cmdline --add --ip " + ip).read()
-		testData = self.getBlacklistedIpList()
-		if testIP in testData:
-			return "success"
-		else:
-			return "Failure"
+		return;
 		
 	def whiteListIP(self,ip):
 		myCmd = os.popen("cd " + self.pathToSource + " && sudo ./xdp_ddos01_blacklist_cmdline --del --ip " + ip).read()
-		return;
-
-	def addBackend(self,ip):
-		myCmd = os.popen("cd " + self.pathToSource + " && sudo ./xdp_ddos01_blacklist_cmdline --add --backend --ip " + ip).read()
-		return;
-
-	def removeBackend(self,ip):
-		myCmd = os.popen("cd " + self.pathToSource + " && sudo ./xdp_ddos01_blacklist_cmdline --del --backend --ip " + ip).read()
 		return;
 		
 	def getBlacklistedIpList(self):
@@ -54,4 +40,3 @@ class controller:
 		if(dataString[len(dataString)-1]==','):
 			dataString = dataString[:-1]
 		return dataString.split(",")
-

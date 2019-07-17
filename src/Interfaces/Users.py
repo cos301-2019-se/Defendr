@@ -84,11 +84,6 @@ class managementwindow:
         line = databaseCon.printUsers(db)
         self.Userstxt.delete(1.0, tk.END)
         self.Userstxt.insert(tk.END, line)
-        line=databaseCon.printUsers(db)
-        lineArray = line.split('\n')
-        for x in lineArray:
-            print(x)
-            self.Userstxt.insert(tk.END, x)
 
     def __init__(self, top=None):
         db = databaseCon.connect()
@@ -107,7 +102,6 @@ class managementwindow:
             "roman -underline 0 -overstrike 0"
 
         top.geometry("631x371+378+132")
-        top.geometry("531x371+378+132")
         top.title("Users management")
 
         self.UsersManagementLBL = tk.Label(top)
@@ -183,7 +177,6 @@ class managementwindow:
         self.Repsdtxt.configure(width=116)
 
         self.Userstxt = tk.Text(top)
-        self.Userstxt = tk.Entry(top)
         self.Userstxt.place(relx=0.621, rely=0.243,height=213, relwidth=0.331)
         self.Userstxt.configure(background="white")
         self.Userstxt.configure(font="TkFixedFont")
