@@ -78,7 +78,7 @@ OBJECTS = $(OBJECT_LOADBPF)
 #
 # The static libbpf library
 LIBBPF = $(TOOLS_PATH)/lib/bpf/libbpf.a
-LIBBPF += -lmongoc-1.0 -lbson-1.0 -lGeoIP -lIP2Location
+LIBBPF += -lmongoc-1.0 -lbson-1.0 -lIP2Location
 # Allows pointing LLC/CLANG to another LLVM backend, redefine on cmdline:
 #  make LLC=~/git/llvm/build/bin/llc CLANG=~/git/llvm/build/bin/clang
 LLC ?= llc

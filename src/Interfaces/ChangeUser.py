@@ -66,7 +66,7 @@ class UserChange:
         if(type=="Name"):
             self.changeName()
         else:
-            if (type == "Surename"):
+            if (type == "Surname"):
                 self.changeLastName()
             else:
                 if (type == "Email"):
@@ -78,7 +78,7 @@ class UserChange:
                         if(type == "Roll"):
                             self.changeRoll()
                         else:
-                            messagebox.showwarning("Change user", "Please select want to chang.")
+                            messagebox.showwarning("Change user", "Please select what to change.")
 
     def changeName(self):
         name =self.Ent_new_item.get()
@@ -89,10 +89,10 @@ class UserChange:
             if(name=='' or reenter_name==''):
                 messagebox.showwarning("Change user", "Please enter the item in both fields.")
             else:
-                msg = messagebox.askyesno("Change user", "Are you sure you want to chang this?")
+                msg = messagebox.askyesno("Change user", "Are you sure you want to change this?")
                 if (msg):
                     databaseCon.changeName(db,email,name)
-                    messagebox.showinfo("Change user", "Succefully change.")
+                    messagebox.showinfo("Change user", "Successfully changed.")
         self.clear()
 
     def changeLastName(self):
@@ -104,10 +104,10 @@ class UserChange:
             if(name=='' or reenter_name==''):
                 messagebox.showwarning("Change user", "Please enter the item in both fields.")
             else:
-                msg = messagebox.askyesno("Change user", "Are you sure you want to chang this?")
+                msg = messagebox.askyesno("Change user", "Are you sure you want to change this?")
                 if (msg):
                    databaseCon.changeLastname(db,email,name)
-                   messagebox.showinfo("Change user", "Succefully change.")
+                   messagebox.showinfo("Change user", "Succefully changed.")
         self.clear()
 
     def changeRoll(self):
@@ -120,12 +120,12 @@ class UserChange:
                 messagebox.showwarning("Change user", "Please enter the item in both fields.")
             else:
                 if(not(roll=="admin" or roll=="user")):
-                    messagebox.showwarning("Change user", "Roll must be neder admin or user.")
+                    messagebox.showwarning("Change user", "Roll must be either admin or user.")
                 else:
-                    msg = messagebox.askyesno("Change user", "Are you sure you want to chang this?")
+                    msg = messagebox.askyesno("Change user", "Are you sure you want to change this?")
                     if (msg):
                         databaseCon.changeRoll(db,email,roll)
-                        messagebox.showinfo("Change user", "Succefully change.")
+                        messagebox.showinfo("Change user", "Successfully change.")
         self.clear()
 
     def changeEmail(self):
@@ -138,10 +138,10 @@ class UserChange:
                 messagebox.showwarning("Change user", "Please enter the item in both fields.")
             else:
                 if(self.checkEmail(newEmail)):
-                    msg = messagebox.askyesno("Change user", "Are you sure you want to chang this?");
+                    msg = messagebox.askyesno("Change user", "Are you sure you want to change this?");
                     if (msg):
                         databaseCon.changeEmail(db,email,newEmail)
-                        messagebox.showinfo("Change user", "Succefully change.")
+                        messagebox.showinfo("Change user", "Successfully change.")
         self.clear()
 
     def changePassword(self):
@@ -154,10 +154,10 @@ class UserChange:
                 messagebox.showwarning("Change user", "Please enter the item in both fields.")
             else:
                 if (self.checkPassword(password)):
-                    msg = messagebox.askyesno("Change user", "Are you sure you want to chang this?");
+                    msg = messagebox.askyesno("Change user", "Are you sure you want to change this?");
                     if (msg):
                         databaseCon.changePassword(db,email,password)
-                        messagebox.showinfo("Change user", "Succefully change.")
+                        messagebox.showinfo("Change user", "Successfully change.")
         self.clear()
 
     # check if the email is correct
@@ -182,12 +182,12 @@ class UserChange:
             return False
         caps = re.findall("[A-Z]", password)
         if (not (caps)):
-            messagebox.showwarning("Change user", "Your password needs a uppercase chatter.")
+            messagebox.showwarning("Change user", "Your password needs a uppercase character.")
             self.clear()
             return False
         lower = re.findall("[a-z]", password)
         if (not (lower)):
-            messagebox.showwarning("Password", "Your password needs a lowercase chatter.")
+            messagebox.showwarning("Password", "Your password needs a lowercase character.")
             self.clear()
             return False
         symbols = re.findall("[!,@,#,$,%,^,&,*,.,?]", password)
@@ -233,7 +233,7 @@ class UserChange:
         self.Ltb_want_change.configure(font="TkFixedFont")
         self.Ltb_want_change.configure(width=164)
         self.Ltb_want_change.insert(1, "Name")
-        self.Ltb_want_change.insert(2, "Surename")
+        self.Ltb_want_change.insert(2, "Surname")
         self.Ltb_want_change.insert(3, "Email")
         self.Ltb_want_change.insert(4, "Password")
         self.Ltb_want_change.insert(5, "Roll")

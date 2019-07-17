@@ -82,17 +82,17 @@ class win_Login:
             db = databaseCon.connect()
             if(databaseCon.checkPass(db,Email,passw)):
                 roll =databaseCon.getRoll(db,Email)
-                messagebox.showinfo("Login Page", "Successly log in as "+roll)
+                messagebox.showinfo("Login Page", "Successfully logged in as "+roll)
                 self.txtEmail.delete(0, 'end')
                 self.txtPass.delete(0, 'end')
                 Login_support.createMain(roll)
             else:
                 self.txtPass.delete(0, 'end')
-                messagebox.showwarning("Login Page", "Incorrect email or Password")
+                messagebox.showwarning("Login Page", "Incorrect Email or Password")
         else:
             self.txtPass.delete(0, 'end')
             self.txtEmail.delete(0, 'end')
-            messagebox.showwarning("Login Page", "Please enter email or Password")
+            messagebox.showwarning("Login Page", "Please enter Email or Password")
 
 
     def register(self):

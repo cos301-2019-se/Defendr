@@ -59,21 +59,21 @@ class managementwindow:
         name=self.AddNametxt.get()
         password=self.Psdtxt.get()
         if(self.Repsdtxt.get()!=password):
-            messagebox.showwarning("Users Page", "Plaese check the password.")
+            messagebox.showwarning("Users Page", "Please check the password.")
         else:
-            msg = messagebox.askyesno("Roll", "Are "+name+" an admin?")
+            msg = messagebox.askyesno("Roll", "Is "+name+" an admin?")
             roll="user"
             if(msg):
                 roll="admin"
             answer=databaseCon.makeNewUser(db,name,password,roll)
-            messagebox.showinfo("Users mangement",answer)
+            messagebox.showinfo("User Management",answer)
 
     def removeUsers(self,db):
         name=self.RemoveNametxt.get()
-        msg = messagebox.askyesno("Remove users", "Are  sure you want to remove "+name+" ?")
+        msg = messagebox.askyesno("Remove Users", "Are  sure you want to remove "+name+" ?")
         if(msg):
             answer=databaseCon.remove(db,name)
-            messagebox.showinfo("Users mangement",answer)
+            messagebox.showinfo("User Management",answer)
             self.RemoveNametxt.insert(tk.END, "")
 
     def back(self):
@@ -108,7 +108,7 @@ class managementwindow:
         self.UsersManagementLBL.place(relx=0.358, rely=0.054, height=33
                 , width=262)
         self.UsersManagementLBL.configure(font=font9)
-        self.UsersManagementLBL.configure(text='''Users Management''')
+        self.UsersManagementLBL.configure(text='''User Management''')
 
         self.AddUsersLbl = tk.Label(top)
         self.AddUsersLbl.place(relx=0.094, rely=0.162, height=27, width=117)

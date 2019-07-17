@@ -63,35 +63,35 @@ class UserManagement_window:
         password = self.Ent_password.get()
         reentered = self.Ent_reenter.get()
         if (name == ''):
-            messagebox.showwarning("UserManagement", "Plaese entere a name!")
+            messagebox.showwarning("User Management", "Please enter a name!")
         else:
             if (surename == ''):
-                messagebox.showwarning("UserManagement", "Please entere a surename!")
+                messagebox.showwarning("User Management", "Please enter a surname!")
             else:
                 if(password== ''):
-                    messagebox.showwarning("UserManagement", "Please entere a password!")
+                    messagebox.showwarning("User Management", "Please enter a password!")
                 else:
                     if (password != reentered):
-                        messagebox.showwarning("UserManagement", "Passwords must match!")
+                        messagebox.showwarning("User Management", "Passwords must match!")
                         self.Ent_password.delete(0, 'end')
                         self.ent_reenter.delete(0, 'end')
                     else:
                         if (self.checkPassword(password)):
                             if (self.checkEmail(email)):
-                                msg = messagebox.askyesno("Roll", "Are " + name + " an admin?")
+                                msg = messagebox.askyesno("Roll", "Is " + name + " an admin?")
                                 roll = "user"
                                 if (msg):
                                     roll = "admin"
                                 answer = databaseCon.makeNewUser(db, name, surename, password, roll, email)
                                 if (answer):
-                                    messagebox.showinfo("UserManagement", name + " succefully added")
+                                    messagebox.showinfo("UserManagement", name + " Successfully added")
                                     self.ent_name.insert(tk.END, "")
                                     self.Ent_Lastname.insert(tk.END, "")
                                     self.Ent_email.insert(tk.END, "")
                                     self.Ent_password.insert(tk.END, "")
                                     self.Ent_reenter.insert(tk.END, "")
                                 else:
-                                    messagebox.showwarning("UserManagement", "Email is in use")
+                                    messagebox.showwarning("User Management", "Email already exists")
 
     # check if the email is correct
     def checkEmail(self, email):
@@ -102,7 +102,7 @@ class UserManagement_window:
         if (check):
             return True
         else:
-            messagebox.showwarning("Users mangement", "Invalid email.")
+            messagebox.showwarning("User Management", "Invalid email.")
             self.Ent_email.delete(0, 'end')
             return False
 
@@ -111,25 +111,25 @@ class UserManagement_window:
         password = psw
         number = re.findall("[0-9]", password)
         if (not (number)):
-            messagebox.showwarning("Users mangement", "Your password needs a number.")
+            messagebox.showwarning("User Management", "Your password needs a number.")
             self.Ent_password.delete(0, 'end')
             self.ent_reenter.delete(0, 'end')
             return False
         caps = re.findall("[A-Z]", password)
         if (not (caps)):
-            messagebox.showwarning("Users mangement", "Your password needs a uppercase chatter.")
+            messagebox.showwarning("User Management", "Your password needs a uppercase character.")
             self.Ent_password.delete(0, 'end')
             self.ent_reenter.delete(0, 'end')
             return False
         lower = re.findall("[a-z]", password)
         if (not (lower)):
-            messagebox.showwarning("Users mangement", "Your password needs a lowercase chatter.")
+            messagebox.showwarning("User Management", "Your password needs a lowercase character.")
             self.Ent_password.delete(0, 'end')
             self.ent_reenter.delete(0, 'end')
             return False
         symbols = re.findall("[!,@,#,$,%,^,&,*,.,?]", password)
         if (not (symbols)):
-            messagebox.showwarning("Users mangement", "Your password needs a symbol.")
+            messagebox.showwarning("User Management", "Your password needs a symbol.")
             self.Ent_password.delete(0, 'end')
             self.ent_reenter.delete(0, 'end')
             return False
@@ -138,12 +138,12 @@ class UserManagement_window:
     def removeUsers(self,db):
         email=self.Ent_remove_email.get()
         if(email==''):
-            messagebox.showwarning("Users mangement","Please enter an email.")
+            messagebox.showwarning("User Management","Please enter an email.")
         else:
-            msg = messagebox.askyesno("Users mangement", "Are  sure you want to remove "+email+" ?")
+            msg = messagebox.askyesno("User Management", "Are  sure you want to remove "+email+" ?")
             if(msg):
                 answer=databaseCon.remove(db,email)
-                messagebox.showinfo("Users mangement",answer)
+                messagebox.showinfo("User Management",answer)
                 self.Ent_remove_email.insert(tk.END, "")
 
     def back(self):
@@ -161,7 +161,7 @@ class UserManagement_window:
         if(not(email=="") and self.checkEmail(email) and not(check=="notFond")):
             UserManagement_support.createChangeUser(email,db)
         else:
-            messagebox.showwarning("UserManagement", "Email is invalid")
+            messagebox.showwarning("User Management", "Email is invalid")
 
     def __init__(self, top=None):
         db = databaseCon.connect()
@@ -184,14 +184,14 @@ class UserManagement_window:
             "roman -underline 0 -overstrike 0"
 
         top.geometry("862x467+756+142")
-        top.title("User management")
+        top.title("User Management")
         top.configure(highlightcolor="black")
 
         self.lbl_Header1 = tk.Label(top)
         self.lbl_Header1.place(relx=0.293, rely=0.043, height=36, width=351)
         self.lbl_Header1.configure(activebackground="#f9f9f9")
         self.lbl_Header1.configure(font=font9)
-        self.lbl_Header1.configure(text='''User management''')
+        self.lbl_Header1.configure(text='''User Management''')
 
         self.btn_close = tk.Button(top)
         self.btn_close.place(relx=0.857, rely=0.878, height=38, width=82)
@@ -210,7 +210,7 @@ class UserManagement_window:
         self.lbl_lastName.place(relx=0.059, rely=0.257, height=27, width=106)
         self.lbl_lastName.configure(activebackground="#f9f9f9")
         self.lbl_lastName.configure(font=font10)
-        self.lbl_lastName.configure(text='''Last name:''')
+        self.lbl_lastName.configure(text='''Surname:''')
 
         self.Ent_Lastname = tk.Entry(top)
         self.Ent_Lastname.place(relx=0.305, rely=0.268, height=23
@@ -348,7 +348,7 @@ class UserManagement_window:
         self.Btn_Refesh.place(relx=0.704, rely=0.878, height=38, width=96)
         self.Btn_Refesh.configure(activebackground="#f9f9f9")
         self.Btn_Refesh.configure(font=font13)
-        self.Btn_Refesh.configure(text='''Refesh''')
+        self.Btn_Refesh.configure(text='''Refresh''')
         self.Btn_Refesh.configure(command=lambda: self.refeshed(db))
 
 if __name__ == '__main__':

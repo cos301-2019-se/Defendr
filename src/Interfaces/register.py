@@ -72,10 +72,10 @@ class register_window:
         password = self.Ent_password.get()
         reentered = self.ent_reenter.get()
         if(name==' '):
-            messagebox.showwarning("Name","Plaese entere a name!")
+            messagebox.showwarning("Name","Please enter a name!")
         else:
             if(surename==' '):
-                messagebox.showwarning("Surename","Please entere a surename!")
+                messagebox.showwarning("Surname","Please enter a surname!")
             else:
                 if(password!=reentered):
                     messagebox.showwarning("Password","Passwords must match!")
@@ -90,12 +90,12 @@ class register_window:
                                 roll="admin"
                             answer=databaseCon.makeNewUser(db, name, surename, password, roll, email)
                             if(answer):
-                                messagebox.showinfo("Register",name+" succefully added")
+                                messagebox.showinfo("Register",name+" Successfully added")
                                 self.Ent_password.delete(0, 'end')
                                 self.ent_reenter.delete(0, 'end')
                                 register_support.createMain(roll)
                             else:
-                                messagebox.showwarning("Register","Email is in use")
+                                messagebox.showwarning("Register","Email already exists")
 
     #check if the email is correct
     def checkEmail(self, email):
@@ -119,13 +119,13 @@ class register_window:
             return False
         caps = re.findall("[A-Z]", password)
         if (not (caps)):
-            messagebox.showwarning("Password", "Your password needs a uppercase chatter.")
+            messagebox.showwarning("Password", "Your password needs a uppercase character.")
             self.Ent_password.delete(0, 'end')
             self.ent_reenter.delete(0, 'end')
             return False
         lower = re.findall("[a-z]", password)
         if (not (lower)):
-            messagebox.showwarning("Password", "Your password needs a lowercase chatter.")
+            messagebox.showwarning("Password", "Your password needs a lowercase character.")
             self.Ent_password.delete(0, 'end')
             self.ent_reenter.delete(0, 'end')
             return False
@@ -169,7 +169,7 @@ class register_window:
         self.btn_Singin = tk.Button(top)
         self.btn_Singin.place(relx=0.098, rely=0.816, height=38, width=89)
         self.btn_Singin.configure(font=font11)
-        self.btn_Singin.configure(text="Log in")
+        self.btn_Singin.configure(text="Log In")
         self.btn_Singin.configure(command=lambda: self.login())
 
         self.btn_close = tk.Button(top)

@@ -12,5 +12,15 @@ sudo pip3 install dnspython
 sudo apt install gradle
 sudo apt install net-tools
 sudo apt install apache2
+sudo apt-get install libtool
+sudo apt-get install autoconf
+cd src/IP2Location-C-Library-master
+sudo autoreconf -i -v --force
+sudo ./configure
+sudo make
+sudo make install
+cd data
+sudo perl ip-country.pl
+cd ../../../
 cd src/Interfaces/
 python3 Login.py
