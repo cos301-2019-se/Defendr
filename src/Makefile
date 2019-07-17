@@ -5,7 +5,6 @@
 # Still depend on a kernel source tree.
 #
 TARGETS := xdp_ddos01_blacklist
-TARGETS += bpf_tail_calls01
 TARGETS += unitTest
 
 
@@ -67,13 +66,19 @@ CFLAGS += -I$(TOOLS_PATH)/lib
 
 LDFLAGS= -lelf
 
+# C preprocessor flags
+CPPFLAGS = -I/usr/local/include/libmongoc-1.0 -I/usr/local/include/libbson-1.0 -pthread
+
+# Libraries
+LDLIBS   = -lmongoc-1.0 -lbson-1.0 
+
 # Objects that xxx_user program is linked with:
 OBJECT_LOADBPF = bpf_load.o
 OBJECTS = $(OBJECT_LOADBPF)
 #
 # The static libbpf library
 LIBBPF = $(TOOLS_PATH)/lib/bpf/libbpf.a
-
+LIBBPF += -lmongoc-1.0 -lbson-1.0 -lGeoIP -lIP2Location
 # Allows pointing LLC/CLANG to another LLVM backend, redefine on cmdline:
 #  make LLC=~/git/llvm/build/bin/llc CLANG=~/git/llvm/build/bin/clang
 LLC ?= llc
@@ -195,14 +200,12 @@ $(KERN_OBJECTS): %.o: %.c bpf_helpers.h Makefile
 	$(LLC) -march=bpf -filetype=obj -o $@ ${@:.o=.ll}
 
 $(TARGETS): %: %_user.c $(OBJECTS) $(LIBBPF) Makefile bpf_util.h
-	$(CC) $(CFLAGS) $(OBJECTS) $(LDFLAGS) -o $@ $<  $(LIBBPF)
+	$(CC) $(CFLAGS) $(CPPFLAGS) $(OBJECTS) $(LDFLAGS) -o $@ $<  $(LIBBPF)
 
 # Targets that links with libpcap
 $(TARGETS_PCAP): %: %_user.c $(OBJECTS) $(LIBBPF) Makefile bpf_util.h
-	$(CC) $(CFLAGS) $(OBJECTS) $(LDFLAGS) -o $@ $<  $(LIBBPF) -lpcap
+	$(CC)  $(OBJECTS) $(LDFLAGS) -o $@ $<  $(LIBBPF) -lpcap
 
 $(CMDLINE_TOOLS): %: %.c $(OBJECTS) $(LIBBPF) Makefile $(COMMON_H) bpf_util.h
-	$(CC) -g $(CFLAGS) $(OBJECTS) $(LDFLAGS) -o $@ $<  $(LIBBPF)
+	$(CC) -g $(CFLAGS) $(CPPFLAGS) $(OBJECTS) $(LDFLAGS) -o $@ $<  $(LIBBPF)
 
-defendr:
-	g++ -o Defendr Defendr.cpp
