@@ -1,6 +1,5 @@
 #Will need xterm to run
-#sudo apt-get install xterm
-
+sudo apt-get install xterm
 	
 cd node_exporter
 chmod +wrx node_exporter
