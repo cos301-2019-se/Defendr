@@ -165,10 +165,10 @@ static int service_modify(int fd_services,int fd_servers, char *service_ip,char 
 			value->last_used = 0;
 			value->num_servers = 1;
 			value->id = server_id;
-			server_id += MAX_INSTANCES;
+			//server_id += MAX_INSTANCES;
 			fptr = fopen("id.txt","w");
 	   		if(fptr != NULL){
-				fprintf(fptr,"%d",server_id); 
+				fprintf(fptr,"%d",server_id+MAX_INSTANCES); 
 				fclose(fptr);          
 	        }
 
@@ -232,15 +232,18 @@ static int service_modify(int fd_services,int fd_servers, char *service_ip,char 
 			res = bpf_map_update_elem(fd_services, &key, value, BPF_EXIST);
 		}
 		backend_id = value->id;
+
+		key = NULL;
+		prev_key = NULL;
 		bool found = false;
 		while (bpf_map_get_next_key(fd_servers, prev_key, &key) == 0 && !found) {
 			struct dest_info *backend = (struct dest_info*)malloc(sizeof(struct dest_info));
-			res = bpf_map_lookup_elem(fd_servers,&backend_id,backend); 
+			res = bpf_map_lookup_elem(fd_servers,&key,backend); 
 			if(res==0){
 				if(backend->daddr == backendIP){
 					res = bpf_map_delete_elem(fd_servers, &backend_id);
 					found = true;
-				}	
+				}
 			}
 		 	prev_key = &key;
 		}

@@ -23,9 +23,9 @@ struct dest_info {
 };
 
 struct service{
-	__u64 last_used;
-	__u64 num_servers;
-	__u64 id;
+	__u32 last_used;
+	__u32 num_servers;
+	__u32 id;
 };
 
 struct log{

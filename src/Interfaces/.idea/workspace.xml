@@ -10,123 +10,51 @@
   </component>
   <component name="FileEditorManager">
     <leaf SIDE_TABS_SIZE_LIMIT_KEY="300">
-<<<<<<< HEAD
       <file pinned="false" current-in-tab="true">
-        <entry file="file://$PROJECT_DIR$/register.py">
+        <entry file="file://$PROJECT_DIR$/UserManagement.py">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="643">
-              <caret line="97" column="72" selection-start-line="97" selection-start-column="72" selection-end-line="97" selection-end-column="72" />
+            <state relative-caret-position="282">
+              <caret line="104" column="51" selection-start-line="104" selection-start-column="51" selection-end-line="104" selection-end-column="51" />
+              <folding>
+                <element signature="e#1256#2998#0" />
+                <element signature="e#3520#4676#0" />
+                <element signature="e#4716#5019#0" />
+                <element signature="e#5049#5118#0" />
+                <element signature="e#5155#5275#0" />
+                <element signature="e#5310#5600#0" />
+              </folding>
+            </state>
+          </provider>
+        </entry>
+      </file>
+      <file pinned="false" current-in-tab="false">
+        <entry file="file://$PROJECT_DIR$/ChangeUser.py">
+          <provider selected="true" editor-type-id="text-editor">
+            <state relative-caret-position="521">
+              <caret line="121" column="39" selection-start-line="121" selection-start-column="39" selection-end-line="121" selection-end-column="39" />
               <folding>
                 <element signature="e#186#196#0" expanded="true" />
-                <element signature="e#3049#3382#0" />
-                <element signature="e#3462#4613#0" />
-=======
-      <file pinned="false" current-in-tab="false">
-        <entry file="file://$PROJECT_DIR$/databaseCon.py">
-          <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="1054">
-              <caret line="99" column="36" selection-start-line="99" selection-start-column="36" selection-end-line="99" selection-end-column="36" />
-              <folding>
-                <element signature="e#0#14#0" expanded="true" />
-                <element signature="e#79#151#0" />
-                <element signature="e#419#639#0" />
-                <element signature="e#667#952#0" />
-                <element signature="e#984#1266#0" />
-                <element signature="e#1294#1580#0" />
-                <element signature="e#1629#1744#0" />
->>>>>>> packet_dropper
+                <element signature="e#1942#2374#0" />
+                <element signature="e#2527#2926#0" />
+                <element signature="e#3877#5033#0" />
+                <element signature="e#5186#5269#0" />
               </folding>
             </state>
           </provider>
         </entry>
       </file>
-<<<<<<< HEAD
       <file pinned="false" current-in-tab="false">
-        <entry file="file://$PROJECT_DIR$/controller.py">
-          <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="187">
-              <caret line="11" column="88" selection-start-line="11" selection-start-column="87" selection-end-line="11" selection-end-column="88" />
-              <folding>
-                <element signature="e#0#9#0" expanded="true" />
-              </folding>
-=======
-      <file pinned="false" current-in-tab="true">
-        <entry file="file://$PROJECT_DIR$/Users.py">
-          <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="34">
-              <caret line="82" column="8" selection-start-line="81" selection-end-line="82" selection-end-column="8" />
->>>>>>> packet_dropper
-            </state>
-          </provider>
-        </entry>
-      </file>
-      <file pinned="false" current-in-tab="false">
-<<<<<<< HEAD
         <entry file="file://$PROJECT_DIR$/test.py">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="102">
-              <caret line="6" selection-start-line="6" selection-end-line="6" selection-end-column="130" />
-=======
-        <entry file="file://$PROJECT_DIR$/Logging.py">
-          <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="1360">
-              <caret line="81" column="16" selection-start-line="81" selection-start-column="12" selection-end-line="81" selection-end-column="46" />
->>>>>>> packet_dropper
-            </state>
-          </provider>
-        </entry>
-      </file>
-      <file pinned="false" current-in-tab="false">
-<<<<<<< HEAD
-        <entry file="file://$PROJECT_DIR$/register_support.py">
-          <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="119">
-              <caret line="9" column="11" selection-start-line="9" selection-start-column="11" selection-end-line="9" selection-end-column="11" />
+            <state relative-caret-position="153">
+              <caret line="16" lean-forward="true" selection-start-line="10" selection-end-line="45" selection-end-column="38" />
               <folding>
-                <element signature="e#190#200#0" expanded="true" />
-=======
-        <entry file="file://$PROJECT_DIR$/Home.py">
-          <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="1054">
-              <caret line="71" column="20" selection-start-line="71" selection-start-column="20" selection-end-line="71" selection-end-column="20" />
-              <folding>
-                <element signature="e#559#835#0" />
->>>>>>> packet_dropper
+                <element signature="e#331#463#0" />
+                <element signature="e#510#650#0" />
+                <element signature="e#692#823#0" />
+                <element signature="e#860#986#0" />
+                <element signature="e#1547#1741#0" />
               </folding>
-            </state>
-          </provider>
-        </entry>
-      </file>
-      <file pinned="false" current-in-tab="false">
-<<<<<<< HEAD
-        <entry file="file://$PROJECT_DIR$/databaseCon.py">
-          <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="507">
-              <caret line="157" column="15" selection-start-line="157" selection-start-column="15" selection-end-line="157" selection-end-column="15" />
-              <folding>
-                <element signature="e#0#14#0" expanded="true" />
-                <element signature="e#79#151#0" />
-                <element signature="e#172#388#0" />
-                <element signature="e#419#639#0" />
-                <element signature="e#668#981#0" />
-                <element signature="e#1014#1324#0" />
-                <element signature="e#1353#1667#0" />
-                <element signature="e#1696#2010#0" />
-                <element signature="e#2043#2353#0" />
-                <element signature="e#2418#2570#0" />
-                <element signature="e#2631#2773#0" />
-                <element signature="e#2799#3285#0" />
-                <element signature="e#3311#3508#0" />
-                <element signature="e#3574#3753#0" />
-                <element signature="e#3793#3927#0" />
-                <element signature="e#3949#3988#0" />
-                <element signature="e#4016#4528#0" />
-              </folding>
-=======
-        <entry file="file://$PROJECT_DIR$/Home_support.py">
-          <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="170">
-              <caret line="10" column="8" selection-start-line="10" selection-start-column="8" selection-end-line="10" selection-end-column="8" />
             </state>
           </provider>
         </entry>
@@ -134,9 +62,62 @@
       <file pinned="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/Login.py">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="1360">
-              <caret line="81" column="31" selection-start-line="81" selection-start-column="23" selection-end-line="81" selection-end-column="31" />
->>>>>>> packet_dropper
+            <state relative-caret-position="45">
+              <caret line="73" column="55" selection-start-line="73" selection-start-column="49" selection-end-line="73" selection-end-column="55" />
+              <folding>
+                <element signature="e#186#196#0" expanded="true" />
+              </folding>
+            </state>
+          </provider>
+        </entry>
+      </file>
+      <file pinned="false" current-in-tab="false">
+        <entry file="file://$PROJECT_DIR$/IPList.py">
+          <provider selected="true" editor-type-id="text-editor">
+            <state relative-caret-position="129">
+              <caret line="76" column="58" lean-forward="true" selection-start-line="76" selection-start-column="22" selection-end-line="76" selection-end-column="67" />
+            </state>
+          </provider>
+        </entry>
+      </file>
+      <file pinned="false" current-in-tab="false">
+        <entry file="file://$PROJECT_DIR$/Home.py">
+          <provider selected="true" editor-type-id="text-editor">
+            <state relative-caret-position="1354">
+              <caret line="125" column="60" selection-start-line="125" selection-start-column="54" selection-end-line="125" selection-end-column="60" />
+              <folding>
+                <element signature="e#559#835#0" />
+              </folding>
+            </state>
+          </provider>
+        </entry>
+      </file>
+      <file pinned="false" current-in-tab="false">
+        <entry file="file://$PROJECT_DIR$/Home_support.py">
+          <provider selected="true" editor-type-id="text-editor">
+            <state relative-caret-position="439">
+              <caret line="44" lean-forward="true" selection-start-line="44" selection-end-line="47" selection-end-column="19" />
+              <folding>
+                <element signature="e#190#200#0" expanded="true" />
+              </folding>
+            </state>
+          </provider>
+        </entry>
+      </file>
+      <file pinned="false" current-in-tab="false">
+        <entry file="file://$PROJECT_DIR$/databaseCon.py">
+          <provider selected="true" editor-type-id="text-editor">
+            <state relative-caret-position="274">
+              <caret line="109" selection-start-line="109" selection-end-line="109" />
+              <folding>
+                <element signature="e#2799#3388#0" />
+                <element signature="e#3414#3611#0" />
+                <element signature="e#3649#3781#0" />
+                <element signature="e#3828#3968#0" />
+                <element signature="e#4010#4141#0" />
+                <element signature="e#4178#4304#0" />
+                <element signature="e#4349#4543#0" />
+              </folding>
             </state>
           </provider>
         </entry>
@@ -145,34 +126,8 @@
   </component>
   <component name="FindInProjectRecents">
     <findStrings>
-<<<<<<< HEAD
-=======
-      <find>findPackets</find>
-      <find>x</find>
-      <find>Loggin</find>
-      <find>logout</find>
-      <find>btnLogout</find>
-      <find>createLogs</find>
-      <find>btn</find>
-      <find>users_support</find>
-      <find>txtIp</find>
-      <find>0.35</find>
-      <find>psd</find>
-      <find>431</find>
-      <find>512</find>
-      <find>593</find>
->>>>>>> packet_dropper
-      <find>Logging</find>
-      <find>add</find>
-      <find>tk</find>
-      <find>top</find>
-      <find>users</find>
-      <find>usertype</find>
-      <find>databaseCon</find>
-      <find>refeshed</find>
       <find>printUsers</find>
       <find>user</find>
-<<<<<<< HEAD
       <find>RemoveUsers</find>
       <find>remove</find>
       <find>txt</find>
@@ -184,7 +139,6 @@
       <find>logout</find>
       <find>btnLog</find>
       <find>Home</find>
-      <find>btn</find>
       <find>reen</find>
       <find>txtUser</find>
       <find>saveUser</find>
@@ -193,18 +147,23 @@
       <find>User</find>
       <find>pr</find>
       <find>checkUsers</find>
+      <find>db</find>
+      <find>destroy_win_Logging</find>
+      <find>btn</find>
+      <find>usertype</find>
+      <find>register</find>
+      <find>print(</find>
+      <find>lst_IPs</find>
+      <find>create_UserManagement_window</find>
+      <find>getSalt</find>
     </findStrings>
     <replaceStrings>
       <replace>&quot;</replace>
       <replace>Email</replace>
+      <replace>UserManagement</replace>
+      <replace>self.clear</replace>
+      <replace>self.clear()</replace>
     </replaceStrings>
-=======
-      <find>txt</find>
-      <find>removeUser</find>
-      <find>RemoveUsers</find>
-      <find>remove</find>
-    </findStrings>
->>>>>>> packet_dropper
   </component>
   <component name="Git.Settings">
     <option name="RECENT_GIT_ROOT_PATH" value="$PROJECT_DIR$/../.." />
@@ -212,42 +171,30 @@
   <component name="IdeDocumentHistory">
     <option name="CHANGED_PATHS">
       <list>
-<<<<<<< HEAD
-=======
-        <option value="$PROJECT_DIR$/Login.py" />
-        <option value="$PROJECT_DIR$/Login_support.py" />
->>>>>>> packet_dropper
-        <option value="$PROJECT_DIR$/Home_support.py" />
         <option value="$PROJECT_DIR$/Users_support.py" />
         <option value="$PROJECT_DIR$/Logging.py" />
-        <option value="$PROJECT_DIR$/Home.py" />
-        <option value="$PROJECT_DIR$/../../../../hash/databaseCon.py" />
-<<<<<<< HEAD
+        <option value="$USER_HOME$/hash/databaseCon.py" />
         <option value="$PROJECT_DIR$/Users.py" />
         <option value="$PROJECT_DIR$/Login_support.py" />
         <option value="$PROJECT_DIR$/register_support.py" />
-        <option value="$PROJECT_DIR$/test.py" />
         <option value="$PROJECT_DIR$/Login.py" />
-        <option value="$PROJECT_DIR$/databaseCon.py" />
         <option value="$PROJECT_DIR$/register.py" />
-=======
+        <option value="$PROJECT_DIR$/Home.py" />
+        <option value="$PROJECT_DIR$/Home_support.py" />
+        <option value="$PROJECT_DIR$/UserManagement_support.py" />
+        <option value="$PROJECT_DIR$/ChangeUser_support.py" />
+        <option value="$PROJECT_DIR$/test.py" />
         <option value="$PROJECT_DIR$/databaseCon.py" />
-        <option value="$PROJECT_DIR$/Users.py" />
->>>>>>> packet_dropper
+        <option value="$PROJECT_DIR$/ChangeUser.py" />
+        <option value="$PROJECT_DIR$/UserManagement.py" />
       </list>
     </option>
   </component>
   <component name="ProjectFrameBounds" extendedState="6">
-<<<<<<< HEAD
-    <option name="x" value="-7" />
+    <option name="x" value="435" />
+    <option name="y" value="-17" />
     <option name="width" value="1346" />
     <option name="height" value="775" />
-=======
-    <option name="x" value="260" />
-    <option name="y" value="40" />
-    <option name="width" value="1400" />
-    <option name="height" value="1000" />
->>>>>>> packet_dropper
   </component>
   <component name="ProjectLevelVcsManager" settingsEditedManually="true" />
   <component name="ProjectView">
@@ -255,10 +202,6 @@
       <foldersAlwaysOnTop value="true" />
     </navigator>
     <panes>
-<<<<<<< HEAD
-      <pane id="Scope" />
-=======
->>>>>>> packet_dropper
       <pane id="ProjectPane">
         <subPane>
           <expand>
@@ -270,10 +213,7 @@
           <select />
         </subPane>
       </pane>
-<<<<<<< HEAD
-=======
       <pane id="Scope" />
->>>>>>> packet_dropper
     </panes>
   </component>
   <component name="PropertiesComponent">
@@ -329,23 +269,14 @@
   </component>
   <component name="ToolWindowManager">
     <frame x="-8" y="-8" width="1936" height="1096" extended-state="6" />
-<<<<<<< HEAD
     <editor active="true" />
     <layout>
-      <window_info content_ui="combo" id="Project" order="0" weight="0.25223213" />
-=======
-    <layout>
-      <window_info content_ui="combo" id="Project" order="0" visible="true" weight="0.2528978" />
->>>>>>> packet_dropper
-      <window_info id="Structure" order="1" side_tool="true" weight="0.25" />
-      <window_info id="Favorites" order="2" side_tool="true" />
+      <window_info id="Structure" order="0" side_tool="true" weight="0.25" />
+      <window_info id="Favorites" order="1" side_tool="true" />
+      <window_info content_ui="combo" id="Project" order="2" visible="true" weight="0.25869337" />
       <window_info anchor="bottom" id="Message" order="0" />
       <window_info anchor="bottom" id="Find" order="1" />
-<<<<<<< HEAD
-      <window_info active="true" anchor="bottom" id="Run" order="2" visible="true" weight="0.21495327" />
-=======
-      <window_info anchor="bottom" id="Run" order="2" weight="0.48598132" />
->>>>>>> packet_dropper
+      <window_info active="true" anchor="bottom" id="Run" order="2" visible="true" weight="0.13084112" />
       <window_info anchor="bottom" id="Debug" order="3" weight="0.4" />
       <window_info anchor="bottom" id="Cvs" order="4" weight="0.25" />
       <window_info anchor="bottom" id="Inspection" order="5" weight="0.4" />
@@ -358,7 +289,6 @@
       <window_info anchor="right" id="Ant Build" order="1" weight="0.25" />
       <window_info anchor="right" content_ui="combo" id="Hierarchy" order="2" weight="0.25" />
     </layout>
-<<<<<<< HEAD
     <layout-to-restore>
       <window_info content_ui="combo" id="Project" order="0" visible="true" weight="0.25223213" />
       <window_info id="Structure" order="1" side_tool="true" weight="0.25" />
@@ -380,7 +310,7 @@
     </layout-to-restore>
   </component>
   <component name="editorHistoryManager">
-    <entry file="file://$PROJECT_DIR$/../../../../vm/controller.py" />
+    <entry file="file://$USER_HOME$/vm/controller.py" />
     <entry file="file://$PROJECT_DIR$/Users_support.py">
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="275">
@@ -388,147 +318,15 @@
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/../../../../hash/databaseCon.py">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="431">
-          <caret line="118" column="26" selection-start-line="118" selection-start-column="26" selection-end-line="118" selection-end-column="26" />
-          <folding>
-            <element signature="e#0#20#0" expanded="true" />
-            <element signature="e#1637#1830#0" />
-            <element signature="e#1870#2004#0" />
-            <element signature="e#2026#2065#0" />
-            <element signature="e#2092#2387#0" />
-            <element signature="e#2436#2729#0" />
-=======
-  </component>
-  <component name="editorHistoryManager">
-    <entry file="file://$PROJECT_DIR$/controller.py">
-      <provider selected="true" editor-type-id="text-editor">
-        <state>
-          <folding>
-            <element signature="e#0#9#0" expanded="true" />
->>>>>>> packet_dropper
-          </folding>
-        </state>
-      </provider>
-    </entry>
-<<<<<<< HEAD
-    <entry file="file://$PROJECT_DIR$/Home_support.py">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="-289">
-          <caret line="10" column="8" selection-start-line="10" selection-start-column="8" selection-end-line="10" selection-end-column="8" />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/Logging.py">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="144">
-          <caret line="127" column="31" selection-start-line="127" selection-start-column="27" selection-end-line="127" selection-end-column="31" />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/IPList.py">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="175">
-          <caret line="57" column="22" selection-start-line="57" selection-start-column="4" selection-end-line="57" selection-end-column="22" />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/Users.py">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="350">
-          <caret line="103" column="23" selection-start-line="103" selection-start-column="23" selection-end-line="103" selection-end-column="23" />
-        </state>
-      </provider>
-    </entry>
+    <entry file="file://$USER_HOME$/hash/databaseCon.py" />
     <entry file="file://$PROJECT_DIR$/Logging_support.py">
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="255">
-=======
-    <entry file="file://$PROJECT_DIR$/Login_support.py">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="527">
-          <caret line="35" column="34" selection-start-line="35" selection-start-column="34" selection-end-line="35" selection-end-column="34" />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/../../../../vm/controller.py" />
-    <entry file="file://$PROJECT_DIR$/IPList.py">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="189">
-          <caret line="129" column="18" selection-start-line="129" selection-start-column="13" selection-end-line="129" selection-end-column="18" />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/Users_support.py">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="275">
->>>>>>> packet_dropper
           <caret line="27" column="18" selection-start-line="27" selection-start-column="4" selection-end-line="27" selection-end-column="18" />
         </state>
       </provider>
     </entry>
-<<<<<<< HEAD
-    <entry file="file://$PROJECT_DIR$/test.py">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="102">
-          <caret line="6" selection-start-line="6" selection-end-line="6" selection-end-column="130" />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/Login_support.py">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="561">
-          <caret line="35" column="14" selection-start-line="35" selection-start-column="14" selection-end-line="37" selection-end-column="19" />
-          <folding>
-            <element signature="e#190#200#0" expanded="true" />
-=======
-    <entry file="file://$PROJECT_DIR$/Logging_support.py">
-      <provider selected="true" editor-type-id="text-editor" />
-    </entry>
-    <entry file="file://$PROJECT_DIR$/../../../../hash/databaseCon.py">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="431">
-          <caret line="118" column="26" selection-start-line="118" selection-start-column="26" selection-end-line="118" selection-end-column="26" />
-          <folding>
-            <element signature="e#0#20#0" expanded="true" />
-            <element signature="e#1637#1830#0" />
-            <element signature="e#1870#2004#0" />
-            <element signature="e#2026#2065#0" />
-            <element signature="e#2092#2387#0" />
-            <element signature="e#2436#2729#0" />
->>>>>>> packet_dropper
-          </folding>
-        </state>
-      </provider>
-    </entry>
-<<<<<<< HEAD
-    <entry file="file://$PROJECT_DIR$/Home.py">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="459">
-          <caret line="27" column="19" selection-start-line="27" selection-start-column="19" selection-end-line="28" selection-end-column="20" />
-          <folding>
-            <element signature="e#559#835#0" />
-            <element signature="e#901#1261#0" />
-=======
-    <entry file="file://$PROJECT_DIR$/databaseCon.py">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="1054">
-          <caret line="99" column="36" selection-start-line="99" selection-start-column="36" selection-end-line="99" selection-end-column="36" />
-          <folding>
-            <element signature="e#0#14#0" expanded="true" />
-            <element signature="e#79#151#0" />
-            <element signature="e#419#639#0" />
-            <element signature="e#667#952#0" />
-            <element signature="e#984#1266#0" />
-            <element signature="e#1294#1580#0" />
-            <element signature="e#1629#1744#0" />
->>>>>>> packet_dropper
-          </folding>
-        </state>
-      </provider>
-    </entry>
-<<<<<<< HEAD
+    <entry file="file://$PROJECT_DIR$/register_support.py" />
     <entry file="file://$PROJECT_DIR$/controller.py">
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="187">
@@ -539,97 +337,152 @@
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/Login.py">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="487">
-          <caret line="79" lean-forward="true" selection-start-line="79" selection-end-line="79" />
-          <folding>
-            <element signature="e#186#196#0" expanded="true" />
-=======
     <entry file="file://$PROJECT_DIR$/Logging.py">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="1360">
-          <caret line="81" column="16" selection-start-line="81" selection-start-column="12" selection-end-line="81" selection-end-column="46" />
+        <state relative-caret-position="144">
+          <caret line="57" column="23" selection-start-line="57" selection-start-column="4" selection-end-line="57" selection-end-column="23" />
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/Home.py">
+    <entry file="file://$PROJECT_DIR$/Users.py">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="1054">
-          <caret line="71" column="20" selection-start-line="71" selection-start-column="20" selection-end-line="71" selection-end-column="20" />
+        <state relative-caret-position="143">
+          <caret line="63" column="17" lean-forward="true" selection-start-line="63" selection-start-column="11" selection-end-line="66" selection-end-column="28" />
           <folding>
-            <element signature="e#559#835#0" />
->>>>>>> packet_dropper
-          </folding>
-        </state>
-      </provider>
-    </entry>
-<<<<<<< HEAD
-    <entry file="file://$PROJECT_DIR$/register_support.py">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="119">
-          <caret line="9" column="11" selection-start-line="9" selection-start-column="11" selection-end-line="9" selection-end-column="11" />
-          <folding>
-            <element signature="e#190#200#0" expanded="true" />
-          </folding>
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/databaseCon.py">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="507">
-          <caret line="157" column="15" selection-start-line="157" selection-start-column="15" selection-end-line="157" selection-end-column="15" />
-          <folding>
-            <element signature="e#0#14#0" expanded="true" />
-            <element signature="e#79#151#0" />
-            <element signature="e#172#388#0" />
-            <element signature="e#419#639#0" />
-            <element signature="e#668#981#0" />
-            <element signature="e#1014#1324#0" />
-            <element signature="e#1353#1667#0" />
-            <element signature="e#1696#2010#0" />
-            <element signature="e#2043#2353#0" />
-            <element signature="e#2418#2570#0" />
-            <element signature="e#2631#2773#0" />
-            <element signature="e#2799#3285#0" />
-            <element signature="e#3311#3508#0" />
-            <element signature="e#3574#3753#0" />
-            <element signature="e#3793#3927#0" />
-            <element signature="e#3949#3988#0" />
-            <element signature="e#4016#4528#0" />
+            <element signature="e#1701#1995#0" />
+            <element signature="e#2025#2089#0" />
+            <element signature="e#2126#2244#0" />
           </folding>
         </state>
       </provider>
     </entry>
     <entry file="file://$PROJECT_DIR$/register.py">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="643">
-          <caret line="97" column="72" selection-start-line="97" selection-start-column="72" selection-end-line="97" selection-end-column="72" />
+        <state relative-caret-position="117">
+          <caret line="7" column="10" lean-forward="true" selection-start-line="7" selection-start-column="10" selection-end-line="8" selection-end-column="9" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/Login_support.py">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="510">
+          <caret line="32" column="21" selection-start-line="32" selection-start-column="21" selection-end-line="32" selection-end-column="21" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/UserManagement_support.py">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="255">
+          <caret line="16" column="14" lean-forward="true" selection-start-line="16" selection-start-column="14" selection-end-line="16" selection-end-column="14" />
           <folding>
-            <element signature="e#186#196#0" expanded="true" />
-            <element signature="e#3049#3382#0" />
-            <element signature="e#3462#4613#0" />
+            <element signature="e#190#200#0" expanded="true" />
           </folding>
-=======
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/ChangeUser_support.py">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="612">
+          <caret line="36" column="47" selection-start-line="36" selection-start-column="47" selection-end-line="36" selection-end-column="47" />
+          <folding>
+            <element signature="e#190#200#0" expanded="true" />
+          </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/IPList.py">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="129">
+          <caret line="76" column="58" lean-forward="true" selection-start-line="76" selection-start-column="22" selection-end-line="76" selection-end-column="67" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/Home.py">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="1354">
+          <caret line="125" column="60" selection-start-line="125" selection-start-column="54" selection-end-line="125" selection-end-column="60" />
+          <folding>
+            <element signature="e#559#835#0" />
+          </folding>
+        </state>
+      </provider>
+    </entry>
     <entry file="file://$PROJECT_DIR$/Home_support.py">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="170">
-          <caret line="10" column="8" selection-start-line="10" selection-start-column="8" selection-end-line="10" selection-end-column="8" />
+        <state relative-caret-position="439">
+          <caret line="44" lean-forward="true" selection-start-line="44" selection-end-line="47" selection-end-column="19" />
+          <folding>
+            <element signature="e#190#200#0" expanded="true" />
+          </folding>
         </state>
       </provider>
     </entry>
     <entry file="file://$PROJECT_DIR$/Login.py">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="1360">
-          <caret line="81" column="31" selection-start-line="81" selection-start-column="23" selection-end-line="81" selection-end-column="31" />
+        <state relative-caret-position="45">
+          <caret line="73" column="55" selection-start-line="73" selection-start-column="49" selection-end-line="73" selection-end-column="55" />
+          <folding>
+            <element signature="e#186#196#0" expanded="true" />
+          </folding>
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/Users.py">
+    <entry file="file://$PROJECT_DIR$/test.py">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="34">
-          <caret line="82" column="8" selection-start-line="81" selection-end-line="82" selection-end-column="8" />
->>>>>>> packet_dropper
+        <state relative-caret-position="153">
+          <caret line="16" lean-forward="true" selection-start-line="10" selection-end-line="45" selection-end-column="38" />
+          <folding>
+            <element signature="e#331#463#0" />
+            <element signature="e#510#650#0" />
+            <element signature="e#692#823#0" />
+            <element signature="e#860#986#0" />
+            <element signature="e#1547#1741#0" />
+          </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/databaseCon.py">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="274">
+          <caret line="109" selection-start-line="109" selection-end-line="109" />
+          <folding>
+            <element signature="e#2799#3388#0" />
+            <element signature="e#3414#3611#0" />
+            <element signature="e#3649#3781#0" />
+            <element signature="e#3828#3968#0" />
+            <element signature="e#4010#4141#0" />
+            <element signature="e#4178#4304#0" />
+            <element signature="e#4349#4543#0" />
+          </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/ChangeUser.py">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="521">
+          <caret line="121" column="39" selection-start-line="121" selection-start-column="39" selection-end-line="121" selection-end-column="39" />
+          <folding>
+            <element signature="e#186#196#0" expanded="true" />
+            <element signature="e#1942#2374#0" />
+            <element signature="e#2527#2926#0" />
+            <element signature="e#3877#5033#0" />
+            <element signature="e#5186#5269#0" />
+          </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/UserManagement.py">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="282">
+          <caret line="104" column="51" selection-start-line="104" selection-start-column="51" selection-end-line="104" selection-end-column="51" />
+          <folding>
+            <element signature="e#1256#2998#0" />
+            <element signature="e#3520#4676#0" />
+            <element signature="e#4716#5019#0" />
+            <element signature="e#5049#5118#0" />
+            <element signature="e#5155#5275#0" />
+            <element signature="e#5310#5600#0" />
+          </folding>
         </state>
       </provider>
     </entry>
