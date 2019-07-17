@@ -71,7 +71,7 @@ class win_Home:
 
     def users(self):
         if(usertype=="user"):
-            messagebox.showinfo("Home Page", "You are log in as admin")
+            messagebox.showinfo("Home Page", "You are not logged in as admin")
         else:
             Home_support.createUsers()
 
