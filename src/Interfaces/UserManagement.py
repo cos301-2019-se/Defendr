@@ -62,33 +62,36 @@ class UserManagement_window:
         email = self.Ent_email.get()
         password = self.Ent_password.get()
         reentered = self.Ent_reenter.get()
-        if (name == ' '):
+        if (name == ''):
             messagebox.showwarning("UserManagement", "Plaese entere a name!")
         else:
-            if (surename == ' '):
+            if (surename == ''):
                 messagebox.showwarning("UserManagement", "Please entere a surename!")
             else:
-                if (password != reentered):
-                    messagebox.showwarning("UserManagement", "Passwords must match!")
-                    self.Ent_password.delete(0, 'end')
-                    self.ent_reenter.delete(0, 'end')
+                if(password== ''):
+                    messagebox.showwarning("UserManagement", "Please entere a password!")
                 else:
-                    if (self.checkPassword(password)):
-                        if (self.checkEmail(email)):
-                            msg = messagebox.askyesno("Roll", "Are " + name + " an admin?")
-                            roll = "user"
-                            if (msg):
-                                roll = "admin"
-                            answer = databaseCon.makeNewUser(db, name, surename, password, roll, email)
-                            if (answer):
-                                messagebox.showinfo("UserManagement", name + " succefully added")
-                                self.ent_name.insert(tk.END, "")
-                                self.Ent_Lastname.insert(tk.END, "")
-                                self.Ent_email.insert(tk.END, "")
-                                self.Ent_password.insert(tk.END, "")
-                                self.Ent_reenter.insert(tk.END, "")
-                            else:
-                                messagebox.showwarning("UserManagement", "Email is in use")
+                    if (password != reentered):
+                        messagebox.showwarning("UserManagement", "Passwords must match!")
+                        self.Ent_password.delete(0, 'end')
+                        self.ent_reenter.delete(0, 'end')
+                    else:
+                        if (self.checkPassword(password)):
+                            if (self.checkEmail(email)):
+                                msg = messagebox.askyesno("Roll", "Are " + name + " an admin?")
+                                roll = "user"
+                                if (msg):
+                                    roll = "admin"
+                                answer = databaseCon.makeNewUser(db, name, surename, password, roll, email)
+                                if (answer):
+                                    messagebox.showinfo("UserManagement", name + " succefully added")
+                                    self.ent_name.insert(tk.END, "")
+                                    self.Ent_Lastname.insert(tk.END, "")
+                                    self.Ent_email.insert(tk.END, "")
+                                    self.Ent_password.insert(tk.END, "")
+                                    self.Ent_reenter.insert(tk.END, "")
+                                else:
+                                    messagebox.showwarning("UserManagement", "Email is in use")
 
     # check if the email is correct
     def checkEmail(self, email):
@@ -99,34 +102,34 @@ class UserManagement_window:
         if (check):
             return True
         else:
-            messagebox.showwarning("Email", "Invalid email.")
+            messagebox.showwarning("Users mangement", "Invalid email.")
             self.Ent_email.delete(0, 'end')
             return False
 
-    # check if the email is correct
+    # check if the password is correct
     def checkPassword(self, psw):
         password = psw
         number = re.findall("[0-9]", password)
         if (not (number)):
-            messagebox.showwarning("Password", "Your password needs a number.")
+            messagebox.showwarning("Users mangement", "Your password needs a number.")
             self.Ent_password.delete(0, 'end')
             self.ent_reenter.delete(0, 'end')
             return False
         caps = re.findall("[A-Z]", password)
         if (not (caps)):
-            messagebox.showwarning("Password", "Your password needs a uppercase chatter.")
+            messagebox.showwarning("Users mangement", "Your password needs a uppercase chatter.")
             self.Ent_password.delete(0, 'end')
             self.ent_reenter.delete(0, 'end')
             return False
         lower = re.findall("[a-z]", password)
         if (not (lower)):
-            messagebox.showwarning("Password", "Your password needs a lowercase chatter.")
+            messagebox.showwarning("Users mangement", "Your password needs a lowercase chatter.")
             self.Ent_password.delete(0, 'end')
             self.ent_reenter.delete(0, 'end')
             return False
         symbols = re.findall("[!,@,#,$,%,^,&,*,.,?]", password)
         if (not (symbols)):
-            messagebox.showwarning("Password", "Your password needs a symbol.")
+            messagebox.showwarning("Users mangement", "Your password needs a symbol.")
             self.Ent_password.delete(0, 'end')
             self.ent_reenter.delete(0, 'end')
             return False
@@ -134,11 +137,14 @@ class UserManagement_window:
 
     def removeUsers(self,db):
         email=self.Ent_remove_email.get()
-        msg = messagebox.askyesno("Remove users", "Are  sure you want to remove "+email+" ?")
-        if(msg):
-            answer=databaseCon.remove(db,email)
-            messagebox.showinfo("Users mangement",answer)
-            self.Ent_remove_email.insert(tk.END, "")
+        if(email==''):
+            messagebox.showwarning("Users mangement","Please enter an email.")
+        else:
+            msg = messagebox.askyesno("Users mangement", "Are  sure you want to remove "+email+" ?")
+            if(msg):
+                answer=databaseCon.remove(db,email)
+                messagebox.showinfo("Users mangement",answer)
+                self.Ent_remove_email.insert(tk.END, "")
 
     def back(self):
         destroy_UserManagement_window()
@@ -152,8 +158,8 @@ class UserManagement_window:
     def change(self,db):
         email = self.Ent_change_email.get()
         check=databaseCon.getName(db,email)
-        if(self.checkEmail(email) and not(check=="notFond")):
-            UserManagement_support.createChangeUser(email)
+        if(not(email=="") and self.checkEmail(email) and not(check=="notFond")):
+            UserManagement_support.createChangeUser(email,db)
         else:
             messagebox.showwarning("UserManagement", "Email is invalid")
 

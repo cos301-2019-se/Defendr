@@ -6,6 +6,7 @@
 #    Jul 16, 2019 10:30:54 AM SAST  platform: Linux
 
 import sys
+import UserManagement
 
 try:
     import Tkinter as tk
@@ -30,6 +31,11 @@ def destroy_window():
     global top_level
     top_level.destroy()
     top_level = None
+
+
+def createUser():
+    UserManagement.create_UserManagement_window(root)
+    root.withdraw()
 
 if __name__ == '__main__':
     import ChangeUser
