@@ -108,6 +108,43 @@ def checkUsers(db):
     else:
         return True
 
+def changeName(db, email, name):
+    mycol = db["user"]
+    myquery = {"email": email}
+    newvalues = {"$set": {"name": name}}
+
+    mycol.update_one(myquery, newvalues)
+
+def changeLastname(db, email, lastname):
+    mycol = db["user"]
+    myquery = {"email": email}
+    newvalues = {"$set": {"lastname": lastname}}
+
+    mycol.update_one(myquery, newvalues)
+
+def changeEmail(db, email, newEmail):
+  mycol = db["user"]
+  myquery = {"email": email}
+  newvalues = {"$set": {"email": newEmail}}
+
+  mycol.update_one(myquery, newvalues)
+
+def changeRoll(db, email, roll):
+  mycol = db["user"]
+  myquery = {"email": email}
+  newvalues = {"$set": {"roll": roll}}
+
+  mycol.update_one(myquery, newvalues)
+
+def changePassword(db, email, password):
+  salt = getSalt(db, email)
+  pwd = hashFunction(password, salt)
+  mycol = db["user"]
+  myquery = {"email": email}
+  newvalues = {"$set": {"password": pwd}}
+
+  mycol.update_one(myquery, newvalues)
+
 #sign in function class
 def checkPass(db, email, password):
     salt=getSalt(db,email)

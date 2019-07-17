@@ -185,7 +185,7 @@ class register_window:
 
         self.lbl_lastName = tk.Label(top)
         self.lbl_lastName.place(relx=0.109, rely=0.363, height=27, width=106)
-        self.lbl_lastName.configure(font=font14)
+        self.lbl_lastName.configure(font=font11)
         self.lbl_lastName.configure(text="Surname:")
 
         self.ent_Lastname = tk.Entry(top)
