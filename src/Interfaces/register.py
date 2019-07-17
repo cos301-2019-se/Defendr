@@ -100,7 +100,7 @@ class register_window:
     #check if the email is correct
     def checkEmail(self, email):
         mail=email
-        check = re.search("([a-z]|[A-Z]|[0-9])+\@([a-z]|[A-Z]|[0-9])+((\.(([A-Z]|[a-z]|[0-9])+))|(\.(([A-Z]|[a-z]|[0-9])+)){2})$",mail)
+        check = re.search("([a-z]|[A-Z]|[0-9])+\@([a-z]|[A-Z]|[0-9])+((\.(([A-Z]|[a-z]|[0-9])+))+)$",mail)
         if(check):
             return True
         else:

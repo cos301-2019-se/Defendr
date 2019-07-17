@@ -1,6 +1,7 @@
 import pymongo
 import hashlib, uuid
 import urllib.parse
+import re
 
 def addIp(db,ip):
     col = db["blacklist"]
@@ -193,3 +194,10 @@ def makeNewUser(db, name, lastName, password, roll, email):
     hashpassword = hashFunction(password, salt)
     saveUser(db, name,lastName, roll, salt, hashpassword, email)
     return True
+
+mail="t@cs.up.ac.za"
+check = re.search("([a-z]|[A-Z]|[0-9])+\@([a-z]|[A-Z]|[0-9])+((\.(([A-Z]|[a-z]|[0-9])+))+)$",mail)
+if(check):
+    print("p")
+else:
+    print("F")

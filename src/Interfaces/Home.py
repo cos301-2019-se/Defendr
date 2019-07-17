@@ -70,11 +70,10 @@ class win_Home:
             Login_support.root.deiconify()
 
     def users(self):
-        Home_support.createUsers()
-        #if(usertype=="user"):
-        #    messagebox.showinfo("Home Page", "You are log in as admin")
-        #else:
-        #    Home_support.createUsers()
+        if(usertype=="user"):
+            messagebox.showinfo("Home Page", "You are log in as admin")
+        else:
+            Home_support.createUsers()
 
     def __init__(self, top=None):
         '''This class configures and populates the toplevel window.
