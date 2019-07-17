@@ -1,0 +1,17 @@
+{
+	"ulid": "01DFZRPF648PJAZJF2NYKAC4PQ",
+	"minTime": 1563314400000,
+	"maxTime": 1563321600000,
+	"stats": {
+		"numSamples": 111523,
+		"numSeries": 873,
+		"numChunks": 1626
+	},
+	"compaction": {
+		"level": 1,
+		"sources": [
+			"01DFZRPF648PJAZJF2NYKAC4PQ"
+		]
+	},
+	"version": 1
+}
