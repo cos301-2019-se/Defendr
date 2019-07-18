@@ -149,7 +149,7 @@ static void insert_into_packets_list ( char* ip_source,  char* status,  char* ti
 	}
 
 	string = bson_as_canonical_extended_json (bson, NULL);
-	//printf("%s\n", string);
+	if(verbose)printf("%s\n", string);
 
 	if(!mongoc_collection_insert_one(collection, bson, NULL, NULL, &error))
 		fprintf(stderr, "%s\n", error.message);
@@ -167,7 +167,7 @@ void insert_into_blacklist (const char *ip)
 	char *string;
 	char* json;
 	asprintf(&json,"{\"ip\":\"%s\"}", ip);
-	if(verbose) printf("%s\n", json);
+	//if(verbose) printf("%s\n", json);
 	bson = bson_new_from_json ((const uint8_t *)json, -1, &error);
 
 	if(!bson)
@@ -177,7 +177,7 @@ void insert_into_blacklist (const char *ip)
 	}
 
 	string = bson_as_canonical_extended_json (bson, NULL);
-	printf("%s\n", string);
+	if(verbose)printf("%s\n", string);
 
 	if(!mongoc_collection_insert_one(collection, bson, NULL, NULL, &error))
 		fprintf(stderr, "%s\n", error.message);
@@ -205,8 +205,8 @@ int get_status_by_country_id(const char* country_id)
 
 	if(!doc || !cursor)
 	{
-		printf("The id %s cannot be found.  Assigning status type HIGH", country_id);
-		return HIGH;
+		printf("The id %s cannot be found.  Assigning status type MED\n", country_id);
+		return MED;
 	}
 
 	str = bson_as_canonical_extended_json (doc, NULL);
@@ -451,7 +451,7 @@ static  void activate_dynamic_blacklist(){
 				value = get_key32_value64_percpu(fd_watchlist, key);
 				char ip_txt[INET_ADDRSTRLEN] = {0};
 				if (inet_ntop(AF_INET, &key, ip_txt, sizeof(ip_txt))) {	
-					printf("%s %s %llu \n","monitor ", ip_txt,value);							
+					//if(verbose)printf("%s %s %llu \n","monitor ", ip_txt,value);							
 					if(value > 5){
 						char email_body[100]; 
 						bool possible_ddos = false;
@@ -464,19 +464,23 @@ static  void activate_dynamic_blacklist(){
 							int fd_blacklist = open_bpf_map(file_blacklist);						
 							blacklist_modify(fd_blacklist,ip_txt, ACTION_ADD);
 							close(fd_blacklist);	
-							printf("blacklisted %s with count %llu and risk %d\n",ip_txt,value,risk);
+							printf("blacklisted %s with count %llu and high risk from %s \n",ip_txt,value,record->country_short);
 							init_db();
+							printf("++++++++++++++++++++++++\n");
 							insert_into_blacklist(ip_txt);
-							close_db();			
+							close_db();		
+							printf("++++++++++++++++++++++++\n");	
 							sprintf(email_body,"Blacklisted ip: %s from %s because of possible DDOS attack from high risk source.",ip_txt,record->country_short); 
 							possible_ddos = true;	
 						}else if (risk == MED && value > 8){
 							int fd_blacklist = open_bpf_map(file_blacklist);						
 							blacklist_modify(fd_blacklist,ip_txt, ACTION_ADD);
 							close(fd_blacklist);	
-							printf("blacklisted %s with count %llu and risk %d\n",ip_txt,value,risk);	
+							printf("blacklisted %s with count %llu and mid risk from %s \n",ip_txt,value,record->country_short);	
 							init_db();
+							printf("++++++++++++++++++++++++\n");
 							insert_into_blacklist(ip_txt);
+							printf("++++++++++++++++++++++++\n");
 							close_db();			
 							sprintf(email_body,"Blacklisted ip: %s from %s because of possible DDOS attack from mid risk source.",ip_txt,record->country_short);
 							possible_ddos = true;					
@@ -484,9 +488,11 @@ static  void activate_dynamic_blacklist(){
 							int fd_blacklist = open_bpf_map(file_blacklist);						
 							blacklist_modify(fd_blacklist,ip_txt, ACTION_ADD);
 							close(fd_blacklist);	
-							printf("blacklisted %s with count %llu and risk %d\n",ip_txt,value,risk);	
+							printf("blacklisted %s with count %llu and low risk from %s \n",ip_txt,value,record->country_short);	
 							init_db();
+							printf("++++++++++++++++++++++++\n");
 							insert_into_blacklist(ip_txt);
+							printf("++++++++++++++++++++++++\n");
 							close_db();		
 							sprintf(email_body,"Blacklisted ip: %s from %s because of possible DDOS attack from low risk source.",ip_txt,record->country_short);			
 							possible_ddos = true;		
@@ -588,8 +594,10 @@ static  void start_logging(){
 					char time_str[30];
 					snprintf(time_str, 10, "%ld", time);
 
-					if(verbose) printf("Packet( %s ):ip_src-%s, ip_dest-%s, server-%s, country-%s, reason-%s, time-%ld\n",status,src_ip,dest_ip,mac_str,country,reason,time);
+					/*if(verbose)*/ printf("Packet( %s ):ip_src-%s, ip_dest-%s, server-%s, country-%s, reason-%s, time-%ld\n",status,src_ip,dest_ip,mac_str,country,reason,time);
+					verbose = 0;
 					insert_into_packets_list(src_ip,status,time_str,country,dest_ip,mac_str,reason);
+					verbose = 1;
 					logsToRemove[numLogsToRemove] = key; 
 					++numLogsToRemove;		
 					
