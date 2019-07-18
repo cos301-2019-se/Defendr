@@ -452,7 +452,9 @@ static  void activate_dynamic_blacklist(){
 				char ip_txt[INET_ADDRSTRLEN] = {0};
 				if (inet_ntop(AF_INET, &key, ip_txt, sizeof(ip_txt))) {	
 					printf("%s %s %llu \n","monitor ", ip_txt,value);							
-					if(value > 3){
+					if(value > 5){
+						char email_body[100]; 
+						bool possible_ddos = false;
 						IP2LocationRecord *record = IP2Location_get_all(IP2LocationObj,ip_txt);
 						char* country = record->country_short;
 						init_db();
@@ -465,15 +467,19 @@ static  void activate_dynamic_blacklist(){
 							printf("blacklisted %s with count %llu and risk %d\n",ip_txt,value,risk);
 							init_db();
 							insert_into_blacklist(ip_txt);
-							close_db();							
-						}else if (risk == MED && value > 5){
+							close_db();			
+							sprintf(email_body,"Blacklisted ip: %s from %s because of possible DDOS attack from high risk source.",ip_txt,record->country_short); 
+							possible_ddos = true;	
+						}else if (risk == MED && value > 8){
 							int fd_blacklist = open_bpf_map(file_blacklist);						
 							blacklist_modify(fd_blacklist,ip_txt, ACTION_ADD);
 							close(fd_blacklist);	
 							printf("blacklisted %s with count %llu and risk %d\n",ip_txt,value,risk);	
 							init_db();
 							insert_into_blacklist(ip_txt);
-							close_db();							
+							close_db();			
+							sprintf(email_body,"Blacklisted ip: %s from %s because of possible DDOS attack from mid risk source.",ip_txt,record->country_short);
+							possible_ddos = true;					
 						}else if (risk == LOW && value > 10){
 							int fd_blacklist = open_bpf_map(file_blacklist);						
 							blacklist_modify(fd_blacklist,ip_txt, ACTION_ADD);
@@ -481,9 +487,24 @@ static  void activate_dynamic_blacklist(){
 							printf("blacklisted %s with count %llu and risk %d\n",ip_txt,value,risk);	
 							init_db();
 							insert_into_blacklist(ip_txt);
-							close_db();						
+							close_db();		
+							sprintf(email_body,"Blacklisted ip: %s from %s because of possible DDOS attack from low risk source.",ip_txt,record->country_short);			
+							possible_ddos = true;		
 						}
 						IP2Location_free_record(record);
+						if(possible_ddos){
+							char cmd[100];
+							char to[] = "u17094446@tuks.co.za";
+							char tempFile[100];
+							strcpy(tempFile,tempnam("/tmp","sendmail"));
+
+							FILE *fp = fopen(tempFile,"w");
+							fprintf(fp,"%s\n",email_body);
+							fclose(fp); 
+
+							sprintf(cmd,"mail -s Alert from defendr  %s < %s",to,tempFile);
+							system(cmd);
+						}
 
 					}	
 					ipsToRemove[numToRemove] = malloc(strlen(ip_txt) + 1); 
@@ -504,6 +525,7 @@ static  void activate_dynamic_blacklist(){
 
 /* Function used for logging incoming traffic in database*/
 static  void start_logging(){
+		
 	IP2Location *IP2LocationObj = IP2Location_open("data/IP-COUNTRY.BIN");	
 	init_db();
 	struct sysinfo s_info;
