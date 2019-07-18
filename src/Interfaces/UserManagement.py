@@ -56,12 +56,13 @@ def destroy_UserManagement_window():
 
 class UserManagement_window:
 
-    def adduser(self, db):
+    #Fucntion to add an user
+    def add_user(self, db):
         name = self.ent_name.get()
-        surename = self.Ent_Lastname.get()
-        email = self.Ent_email.get()
-        password = self.Ent_password.get()
-        reentered = self.Ent_reenter.get()
+        surename = self.ent_lastname.get()
+        email = self.ent_email.get()
+        password = self.ent_password.get()
+        reentered = self.ent_reenter.get()
         if (name == ''):
             messagebox.showwarning("User Management", "Please enter a name!")
         else:
@@ -73,68 +74,74 @@ class UserManagement_window:
                 else:
                     if (password != reentered):
                         messagebox.showwarning("User Management", "Passwords must match!")
-                        self.Ent_password.delete(0, 'end')
+                        self.ent_password.delete(0, 'end')
                         self.ent_reenter.delete(0, 'end')
                     else:
-                        if (self.checkPassword(password)):
-                            if (self.checkEmail(email)):
+                        if (self.check_password(password)):
+                            if (self.check_email(email)):
                                 msg = messagebox.askyesno("Roll", "Is " + name + " an admin?")
                                 roll = "user"
                                 if (msg):
                                     roll = "admin"
-                                answer = databaseCon.makeNewUser(db, name, surename, password, roll, email)
+                                answer = databaseCon.make_new_user(db, name, surename, password, roll, email)
                                 if (answer):
                                     messagebox.showinfo("UserManagement", name + " Successfully added")
                                     self.ent_name.insert(tk.END, "")
-                                    self.Ent_Lastname.insert(tk.END, "")
-                                    self.Ent_email.insert(tk.END, "")
-                                    self.Ent_password.insert(tk.END, "")
-                                    self.Ent_reenter.insert(tk.END, "")
+                                    self.ent_lastname.insert(tk.END, "")
+                                    self.ent_email.insert(tk.END, "")
+                                    self.ent_password.insert(tk.END, "")
+                                    self.ent_reenter.insert(tk.END, "")
                                 else:
                                     messagebox.showwarning("User Management", "Email already exists")
 
-    # check if the email is correct
-    def checkEmail(self, email):
+    #Fucntion to check if the email is correct
+    def check_email(self, email):
         mail = email
         check = re.search("([a-z]|[A-Z]|[0-9])+\@([a-z]|[A-Z]|[0-9])+((\.(([A-Z]|[a-z]|[0-9])+))+)$", mail)
         if (check):
             return True
         else:
             messagebox.showwarning("User Management", "Invalid email.")
-            self.Ent_email.delete(0, 'end')
+            self.ent_email.delete(0, 'end')
             return False
 
-    # check if the password is correct
-    def checkPassword(self, psw):
+    #Fucntion to check if the password is correct
+    def check_password(self, psw):
         password = psw
         number = re.findall("[0-9]", password)
         if (not (number)):
             messagebox.showwarning("User Management", "Your password needs a number.")
-            self.Ent_password.delete(0, 'end')
+            self.ent_password.delete(0, 'end')
             self.ent_reenter.delete(0, 'end')
             return False
         caps = re.findall("[A-Z]", password)
         if (not (caps)):
             messagebox.showwarning("User Management", "Your password needs a uppercase character.")
-            self.Ent_password.delete(0, 'end')
+            self.ent_password.delete(0, 'end')
             self.ent_reenter.delete(0, 'end')
             return False
         lower = re.findall("[a-z]", password)
         if (not (lower)):
             messagebox.showwarning("User Management", "Your password needs a lowercase character.")
-            self.Ent_password.delete(0, 'end')
+            self.ent_password.delete(0, 'end')
             self.ent_reenter.delete(0, 'end')
             return False
         symbols = re.findall("[!,@,#,$,%,^,&,*,.,?]", password)
         if (not (symbols)):
             messagebox.showwarning("User Management", "Your password needs a symbol.")
-            self.Ent_password.delete(0, 'end')
+            self.ent_password.delete(0, 'end')
+            self.ent_reenter.delete(0, 'end')
+            return False
+        if(len(password)<6):
+            messagebox.showwarning("User Management", "Your password needs to be 6 characters long.")
+            self.ent_password.delete(0, 'end')
             self.ent_reenter.delete(0, 'end')
             return False
         return True
 
-    def removeUsers(self,db):
-        email=self.Ent_remove_email.get()
+    #Fucntion to remove an user
+    def remove_users(self,db):
+        email=self.ent_remove_email.get()
         if(email==''):
             messagebox.showwarning("User Management","Please enter an email.")
         else:
@@ -142,22 +149,25 @@ class UserManagement_window:
             if(msg):
                 answer=databaseCon.remove(db,email)
                 messagebox.showinfo("User Management",answer)
-                self.Ent_remove_email.insert(tk.END, "")
+                self.ent_remove_email.insert(tk.END, "")
 
+    #Function to return to the home window
     def back(self):
         destroy_UserManagement_window()
         Home_support.root.deiconify()
 
+    #Function to refeshed the user
     def refeshed(self,db):
-        line = databaseCon.printUsers(db)
-        self.Txt_users.delete(1.0, tk.END)
-        self.Txt_users.insert(tk.END, line)
+        line = databaseCon.print_user(db)
+        self.txt_users.delete(1.0, tk.END)
+        self.txt_users.insert(tk.END, line)
 
+    #Function to go the chances window
     def change(self,db):
-        email = self.Ent_change_email.get()
-        check=databaseCon.getName(db,email)
-        if(not(email=="") and self.checkEmail(email) and not(check=="notFond")):
-            UserManagement_support.createChangeUser(email,db)
+        email = self.ent_change_email.get()
+        check=databaseCon.get_name(db,email)
+        if(not(email=="") and self.check_email(email) and not(check=="notFond")):
+            UserManagement_support.create_change_user(email,db)
         else:
             messagebox.showwarning("User Management", "Email is invalid")
 
@@ -170,15 +180,11 @@ class UserManagement_window:
         _compcolor = '#d9d9d9' # X11 color: 'gray85'
         _ana1color = '#d9d9d9' # X11 color: 'gray85'
         _ana2color = '#ececec' # Closest X11 color: 'gray92'
-        font10 = "-family {DejaVu Sans} -size 13 -weight normal -slant"  \
+        fnt_Text = "-family {DejaVu Sans} -size 13 -weight normal -slant"  \
             " roman -underline 0 -overstrike 0"
-        font11 = "-family {DejaVu Sans} -size 15 -weight bold -slant "  \
+        fnt_Header2 = "-family {DejaVu Sans} -size 15 -weight bold -slant "  \
             "roman -underline 0 -overstrike 0"
-        font12 = "-family {DejaVu Sans} -size 13 -weight bold -slant "  \
-            "roman -underline 0 -overstrike 0"
-        font13 = "-family {DejaVu Sans} -size 15 -weight normal -slant"  \
-            " roman -underline 0 -overstrike 0"
-        font9 = "-family {DejaVu Sans} -size 20 -weight bold -slant "  \
+        fnt_Header1 = "-family {DejaVu Sans} -size 20 -weight bold -slant "  \
             "roman -underline 0 -overstrike 0"
 
         top.geometry("862x467+756+142")
@@ -188,34 +194,34 @@ class UserManagement_window:
         self.lbl_Header1 = tk.Label(top)
         self.lbl_Header1.place(relx=0.293, rely=0.043, height=36, width=351)
         self.lbl_Header1.configure(activebackground="#f9f9f9")
-        self.lbl_Header1.configure(font=font9)
+        self.lbl_Header1.configure(font=fnt_Header1)
         self.lbl_Header1.configure(text='''User Management''')
 
         self.btn_close = tk.Button(top)
         self.btn_close.place(relx=0.857, rely=0.878, height=38, width=82)
         self.btn_close.configure(activebackground="#f9f9f9")
-        self.btn_close.configure(font=font13)
+        self.btn_close.configure(font=fnt_Header2)
         self.btn_close.configure(text='''Close''')
         self.btn_close.configure(command=lambda: self.back())
 
         self.lbl_name = tk.Label(top)
         self.lbl_name.place(relx=0.059, rely=0.193, height=28, width=69)
         self.lbl_name.configure(activebackground="#f9f9f9")
-        self.lbl_name.configure(font=font10)
+        self.lbl_name.configure(font=fnt_Text)
         self.lbl_name.configure(text='''Name:''')
 
         self.lbl_lastName = tk.Label(top)
         self.lbl_lastName.place(relx=0.059, rely=0.257, height=27, width=106)
         self.lbl_lastName.configure(activebackground="#f9f9f9")
-        self.lbl_lastName.configure(font=font10)
+        self.lbl_lastName.configure(font=fnt_Text)
         self.lbl_lastName.configure(text='''Surname:''')
 
-        self.Ent_Lastname = tk.Entry(top)
-        self.Ent_Lastname.place(relx=0.305, rely=0.268, height=23
+        self.ent_lastname = tk.Entry(top)
+        self.ent_lastname.place(relx=0.305, rely=0.268, height=23
                 , relwidth=0.195)
-        self.Ent_Lastname.configure(background="white")
-        self.Ent_Lastname.configure(font="TkFixedFont")
-        self.Ent_Lastname.configure(selectbackground="#c4c4c4")
+        self.ent_lastname.configure(background="white")
+        self.ent_lastname.configure(font="TkFixedFont")
+        self.ent_lastname.configure(selectbackground="#c4c4c4")
 
         self.ent_name = tk.Entry(top)
         self.ent_name.place(relx=0.305, rely=0.193,height=23, relwidth=0.195)
@@ -226,128 +232,128 @@ class UserManagement_window:
         self.Lbl_email = tk.Label(top)
         self.Lbl_email.place(relx=0.053, rely=0.321, height=28, width=67)
         self.Lbl_email.configure(activebackground="#f9f9f9")
-        self.Lbl_email.configure(font=font10)
+        self.Lbl_email.configure(font=fnt_Text)
         self.Lbl_email.configure(text='''Email:''')
 
-        self.Ent_email = tk.Entry(top)
-        self.Ent_email.place(relx=0.305, rely=0.332,height=23, relwidth=0.195)
-        self.Ent_email.configure(background="white")
-        self.Ent_email.configure(font="TkFixedFont")
-        self.Ent_email.configure(selectbackground="#c4c4c4")
+        self.ent_email = tk.Entry(top)
+        self.ent_email.place(relx=0.305, rely=0.332,height=23, relwidth=0.195)
+        self.ent_email.configure(background="white")
+        self.ent_email.configure(font="TkFixedFont")
+        self.ent_email.configure(selectbackground="#c4c4c4")
 
         self.Lbl_password = tk.Label(top)
         self.Lbl_password.place(relx=0.053, rely=0.385, height=28, width=104)
         self.Lbl_password.configure(activebackground="#f9f9f9")
-        self.Lbl_password.configure(font=font10)
+        self.Lbl_password.configure(font=fnt_Text)
         self.Lbl_password.configure(text='''Password:''')
 
-        self.Ent_password = tk.Entry(top)
-        self.Ent_password.place(relx=0.305, rely=0.407, height=23
+        self.ent_password = tk.Entry(top)
+        self.ent_password.place(relx=0.305, rely=0.407, height=23
                 , relwidth=0.195)
-        self.Ent_password.configure(background="white")
-        self.Ent_password.configure(font="TkFixedFont")
-        self.Ent_password.configure(selectbackground="#c4c4c4")
-        self.Ent_password.configure(show="*")
+        self.ent_password.configure(background="white")
+        self.ent_password.configure(font="TkFixedFont")
+        self.ent_password.configure(selectbackground="#c4c4c4")
+        self.ent_password.configure(show="*")
 
         self.Lbl_reenter = tk.Label(top)
         self.Lbl_reenter.place(relx=0.047, rely=0.471, height=28, width=196)
         self.Lbl_reenter.configure(activebackground="#f9f9f9")
-        self.Lbl_reenter.configure(font=font10)
+        self.Lbl_reenter.configure(font=fnt_Text)
         self.Lbl_reenter.configure(text='''Re-enter Password:''')
 
-        self.Ent_reenter = tk.Entry(top)
-        self.Ent_reenter.place(relx=0.305, rely=0.471, height=23, relwidth=0.195)
+        self.ent_reenter = tk.Entry(top)
+        self.ent_reenter.place(relx=0.305, rely=0.471, height=23, relwidth=0.195)
 
-        self.Ent_reenter.configure(background="white")
-        self.Ent_reenter.configure(font="TkFixedFont")
-        self.Ent_reenter.configure(selectbackground="#c4c4c4")
-        self.Ent_reenter.configure(show="*")
+        self.ent_reenter.configure(background="white")
+        self.ent_reenter.configure(font="TkFixedFont")
+        self.ent_reenter.configure(selectbackground="#c4c4c4")
+        self.ent_reenter.configure(show="*")
 
         self.lbl_add = tk.Label(top)
         self.lbl_add.place(relx=0.223, rely=0.128, height=28, width=55)
         self.lbl_add.configure(activebackground="#f9f9f9")
-        self.lbl_add.configure(font=font11)
+        self.lbl_add.configure(font=fnt_Header2)
         self.lbl_add.configure(text='''Add:''')
 
-        self.Txt_users = tk.Text(top)
-        self.Txt_users.place(relx=0.54, rely=0.193, relheight=0.63
+        self.txt_users = tk.Text(top)
+        self.txt_users.place(relx=0.54, rely=0.193, relheight=0.63
                 , relwidth=0.43)
-        self.Txt_users.configure(background="white")
-        self.Txt_users.configure(font="TkTextFont")
-        self.Txt_users.configure(selectbackground="#c4c4c4")
-        self.Txt_users.configure(width=366)
-        self.Txt_users.configure(wrap="word")
+        self.txt_users.configure(background="white")
+        self.txt_users.configure(font="TkTextFont")
+        self.txt_users.configure(selectbackground="#c4c4c4")
+        self.txt_users.configure(width=366)
+        self.txt_users.configure(wrap="word")
 
         self.Lbl_users = tk.Label(top)
         self.Lbl_users.place(relx=0.751, rely=0.128, height=28, width=76)
         self.Lbl_users.configure(activebackground="#f9f9f9")
-        self.Lbl_users.configure(font=font11)
+        self.Lbl_users.configure(font=fnt_Header2)
         self.Lbl_users.configure(text='''Users:''')
 
         self.lbl_remove = tk.Label(top)
         self.lbl_remove.place(relx=0.2, rely=0.557, height=28, width=103)
         self.lbl_remove.configure(activebackground="#f9f9f9")
-        self.lbl_remove.configure(font=font11)
+        self.lbl_remove.configure(font=fnt_Header2)
         self.lbl_remove.configure(text='''Remove:''')
 
         self.Lbl_remove_email = tk.Label(top)
         self.Lbl_remove_email.place(relx=0.07, rely=0.642, height=26, width=59)
         self.Lbl_remove_email.configure(activebackground="#f9f9f9")
-        self.Lbl_remove_email.configure(font=font10)
+        self.Lbl_remove_email.configure(font=fnt_Text)
         self.Lbl_remove_email.configure(text='''Email:''')
 
-        self.Ent_remove_email = tk.Entry(top)
-        self.Ent_remove_email.place(relx=0.305, rely=0.642, height=23
+        self.ent_remove_email = tk.Entry(top)
+        self.ent_remove_email.place(relx=0.305, rely=0.642, height=23
                 , relwidth=0.195)
-        self.Ent_remove_email.configure(background="white")
-        self.Ent_remove_email.configure(font="TkFixedFont")
-        self.Ent_remove_email.configure(selectbackground="#c4c4c4")
+        self.ent_remove_email.configure(background="white")
+        self.ent_remove_email.configure(font="TkFixedFont")
+        self.ent_remove_email.configure(selectbackground="#c4c4c4")
 
         self.Lbl_Change = tk.Label(top)
         self.Lbl_Change.place(relx=0.211, rely=0.707, height=26, width=84)
         self.Lbl_Change.configure(activebackground="#f9f9f9")
-        self.Lbl_Change.configure(font=font12)
+        self.Lbl_Change.configure(font=fnt_Header2)
         self.Lbl_Change.configure(text='''Change:''')
 
         self.Lbl_change_email = tk.Label(top)
         self.Lbl_change_email.place(relx=0.07, rely=0.771, height=26, width=59)
         self.Lbl_change_email.configure(activebackground="#f9f9f9")
-        self.Lbl_change_email.configure(font=font10)
+        self.Lbl_change_email.configure(font=fnt_Text)
         self.Lbl_change_email.configure(text='''Email:''')
 
-        self.Ent_change_email = tk.Entry(top)
-        self.Ent_change_email.place(relx=0.305, rely=0.771,height=23, relwidth=0.195)
-        self.Ent_change_email.configure(background="white")
-        self.Ent_change_email.configure(font="TkFixedFont")
-        self.Ent_change_email.configure(selectbackground="#c4c4c4")
+        self.ent_change_email = tk.Entry(top)
+        self.ent_change_email.place(relx=0.305, rely=0.771,height=23, relwidth=0.195)
+        self.ent_change_email.configure(background="white")
+        self.ent_change_email.configure(font="TkFixedFont")
+        self.ent_change_email.configure(selectbackground="#c4c4c4")
 
-        self.Btn_add = tk.Button(top)
-        self.Btn_add.place(relx=0.07, rely=0.878, height=36, width=87)
-        self.Btn_add.configure(activebackground="#f9f9f9")
-        self.Btn_add.configure(font=font13)
-        self.Btn_add.configure(text='''Add''')
-        self.Btn_add.configure(command=lambda: self.adduser(db))
+        self.btn_add = tk.Button(top)
+        self.btn_add.place(relx=0.07, rely=0.878, height=36, width=87)
+        self.btn_add.configure(activebackground="#f9f9f9")
+        self.btn_add.configure(font=fnt_Header2)
+        self.btn_add.configure(text='''Add''')
+        self.btn_add.configure(command=lambda: self.add_user(db))
 
-        self.Btn_remove = tk.Button(top)
-        self.Btn_remove.place(relx=0.211, rely=0.878, height=38, width=109)
-        self.Btn_remove.configure(activebackground="#f9f9f9")
-        self.Btn_remove.configure(font=font13)
-        self.Btn_remove.configure(text='''Remove''')
-        self.Btn_remove.configure(command=lambda: self.removeUsers(db))
+        self.btn_remove = tk.Button(top)
+        self.btn_remove.place(relx=0.211, rely=0.878, height=38, width=109)
+        self.btn_remove.configure(activebackground="#f9f9f9")
+        self.btn_remove.configure(font=fnt_Header2)
+        self.btn_remove.configure(text='''Remove''')
+        self.btn_remove.configure(command=lambda: self.remove_users(db))
 
-        self.Btn_Change = tk.Button(top)
-        self.Btn_Change.place(relx=0.387, rely=0.878, height=38, width=105)
-        self.Btn_Change.configure(activebackground="#f9f9f9")
-        self.Btn_Change.configure(font=font13)
-        self.Btn_Change.configure(text='''Change''')
-        self.Btn_Change.configure(command=lambda: self.change(db))
+        self.btn_Change = tk.Button(top)
+        self.btn_Change.place(relx=0.387, rely=0.878, height=38, width=105)
+        self.btn_Change.configure(activebackground="#f9f9f9")
+        self.btn_Change.configure(font=fnt_Header2)
+        self.btn_Change.configure(text='''Change''')
+        self.btn_Change.configure(command=lambda: self.change(db))
 
-        self.Btn_Refesh = tk.Button(top)
-        self.Btn_Refesh.place(relx=0.704, rely=0.878, height=38, width=96)
-        self.Btn_Refesh.configure(activebackground="#f9f9f9")
-        self.Btn_Refesh.configure(font=font13)
-        self.Btn_Refesh.configure(text='''Refresh''')
-        self.Btn_Refesh.configure(command=lambda: self.refeshed(db))
+        self.btn_Refesh = tk.Button(top)
+        self.btn_Refesh.place(relx=0.704, rely=0.878, height=38, width=96)
+        self.btn_Refesh.configure(activebackground="#f9f9f9")
+        self.btn_Refesh.configure(font=fnt_Header2)
+        self.btn_Refesh.configure(text='''Refresh''')
+        self.btn_Refesh.configure(command=lambda: self.refeshed(db))
 
 if __name__ == '__main__':
     vp_start_gui()

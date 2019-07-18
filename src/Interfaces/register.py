@@ -56,20 +56,20 @@ def destroy_register_window():
 class register_window:
     #switch window to the login window
     def login(self):
-        register_support.createLogin()
+        register_support.create_login()
 
     #closeing the window
-    def cancelRegister(self):
+    def cancel_register(self):
         msg = messagebox.askyesno("Exit", "Are you sure?");
         if(msg):
             exit()
 
     #add the a new user
-    def adduser(self):
+    def add_user(self):
         name=self.ent_name.get()
         surename = self.ent_Lastname.get()
-        email = self.Ent_email.get()
-        password = self.Ent_password.get()
+        email = self.ent_email.get()
+        password = self.ent_password.get()
         reentered = self.ent_reenter.get()
         if(name==' '):
             messagebox.showwarning("Name","Please enter a name!")
@@ -79,60 +79,60 @@ class register_window:
             else:
                 if(password!=reentered):
                     messagebox.showwarning("Password","Passwords must match!")
-                    self.Ent_password.delete(0, 'end')
+                    self.ent_password.delete(0, 'end')
                     self.ent_reenter.delete(0, 'end')
                 else:
-                    if(self.checkPassword(password)):
-                        if(self.checkEmail(email)):
+                    if(self.check_password(password)):
+                        if(self.check_email(email)):
                             db = databaseCon.connect()
                             roll="user"
-                            if(not databaseCon.checkUsers(db)):
+                            if(not databaseCon.check_users(db)):
                                 roll="admin"
-                            answer=databaseCon.makeNewUser(db, name, surename, password, roll, email)
+                            answer=databaseCon.make_new_user(db, name, surename, password, roll, email)
                             if(answer):
                                 messagebox.showinfo("Register",name+" Successfully added")
-                                self.Ent_password.delete(0, 'end')
+                                self.ent_password.delete(0, 'end')
                                 self.ent_reenter.delete(0, 'end')
-                                register_support.createMain(roll)
+                                register_support.create_main(roll)
                             else:
                                 messagebox.showwarning("Register","Email already exists")
 
     #check if the email is correct
-    def checkEmail(self, email):
+    def check_email(self, email):
         mail=email
         check = re.search("([a-z]|[A-Z]|[0-9])+\@([a-z]|[A-Z]|[0-9])+((\.(([A-Z]|[a-z]|[0-9])+))+)$",mail)
         if(check):
             return True
         else:
             messagebox.showwarning("Email","Invalid email.")
-            self.Ent_email.delete(0, 'end')
+            self.ent_email.delete(0, 'end')
             return False
 
     #check if the email is correct
-    def checkPassword(self, psw):
+    def check_password(self, psw):
         password=psw
         number = re.findall("[0-9]", password)
         if(not(number)):
             messagebox.showwarning("Password","Your password needs a number.")
-            self.Ent_password.delete(0, 'end')
+            self.ent_password.delete(0, 'end')
             self.ent_reenter.delete(0, 'end')
             return False
         caps = re.findall("[A-Z]", password)
         if (not (caps)):
             messagebox.showwarning("Password", "Your password needs a uppercase character.")
-            self.Ent_password.delete(0, 'end')
+            self.ent_password.delete(0, 'end')
             self.ent_reenter.delete(0, 'end')
             return False
         lower = re.findall("[a-z]", password)
         if (not (lower)):
             messagebox.showwarning("Password", "Your password needs a lowercase character.")
-            self.Ent_password.delete(0, 'end')
+            self.ent_password.delete(0, 'end')
             self.ent_reenter.delete(0, 'end')
             return False
         symbols = re.findall("[!,@,#,$,%,^,&,*,.,?]", password)
         if (not (symbols)):
             messagebox.showwarning("Password", "Your password needs a symbol.")
-            self.Ent_password.delete(0, 'end')
+            self.ent_password.delete(0, 'end')
             self.ent_reenter.delete(0, 'end')
             return False
         return True
@@ -164,7 +164,7 @@ class register_window:
         self.btn_register.place(relx=0.415, rely=0.816, height=38, width=111)
         self.btn_register.configure(font=font11)
         self.btn_register.configure(text="Register")
-        self.btn_register.configure(command=lambda: self.adduser())
+        self.btn_register.configure(command=lambda: self.add_user())
 
         self.btn_Singin = tk.Button(top)
         self.btn_Singin.place(relx=0.098, rely=0.816, height=38, width=89)
@@ -176,7 +176,7 @@ class register_window:
         self.btn_close.place(relx=0.742, rely=0.801, height=38, width=82)
         self.btn_close.configure(font=font11)
         self.btn_close.configure(text="Close")
-        self.btn_close.configure(command=lambda: self.cancelRegister())
+        self.btn_close.configure(command=lambda: self.cancel_register())
 
         self.lbl_name = tk.Label(top)
         self.lbl_name.place(relx=0.109, rely=0.272, height=28, width=69)
@@ -203,22 +203,22 @@ class register_window:
         self.Lbl_email.configure(font=font11)
         self.Lbl_email.configure(text="Email:")
 
-        self.Ent_email = tk.Entry(top)
-        self.Ent_email.place(relx=0.568, rely=0.468,height=23, relwidth=0.362)
-        self.Ent_email.configure(background="white")
-        self.Ent_email.configure(font="TkFixedFont")
+        self.ent_email = tk.Entry(top)
+        self.ent_email.place(relx=0.568, rely=0.468,height=23, relwidth=0.362)
+        self.ent_email.configure(background="white")
+        self.ent_email.configure(font="TkFixedFont")
 
         self.Lbl_password = tk.Label(top)
         self.Lbl_password.place(relx=0.109, rely=0.544, height=28, width=104)
         self.Lbl_password.configure(font=font11)
         self.Lbl_password.configure(text="Password:")
 
-        self.Ent_password = tk.Entry(top)
-        self.Ent_password.place(relx=0.568, rely=0.574, height=23
+        self.ent_password = tk.Entry(top)
+        self.ent_password.place(relx=0.568, rely=0.574, height=23
                 , relwidth=0.362)
-        self.Ent_password.configure(background="white")
-        self.Ent_password.configure(font="TkFixedFont")
-        self.Ent_password.configure(show="*")
+        self.ent_password.configure(background="white")
+        self.ent_password.configure(font="TkFixedFont")
+        self.ent_password.configure(show="*")
 
         self.Lbl_reenter = tk.Label(top)
         self.Lbl_reenter.place(relx=0.109, rely=0.665, height=28, width=196)

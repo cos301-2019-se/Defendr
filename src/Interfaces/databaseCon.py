@@ -3,18 +3,21 @@ import hashlib, uuid
 import urllib.parse
 import re
 
-def addIp(db,ip):
+#Function to add an ip to the blacklist on the database
+def add_ip(db,ip):
     col = db["blacklist"]
     data = {"adress": ip}
     col.insert_one(data)
 
+#Function to connect
 def connect():
     mongo_uri = "mongodb+srv://darknites:" + urllib.parse.quote("D@rkN1t3s") + "@defendr-1vnvv.azure.mongodb.net/test?retryWrites=true"
     client = pymongo.MongoClient(mongo_uri)
     db = client["Defendr"]
     return db
 
-def findPackets(db, ip):
+#Function to get packets
+def find_packets(db, ip):
     col = db["packets_list"]
     if ip=="":
         doc=col.find({},{"_id": 0}).sort("timestamp", -1)
@@ -23,70 +26,78 @@ def findPackets(db, ip):
         doc = col.find(query,{ "_id": 0}).sort("timestamp", -1)
     return doc
 
-def getSalt(db,email):
+#Function to get the salt for an email
+def get_salt(db,email):
     col = db["user"]
     doc = col.find({"email": email},{ "_id": 0, "name": 0, "roll": 0, "password": 0, "lastname": 0,"email": 0})
-    stringoutput = "notFond"
+    string_output = "notFond"
     for x in doc:
-        stringoutput =str(x)
-    if(stringoutput!="notFond"):
-        return stringoutput[10:len(stringoutput)-2]
-    return stringoutput
+        string_output =str(x)
+    if(string_output!="notFond"):
+        return string_output[10:len(string_output)-2]
+    return string_output
 
-def getPassword(db,email):
+#Function to get the password for an email
+def get_password(db,email):
     col = db["user"]
     doc = col.find({"email": email},{ "_id": 0, "name": 0, "roll": 0, "salt": 0, "lastname": 0,"email": 0})
-    stringoutput = "notFond"
+    string_output = "notFond"
     for x in doc:
-        stringoutput = str(x)
-    if(stringoutput!="notFond"):
-        return stringoutput[14:len(stringoutput)-2]
-    return stringoutput
+        string_output = str(x)
+    if(string_output!="notFond"):
+        return string_output[14:len(string_output)-2]
+    return string_output
 
-def getRoll(db,email):
+#Function to get the roll for an email
+def get_roll(db,email):
     col = db["user"]
     doc = col.find({"email": email},{ "_id": 0, "name": 0, "salt": 0, "password": 0, "lastname": 0,"email": 0})
-    stringoutput="notFond"
+    string_output="notFond"
     for x in doc:
-        stringoutput = str(x)
-    if(stringoutput!="notFond"):
-        return stringoutput[10:len(stringoutput) - 2]
-    return stringoutput
+        string_output = str(x)
+    if(string_output!="notFond"):
+        return string_output[10:len(string_output) - 2]
+    return string_output
 
-def getName(db,email):
+#Function to get the name for an email
+def get_name(db,email):
     col = db["user"]
     doc = col.find({"email": email},{ "_id": 0, "roll": 0, "salt": 0, "password": 0, "lastname": 0,"email": 0})
-    stringoutput="notFond"
+    string_output="notFond"
     for x in doc:
-        stringoutput = str(x)
-    if(stringoutput!="notFond"):
-        return stringoutput[10:len(stringoutput) - 2]
-    return stringoutput
+        string_output = str(x)
+    if(string_output!="notFond"):
+        return string_output[10:len(string_output) - 2]
+    return string_output
 
-def getLastname(db,email):
+#Function to get the last name for an email
+def get_last_name(db,email):
     col = db["user"]
     doc = col.find({"email": email},{ "_id": 0, "name": 0, "salt": 0, "password": 0, "roll": 0,"email": 0})
-    stringoutput="notFond"
+    string_output="notFond"
     for x in doc:
-        stringoutput = str(x)
-    if(stringoutput!="notFond"):
-        return stringoutput[14:len(stringoutput) - 2]
-    return stringoutput
+        string_output = str(x)
+    if(string_output!="notFond"):
+        return string_output[14:len(string_output) - 2]
+    return string_output
 
-def saveUser(db,name,lastName,roll,salt, password, email):
+#Function to add an user to the database
+def save_user(db,name,lastName,roll,salt, password, email):
     col = db["user"]
     dict={"name": name, "lastname":lastName, "roll": roll, "salt": salt, "password": password, "email": email}
     col.insert_one(dict)
 
-def removeUser(db,name,roll,salt, password, lastname):
+#Function to remove an user for the database
+def remove_user(db,name,roll,salt, password, lastname):
     col = db["user"]
     query = {"name": name, "lastname": lastname, "roll": roll, "salt": salt, "password": password}
     col.delete_many(query)
 
-def printUsers(db):
-    mycol = db["user"]
+#Function to get all user for the database
+def print_user(db):
+    my_col = db["user"]
     lines = "-------------------------------------------------------------------------"
-    for x in mycol.find({}, {"_id": 0, "salt": 0, "password": 0}):
+    for x in my_col.find({}, {"_id": 0, "salt": 0, "password": 0}):
         temp = str(x)
         array =temp.split('\'')
         name = array[3]
@@ -99,98 +110,108 @@ def printUsers(db):
     lines = lines + "-------------------------------------------------------------------------"
     return lines
 
-def checkUsers(db):
-    mycol = db["user"]
+#Function to check in an user is in the database
+def check_user(db):
+    my_col = db["user"]
     counter =0
-    for x in mycol.find({}, {"_id": 0, "salt": 0, "password": 0}):
+    for x in my_col.find({}, {"_id": 0, "salt": 0, "password": 0}):
         counter=counter+1
     if(counter==0):
         return False
     else:
         return True
 
-def changeName(db, email, name):
-    mycol = db["user"]
-    myquery = {"email": email}
-    newvalues = {"$set": {"name": name}}
+#Function to change an user's name in the database
+def change_name(db, email, name):
+    my_col = db["user"]
+    my_query = {"email": email}
+    new_values = {"$set": {"name": name}}
 
-    mycol.update_one(myquery, newvalues)
+    my_col.update_one(my_query, new_values)
 
-def changeLastname(db, email, lastname):
-    mycol = db["user"]
-    myquery = {"email": email}
-    newvalues = {"$set": {"lastname": lastname}}
+#Function to change an user's last name in the database
+def change_lastname(db, email, lastname):
+    my_col = db["user"]
+    my_query = {"email": email}
+    new_values = {"$set": {"lastname": lastname}}
 
-    mycol.update_one(myquery, newvalues)
+    my_col.update_one(my_query, new_values)
 
-def changeEmail(db, email, newEmail):
-  mycol = db["user"]
-  myquery = {"email": email}
-  newvalues = {"$set": {"email": newEmail}}
+#Function to change an user's email in the databas
+def change_email(db, email, new_email):
+  my_col = db["user"]
+  my_query = {"email": email}
+  new_values = {"$set": {"email": new_email}}
 
-  mycol.update_one(myquery, newvalues)
+  my_col.update_one(my_query, new_values)
 
-def changeRoll(db, email, roll):
-  mycol = db["user"]
-  myquery = {"email": email}
-  newvalues = {"$set": {"roll": roll}}
+#Function to change an user's roll in the databas
+def change_roll(db, email, roll):
+  my_col = db["user"]
+  my_query = {"email": email}
+  new_values = {"$set": {"roll": roll}}
 
-  mycol.update_one(myquery, newvalues)
+  my_col.update_one(my_query, new_values)
 
-def changePassword(db, email, password):
-  salt = getSalt(db, email)
+#Function to change an user's password in the databas
+def change_password(db, email, password):
+  salt = get_salt(db, email)
   pwd = hashFunction(password, salt)
-  mycol = db["user"]
-  myquery = {"email": email}
-  newvalues = {"$set": {"password": pwd}}
+  my_col = db["user"]
+  my_query = {"email": email}
+  new_values = {"$set": {"password": pwd}}
 
-  mycol.update_one(myquery, newvalues)
+  my_col.update_one(my_query, new_values)
 
-#sign in function class
-def checkPass(db, email, password):
-    salt=getSalt(db,email)
-    checkPwd=hashFunction(password,salt)
-    hashedPwd=getPassword(db,email)
-    if(checkPwd==hashedPwd):
+#Function to check password
+def check_pass(db, email, password):
+    salt=get_salt(db,email)
+    check_pwd=hashed_function(password,salt)
+    hashed_pwd=get_password(db,email)
+    if(check_pwd==hashed_pwd):
         return True
     else:
         return False
 
-def hashFunction(password, salt):
-    passwordtemp = password + salt
-    hashedPassword = hashlib.sha512(passwordtemp.encode('utf-8')).hexdigest()
-    return hashedPassword
+#Function to hash a password
+def hashed_function(password, salt):
+    password_temp = password + salt
+    hashed_password = hashlib.sha512(password_temp.encode('utf-8')).hexdigest()
+    return hashed_password
 
+#Function to make salt
 def makeSalt():
     salt = uuid.uuid4().hex
     return salt
 
+#Function to get detalis and remove an user
 def remove(db,email):
-    salt = getSalt(db,email)
+    salt = get_salt(db,email)
     if salt=="notFond":
         return "Not removed"
-    roll = getRoll(db,email)
+    roll = get_roll(db,email)
     if roll=="notFond":
         return "Not removed"
-    password = getPassword(db,email)
+    password = get_password(db,email)
     if password=="notFond":
         return "Not removed"
-    name = getName(db,email)
+    name = get_name(db,email)
     if name=="notFond":
         return "Not removed"
-    lastname = getLastname(db,email)
+    lastname = get_last_name(db,email)
     if lastname=="notFond":
         return "Not removed"
-    removeUser(db, name, roll, salt, password,lastname)
+    remove_user(db, name, roll, salt, password,lastname)
     return name+" removed"
 
-def makeNewUser(db, name, lastName, password, roll, email):
+#Function to make a new user
+def make_new_user(db, name, lastName, password, roll, email):
     # check if name is used
-    check = getSalt(db, email)
+    check = get_salt(db, email)
     if check !="notFond":
         return False
     # make salt and hash
     salt = makeSalt()
-    hashpassword = hashFunction(password, salt)
-    saveUser(db, name,lastName, roll, salt, hashpassword, email)
+    hash_password = hashed_function(password, salt)
+    save_user(db, name,lastName, roll, salt, hash_password, email)
     return True

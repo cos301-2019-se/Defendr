@@ -38,7 +38,7 @@ def vp_start_gui():
     root.mainloop()
 
 w = None
-def create_UserChange(root, email_in, db_in, *args, **kwargs):
+def create_user_change(root, email_in, db_in, *args, **kwargs):
     '''Starting point when module is imported by another program.'''
     global w, w_win, rt
     global email, db
@@ -56,33 +56,36 @@ def destroy_UserChange():
     w = None
 
 class UserChange:
+    #Function to go back to User Management window
     def back(self):
         msg = messagebox.askyesno("Change user", "Are you sure you want to leave?");
         if (msg):
-            ChangeUser_support.createUser()
+            ChangeUser_support.create_User()
 
+    #Function to check want needs to be chacnged
     def change(self):
-        type=self.Ltb_want_change.get(self.Ltb_want_change.curselection())
+        type=self.ltb_Want_Change.get(self.ltb_Want_Change.curselection())
         if(type=="Name"):
-            self.changeName()
+            self.change_name()
         else:
             if (type == "Surname"):
-                self.changeLastName()
+                self.change_last_name()
             else:
                 if (type == "Email"):
-                    self.changeEmail()
+                    self.change_email()
                 else:
                     if (type == "Password"):
-                        self.changePassword()
+                        self.change_password()
                     else:
                         if(type == "Roll"):
-                            self.changeRoll()
+                            self.change_roll()
                         else:
                             messagebox.showwarning("Change user", "Please select what to change.")
 
-    def changeName(self):
-        name =self.Ent_new_item.get()
-        reenter_name = self.Ent_reenter_change.get()
+    #Function to change the name of an user and checking
+    def change_name(self):
+        name =self.txt_New_Item.get()
+        reenter_name = self.txt_Reenter_Change.get()
         if(not(name==reenter_name)):
             messagebox.showwarning("Change user", "New item and re-enter item must match.")
         else:
@@ -91,13 +94,14 @@ class UserChange:
             else:
                 msg = messagebox.askyesno("Change user", "Are you sure you want to change this?")
                 if (msg):
-                    databaseCon.changeName(db,email,name)
+                    databaseCon.change_name(db,email,name)
                     messagebox.showinfo("Change user", "Successfully changed.")
         self.clear()
 
-    def changeLastName(self):
-        name =self.Ent_new_item.get()
-        reenter_name = self.Ent_reenter_change.get()
+    #Function to change the last name of an user and checking
+    def change_last_name(self):
+        name =self.txt_New_Item.get()
+        reenter_name = self.txt_Reenter_Change.get()
         if(not(name==reenter_name)):
             messagebox.showwarning("Change user", "New item and re-enter item must match.")
         else:
@@ -106,13 +110,14 @@ class UserChange:
             else:
                 msg = messagebox.askyesno("Change user", "Are you sure you want to change this?")
                 if (msg):
-                   databaseCon.changeLastname(db,email,name)
+                   databaseCon.change_last_name(db,email,name)
                    messagebox.showinfo("Change user", "Succefully changed.")
         self.clear()
 
-    def changeRoll(self):
-        roll =self.Ent_new_item.get()
-        reenter_roll = self.Ent_reenter_change.get()
+    #Function to change the roll of an user and checking
+    def change_roll(self):
+        roll =self.txt_New_Item.get()
+        reenter_roll = self.txt_Reenter_Change.get()
         if(not(roll==reenter_roll)):
             messagebox.showwarning("Change user", "New item and re-enter item must match.")
         else:
@@ -124,44 +129,46 @@ class UserChange:
                 else:
                     msg = messagebox.askyesno("Change user", "Are you sure you want to change this?")
                     if (msg):
-                        databaseCon.changeRoll(db,email,roll)
+                        databaseCon.change_roll(db,email,roll)
                         messagebox.showinfo("Change user", "Successfully change.")
         self.clear()
 
-    def changeEmail(self):
-        newEmail =self.Ent_new_item.get()
-        reenter_email = self.Ent_reenter_change.get()
+    #Function to change the email of an user and checking
+    def change_email(self):
+        newEmail =self.txt_New_Item.get()
+        reenter_email = self.txt_Reenter_Change.get()
         if (not (newEmail == reenter_email)):
             messagebox.showwarning("Change user", "New item and re-enter item must match.")
         else:
             if (newEmail == '' or reenter_email == ''):
                 messagebox.showwarning("Change user", "Please enter the item in both fields.")
             else:
-                if(self.checkEmail(newEmail)):
+                if(self.check_email(newEmail)):
                     msg = messagebox.askyesno("Change user", "Are you sure you want to change this?");
                     if (msg):
-                        databaseCon.changeEmail(db,email,newEmail)
+                        databaseCon.change_email(db,email,newEmail)
                         messagebox.showinfo("Change user", "Successfully change.")
         self.clear()
 
-    def changePassword(self):
-        password = self.Ent_new_item.get()
-        reenter_password = self.Ent_reenter_change.get()
+    #Function to change the password of an user and checking
+    def change_password(self):
+        password = self.txt_New_Item.get()
+        reenter_password = self.txt_Reenter_Change.get()
         if (not (password == reenter_password)):
             messagebox.showwarning("Change user", "New item and re-enter item must match.")
         else:
             if (password == '' or reenter_password == ''):
                 messagebox.showwarning("Change user", "Please enter the item in both fields.")
             else:
-                if (self.checkPassword(password)):
+                if (self.check_password(password)):
                     msg = messagebox.askyesno("Change user", "Are you sure you want to change this?");
                     if (msg):
-                        databaseCon.changePassword(db,email,password)
+                        databaseCon.change_password(db,email,password)
                         messagebox.showinfo("Change user", "Successfully change.")
         self.clear()
 
-    # check if the email is correct
-    def checkEmail(self, email):
+    #Function to check if the email is correct with regex
+    def check_email(self, email):
         mail = email
         check = re.search("([a-z]|[A-Z]|[0-9])+\@([a-z]|[A-Z]|[0-9])+((\.(([A-Z]|[a-z]|[0-9])+))+)$",mail)
         if (check):
@@ -171,14 +178,13 @@ class UserChange:
             self.clear()
             return False
 
-    # check if the password is correct
-    def checkPassword(self, psw):
+    #Function to check if the password is correct with regex
+    def check_password(self, psw):
         password = psw
         number = re.findall("[0-9]", password)
         if (not (number)):
             messagebox.showwarning("Change user", "Your password needs a number.")
-            self.Ent_new_item.delete(0, 'end')
-            self.Ent_reenter_change.delete(0, 'end')
+            self.clear()
             return False
         caps = re.findall("[A-Z]", password)
         if (not (caps)):
@@ -197,10 +203,12 @@ class UserChange:
             return False
         return True
 
+    #Function to clear the textboxs
     def clear(self):
-        self.Ent_new_item.delete(0, 'end')
-        self.Ent_reenter_change.delete(0, 'end')
+        self.txt_New_Item.delete(0, 'end')
+        self.txt_Reenter_Change.delete(0, 'end')
 
+    #Function to create the window
     def __init__(self, top=None):
         '''This class configures and populates the toplevel window.
            top is the toplevel containing window.'''
@@ -209,67 +217,64 @@ class UserChange:
         _compcolor = '#d9d9d9' # X11 color: 'gray85'
         _ana1color = '#d9d9d9' # X11 color: 'gray85'
         _ana2color = '#ececec' # Closest X11 color: 'gray92'
-        font11 = "-family {DejaVu Sans} -size 15 -weight normal -slant"  \
-            " roman -underline 0 -overstrike 0"
-        font9 = "-family {DejaVu Sans} -size 20 -weight bold -slant "  \
-            "roman -underline 0 -overstrike 0"
+        fnt_text = "-family {DejaVu Sans} -size 15 -weight normal -slant roman -underline 0 -overstrike 0"
+        fnt_Heading1 = "-family {DejaVu Sans} -size 20 -weight bold -slant roman -underline 0 -overstrike 0"
 
         top.geometry("484x318+756+142")
         top.title("Change user")
 
-        self.Lbl_Change_user = tk.Label(top)
-        self.Lbl_Change_user.place(relx=0.31, rely=0.075, height=36, width=192)
-        self.Lbl_Change_user.configure(font=font9)
-        self.Lbl_Change_user.configure(text='''Change user''')
+        self.lbl_Change_User = tk.Label(top)
+        self.lbl_Change_User.place(relx=0.31, rely=0.075, height=36, width=192)
+        self.lbl_Change_User.configure(font=fnt_Heading1)
+        self.lbl_Change_User.configure(text='''Change user''')
 
-        self.Lbl_want_change = tk.Label(top)
-        self.Lbl_want_change.place(relx=0.103, rely=0.312, height=26, width=151)
-        self.Lbl_want_change.configure(font=font11)
-        self.Lbl_want_change.configure(text='''Want to change:''')
+        self.lbl_Want_Change = tk.Label(top)
+        self.lbl_Want_Change.place(relx=0.103, rely=0.312, height=26, width=151)
+        self.lbl_Want_Change.configure(font=fnt_text)
+        self.lbl_Want_Change.configure(text='''Want to change:''')
 
-        self.Ltb_want_change = tk.Listbox(top)
-        self.Ltb_want_change.place(relx=0.558, rely=0.252, relheight=0.28, relwidth=0.339)
-        self.Ltb_want_change.configure(background="white")
-        self.Ltb_want_change.configure(font="TkFixedFont")
-        self.Ltb_want_change.configure(width=164)
-        self.Ltb_want_change.insert(1, "Name")
-        self.Ltb_want_change.insert(2, "Surname")
-        self.Ltb_want_change.insert(3, "Email")
-        self.Ltb_want_change.insert(4, "Password")
-        self.Ltb_want_change.insert(5, "Roll")
+        self.ltb_Want_Change = tk.Listbox(top)
+        self.ltb_Want_Change.place(relx=0.558, rely=0.252, relheight=0.28, relwidth=0.339)
+        self.ltb_Want_Change.configure(background="white")
+        self.ltb_Want_Change.configure(font="TkFixedFont")
+        self.ltb_Want_Change.configure(width=164)
+        self.ltb_Want_Change.insert(1, "Name")
+        self.ltb_Want_Change.insert(2, "Surname")
+        self.ltb_Want_Change.insert(3, "Email")
+        self.ltb_Want_Change.insert(4, "Password")
+        self.ltb_Want_Change.insert(5, "Roll")
 
-        self.Lbl_new_item = tk.Label(top)
-        self.Lbl_new_item.place(relx=0.103, rely=0.551, height=28, width=134)
-        self.Lbl_new_item.configure(font=font11)
-        self.Lbl_new_item.configure(text='''New change:''')
+        self.lbl_New_Item = tk.Label(top)
+        self.lbl_New_Item.place(relx=0.103, rely=0.551, height=28, width=134)
+        self.lbl_New_Item.configure(font=fnt_text)
+        self.lbl_New_Item.configure(text='''New change:''')
 
-        self.Ent_new_item = tk.Entry(top)
-        self.Ent_new_item.place(relx=0.558, rely=0.551,height=28, relwidth=0.343)
-        self.Ent_new_item.configure(background="white")
-        self.Ent_new_item.configure(font="TkFixedFont")
+        self.txt_New_Item = tk.Entry(top)
+        self.txt_New_Item.place(relx=0.558, rely=0.551,height=28, relwidth=0.343)
+        self.txt_New_Item.configure(background="white")
+        self.txt_New_Item.configure(font="TkFixedFont")
 
-        self.Lbl_reenter_change = tk.Label(top)
-        self.Lbl_reenter_change.place(relx=0.103, rely=0.652, height=28
-                , width=177)
-        self.Lbl_reenter_change.configure(font=font11)
-        self.Lbl_reenter_change.configure(text='''Re-enter change:''')
+        self.lbl_Reenter_Change = tk.Label(top)
+        self.lbl_Reenter_Change.place(relx=0.103, rely=0.652, height=28, width=177)
+        self.lbl_Reenter_Change.configure(font=fnt_text)
+        self.lbl_Reenter_Change.configure(text='''Re-enter change:''')
 
-        self.Ent_reenter_change = tk.Entry(top)
-        self.Ent_reenter_change.place(relx=0.558, rely=0.652,height=23, relwidth=0.343)
-        self.Ent_reenter_change.configure(background="white")
-        self.Ent_reenter_change.configure(font="TkFixedFont")
+        self.txt_Reenter_Change = tk.Entry(top)
+        self.txt_Reenter_Change.place(relx=0.558, rely=0.652,height=23, relwidth=0.343)
+        self.txt_Reenter_Change.configure(background="white")
+        self.txt_Reenter_Change.configure(font="TkFixedFont")
 
-        self.Btn_change = tk.Button(top)
-        self.Btn_change.place(relx=0.124, rely=0.789, height=38, width=105)
-        self.Btn_change.configure(font=font11)
-        self.Btn_change.configure(text='''Change''')
-        self.Btn_change.configure(command=lambda: self.change())
+        self.btn_Change = tk.Button(top)
+        self.btn_Change.place(relx=0.124, rely=0.789, height=38, width=105)
+        self.btn_Change.configure(font=fnt_text)
+        self.btn_Change.configure(text='''Change''')
+        self.btn_Change.configure(command=lambda: self.change())
 
-        self.Btn_back = tk.Button(top)
-        self.Btn_back.place(relx=0.64, rely=0.789, height=38, width=77)
-        self.Btn_back.configure(font=font11)
-        self.Btn_back.configure(text='''Back''')
-        self.Btn_back.configure(command=lambda: self.back())
+        self.btn_Back = tk.Button(top)
+        self.btn_Back.place(relx=0.64, rely=0.789, height=38, width=77)
+        self.btn_Back.configure(font=fnt_text)
+        self.btn_Back.configure(text='''Back''')
+        self.btn_Back.configure(command=lambda: self.back())
 
 if __name__ == '__main__':
     vp_start_gui()

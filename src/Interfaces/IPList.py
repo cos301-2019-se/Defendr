@@ -62,29 +62,31 @@ def destroy_win_IPList():
 
 class win_IPList:
 
+    # Fucntion to return to the home window
     def back(self):
         destroy_win_IPList()
         Home_support.root.deiconify()
 
-    def logout(self):
+    # Fucntion to log out the user
+    def log_out(self):
         msg = messagebox.askyesno("Logout", "Are you sure?");
         if (msg):
             destroy_win_IPList()
             Login_support.root.deiconify()
 
-    def removeIP(self):
+    def remove_IP(self):
         c = controller("../")
-        c.whiteListIP(self.lst_IPs.get(self.lst_IPs.curselection()))
+        c.white_list_IP(self.lst_IPs.get(self.lst_IPs.curselection()))
 
-    def addIP(self):
+    def add_IP(self):
         c = controller("../")
-        c.blacklistIP(self.txtIp.get())
+        c.black_list_IP(self.txtIp.get())
 
-    def listIPs(self):
+    def list_IPs(self):
         self.lst_IPs.delete(0, tk.END)
         c = controller("../")
-        ipList = c.getBlacklistedIpList()
-        for x in ipList:
+        ip_list = c.get_black_listed_Ip_list()
+        for x in ip_list:
             self.lst_IPs.insert(tk.END, x)
 
     def __init__(self, top=None):
@@ -99,24 +101,24 @@ class win_IPList:
         top.geometry("229x30+447+144")
         top.title("List IP's")
 
-        self.Label1 = tk.Label(top)
-        self.Label1.place(relx=0.018, rely=0.022, height=151, width=349)
+        self.lbl_logo = tk.Label(top)
+        self.lbl_logo.place(relx=0.018, rely=0.022, height=151, width=349)
         photo_location = os.path.join(prog_location,"Images/Defendr.png")
         self._img0 = tk.PhotoImage(file=photo_location)
-        self.Label1.configure(image=self._img0)
-        self.Label1.configure(width=349)
+        self.lbl_logo.configure(image=self._img0)
+        self.lbl_logo.configure(width=349)
 
-        self.btnLogout = tk.Button(top)
-        self.btnLogout.place(relx=0.857, rely=0.022, height=31, width=72)
-        self.btnLogout.configure(text='''Logout''')
-        self.btnLogout.configure(cursor="hand1")
-        self.btnLogout.configure(command=lambda: self.logout())
+        self.btn_log_out = tk.Button(top)
+        self.btn_log_out.place(relx=0.857, rely=0.022, height=31, width=72)
+        self.btn_log_out.configure(text='''Logout''')
+        self.btn_log_out.configure(cursor="hand1")
+        self.btn_log_out.configure(command=lambda: self.log_out())
 
-        self.btnBack = tk.Button(top)
-        self.btnBack.place(relx=0.018, rely=0.913, height=31, width=60)
-        self.btnBack.configure(text='''Back''')
-        self.btnBack.configure(cursor="hand1")
-        self.btnBack.configure(command=lambda: self.back())
+        self.btn_back = tk.Button(top)
+        self.btn_back.place(relx=0.018, rely=0.913, height=31, width=60)
+        self.btn_back.configure(text='''Back''')
+        self.btn_back.configure(cursor="hand1")
+        self.btn_back.configure(command=lambda: self.back())
 
         self.lst_IPs = tk.Listbox(top)
         self.lst_IPs.place(relx=0.661, rely=0.356, relheight=0.503
@@ -127,40 +129,40 @@ class win_IPList:
         self.lst_IPs.configure(setgrid="1")
         self.lst_IPs.configure(width=184)
 
-        self.txtIp = tk.Entry(top)
-        self.txtIp.place(relx=0.036, rely=0.379,height=33, relwidth=0.296)
-        self.txtIp.configure(background="white")
-        self.txtIp.configure(exportselection="0")
-        self.txtIp.configure(font="TkFixedFont")
-        self.txtIp.configure(width=166)
+        self.txt_Ip = tk.Entry(top)
+        self.txt_Ip.place(relx=0.036, rely=0.379,height=33, relwidth=0.296)
+        self.txt_Ip.configure(background="white")
+        self.txt_Ip.configure(exportselection="0")
+        self.txt_Ip.configure(font="TkFixedFont")
+        self.txt_Ip.configure(width=166)
 
-        self.btnAdd = tk.Button(top)
-        self.btnAdd.place(relx=0.357, rely=0.379, height=31, width=69)
-        self.btnAdd.configure(text='''Add IP''')
-        self.btnAdd.configure(cursor="hand1")
-        self.btnAdd.configure(command=lambda: self.addIP())
+        self.btn_Add = tk.Button(top)
+        self.btn_Add.place(relx=0.357, rely=0.379, height=31, width=69)
+        self.btn_Add.configure(text='''Add IP''')
+        self.btn_Add.configure(cursor="hand1")
+        self.btn_Add.configure(command=lambda: self.add_IP())
 
-        self.btnRemove = tk.Button(top)
-        self.btnRemove.place(relx=0.821, rely=0.913, height=31, width=91)
-        self.btnRemove.configure(text='''Remove IP''')
-        self.btnRemove.configure(width=91)
-        self.btnRemove.configure(cursor="hand1")
-        self.btnRemove.configure(command=lambda: self.removeIP())
+        self.btn_Remove = tk.Button(top)
+        self.btn_Remove.place(relx=0.821, rely=0.913, height=31, width=91)
+        self.btn_Remove.configure(text='''Remove IP''')
+        self.btn_Remove.configure(width=91)
+        self.btn_Remove.configure(cursor="hand1")
+        self.btn_Remove.configure(command=lambda: self.remove_IP())
 
-        self.Label2 = tk.Label(top)
-        self.Label2.place(relx=0.018, rely=0.512, height=151, width=349)
+        self.lbl_Black_List = tk.Label(top)
+        self.lbl_Black_List.place(relx=0.018, rely=0.512, height=151, width=349)
         photo_location = os.path.join(prog_location,"Images/blacklist.png")
         self._img1 = tk.PhotoImage(file=photo_location)
-        self.Label2.configure(image=self._img1)
-        self.Label2.configure(width=349)
+        self.lbl_Black_List.configure(image=self._img1)
+        self.lbl_Black_List.configure(width=349)
 
         self.menubar = tk.Menu(top,font="TkMenuFont",bg=_bgcolor,fg=_fgcolor)
         top.configure(menu = self.menubar)
 
-        self.btnList = tk.Button(top)
-        self.btnList.place(relx=0.714, rely=0.257, height=31, width=127)
-        self.btnList.configure(text='''List Blacklisted''')
-        self.btnList.configure(command=lambda: self.listIPs())
+        self.btn_List = tk.Button(top)
+        self.btn_List.place(relx=0.714, rely=0.257, height=31, width=127)
+        self.btn_List.configure(text='''List Blacklisted''')
+        self.btn_List.configure(command=lambda: self.list_IPs())
 
 if __name__ == '__main__':
     vp_start_gui()

@@ -46,8 +46,8 @@ def create_win_Home(root, roll, *args, **kwargs):
     '''Starting point when module is imported by another program.'''
     global w, w_win, rt
     global prog_location
-    global usertype
-    usertype = roll
+    global user_type
+    user_type = roll
     prog_call = sys.argv[0]
     prog_location = os.path.split(prog_call)[0]
     rt = root
@@ -63,18 +63,21 @@ def destroy_win_Home():
 
 class win_Home:
 
-    def logout(self):
+    #Fucntion to log out
+    def log_out(self):
         msg = messagebox.askyesno("Logout", "Are you sure?");
         if (msg):
             destroy_win_Home()
             Login_support.root.deiconify()
 
+    #Fucntion to check in an user is admin
     def users(self):
-        if(usertype=="user"):
+        if(user_type=="user"):
             messagebox.showinfo("Home Page", "You are not logged in as admin")
         else:
-            Home_support.createUsers()
+            Home_support.create_users()
 
+    #Fucntion to create window
     def __init__(self, top=None):
         '''This class configures and populates the toplevel window.
            top is the toplevel containing window.'''
@@ -88,58 +91,58 @@ class win_Home:
         top.title("Home Page")
         top.configure(highlightcolor="black")
 
-        self.btnListIP = tk.Button(top)
-        self.btnListIP.place(relx=0.034, rely=0.448, height=151, width=151)
-        self.btnListIP.configure(activebackground="#f9f9f9")
+        self.btn_list_ip = tk.Button(top)
+        self.btn_list_ip.place(relx=0.034, rely=0.448, height=151, width=151)
+        self.btn_list_ip.configure(activebackground="#f9f9f9")
         photo_location = os.path.join(prog_location,"Images/iplist.png")
         self._img0 = tk.PhotoImage(file=photo_location)
-        self.btnListIP.configure(image=self._img0)
-        self.btnListIP.configure(cursor="hand1")
-        self.btnListIP.configure(command=lambda: Home_support.createIPList())
+        self.btn_list_ip.configure(image=self._img0)
+        self.btn_list_ip.configure(cursor="hand1")
+        self.btn_list_ip.configure(command=lambda: Home_support.create_ip_list())
 
-        self.btnLogging = tk.Button(top)
-        self.btnLogging.place(relx=0.371, rely=0.448, height=151, width=151)
-        self.btnLogging.configure(activebackground="#f9f9f9")
+        self.btn_logging = tk.Button(top)
+        self.btn_logging.place(relx=0.371, rely=0.448, height=151, width=151)
+        self.btn_logging.configure(activebackground="#f9f9f9")
         photo_location = os.path.join(prog_location,"Images/logs.png")
         self._img1 = tk.PhotoImage(file=photo_location)
-        self.btnLogging.configure(image=self._img1)
-        self.btnLogging.configure(state='active')
-        self.btnLogging.configure(width=151)
-        self.btnLogging.configure(cursor="hand1")
-        self.btnLogging.configure(command=lambda: Home_support.createLogs())
+        self.btn_logging.configure(image=self._img1)
+        self.btn_logging.configure(state='active')
+        self.btn_logging.configure(width=151)
+        self.btn_logging.configure(cursor="hand1")
+        self.btn_logging.configure(command=lambda: Home_support.create_logs())
 
-        self.btnMetrics = tk.Button(top)
-        self.btnMetrics.place(relx=0.708, rely=0.448, height=151, width=151)
-        self.btnMetrics.configure(activebackground="#f9f9f9")
+        self.btn_metrics = tk.Button(top)
+        self.btn_metrics.place(relx=0.708, rely=0.448, height=151, width=151)
+        self.btn_metrics.configure(activebackground="#f9f9f9")
         photo_location = os.path.join(prog_location,"Images/metrics.png")
         self._img2 = tk.PhotoImage(file=photo_location)
-        self.btnMetrics.configure(image=self._img2)
-        self.btnMetrics.configure(width=151)
-        self.btnMetrics.configure(cursor="hand1")
+        self.btn_metrics.configure(image=self._img2)
+        self.btn_metrics.configure(width=151)
+        self.btn_metrics.configure(cursor="hand1")
 
-        self.btnLogout = tk.Button(top)
-        self.btnLogout.place(relx=0.843, rely=0.06, height=31, width=72)
-        self.btnLogout.configure(activebackground="#f9f9f9")
-        self.btnLogout.configure(text='''Logout''')
-        self.btnLogout.configure(cursor="hand1")
-        self.btnLogout.configure(command=lambda: self.logout())
+        self.btn_log_out = tk.Button(top)
+        self.btn_log_out.place(relx=0.843, rely=0.06, height=31, width=72)
+        self.btn_log_out.configure(activebackground="#f9f9f9")
+        self.btn_log_out.configure(text='''Logout''')
+        self.btn_log_out.configure(cursor="hand1")
+        self.btn_log_out.configure(command=lambda: self.log_out())
 
-        self.btnUsers = tk.Button(top)
-        self.btnUsers.place(relx=0.843, rely=0.18, height=31, width=72)
-        self.btnUsers.configure(activebackground="#f9f9f9")
-        self.btnUsers.configure(text='''Users''')
-        self.btnUsers.configure(cursor="hand1")
-        self.btnUsers.configure(command=lambda: self.users())
+        self.btn_users = tk.Button(top)
+        self.btn_users.place(relx=0.843, rely=0.18, height=31, width=72)
+        self.btn_users.configure(activebackground="#f9f9f9")
+        self.btn_users.configure(text='''Users''')
+        self.btn_users.configure(cursor="hand1")
+        self.btn_users.configure(command=lambda: self.users())
 
         self.menubar = tk.Menu(top,font="TkMenuFont",bg=_bgcolor,fg=_fgcolor)
         top.configure(menu = self.menubar)
 
-        self.img_Defendr = tk.Label(top)
-        self.img_Defendr.place(relx=-0.051, rely=0.03, height=131, width=429)
-        self.img_Defendr.configure(activebackground="#f9f9f9")
+        self.img_defendr = tk.Label(top)
+        self.img_defendr.place(relx=-0.051, rely=0.03, height=131, width=429)
+        self.img_defendr.configure(activebackground="#f9f9f9")
         photo_location = os.path.join(prog_location,"Images/Defendr.png")
         self._img3 = tk.PhotoImage(file=photo_location)
-        self.img_Defendr.configure(image=self._img3)
+        self.img_defendr.configure(image=self._img3)
 
         self.lbl_IP = tk.Label(top)
         self.lbl_IP.place(relx=0.118, rely=0.896, height=21, width=43)
@@ -151,10 +154,10 @@ class win_Home:
         self.lbl_IP_1.configure(activebackground="#f9f9f9")
         self.lbl_IP_1.configure(text='''Logging''')
 
-        self.lblIP_2 = tk.Label(top)
-        self.lblIP_2.place(relx=0.776, rely=0.896, height=21, width=63)
-        self.lblIP_2.configure(activebackground="#f9f9f9")
-        self.lblIP_2.configure(text='''Metrics''')
+        self.lbl_IP_2 = tk.Label(top)
+        self.lbl_IP_2.place(relx=0.776, rely=0.896, height=21, width=63)
+        self.lbl_IP_2.configure(activebackground="#f9f9f9")
+        self.lbl_IP_2.configure(text='''Metrics''')
 
 if __name__ == '__main__':
     vp_start_gui()
