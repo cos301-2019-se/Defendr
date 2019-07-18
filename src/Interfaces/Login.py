@@ -64,14 +64,14 @@ def destroy_win_Login():
 	w = None
 
 class win_Login:
-
-	def cancelLogin(self):
+	#Function to check if user wishes to cancel login and exit program
+	def cancel_Login(self):
 		msg = messagebox.askyesno("Exit", "Are you sure?");
 		if(msg):
 			Metrics.stop()
 			exit()
-
-	def loginUser(self):
+	#Function to log the user into the database by checking details against database
+	def login_User(self):
 
 		# users = ["Jeandre", "Muhammed","Sisa","Christiaan","Ruslynn","Chris"]
 		# passwds = ["jPass1","mPass1","sPass1","cPass1","rPass1","cPass1"]
@@ -97,6 +97,7 @@ class win_Login:
 			self.txtEmail.delete(0, 'end')
 			messagebox.showwarning("Login Page", "Please enter Email or Password")
 
+	#Function to redirect to the register user page
 	def register(self):
 		Login_support.create_register()
 
@@ -167,13 +168,13 @@ class win_Login:
 		self.btnLogin.place(relx=0.684, rely=0.667, height=31, width=68)
 		self.btnLogin.configure(text='''Login''')
 		self.btnLogin.configure(cursor="hand1")
-		self.btnLogin.configure(command=lambda: self.loginUser())
+		self.btnLogin.configure(command=lambda: self.login_User())
 
 		self.btnCancel = tk.Button(self.Frame1)
 		self.btnCancel.place(relx=0.127, rely=0.667, height=31, width=76)
 		self.btnCancel.configure(text='''Cancel''')
 		self.btnCancel.configure(cursor="hand1")
-		self.btnCancel.configure(command=lambda: self.cancelLogin())
+		self.btnCancel.configure(command=lambda: self.cancel_Login())
 
 		self.btnRegister = tk.Button(self.Frame1)
 		self.btnRegister.place(relx=0.406, rely=0.667, height=31, width=76)

@@ -84,7 +84,7 @@ class win_Logging:
             line="------------------------------------------------------------------------------------------------------------------------------------------------- \n"
             self.txtb_Logs.insert(tk.END,line)
 
-    # Function to back to the home window
+    # Function to go back to the home window
     def back(self):
         destroy_win_Logging()
         Home_support.root.deiconify()
