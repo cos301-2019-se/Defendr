@@ -32,11 +32,11 @@ def destroy_window():
     top_level.destroy()
     top_level = None
 
-def createLogin():
+def create_login():
     Login.create_win_Login(root)
     root.withdraw()
 
-def createMain(roll):
+def create_main(roll):
     Home.create_win_Home(root,roll)
     root.withdraw()
 

@@ -26,14 +26,14 @@ def init(top, gui, *args, **kwargs):
     top_level = top
     root = top
 
+# Function which closes the window.
 def destroy_window():
-    # Function which closes the window.
     global top_level
     top_level.destroy()
     top_level = None
 
-
-def createUser():
+#Function to go back to User Management window
+def create_User():
     UserManagement.create_UserManagement_window(root)
     root.withdraw()
 

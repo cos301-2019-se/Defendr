@@ -35,15 +35,18 @@ def destroy_window():
     top_level.destroy()
     top_level = None
 
-def createIPList():
+#Fucntion to creat list window
+def create_ip_list():
     IPList.create_win_IPList(root)
     root.withdraw()
 
-def createLogs():
+#Fucntion to creat logs window
+def create_logs():
     Logging.create_win_Logging(root)
     root.withdraw()
 
-def createUsers():
+#Fucntion to creat users window
+def create_users():
     UserManagement.create_UserManagement_window(root)
     root.withdraw()
 

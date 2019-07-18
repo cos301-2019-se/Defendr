@@ -33,11 +33,11 @@ def destroy_window():
     top_level.destroy()
     top_level = None
 
-def createMain(roll):
+def create_main(roll):
     Home.create_win_Home(root,roll)
     root.withdraw()
 
-def createRegister():
+def create_register():
     register.create_register_window(root)
     root.withdraw()
 
