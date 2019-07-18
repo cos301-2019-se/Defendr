@@ -67,21 +67,21 @@ class win_Logging:
         db = databaseCon.connect()
         doc = databaseCon.find_packets(db, self.txt_Search.get())
         self.txtb_Logs.delete(1.0, tk.END)
-        line="-------------------------------------------------------------------------------------------------------------------------------  \n"
+        line="------------------------------------------------------------------------------------------------------------------------------------------------- \n"
         self.txtb_Logs.insert(tk.END,(line))
-        line="| ip_source \t \t | status \t \t | timestamp \t \t | country_id \t \t | ip_destination \t \t | server \t \t |reason \t | \n"
+        line="| ip_source \t \t | status \t \t | timestamp \t \t | country_id \t \t | ip_destination \t \t | server \t \t |reason \t\t\t| \n"
         self.txtb_Logs.insert(tk.END,line)
-        line="-------------------------------------------------------------------------------------------------------------------------------  \n"
+        line="------------------------------------------------------------------------------------------------------------------------------------------------- \n"
         self.txtb_Logs.insert(tk.END,line)
         for x in doc:
             line_array=str(x).split(",")
             line=""
             for y in line_array:
-                word=y.split(":")
+                word=y.split("':")
                 line=line+" | "+word[1][2:len(word[1])-1]+"\t \t"
-            line="|"+line[2:len(line)-4]+" \t | \n"
+            line="|"+line[2:len(line)-4]+" \t\t\t| \n"
             self.txtb_Logs.insert(tk.END, line)
-            line="-------------------------------------------------------------------------------------------------------------------------------  \n"
+            line="------------------------------------------------------------------------------------------------------------------------------------------------- \n"
             self.txtb_Logs.insert(tk.END,line)
 
     # Function to back to the home window
@@ -105,7 +105,7 @@ class win_Logging:
         _ana1color = '#d9d9d9' # X11 color: 'gray85'
         _ana2color = '#ececec' # Closest X11 color: 'gray92'
 
-        top.geometry("700x450+372+125")
+        top.geometry("862x450+472+125")
         top.title("Logs")
         top.configure(highlightcolor="black")
 

@@ -215,3 +215,7 @@ def make_new_user(db, name, lastName, password, roll, email):
     hash_password = hashed_function(password, salt)
     save_user(db, name,lastName, roll, salt, hash_password, email)
     return True
+
+doc=find_packets(connect(),"10.0.0.10")
+for x in doc:
+    print(x)
