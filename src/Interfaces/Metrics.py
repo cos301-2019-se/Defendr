@@ -22,7 +22,3 @@ def stop():
 	subprocess.call(['killall prometheus'], shell=True)
 	#time.sleep(1)
 	subprocess.call(['killall node_exporter'], shell=True)
-
-start() #startup of scrapers
-execute() #statrup of browser
-stop() #shutdown of scrapers

@@ -7,6 +7,7 @@
 
 import sys
 import databaseCon
+import Metrics
 
 try:
     import Tkinter as tk
@@ -40,7 +41,8 @@ def vp_start_gui():
     top = win_Login (root)
     Login_support.init(root, top)
     c = controller("../")
-    c.load_xdp()
+    c.loadXdp()
+    Metrics.start()
     root.mainloop()
 
 w = None
@@ -63,42 +65,42 @@ def destroy_win_Login():
 
 class win_Login:
 
-    #Function to cancel log in
-    def cancel_login(self):
+    def cancelLogin(self):
         msg = messagebox.askyesno("Exit", "Are you sure?");
         if(msg):
             exit()
 
-    # Function to login an user
-    def login_user(self):
+    def loginUser(self):
 
-        # users = ["Jeandre", "Muhammed","Sisa","Christiaan","Ruslynn","Chris"]
-        # passwds = ["jPass1","mPass1","sPass1","cPass1","rPass1","cPass1"]
-        # last = ["Botha","Carrim","Khoza","Opperman","Appana","Osbrone"]
-        # email = ["u17094446@tuks.co.za","u15019854@tuks.co.za","u15034993@tuks.co.za","u17023239@tuks.co.za","u14016304@tuks.co.za","Chris@gmail.com"]
+		# users = ["Jeandre", "Muhammed","Sisa","Christiaan","Ruslynn","Chris"]
+		# passwds = ["jPass1","mPass1","sPass1","cPass1","rPass1","cPass1"]
+		# last = ["Botha","Carrim","Khoza","Opperman","Appana","Osbrone"]
+		# email = ["u17094446@tuks.co.za","u15019854@tuks.co.za","u15034993@tuks.co.za","u17023239@tuks.co.za","u14016304@tuks.co.za","Chris@gmail.com"]
 
-        Email = self.txt_email.get()
-        passw = self.txt_Pass.get()
+        Email = self.txtEmail.get()
+        passw = self.txtPass.get()
 
         if(not(Email=='') and not(passw=='')):
             db = databaseCon.connect()
-            if(databaseCon.check_pass(db,Email,passw)):
-                roll =databaseCon.get_roll(db,Email)
+            if(databaseCon.checkPass(db,Email,passw)):
+                roll =databaseCon.getRoll(db,Email)
                 messagebox.showinfo("Login Page", "Successfully logged in as "+roll)
-                self.txt_email.delete(0, 'end')
-                self.txt_Pass.delete(0, 'end')
-                Login_support.create_main(roll)
+                self.txtEmail.delete(0, 'end')
+                self.txtPass.delete(0, 'end')
+                Login_support.createMain(roll)
             else:
-                self.txt_Pass.delete(0, 'end')
+                self.txtPass.delete(0, 'end')
                 messagebox.showwarning("Login Page", "Incorrect Email or Password")
         else:
-            self.txt_Pass.delete(0, 'end')
-            self.txt_email.delete(0, 'end')
+            self.txtPass.delete(0, 'end')
+            self.txtEmail.delete(0, 'end')
             messagebox.showwarning("Login Page", "Please enter Email or Password")
 
+	def register(self):
+		Login_support.createRegister()
 
     def register(self):
-        Login_support.create_register()
+        Login_support.createRegister()
 
        # for i in range(6):
        #     if(i < 5):
@@ -123,77 +125,77 @@ class win_Login:
        #         messagebox.showwarning("Login Page", "Incorrect Username or Password")
        #         break
 
-    def __init__(self, top=None):
-        '''This class configures and populates the toplevel window.
-           top is the toplevel containing window.'''
-        _bgcolor = '#d9d9d9'  # X11 color: 'gray85'
-        _fgcolor = '#000000'  # X11 color: 'black'
-        _compcolor = '#d9d9d9' # X11 color: 'gray85'
-        _ana1color = '#d9d9d9' # X11 color: 'gray85'
-        _ana2color = '#ececec' # Closest X11 color: 'gray92'
+	def __init__(self, top=None):
+		'''This class configures and populates the toplevel window.
+		top is the toplevel containing window.'''
+		_bgcolor = '#d9d9d9'  # X11 color: 'gray85'
+		_fgcolor = '#000000'  # X11 color: 'black'
+		_compcolor = '#d9d9d9' # X11 color: 'gray85'
+		_ana1color = '#d9d9d9' # X11 color: 'gray85'
+		_ana2color = '#ececec' # Closest X11 color: 'gray92'
 
-        top.geometry("510x222+395+150")
-        top.title("Login")
-        top.configure(highlightbackground="#1600d8")
+		top.geometry("510x222+395+150")
+		top.title("Login")
+		top.configure(highlightbackground="#1600d8")
 
-        self.Frame1 = tk.Frame(top)
-        self.Frame1.place(relx=0.118, rely=0.27, relheight=0.608, relwidth=0.775)
+		self.Frame1 = tk.Frame(top)
+		self.Frame1.place(relx=0.118, rely=0.27, relheight=0.608, relwidth=0.775)
 
-        self.Frame1.configure(relief='groove')
-        self.Frame1.configure(borderwidth="2")
-        self.Frame1.configure(relief="groove")
-        self.Frame1.configure(width=395)
+		self.Frame1.configure(relief='groove')
+		self.Frame1.configure(borderwidth="2")
+		self.Frame1.configure(relief="groove")
+		self.Frame1.configure(width=395)
 
-        self.lblEmail = tk.Label(self.Frame1)
-        self.lblEmail.place(relx=0.051, rely=0.148, height=21, width=78)
-        self.lblEmail.configure(text='''Email:''')
+		self.lblEmail = tk.Label(self.Frame1)
+		self.lblEmail.place(relx=0.051, rely=0.148, height=21, width=78)
+		self.lblEmail.configure(text='''Email:''')
 
-        self.lblPass = tk.Label(self.Frame1)
-        self.lblPass.place(relx=0.051, rely=0.444, height=21, width=73)
-        self.lblPass.configure(text='''Password:''')
+		self.lblPass = tk.Label(self.Frame1)
+		self.lblPass.place(relx=0.051, rely=0.444, height=21, width=73)
+		self.lblPass.configure(text='''Password:''')
 
-        self.txt_email = tk.Entry(self.Frame1)
-        self.txt_email.place(relx=0.532, rely=0.148,height=23, relwidth=0.42)
-        self.txt_email.configure(background="white")
-        self.txt_email.configure(font="TkFixedFont")
+        self.txtEmail = tk.Entry(self.Frame1)
+        self.txtEmail.place(relx=0.532, rely=0.148,height=23, relwidth=0.42)
+        self.txtEmail.configure(background="white")
+        self.txtEmail.configure(font="TkFixedFont")
 
-        self.txt_Pass = tk.Entry(self.Frame1)
-        self.txt_Pass.place(relx=0.532, rely=0.444,height=23, relwidth=0.42)
-        self.txt_Pass.configure(background="white")
-        self.txt_Pass.configure(font="TkFixedFont")
-        self.txt_Pass.configure(show="*")
+        self.txtPass = tk.Entry(self.Frame1)
+        self.txtPass.place(relx=0.532, rely=0.444,height=23, relwidth=0.42)
+        self.txtPass.configure(background="white")
+        self.txtPass.configure(font="TkFixedFont")
+        self.txtPass.configure(show="*")
 
         self.btnLogin = tk.Button(self.Frame1)
         self.btnLogin.place(relx=0.684, rely=0.667, height=31, width=68)
         self.btnLogin.configure(text='''Login''')
         self.btnLogin.configure(cursor="hand1")
-        self.btnLogin.configure(command=lambda: self.login_user())
+        self.btnLogin.configure(command=lambda: self.loginUser())
 
         self.btnCancel = tk.Button(self.Frame1)
         self.btnCancel.place(relx=0.127, rely=0.667, height=31, width=76)
         self.btnCancel.configure(text='''Cancel''')
         self.btnCancel.configure(cursor="hand1")
-        self.btnCancel.configure(command=lambda: self.cancel_login())
+        self.btnCancel.configure(command=lambda: self.cancelLogin())
 
-        #self.btnRegister = tk.Button(self.Frame1)
-        #self.btnRegister.place(relx=0.406, rely=0.667, height=31, width=76)
-        #self.btnRegister.configure(text='''Register''')
-        #self.btnRegister.configure(cursor="hand1")
-        #self.btnRegister.configure(command=lambda: self.register())
+        self.btnRegister = tk.Button(self.Frame1)
+        self.btnRegister.place(relx=0.406, rely=0.667, height=31, width=76)
+        self.btnRegister.configure(text='''Register''')
+        self.btnRegister.configure(cursor="hand1")
+        self.btnRegister.configure(command=lambda: self.register())
 
-        self.menubar = tk.Menu(top,font="TkMenuFont",bg=_bgcolor,fg=_fgcolor)
-        top.configure(menu = self.menubar)
+		self.menubar = tk.Menu(top,font="TkMenuFont",bg=_bgcolor,fg=_fgcolor)
+		top.configure(menu = self.menubar)
 
-        self.img_logo = tk.Label(top)
-        self.img_logo.place(relx=0.02, rely=0.045, height=51, width=231)
-        photo_location = os.path.join(prog_location,"Images/advance.png")
-        self._img0 = tk.PhotoImage(file=photo_location)
-        self.img_logo.configure(image=self._img0)
-        self.img_logo.configure(width=231)
+		self.img_logo = tk.Label(top)
+		self.img_logo.place(relx=0.02, rely=0.045, height=51, width=231)
+		photo_location = os.path.join(prog_location,"Images/advance.png")
+		self._img0 = tk.PhotoImage(file=photo_location)
+		self.img_logo.configure(image=self._img0)
+		self.img_logo.configure(width=231)
 
-        self.img_defendr = tk.Label(top)
-        self.img_defendr.place(relx=0.471, rely=0.045, height=51, width=261)
-        self.img_defendr.configure(width=261)
+		self.img_defendr = tk.Label(top)
+		self.img_defendr.place(relx=0.471, rely=0.045, height=51, width=261)
+		self.img_defendr.configure(width=261)
 
 if __name__ == '__main__':
     vp_start_gui()
