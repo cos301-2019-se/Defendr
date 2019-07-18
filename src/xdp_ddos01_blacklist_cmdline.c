@@ -139,7 +139,7 @@ static void insert_into_packets_list ( char* ip_source,  char* status,  char* ti
 	char *string;
 	char *json;
 	asprintf(&json,"{\"ip_source\":\"%s\",\"status\":\"%s\",\"timestamp\":\"%s\",\"country_id\":\"%s\",\"ip_destination\":\"%s\",\"server\":\"%s\",\"reason\":\"%s\"}", ip_source, status, timestamp, country_id, ip_destination, server, reason);
-	if(verbose) printf("%s\n", json);
+	//if(verbose) printf("%s\n", json);
 	bson = bson_new_from_json ((const uint8_t *)json, -1, &error);
 
 	if(!bson)
@@ -149,7 +149,7 @@ static void insert_into_packets_list ( char* ip_source,  char* status,  char* ti
 	}
 
 	string = bson_as_canonical_extended_json (bson, NULL);
-	printf("%s\n", string);
+	//printf("%s\n", string);
 
 	if(!mongoc_collection_insert_one(collection, bson, NULL, NULL, &error))
 		fprintf(stderr, "%s\n", error.message);

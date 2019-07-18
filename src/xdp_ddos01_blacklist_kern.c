@@ -131,14 +131,14 @@ struct bpf_map_def SEC("maps") port_blacklist_drop_count_udp = {
  * @param initval Maximum amount of servers.
  * @return Calculated hash.
  */
-static inline u32 hash(u32 a, u32 b, u32 initval){
+static inline u32 hash(u32 a, u32 b,u32 c, u32 initval){
 	initval += JHASH_INITVAL + (2 << 2);
 	a += initval;
 	b += initval;
-	u32 c = 0;
+	//u32 c = 0;
 	c += initval;
 
-        c ^= b; c -= rol32(b, 14);		
+    c ^= b; c -= rol32(b, 14);		
 	a ^= c; a -= rol32(c, 11);		
 	b ^= a; b -= rol32(a, 25);		
 	c ^= b; c -= rol32(b, 16);		
@@ -190,7 +190,7 @@ static inline unsigned short checksumIP(unsigned short *buf, int buf_size) {
 /* Adds destination for new tcp connection.
  * @param pkt Packet meta data.
  */
-static __always_inline void addDestination(struct pkt_meta *pkt){
+/*static __always_inline void addDestination(struct pkt_meta *pkt){
 	struct dest_info *tnl;
 	__u32 hashKey = hash(pkt->src, pkt->ports, MAX_SERVERS) % MAX_SERVERS;
 	__u32 key = ntohl(pkt->dst);;
@@ -210,15 +210,15 @@ static __always_inline void addDestination(struct pkt_meta *pkt){
 			}
 		}
 	}
-}
+}*/
 
 /* REmoves destination for closed tcp connection.
  * @param pkt Packet meta data.
  */
-static __always_inline void removeDestination(struct pkt_meta *pkt){
+/*static __always_inline void removeDestination(struct pkt_meta *pkt){
 	__u32 hashKey = hash(pkt->src, pkt->ports, MAX_SERVERS) % MAX_SERVERS;
 	bpf_map_delete_elem(&destinations, &hashKey);
-}
+}*/
 
 /* Retrieves available back-end instance  
  * @param pkt Packet meta data.
@@ -235,8 +235,8 @@ static __always_inline struct dest_info *hash_get_dest(struct pkt_meta *pkt){
 	app = NULL;
 	
 	// Hash packet source ip with both ports to obtain a destination back-end.
-	hashKey = hash(pkt->src, pkt->ports, MAX_SERVERS) % MAX_SERVERS;
-
+	hashKey = hash(pkt->src, pkt->ports,pkt->dst,MAX_SERVERS) % MAX_SERVERS;
+	//hashKey = pkt->src;
 	
 	// Try to get previous server used.
 	server_id_ptr = bpf_map_lookup_elem(&destinations, &hashKey);
@@ -245,8 +245,8 @@ static __always_inline struct dest_info *hash_get_dest(struct pkt_meta *pkt){
 	if(server_id_ptr && server_id_ptr != NULL){
 		server_id = *server_id_ptr;	
 	}
-	
-	if(server_id !=  MAX_SERVERS+1){			
+
+	if(server_id !=  MAX_SERVERS+1  ){			
 			tnl = bpf_map_lookup_elem(&servers, &server_id);
 			if (tnl) {
 				return tnl;
@@ -257,19 +257,23 @@ static __always_inline struct dest_info *hash_get_dest(struct pkt_meta *pkt){
 	app = bpf_map_lookup_elem(&services, &key);
 	if (app) {
 		u64 service_id = app->id;	
-		server_id = app->last_used;
+		server_id = app->last_used+service_id+1;
 		#pragma clang loop unroll(full)
-		for(int i = 1;i < MAX_INSTANCES+1;++i){
-			server_id = (server_id + 1)%service_id + service_id;
+		for(int i = 0;i < MAX_INSTANCES;++i){
+			
+			if(server_id >= (service_id+MAX_INSTANCES)) server_id = service_id+1;
 			tnl = bpf_map_lookup_elem(&servers, &server_id);
-			if(tnl){
+			if(tnl && tnl != NULL){
 					bpf_map_update_elem(&destinations, &hashKey,&server_id,BPF_ANY);
-					app->last_used = server_id;
+					app->last_used = app->last_used+1;
 					return tnl;
 			}
+			tnl = NULL;
+			server_id = (server_id + 1);
 		}
 		
 	}
+	app = NULL;
 	// No available server to recieve packet
 	return NULL; 
 
@@ -340,14 +344,13 @@ int  xdp_program(struct xdp_md *ctx)
     int rc = XDP_DROP;
     uint64_t nh_off = 0;
 
-    unsigned short old_daddr;
     u64 *value;
 	__u64 initialValue = 1;
 	u32 ip_src;
 	__u16 payload_len;
 	struct pkt_meta pkt = {};
 	struct dest_info *tnl;
-	__u16 pkt_size;
+	//__u16 pkt_size;
 	__u64 time;
 
     // Read data.
@@ -360,7 +363,7 @@ int  xdp_program(struct xdp_md *ctx)
     // Check frame header size.
     nh_off = sizeof(*eth);
     if (data + nh_off > data_end) {
-        return rc;
+        return XDP_PASS;
     }
 
     // Check protocol.
@@ -373,7 +376,7 @@ int  xdp_program(struct xdp_md *ctx)
     struct iphdr *iph = data + nh_off;
     nh_off += sizeof(struct iphdr);
     if (data + nh_off > data_end) {
-        return rc;
+        return XDP_PASS;
     }
     payload_len = ntohs(iph->tot_len);
 
@@ -453,14 +456,15 @@ int  xdp_program(struct xdp_md *ctx)
 		pkt.port16[1] = tcph->dest;		
 		
 		__u32 ip_dest = ntohl(iph->daddr); 
-		value = bpf_map_lookup_elem(&services,&ip_dest);
-		if(value){
-			
+		struct service *app = bpf_map_lookup_elem(&services,&ip_dest);
+		if(app){
+			app = NULL;
 			/*if(tcph->syn == 1){
 				addDestination(&pkt);
 			}else if (tcph->fin == 1){
 				removeDestination(&pkt);
 			}*/
+			//if (tcph->fin == 1) removeDestination(&pkt);
 			
 			tnl = NULL;		
 			tnl = hash_get_dest(&pkt);
@@ -480,9 +484,7 @@ int  xdp_program(struct xdp_md *ctx)
 				bpf_map_update_elem(&logs,&time,&no_server_log,BPF_ANY);
 				return XDP_DROP; 
 			}
-			
-			// Backup old dest address.
-			old_daddr = ntohs(*(unsigned short *)&iph->daddr);
+
 
 			// Overwrite destination ethernet address.
 			eth->h_dest[0] = tnl->dmac[0];
@@ -507,9 +509,9 @@ int  xdp_program(struct xdp_md *ctx)
 			time = bpf_ktime_get_ns();
 			bpf_map_update_elem(&logs,&time,&pass_log,BPF_ANY);			
 			
-			pkt_size = (__u16)(data_end - data);
+			/*pkt_size = (__u16)(data_end - data);
 			__sync_fetch_and_add(&tnl->pkts, 1);
-			__sync_fetch_and_add(&tnl->bytes, pkt_size);
+			__sync_fetch_and_add(&tnl->bytes, pkt_size);*/
 			return XDP_TX;
 			
 		}else{
