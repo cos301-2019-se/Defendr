@@ -10,97 +10,95 @@ import databaseCon
 import Metrics
 
 try:
-    import Tkinter as tk
+	import Tkinter as tk
 except ImportError:
-    import tkinter as tk
+	import tkinter as tk
 
 try:
-    import ttk
-    py3 = False
+	import ttk
+	py3 = False
 except ImportError:
-    import tkinter.ttk as ttk
-    py3 = True
+	import tkinter.ttk as ttk
+	py3 = True
 
 try:
-    from tkinter import messagebox
+	from tkinter import messagebox
 except:
-    # Python 2
-    import tkMessageBox as messagebox
+	# Python 2
+	import tkMessageBox as messagebox
 
 import Login_support
 from controller import controller
 import os.path
 
 def vp_start_gui():
-    '''Starting point when module is the main routine.'''
-    global val, w, root
-    global prog_location
-    prog_call = sys.argv[0]
-    prog_location = os.path.split(prog_call)[0]
-    root = tk.Tk()
-    top = win_Login (root)
-    Login_support.init(root, top)
-    c = controller("../")
-    c.loadXdp()
-    Metrics.start()
-    root.mainloop()
+	'''Starting point when module is the main routine.'''
+	global val, w, root
+	global prog_location
+	prog_call = sys.argv[0]
+	prog_location = os.path.split(prog_call)[0]
+	root = tk.Tk()
+	top = win_Login (root)
+	Login_support.init(root, top)
+	c = controller("../")
+	c.load_xdp()
+	Metrics.start()
+	root.mainloop()
 
 w = None
 def create_win_Login(root, *args, **kwargs):
-    '''Starting point when module is imported by another program.'''
-    global w, w_win, rt
-    global prog_location
-    prog_call = sys.argv[0]
-    prog_location = os.path.split(prog_call)[0]
-    rt = root
-    w = tk.Toplevel (root)
-    top = win_Login (w)
-    Login_support.init(w, top, *args, **kwargs)
-    return (w, top)
+	'''Starting point when module is imported by another program.'''
+	global w, w_win, rt
+	global prog_location
+	prog_call = sys.argv[0]
+	prog_location = os.path.split(prog_call)[0]
+	rt = root
+	w = tk.Toplevel (root)
+	top = win_Login (w)
+	Login_support.init(w, top, *args, **kwargs)
+	return (w, top)
 
 def destroy_win_Login():
-    global w
-    w.destroy()
-    w = None
+	global w
+	w.destroy()
+	w = None
 
 class win_Login:
 
-    def cancelLogin(self):
-        msg = messagebox.askyesno("Exit", "Are you sure?");
-        if(msg):
-            exit()
+	def cancelLogin(self):
+		msg = messagebox.askyesno("Exit", "Are you sure?");
+		if(msg):
+			Metrics.stop()
+			exit()
 
-    def loginUser(self):
+	def loginUser(self):
 
 		# users = ["Jeandre", "Muhammed","Sisa","Christiaan","Ruslynn","Chris"]
 		# passwds = ["jPass1","mPass1","sPass1","cPass1","rPass1","cPass1"]
 		# last = ["Botha","Carrim","Khoza","Opperman","Appana","Osbrone"]
 		# email = ["u17094446@tuks.co.za","u15019854@tuks.co.za","u15034993@tuks.co.za","u17023239@tuks.co.za","u14016304@tuks.co.za","Chris@gmail.com"]
 
-        Email = self.txtEmail.get()
-        passw = self.txtPass.get()
+		Email = self.txtEmail.get()
+		passw = self.txtPass.get()
 
-        if(not(Email=='') and not(passw=='')):
-            db = databaseCon.connect()
-            if(databaseCon.checkPass(db,Email,passw)):
-                roll =databaseCon.getRoll(db,Email)
-                messagebox.showinfo("Login Page", "Successfully logged in as "+roll)
-                self.txtEmail.delete(0, 'end')
-                self.txtPass.delete(0, 'end')
-                Login_support.createMain(roll)
-            else:
-                self.txtPass.delete(0, 'end')
-                messagebox.showwarning("Login Page", "Incorrect Email or Password")
-        else:
-            self.txtPass.delete(0, 'end')
-            self.txtEmail.delete(0, 'end')
-            messagebox.showwarning("Login Page", "Please enter Email or Password")
+		if(not(Email=='') and not(passw=='')):
+			db = databaseCon.connect()
+			if(databaseCon.check_pass(db,Email,passw)):
+				roll =databaseCon.get_roll(db,Email)
+				messagebox.showinfo("Login Page", "Successfully logged in as "+roll)
+				self.txtEmail.delete(0, 'end')
+				self.txtPass.delete(0, 'end')
+				Login_support.create_main(roll)
+			else:
+				self.txtPass.delete(0, 'end')
+				messagebox.showwarning("Login Page", "Incorrect Email or Password")
+		else:
+			self.txtPass.delete(0, 'end')
+			self.txtEmail.delete(0, 'end')
+			messagebox.showwarning("Login Page", "Please enter Email or Password")
 
 	def register(self):
-		Login_support.createRegister()
-
-    def register(self):
-        Login_support.createRegister()
+		Login_support.create_register()
 
        # for i in range(6):
        #     if(i < 5):
@@ -154,34 +152,34 @@ class win_Login:
 		self.lblPass.place(relx=0.051, rely=0.444, height=21, width=73)
 		self.lblPass.configure(text='''Password:''')
 
-        self.txtEmail = tk.Entry(self.Frame1)
-        self.txtEmail.place(relx=0.532, rely=0.148,height=23, relwidth=0.42)
-        self.txtEmail.configure(background="white")
-        self.txtEmail.configure(font="TkFixedFont")
+		self.txtEmail = tk.Entry(self.Frame1)
+		self.txtEmail.place(relx=0.532, rely=0.148,height=23, relwidth=0.42)
+		self.txtEmail.configure(background="white")
+		self.txtEmail.configure(font="TkFixedFont")
 
-        self.txtPass = tk.Entry(self.Frame1)
-        self.txtPass.place(relx=0.532, rely=0.444,height=23, relwidth=0.42)
-        self.txtPass.configure(background="white")
-        self.txtPass.configure(font="TkFixedFont")
-        self.txtPass.configure(show="*")
+		self.txtPass = tk.Entry(self.Frame1)
+		self.txtPass.place(relx=0.532, rely=0.444,height=23, relwidth=0.42)
+		self.txtPass.configure(background="white")
+		self.txtPass.configure(font="TkFixedFont")
+		self.txtPass.configure(show="*")
 
-        self.btnLogin = tk.Button(self.Frame1)
-        self.btnLogin.place(relx=0.684, rely=0.667, height=31, width=68)
-        self.btnLogin.configure(text='''Login''')
-        self.btnLogin.configure(cursor="hand1")
-        self.btnLogin.configure(command=lambda: self.loginUser())
+		self.btnLogin = tk.Button(self.Frame1)
+		self.btnLogin.place(relx=0.684, rely=0.667, height=31, width=68)
+		self.btnLogin.configure(text='''Login''')
+		self.btnLogin.configure(cursor="hand1")
+		self.btnLogin.configure(command=lambda: self.loginUser())
 
-        self.btnCancel = tk.Button(self.Frame1)
-        self.btnCancel.place(relx=0.127, rely=0.667, height=31, width=76)
-        self.btnCancel.configure(text='''Cancel''')
-        self.btnCancel.configure(cursor="hand1")
-        self.btnCancel.configure(command=lambda: self.cancelLogin())
+		self.btnCancel = tk.Button(self.Frame1)
+		self.btnCancel.place(relx=0.127, rely=0.667, height=31, width=76)
+		self.btnCancel.configure(text='''Cancel''')
+		self.btnCancel.configure(cursor="hand1")
+		self.btnCancel.configure(command=lambda: self.cancelLogin())
 
-        self.btnRegister = tk.Button(self.Frame1)
-        self.btnRegister.place(relx=0.406, rely=0.667, height=31, width=76)
-        self.btnRegister.configure(text='''Register''')
-        self.btnRegister.configure(cursor="hand1")
-        self.btnRegister.configure(command=lambda: self.register())
+		self.btnRegister = tk.Button(self.Frame1)
+		self.btnRegister.place(relx=0.406, rely=0.667, height=31, width=76)
+		self.btnRegister.configure(text='''Register''')
+		self.btnRegister.configure(cursor="hand1")
+		self.btnRegister.configure(command=lambda: self.register())
 
 		self.menubar = tk.Menu(top,font="TkMenuFont",bg=_bgcolor,fg=_fgcolor)
 		top.configure(menu = self.menubar)

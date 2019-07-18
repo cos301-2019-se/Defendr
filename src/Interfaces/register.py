@@ -8,6 +8,7 @@
 import sys
 import re
 import databaseCon
+import Metrics
 
 try:
     import Tkinter as tk
@@ -62,6 +63,7 @@ class register_window:
     def cancel_register(self):
         msg = messagebox.askyesno("Exit", "Are you sure?");
         if(msg):
+            Metrics.stop()
             exit()
 
     #add the a new user
@@ -86,7 +88,7 @@ class register_window:
                         if(self.check_email(email)):
                             db = databaseCon.connect()
                             roll="user"
-                            if(not databaseCon.check_users(db)):
+                            if(not databaseCon.check_user(db)):
                                 roll="admin"
                             answer=databaseCon.make_new_user(db, name, surename, password, roll, email)
                             if(answer):

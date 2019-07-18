@@ -16,15 +16,29 @@ def connect():
     db = client["Defendr"]
     return db
 
-    return stringoutput
-        return stringoutput[8:len(stringoutput)-2]
-    if stringoutput != "Not Found"
-    for x in doc
-        stringoutput = str(x)
-    stringoutput = "Not Found"
-    doc = col.find({"ip": ip}, {"_id": 0, "ip": 0})
+#Function to find blacklisted ip in database of blacklisted ids
+def find_Blacklisted_IP(db, ip):
     col = db["blacklist"]
-def findBlacklist(db, ip):
+    doc = col.find({"ip": ip},{"_id": 0})
+    string_output = "Not Found"
+    for x in doc:
+        string_output =str(x)
+    if(string_output!="Not Found"):
+        return string_output[8:len(string_output)-2]
+    return string_output
+
+#Function to remove blacklisted ip from database of blacklisted ips
+def rem_Blacklisted_IP(db, ip):
+    col = db["blacklist"]
+    col.remove({"ip": ip})
+    doc = col.find({"ip": ip},{"_id": 0})
+    string_output = "Not Found"
+    for x in doc:
+        string_output =str(x)
+    if(string_output=="Not Found"):
+        return "Success"
+    return "Fail"
+
 #Function to get packets
 def find_packets(db, ip):
     col = db["packets_list"]
@@ -224,7 +238,3 @@ def make_new_user(db, name, lastName, password, roll, email):
     hash_password = hashed_function(password, salt)
     save_user(db, name,lastName, roll, salt, hash_password, email)
     return True
-
-doc=find_packets(connect(),"10.0.0.10")
-for x in doc:
-    print(x)

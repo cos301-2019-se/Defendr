@@ -6,7 +6,7 @@ import time
 #Ensure a requisite library is installed
 def install(package):
 	subprocess.call([sys.executable, "-m", "pip", "install", package])
-install("prometheus_client")
+#install("prometheus_client")
 
 def start():
 	subprocess.Popen('./node_exporter', cwd='Metrics/node_exporter')

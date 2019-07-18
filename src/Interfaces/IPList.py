@@ -8,161 +8,168 @@
 import sys
 
 try:
-    import Tkinter as tk
+	import Tkinter as tk
 except ImportError:
-    import tkinter as tk
+	import tkinter as tk
 
 try:
-    import ttk
-    py3 = False
+	import ttk
+	py3 = False
 except ImportError:
-    import tkinter.ttk as ttk
-    py3 = True
+	import tkinter.ttk as ttk
+	py3 = True
 
 try:
-    from tkinter import messagebox
+	from tkinter import messagebox
 except:
-    # Python 2
-    import tkMessageBox as messagebox
+	# Python 2
+	import tkMessageBox as messagebox
 
 import IPList_support
 import Home_support
 import Login_support
 import os.path
 from controller import controller
+import databaseCon
 
 def vp_start_gui():
-    '''Starting point when module is the main routine.'''
-    global val, w, root
-    global prog_location
-    prog_call = sys.argv[0]
-    prog_location = os.path.split(prog_call)[0]
-    root = tk.Tk()
-    top = win_IPList (root)
-    IPList_support.init(root, top)
-    root.mainloop()
+	'''Starting point when module is the main routine.'''
+	global val, w, root
+	global prog_location
+	prog_call = sys.argv[0]
+	prog_location = os.path.split(prog_call)[0]
+	root = tk.Tk()
+	top = win_IPList (root)
+	IPList_support.init(root, top)
+	root.mainloop()
 
 w = None
 def create_win_IPList(root, *args, **kwargs):
-    '''Starting point when module is imported by another program.'''
-    global w, w_win, rt
-    global prog_location
-    prog_call = sys.argv[0]
-    prog_location = os.path.split(prog_call)[0]
-    rt = root
-    w = tk.Toplevel (root)
-    top = win_IPList (w)
-    IPList_support.init(w, top, *args, **kwargs)
-    return (w, top)
+	'''Starting point when module is imported by another program.'''
+	global w, w_win, rt
+	global prog_location
+	prog_call = sys.argv[0]
+	prog_location = os.path.split(prog_call)[0]
+	rt = root
+	w = tk.Toplevel (root)
+	top = win_IPList (w)
+	IPList_support.init(w, top, *args, **kwargs)
+	return (w, top)
 
 def destroy_win_IPList():
-    global w
-    w.destroy()
-    w = None
+	global w
+	w.destroy()
+	w = None
 
 class win_IPList:
 
-    # Fucntion to return to the home window
-    def back(self):
-        destroy_win_IPList()
-        Home_support.root.deiconify()
+	# Fucntion to return to the home window
+	def back(self):
+		destroy_win_IPList()
+		Home_support.root.deiconify()
 
-    # Fucntion to log out the user
-    def log_out(self):
-        msg = messagebox.askyesno("Logout", "Are you sure?");
-        if (msg):
-            destroy_win_IPList()
-            Login_support.root.deiconify()
+	# Fucntion to log out the user
+	def log_out(self):
+		msg = messagebox.askyesno("Logout", "Are you sure?");
+		if (msg):
+			destroy_win_IPList()
+			Login_support.root.deiconify()
 
-    def remove_IP(self):
-        c = controller("../")
-        c.white_list_IP(self.lst_IPs.get(self.lst_IPs.curselection()))
+	#Function to manually remove blacklisted IP from blacklisted IP list
+	def remove_IP(self):
+		c = controller("../")
+		db = databaseCon.connect()
+		databaseCon.rem_Blacklisted_IP(db, self.lst_IPs.get(self.lst_IPs.curselection()))
+		c.remove_Blacklisted_IP(self.lst_IPs.get(self.lst_IPs.curselection()))
 
-    def add_IP(self):
-        c = controller("../")
-        c.black_list_IP(self.txtIp.get())
+	#Function to maually add IP to list of blacklisted IP's
+	def add_IP(self):
+		c = controller("../")
+		c.black_list_IP(self.txt_Ip.get())
+		self.txt_Ip.delete(0, 'end')
 
-    def list_IPs(self):
-        self.lst_IPs.delete(0, tk.END)
-        c = controller("../")
-        ip_list = c.get_black_listed_Ip_list()
-        for x in ip_list:
-            self.lst_IPs.insert(tk.END, x)
+	#Function to display list of blacklisted IP's
+	def list_IPs(self):
+		self.lst_IPs.delete(0, tk.END)
+		c = controller("../")
+		ip_list = c.get_blacklisted_IP_list()
+		for x in ip_list:
+			self.lst_IPs.insert(tk.END, x)
 
-    def __init__(self, top=None):
-        '''This class configures and populates the toplevel window.
-           top is the toplevel containing window.'''
-        _bgcolor = '#d9d9d9'  # X11 color: 'gray85'
-        _fgcolor = '#000000'  # X11 color: 'black'
-        _compcolor = '#d9d9d9' # X11 color: 'gray85'
-        _ana1color = '#d9d9d9' # X11 color: 'gray85'
-        _ana2color = '#ececec' # Closest X11 color: 'gray92'
+	def __init__(self, top=None):
+		'''This class configures and populates the toplevel window.
+		top is the toplevel containing window.'''
+		_bgcolor = '#d9d9d9'  # X11 color: 'gray85'
+		_fgcolor = '#000000'  # X11 color: 'black'
+		_compcolor = '#d9d9d9' # X11 color: 'gray85'
+		_ana1color = '#d9d9d9' # X11 color: 'gray85'
+		_ana2color = '#ececec' # Closest X11 color: 'gray92'
 
-        top.geometry("229x30+447+144")
-        top.title("List IP's")
+		top.geometry("229x30+447+144")
+		top.title("List IP's")
 
-        self.lbl_logo = tk.Label(top)
-        self.lbl_logo.place(relx=0.018, rely=0.022, height=151, width=349)
-        photo_location = os.path.join(prog_location,"Images/Defendr.png")
-        self._img0 = tk.PhotoImage(file=photo_location)
-        self.lbl_logo.configure(image=self._img0)
-        self.lbl_logo.configure(width=349)
+		self.lbl_logo = tk.Label(top)
+		self.lbl_logo.place(relx=0.018, rely=0.022, height=151, width=349)
+		photo_location = os.path.join(prog_location,"Images/Defendr.png")
+		self._img0 = tk.PhotoImage(file=photo_location)
+		self.lbl_logo.configure(image=self._img0)
+		self.lbl_logo.configure(width=349)
 
-        self.btn_log_out = tk.Button(top)
-        self.btn_log_out.place(relx=0.857, rely=0.022, height=31, width=72)
-        self.btn_log_out.configure(text='''Logout''')
-        self.btn_log_out.configure(cursor="hand1")
-        self.btn_log_out.configure(command=lambda: self.log_out())
+		self.btn_log_out = tk.Button(top)
+		self.btn_log_out.place(relx=0.857, rely=0.022, height=31, width=72)
+		self.btn_log_out.configure(text='''Logout''')
+		self.btn_log_out.configure(cursor="hand1")
+		self.btn_log_out.configure(command=lambda: self.log_out())
 
-        self.btn_back = tk.Button(top)
-        self.btn_back.place(relx=0.018, rely=0.913, height=31, width=60)
-        self.btn_back.configure(text='''Back''')
-        self.btn_back.configure(cursor="hand1")
-        self.btn_back.configure(command=lambda: self.back())
+		self.btn_back = tk.Button(top)
+		self.btn_back.place(relx=0.018, rely=0.913, height=31, width=60)
+		self.btn_back.configure(text='''Back''')
+		self.btn_back.configure(cursor="hand1")
+		self.btn_back.configure(command=lambda: self.back())
 
-        self.lst_IPs = tk.Listbox(top)
-        self.lst_IPs.place(relx=0.661, rely=0.356, relheight=0.503
-                , relwidth=0.329)
-        self.lst_IPs.configure(background="white")
-        self.lst_IPs.configure(font="TkFixedFont")
-        self.lst_IPs.configure(selectmode='single')
-        self.lst_IPs.configure(setgrid="1")
-        self.lst_IPs.configure(width=184)
+		self.lst_IPs = tk.Listbox(top)
+		self.lst_IPs.place(relx=0.661, rely=0.356, relheight=0.503
+			, relwidth=0.329)
+		self.lst_IPs.configure(background="white")
+		self.lst_IPs.configure(font="TkFixedFont")
+		self.lst_IPs.configure(selectmode='single')
+		self.lst_IPs.configure(setgrid="1")
+		self.lst_IPs.configure(width=184)
 
-        self.txt_Ip = tk.Entry(top)
-        self.txt_Ip.place(relx=0.036, rely=0.379,height=33, relwidth=0.296)
-        self.txt_Ip.configure(background="white")
-        self.txt_Ip.configure(exportselection="0")
-        self.txt_Ip.configure(font="TkFixedFont")
-        self.txt_Ip.configure(width=166)
+		self.txt_Ip = tk.Entry(top)
+		self.txt_Ip.place(relx=0.036, rely=0.379,height=33, relwidth=0.296)
+		self.txt_Ip.configure(background="white")
+		self.txt_Ip.configure(exportselection="0")
+		self.txt_Ip.configure(font="TkFixedFont")
+		self.txt_Ip.configure(width=166)
 
-        self.btn_Add = tk.Button(top)
-        self.btn_Add.place(relx=0.357, rely=0.379, height=31, width=69)
-        self.btn_Add.configure(text='''Add IP''')
-        self.btn_Add.configure(cursor="hand1")
-        self.btn_Add.configure(command=lambda: self.add_IP())
+		self.btn_Add = tk.Button(top)
+		self.btn_Add.place(relx=0.357, rely=0.379, height=31, width=69)
+		self.btn_Add.configure(text='''Add IP''')
+		self.btn_Add.configure(cursor="hand1")
+		self.btn_Add.configure(command=lambda: self.add_IP())
 
-        self.btn_Remove = tk.Button(top)
-        self.btn_Remove.place(relx=0.821, rely=0.913, height=31, width=91)
-        self.btn_Remove.configure(text='''Remove IP''')
-        self.btn_Remove.configure(width=91)
-        self.btn_Remove.configure(cursor="hand1")
-        self.btn_Remove.configure(command=lambda: self.remove_IP())
+		self.btn_Remove = tk.Button(top)
+		self.btn_Remove.place(relx=0.821, rely=0.913, height=31, width=91)
+		self.btn_Remove.configure(text='''Remove IP''')
+		self.btn_Remove.configure(width=91)
+		self.btn_Remove.configure(cursor="hand1")
+		self.btn_Remove.configure(command=lambda: self.remove_IP())
 
-        self.lbl_Black_List = tk.Label(top)
-        self.lbl_Black_List.place(relx=0.018, rely=0.512, height=151, width=349)
-        photo_location = os.path.join(prog_location,"Images/blacklist.png")
-        self._img1 = tk.PhotoImage(file=photo_location)
-        self.lbl_Black_List.configure(image=self._img1)
-        self.lbl_Black_List.configure(width=349)
+		self.lbl_Black_List = tk.Label(top)
+		self.lbl_Black_List.place(relx=0.018, rely=0.512, height=151, width=349)
+		photo_location = os.path.join(prog_location,"Images/blacklist.png")
+		self._img1 = tk.PhotoImage(file=photo_location)
+		self.lbl_Black_List.configure(image=self._img1)
+		self.lbl_Black_List.configure(width=349)
 
-        self.menubar = tk.Menu(top,font="TkMenuFont",bg=_bgcolor,fg=_fgcolor)
-        top.configure(menu = self.menubar)
+		self.menubar = tk.Menu(top,font="TkMenuFont",bg=_bgcolor,fg=_fgcolor)
+		top.configure(menu = self.menubar)
 
-        self.btn_List = tk.Button(top)
-        self.btn_List.place(relx=0.714, rely=0.257, height=31, width=127)
-        self.btn_List.configure(text='''List Blacklisted''')
-        self.btn_List.configure(command=lambda: self.list_IPs())
+		self.btn_List = tk.Button(top)
+		self.btn_List.place(relx=0.714, rely=0.257, height=31, width=127)
+		self.btn_List.configure(text='''List Blacklisted''')
+		self.btn_List.configure(command=lambda: self.list_IPs())
 
 if __name__ == '__main__':
     vp_start_gui()
