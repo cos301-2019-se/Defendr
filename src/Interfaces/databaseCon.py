@@ -1,6 +1,7 @@
 import pymongo
 import hashlib, uuid
 import urllib.parse
+import re
 
 def addIp(db,ip):
     col = db["blacklist"]
