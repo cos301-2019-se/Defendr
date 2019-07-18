@@ -14,6 +14,17 @@ def connect():
     db = client["Defendr"]
     return db
 
+def findBlacklist(db, ip):
+    col = db["blacklist"]
+    doc = col.find({"ip": ip}, {"_id": 0, "ip": 0})
+    stringoutput = "Not Found"
+    for x in doc
+        stringoutput = str(x)
+    if stringoutput != "Not Found"
+        return stringoutput[8:len(stringoutput)-2]
+    return stringoutput
+
+
 def findPackets(db, ip):
     col = db["packets_list"]
     if ip=="":
