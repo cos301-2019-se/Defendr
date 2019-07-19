@@ -19,7 +19,7 @@
 #define EXIT_FAIL_BPF_ELF	41
 #define EXIT_FAIL_BPF_RELOCATE	42
 
-static int verbose = 0;
+static int verbose = 1;
 
 /* Export eBPF map for IPv4 blacklist as a file
  * Gotcha need to mount:
@@ -28,9 +28,7 @@ static int verbose = 0;
 static const char *file_blacklist = "/sys/fs/bpf/ddos_blacklist";
 static const char *file_verdict   = "/sys/fs/bpf/ddos_blacklist_stat_verdict";
 static const char *file_ip_watchlist   = "/sys/fs/bpf/ddos_blacklist_ip_watchlist";
-static const char *file_enter_logs   = "/sys/fs/bpf/ddos_blacklist_enter_logs";
-static const char *file_drop_logs   = "/sys/fs/bpf/ddos_blacklist_drop_logs";
-static const char *file_pass_logs   = "/sys/fs/bpf/ddos_blacklist_pass_logs";
+static const char *file_logs   = "/sys/fs/bpf/ddos_blacklist_logs";
 static const char *file_servers   = "/sys/fs/bpf/ddos_blacklist_servers";
 static const char *file_services   = "/sys/fs/bpf/ddos_blacklist_services";
 static const char *file_destinations   = "/sys/fs/bpf/ddos_blacklist_destinations";
@@ -167,10 +165,10 @@ static int service_modify(int fd_services,int fd_servers, char *service_ip,char 
 			value->last_used = 0;
 			value->num_servers = 1;
 			value->id = server_id;
-			server_id += MAX_INSTANCES;
+			//server_id += MAX_INSTANCES;
 			fptr = fopen("id.txt","w");
 	   		if(fptr != NULL){
-				fprintf(fptr,"%d",server_id); 
+				fprintf(fptr,"%d",server_id+MAX_INSTANCES); 
 				fclose(fptr);          
 	        }
 
@@ -234,15 +232,18 @@ static int service_modify(int fd_services,int fd_servers, char *service_ip,char 
 			res = bpf_map_update_elem(fd_services, &key, value, BPF_EXIST);
 		}
 		backend_id = value->id;
+
+		key = NULL;
+		prev_key = NULL;
 		bool found = false;
 		while (bpf_map_get_next_key(fd_servers, prev_key, &key) == 0 && !found) {
 			struct dest_info *backend = (struct dest_info*)malloc(sizeof(struct dest_info));
-			res = bpf_map_lookup_elem(fd_servers,&backend_id,backend); 
+			res = bpf_map_lookup_elem(fd_servers,&key,backend); 
 			if(res==0){
 				if(backend->daddr == backendIP){
 					res = bpf_map_delete_elem(fd_servers, &backend_id);
 					found = true;
-				}	
+				}
 			}
 		 	prev_key = &key;
 		}

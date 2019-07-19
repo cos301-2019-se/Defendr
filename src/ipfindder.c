@@ -20,9 +20,11 @@ const char* findIp(char ip[]){
     //excute commad for ip
     char command[50]="wget -O ";
     strcat(command, fileName);
-    char url[]=" http://api.ipfind.com/?ip=";
+    char url[]="https://api.ipgeolocation.io/ipgeo?apiKey=9b1d4fccd2e74a9e8c017e5765d24afd&ip=";
+	char fields[] = "&fields=country_code2&output=xml";
     strcat(command, url);
     strcat(command, ip);
+	strcat(command,fields);
 
     system(command);
     system("reset");

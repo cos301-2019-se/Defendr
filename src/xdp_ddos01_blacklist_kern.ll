@@ -5,802 +5,644 @@ target triple = "x86_64-pc-linux-gnu"
 
 %struct.bpf_map_def = type { i32, i32, i32, i32, i32, i32, i32 }
 %struct.xdp_md = type { i32, i32, i32, i32, i32 }
+%struct.log = type { i32, i32, i32, i32, [6 x i8] }
 %struct.ethhdr = type { [6 x i8], [6 x i8], i16 }
 %struct.dest_info = type { i32, i32, i32, i64, i64, [6 x i8] }
 
 @blacklist = global %struct.bpf_map_def { i32 5, i32 4, i32 8, i32 100000, i32 1, i32 0, i32 0 }, section "maps", align 4
 @ip_watchlist = global %struct.bpf_map_def { i32 5, i32 4, i32 8, i32 100000, i32 1, i32 0, i32 0 }, section "maps", align 4
-@enter_logs = global %struct.bpf_map_def { i32 5, i32 4, i32 8, i32 100000, i32 1, i32 0, i32 0 }, section "maps", align 4
-@drop_logs = global %struct.bpf_map_def { i32 5, i32 4, i32 8, i32 100000, i32 1, i32 0, i32 0 }, section "maps", align 4
-@pass_logs = global %struct.bpf_map_def { i32 5, i32 4, i32 4, i32 100000, i32 1, i32 0, i32 0 }, section "maps", align 4
+@logs = global %struct.bpf_map_def { i32 1, i32 8, i32 24, i32 100000, i32 1, i32 0, i32 0 }, section "maps", align 4
 @servers = global %struct.bpf_map_def { i32 1, i32 4, i32 40, i32 512, i32 0, i32 0, i32 0 }, section "maps", align 4
-@services = global %struct.bpf_map_def { i32 1, i32 4, i32 24, i32 512, i32 0, i32 0, i32 0 }, section "maps", align 4
+@services = global %struct.bpf_map_def { i32 1, i32 4, i32 12, i32 512, i32 0, i32 0, i32 0 }, section "maps", align 4
 @destinations = global %struct.bpf_map_def { i32 1, i32 4, i32 4, i32 512, i32 0, i32 0, i32 0 }, section "maps", align 4
 @verdict_cnt = global %struct.bpf_map_def { i32 6, i32 4, i32 8, i32 4, i32 0, i32 0, i32 0 }, section "maps", align 4
 @port_blacklist = global %struct.bpf_map_def { i32 6, i32 4, i32 4, i32 65536, i32 0, i32 0, i32 0 }, section "maps", align 4
 @port_blacklist_drop_count_tcp = global %struct.bpf_map_def { i32 6, i32 4, i32 8, i32 65536, i32 0, i32 0, i32 0 }, section "maps", align 4
 @port_blacklist_drop_count_udp = global %struct.bpf_map_def { i32 6, i32 4, i32 8, i32 65536, i32 0, i32 0, i32 0 }, section "maps", align 4
 @_license = global [4 x i8] c"GPL\00", section "license", align 1
-@llvm.used = appending global [14 x i8*] [i8* getelementptr inbounds ([4 x i8], [4 x i8]* @_license, i32 0, i32 0), i8* bitcast (%struct.bpf_map_def* @blacklist to i8*), i8* bitcast (%struct.bpf_map_def* @destinations to i8*), i8* bitcast (%struct.bpf_map_def* @drop_logs to i8*), i8* bitcast (%struct.bpf_map_def* @enter_logs to i8*), i8* bitcast (%struct.bpf_map_def* @ip_watchlist to i8*), i8* bitcast (%struct.bpf_map_def* @pass_logs to i8*), i8* bitcast (%struct.bpf_map_def* @port_blacklist to i8*), i8* bitcast (%struct.bpf_map_def* @port_blacklist_drop_count_tcp to i8*), i8* bitcast (%struct.bpf_map_def* @port_blacklist_drop_count_udp to i8*), i8* bitcast (%struct.bpf_map_def* @servers to i8*), i8* bitcast (%struct.bpf_map_def* @services to i8*), i8* bitcast (%struct.bpf_map_def* @verdict_cnt to i8*), i8* bitcast (i32 (%struct.xdp_md*)* @xdp_program to i8*)], section "llvm.metadata"
+@llvm.used = appending global [12 x i8*] [i8* getelementptr inbounds ([4 x i8], [4 x i8]* @_license, i32 0, i32 0), i8* bitcast (%struct.bpf_map_def* @blacklist to i8*), i8* bitcast (%struct.bpf_map_def* @destinations to i8*), i8* bitcast (%struct.bpf_map_def* @ip_watchlist to i8*), i8* bitcast (%struct.bpf_map_def* @logs to i8*), i8* bitcast (%struct.bpf_map_def* @port_blacklist to i8*), i8* bitcast (%struct.bpf_map_def* @port_blacklist_drop_count_tcp to i8*), i8* bitcast (%struct.bpf_map_def* @port_blacklist_drop_count_udp to i8*), i8* bitcast (%struct.bpf_map_def* @servers to i8*), i8* bitcast (%struct.bpf_map_def* @services to i8*), i8* bitcast (%struct.bpf_map_def* @verdict_cnt to i8*), i8* bitcast (i32 (%struct.xdp_md*)* @xdp_program to i8*)], section "llvm.metadata"
 
 ; Function Attrs: nounwind uwtable
 define i32 @xdp_program(%struct.xdp_md* nocapture readonly) #0 section "xdp_prog" {
   %2 = alloca i32, align 4
   %3 = alloca i32, align 4
   %4 = alloca i32, align 4
-  %5 = alloca i32, align 4
+  %5 = alloca i64, align 8
   %6 = alloca i32, align 4
-  %7 = alloca i32, align 4
-  %8 = alloca i32, align 4
-  %9 = alloca i64, align 8
-  %10 = alloca i64, align 8
-  %11 = alloca i64, align 8
-  %12 = alloca i32, align 4
-  %13 = alloca i32, align 4
-  %14 = alloca i32, align 4
-  %15 = bitcast i64* %9 to i8*
+  %7 = alloca i64, align 8
+  %8 = alloca %struct.log, align 4
+  %9 = alloca %struct.log, align 4
+  %10 = alloca %struct.log, align 4
+  %11 = alloca i32, align 4
+  %12 = alloca %struct.log, align 4
+  %13 = alloca %struct.log, align 4
+  %14 = alloca %struct.log, align 4
+  %15 = bitcast i64* %5 to i8*
   call void @llvm.lifetime.start.p0i8(i64 8, i8* nonnull %15) #2
-  store i64 1, i64* %9, align 8, !tbaa !2
-  %16 = bitcast i64* %10 to i8*
-  call void @llvm.lifetime.start.p0i8(i64 8, i8* nonnull %16) #2
-  store i64 1, i64* %10, align 8, !tbaa !2
-  %17 = bitcast i64* %11 to i8*
+  store i64 1, i64* %5, align 8, !tbaa !2
+  %16 = bitcast i32* %6 to i8*
+  call void @llvm.lifetime.start.p0i8(i64 4, i8* nonnull %16) #2
+  %17 = bitcast i64* %7 to i8*
   call void @llvm.lifetime.start.p0i8(i64 8, i8* nonnull %17) #2
-  store i64 1, i64* %11, align 8, !tbaa !2
-  %18 = bitcast i32* %12 to i8*
-  call void @llvm.lifetime.start.p0i8(i64 4, i8* nonnull %18) #2
-  %19 = getelementptr inbounds %struct.xdp_md, %struct.xdp_md* %0, i64 0, i32 1
-  %20 = load i32, i32* %19, align 4, !tbaa !6
-  %21 = zext i32 %20 to i64
-  %22 = inttoptr i64 %21 to i8*
-  %23 = getelementptr inbounds %struct.xdp_md, %struct.xdp_md* %0, i64 0, i32 0
-  %24 = load i32, i32* %23, align 4, !tbaa !9
-  %25 = zext i32 %24 to i64
-  %26 = inttoptr i64 %25 to i8*
-  %27 = inttoptr i64 %25 to %struct.ethhdr*
-  %28 = getelementptr i8, i8* %26, i64 14
-  %29 = icmp ugt i8* %28, %22
-  br i1 %29, label %540, label %30
+  %18 = getelementptr inbounds %struct.xdp_md, %struct.xdp_md* %0, i64 0, i32 1
+  %19 = load i32, i32* %18, align 4, !tbaa !6
+  %20 = zext i32 %19 to i64
+  %21 = inttoptr i64 %20 to i8*
+  %22 = getelementptr inbounds %struct.xdp_md, %struct.xdp_md* %0, i64 0, i32 0
+  %23 = load i32, i32* %22, align 4, !tbaa !9
+  %24 = zext i32 %23 to i64
+  %25 = inttoptr i64 %24 to i8*
+  %26 = inttoptr i64 %24 to %struct.ethhdr*
+  %27 = getelementptr i8, i8* %25, i64 14
+  %28 = icmp ugt i8* %27, %21
+  br i1 %28, label %411, label %29
 
-; <label>:30:                                     ; preds = %1
-  %31 = getelementptr inbounds %struct.ethhdr, %struct.ethhdr* %27, i64 0, i32 2
-  %32 = load i16, i16* %31, align 1, !tbaa !10
-  %33 = icmp eq i16 %32, 8
-  br i1 %33, label %34, label %540
+; <label>:29:                                     ; preds = %1
+  %30 = getelementptr inbounds %struct.ethhdr, %struct.ethhdr* %26, i64 0, i32 2
+  %31 = load i16, i16* %30, align 1, !tbaa !10
+  %32 = icmp eq i16 %31, 8
+  br i1 %32, label %33, label %411
 
-; <label>:34:                                     ; preds = %30
-  %35 = getelementptr i8, i8* %26, i64 34
-  %36 = icmp ugt i8* %35, %22
-  br i1 %36, label %540, label %37
+; <label>:33:                                     ; preds = %29
+  %34 = getelementptr i8, i8* %25, i64 34
+  %35 = icmp ugt i8* %34, %21
+  br i1 %35, label %411, label %36
 
-; <label>:37:                                     ; preds = %34
-  %38 = getelementptr inbounds i8, i8* %26, i64 23
-  %39 = load i8, i8* %38, align 1, !tbaa !13
-  %40 = icmp eq i8 %39, 6
-  br i1 %40, label %41, label %540
+; <label>:36:                                     ; preds = %33
+  %37 = getelementptr inbounds i8, i8* %25, i64 26
+  %38 = bitcast i8* %37 to i32*
+  %39 = load i32, i32* %38, align 4, !tbaa !13
+  %40 = tail call i32 asm "bswapl $0", "=r,0,~{dirflag},~{fpsr},~{flags}"(i32 %39) #3, !srcloc !15
+  store i32 %40, i32* %6, align 4, !tbaa !16
+  %41 = getelementptr inbounds i8, i8* %25, i64 30
+  %42 = bitcast i8* %41 to i32*
+  %43 = load i32, i32* %42, align 4, !tbaa !17
+  %44 = tail call i32 asm "bswapl $0", "=r,0,~{dirflag},~{fpsr},~{flags}"(i32 %43) #3, !srcloc !15
+  %45 = bitcast %struct.log* %8 to i8*
+  call void @llvm.lifetime.start.p0i8(i64 24, i8* nonnull %45) #2
+  %46 = getelementptr inbounds %struct.log, %struct.log* %8, i64 0, i32 4, i64 0
+  %47 = bitcast i8* %46 to i64*
+  store i64 0, i64* %47, align 4
+  %48 = getelementptr inbounds %struct.log, %struct.log* %8, i64 0, i32 0
+  store i32 %40, i32* %48, align 4, !tbaa !18
+  %49 = getelementptr inbounds %struct.log, %struct.log* %8, i64 0, i32 1
+  store i32 0, i32* %49, align 4, !tbaa !20
+  %50 = getelementptr inbounds %struct.log, %struct.log* %8, i64 0, i32 2
+  store i32 0, i32* %50, align 4, !tbaa !21
+  %51 = getelementptr inbounds %struct.log, %struct.log* %8, i64 0, i32 3
+  store i32 %44, i32* %51, align 4, !tbaa !22
+  %52 = getelementptr inbounds %struct.ethhdr, %struct.ethhdr* %26, i64 0, i32 0, i64 0
+  %53 = load i8, i8* %52, align 1, !tbaa !23
+  %54 = getelementptr inbounds %struct.log, %struct.log* %8, i64 0, i32 4, i64 0
+  store i8 %53, i8* %54, align 4, !tbaa !23
+  %55 = load i8, i8* %52, align 1, !tbaa !23
+  %56 = getelementptr inbounds %struct.log, %struct.log* %8, i64 0, i32 4, i64 1
+  store i8 %55, i8* %56, align 1, !tbaa !23
+  %57 = load i8, i8* %52, align 1, !tbaa !23
+  %58 = getelementptr inbounds %struct.log, %struct.log* %8, i64 0, i32 4, i64 2
+  store i8 %57, i8* %58, align 2, !tbaa !23
+  %59 = load i8, i8* %52, align 1, !tbaa !23
+  %60 = getelementptr inbounds %struct.log, %struct.log* %8, i64 0, i32 4, i64 3
+  store i8 %59, i8* %60, align 1, !tbaa !23
+  %61 = load i8, i8* %52, align 1, !tbaa !23
+  %62 = getelementptr inbounds %struct.log, %struct.log* %8, i64 0, i32 4, i64 4
+  store i8 %61, i8* %62, align 4, !tbaa !23
+  %63 = load i8, i8* %52, align 1, !tbaa !23
+  %64 = getelementptr inbounds %struct.log, %struct.log* %8, i64 0, i32 4, i64 5
+  store i8 %63, i8* %64, align 1, !tbaa !23
+  %65 = tail call i64 inttoptr (i64 5 to i64 ()*)() #2
+  store i64 %65, i64* %7, align 8, !tbaa !2
+  %66 = call i32 inttoptr (i64 2 to i32 (i8*, i8*, i8*, i64)*)(i8* bitcast (%struct.bpf_map_def* @logs to i8*), i8* nonnull %17, i8* nonnull %45, i64 0) #2
+  %67 = getelementptr i8, i8* %25, i64 54
+  %68 = icmp ugt i8* %67, %21
+  br i1 %68, label %409, label %69
 
-; <label>:41:                                     ; preds = %37
-  %42 = getelementptr i8, i8* %26, i64 54
-  %43 = icmp ugt i8* %42, %22
-  br i1 %43, label %540, label %44
+; <label>:69:                                     ; preds = %36
+  %70 = call i8* inttoptr (i64 1 to i8* (i8*, i8*)*)(i8* bitcast (%struct.bpf_map_def* @blacklist to i8*), i8* nonnull %16) #2
+  %71 = bitcast i8* %70 to i64*
+  %72 = icmp eq i8* %70, null
+  br i1 %72, label %103, label %73
 
-; <label>:44:                                     ; preds = %41
-  %45 = getelementptr inbounds i8, i8* %26, i64 26
-  %46 = bitcast i8* %45 to i32*
-  %47 = load i32, i32* %46, align 4, !tbaa !15
-  %48 = tail call i32 asm "bswapl $0", "=r,0,~{dirflag},~{fpsr},~{flags}"(i32 %47) #3, !srcloc !16
-  store i32 %48, i32* %12, align 4, !tbaa !17
-  %49 = call i8* inttoptr (i64 1 to i8* (i8*, i8*)*)(i8* bitcast (%struct.bpf_map_def* @enter_logs to i8*), i8* nonnull %18) #2
-  %50 = bitcast i8* %49 to i64*
-  %51 = icmp eq i8* %49, null
-  br i1 %51, label %55, label %52
+; <label>:73:                                     ; preds = %69
+  %74 = load i64, i64* %71, align 8, !tbaa !2
+  %75 = add i64 %74, 1
+  store i64 %75, i64* %71, align 8, !tbaa !2
+  %76 = bitcast %struct.log* %9 to i8*
+  call void @llvm.lifetime.start.p0i8(i64 24, i8* nonnull %76) #2
+  %77 = getelementptr inbounds %struct.log, %struct.log* %9, i64 0, i32 4, i64 0
+  %78 = bitcast i8* %77 to i64*
+  store i64 0, i64* %78, align 4
+  %79 = load i32, i32* %6, align 4, !tbaa !16
+  %80 = getelementptr inbounds %struct.log, %struct.log* %9, i64 0, i32 0
+  store i32 %79, i32* %80, align 4, !tbaa !18
+  %81 = getelementptr inbounds %struct.log, %struct.log* %9, i64 0, i32 1
+  store i32 2, i32* %81, align 4, !tbaa !20
+  %82 = getelementptr inbounds %struct.log, %struct.log* %9, i64 0, i32 2
+  store i32 1, i32* %82, align 4, !tbaa !21
+  %83 = getelementptr inbounds %struct.log, %struct.log* %9, i64 0, i32 3
+  store i32 %44, i32* %83, align 4, !tbaa !22
+  %84 = load i8, i8* %52, align 1, !tbaa !23
+  %85 = getelementptr inbounds %struct.log, %struct.log* %9, i64 0, i32 4, i64 0
+  store i8 %84, i8* %85, align 4, !tbaa !23
+  %86 = getelementptr inbounds %struct.ethhdr, %struct.ethhdr* %26, i64 0, i32 0, i64 1
+  %87 = load i8, i8* %86, align 1, !tbaa !23
+  %88 = getelementptr inbounds %struct.log, %struct.log* %9, i64 0, i32 4, i64 1
+  store i8 %87, i8* %88, align 1, !tbaa !23
+  %89 = getelementptr inbounds %struct.ethhdr, %struct.ethhdr* %26, i64 0, i32 0, i64 2
+  %90 = load i8, i8* %89, align 1, !tbaa !23
+  %91 = getelementptr inbounds %struct.log, %struct.log* %9, i64 0, i32 4, i64 2
+  store i8 %90, i8* %91, align 2, !tbaa !23
+  %92 = getelementptr inbounds %struct.ethhdr, %struct.ethhdr* %26, i64 0, i32 0, i64 3
+  %93 = load i8, i8* %92, align 1, !tbaa !23
+  %94 = getelementptr inbounds %struct.log, %struct.log* %9, i64 0, i32 4, i64 3
+  store i8 %93, i8* %94, align 1, !tbaa !23
+  %95 = getelementptr inbounds %struct.ethhdr, %struct.ethhdr* %26, i64 0, i32 0, i64 4
+  %96 = load i8, i8* %95, align 1, !tbaa !23
+  %97 = getelementptr inbounds %struct.log, %struct.log* %9, i64 0, i32 4, i64 4
+  store i8 %96, i8* %97, align 4, !tbaa !23
+  %98 = getelementptr inbounds %struct.ethhdr, %struct.ethhdr* %26, i64 0, i32 0, i64 5
+  %99 = load i8, i8* %98, align 1, !tbaa !23
+  %100 = getelementptr inbounds %struct.log, %struct.log* %9, i64 0, i32 4, i64 5
+  store i8 %99, i8* %100, align 1, !tbaa !23
+  %101 = call i64 inttoptr (i64 5 to i64 ()*)() #2
+  store i64 %101, i64* %7, align 8, !tbaa !2
+  %102 = call i32 inttoptr (i64 2 to i32 (i8*, i8*, i8*, i64)*)(i8* bitcast (%struct.bpf_map_def* @logs to i8*), i8* nonnull %17, i8* nonnull %76, i64 0) #2
+  call void @llvm.lifetime.end.p0i8(i64 24, i8* nonnull %76) #2
+  br label %409
 
-; <label>:52:                                     ; preds = %44
-  %53 = load i64, i64* %50, align 8, !tbaa !2
-  %54 = add i64 %53, 1
-  store i64 %54, i64* %50, align 8, !tbaa !2
-  br label %57
+; <label>:103:                                    ; preds = %69
+  %104 = call i8* inttoptr (i64 1 to i8* (i8*, i8*)*)(i8* bitcast (%struct.bpf_map_def* @ip_watchlist to i8*), i8* nonnull %16) #2
+  %105 = bitcast i8* %104 to i64*
+  %106 = icmp eq i8* %104, null
+  br i1 %106, label %110, label %107
 
-; <label>:55:                                     ; preds = %44
-  %56 = call i32 inttoptr (i64 2 to i32 (i8*, i8*, i8*, i64)*)(i8* bitcast (%struct.bpf_map_def* @enter_logs to i8*), i8* nonnull %18, i8* nonnull %16, i64 1) #2
-  br label %57
+; <label>:107:                                    ; preds = %103
+  %108 = load i64, i64* %105, align 8, !tbaa !2
+  %109 = add i64 %108, 1
+  store i64 %109, i64* %105, align 8, !tbaa !2
+  br label %112
 
-; <label>:57:                                     ; preds = %55, %52
-  %58 = call i8* inttoptr (i64 1 to i8* (i8*, i8*)*)(i8* bitcast (%struct.bpf_map_def* @blacklist to i8*), i8* nonnull %18) #2
-  %59 = bitcast i8* %58 to i64*
-  %60 = icmp eq i8* %58, null
-  br i1 %60, label %72, label %61
+; <label>:110:                                    ; preds = %103
+  %111 = call i32 inttoptr (i64 2 to i32 (i8*, i8*, i8*, i64)*)(i8* bitcast (%struct.bpf_map_def* @ip_watchlist to i8*), i8* nonnull %16, i8* nonnull %15, i64 1) #2
+  br label %112
 
-; <label>:61:                                     ; preds = %57
-  %62 = load i64, i64* %59, align 8, !tbaa !2
-  %63 = add i64 %62, 1
-  store i64 %63, i64* %59, align 8, !tbaa !2
-  %64 = call i8* inttoptr (i64 1 to i8* (i8*, i8*)*)(i8* bitcast (%struct.bpf_map_def* @drop_logs to i8*), i8* nonnull %18) #2
-  %65 = bitcast i8* %64 to i64*
-  %66 = icmp eq i8* %64, null
-  br i1 %66, label %70, label %67
+; <label>:112:                                    ; preds = %110, %107
+  %113 = getelementptr inbounds i8, i8* %25, i64 23
+  %114 = load i8, i8* %113, align 1, !tbaa !24
+  %115 = icmp eq i8 %114, 6
+  br i1 %115, label %139, label %116
 
-; <label>:67:                                     ; preds = %61
-  %68 = load i64, i64* %65, align 8, !tbaa !2
-  %69 = add i64 %68, 1
-  store i64 %69, i64* %65, align 8, !tbaa !2
-  br label %540
+; <label>:116:                                    ; preds = %112
+  %117 = bitcast %struct.log* %10 to i8*
+  call void @llvm.lifetime.start.p0i8(i64 24, i8* nonnull %117) #2
+  %118 = getelementptr inbounds %struct.log, %struct.log* %10, i64 0, i32 4, i64 0
+  %119 = bitcast i8* %118 to i64*
+  store i64 0, i64* %119, align 4
+  %120 = load i32, i32* %6, align 4, !tbaa !16
+  %121 = getelementptr inbounds %struct.log, %struct.log* %10, i64 0, i32 0
+  store i32 %120, i32* %121, align 4, !tbaa !18
+  %122 = getelementptr inbounds %struct.log, %struct.log* %10, i64 0, i32 1
+  store i32 1, i32* %122, align 4, !tbaa !20
+  %123 = getelementptr inbounds %struct.log, %struct.log* %10, i64 0, i32 2
+  store i32 4, i32* %123, align 4, !tbaa !21
+  %124 = getelementptr inbounds %struct.log, %struct.log* %10, i64 0, i32 3
+  store i32 %44, i32* %124, align 4, !tbaa !22
+  %125 = load i8, i8* %52, align 1, !tbaa !23
+  %126 = getelementptr inbounds %struct.log, %struct.log* %10, i64 0, i32 4, i64 0
+  store i8 %125, i8* %126, align 4, !tbaa !23
+  %127 = load i8, i8* %52, align 1, !tbaa !23
+  %128 = getelementptr inbounds %struct.log, %struct.log* %10, i64 0, i32 4, i64 1
+  store i8 %127, i8* %128, align 1, !tbaa !23
+  %129 = load i8, i8* %52, align 1, !tbaa !23
+  %130 = getelementptr inbounds %struct.log, %struct.log* %10, i64 0, i32 4, i64 2
+  store i8 %129, i8* %130, align 2, !tbaa !23
+  %131 = load i8, i8* %52, align 1, !tbaa !23
+  %132 = getelementptr inbounds %struct.log, %struct.log* %10, i64 0, i32 4, i64 3
+  store i8 %131, i8* %132, align 1, !tbaa !23
+  %133 = load i8, i8* %52, align 1, !tbaa !23
+  %134 = getelementptr inbounds %struct.log, %struct.log* %10, i64 0, i32 4, i64 4
+  store i8 %133, i8* %134, align 4, !tbaa !23
+  %135 = load i8, i8* %52, align 1, !tbaa !23
+  %136 = getelementptr inbounds %struct.log, %struct.log* %10, i64 0, i32 4, i64 5
+  store i8 %135, i8* %136, align 1, !tbaa !23
+  %137 = call i64 inttoptr (i64 5 to i64 ()*)() #2
+  store i64 %137, i64* %7, align 8, !tbaa !2
+  %138 = call i32 inttoptr (i64 2 to i32 (i8*, i8*, i8*, i64)*)(i8* bitcast (%struct.bpf_map_def* @logs to i8*), i8* nonnull %17, i8* nonnull %117, i64 0) #2
+  call void @llvm.lifetime.end.p0i8(i64 24, i8* nonnull %117) #2
+  br label %409
 
-; <label>:70:                                     ; preds = %61
-  %71 = call i32 inttoptr (i64 2 to i32 (i8*, i8*, i8*, i64)*)(i8* bitcast (%struct.bpf_map_def* @drop_logs to i8*), i8* nonnull %18, i8* nonnull %15, i64 1) #2
-  br label %540
+; <label>:139:                                    ; preds = %112
+  %140 = load i32, i32* %38, align 4, !tbaa !13
+  %141 = load i32, i32* %42, align 4, !tbaa !17
+  %142 = bitcast i8* %34 to i16*
+  %143 = load i16, i16* %142, align 4, !tbaa !25
+  %144 = getelementptr inbounds i8, i8* %25, i64 36
+  %145 = bitcast i8* %144 to i16*
+  %146 = load i16, i16* %145, align 2, !tbaa !27
+  %147 = bitcast i32* %11 to i8*
+  call void @llvm.lifetime.start.p0i8(i64 4, i8* nonnull %147) #2
+  %148 = call i32 asm "bswapl $0", "=r,0,~{dirflag},~{fpsr},~{flags}"(i32 %141) #3, !srcloc !15
+  store i32 %148, i32* %11, align 4, !tbaa !16
+  %149 = call i8* inttoptr (i64 1 to i8* (i8*, i8*)*)(i8* bitcast (%struct.bpf_map_def* @services to i8*), i8* nonnull %147) #2
+  %150 = icmp eq i8* %149, null
+  br i1 %150, label %379, label %151
 
-; <label>:72:                                     ; preds = %57
-  %73 = call i8* inttoptr (i64 1 to i8* (i8*, i8*)*)(i8* bitcast (%struct.bpf_map_def* @ip_watchlist to i8*), i8* nonnull %18) #2
-  %74 = bitcast i8* %73 to i64*
-  %75 = icmp eq i8* %73, null
-  br i1 %75, label %79, label %76
+; <label>:151:                                    ; preds = %139
+  %152 = zext i16 %143 to i32
+  %153 = zext i16 %146 to i32
+  %154 = shl nuw i32 %153, 16
+  %155 = or i32 %154, %152
+  %156 = bitcast i32* %2 to i8*
+  call void @llvm.lifetime.start.p0i8(i64 4, i8* nonnull %156) #2
+  %157 = bitcast i32* %3 to i8*
+  call void @llvm.lifetime.start.p0i8(i64 4, i8* nonnull %157) #2
+  %158 = bitcast i32* %4 to i8*
+  call void @llvm.lifetime.start.p0i8(i64 4, i8* nonnull %158) #2
+  store i32 513, i32* %4, align 4, !tbaa !16
+  store i32 0, i32* %2, align 4, !tbaa !16
+  %159 = add i32 %140, -559038217
+  %160 = add i32 %155, -559038217
+  %161 = add i32 %141, -559038217
+  %162 = xor i32 %160, %161
+  %163 = shl i32 %160, 14
+  %164 = lshr i32 %160, 18
+  %165 = or i32 %164, %163
+  %166 = sub i32 %162, %165
+  %167 = xor i32 %166, %159
+  %168 = shl i32 %166, 11
+  %169 = lshr i32 %166, 21
+  %170 = or i32 %169, %168
+  %171 = sub i32 %167, %170
+  %172 = xor i32 %171, %160
+  %173 = shl i32 %171, 25
+  %174 = lshr i32 %171, 7
+  %175 = or i32 %174, %173
+  %176 = sub i32 %172, %175
+  %177 = xor i32 %176, %166
+  %178 = shl i32 %176, 16
+  %179 = lshr i32 %176, 16
+  %180 = or i32 %179, %178
+  %181 = sub i32 %177, %180
+  %182 = xor i32 %181, %171
+  %183 = shl i32 %181, 4
+  %184 = lshr i32 %181, 28
+  %185 = or i32 %184, %183
+  %186 = sub i32 %182, %185
+  %187 = xor i32 %186, %176
+  %188 = shl i32 %186, 14
+  %189 = lshr i32 %186, 18
+  %190 = or i32 %189, %188
+  %191 = sub i32 %187, %190
+  %192 = xor i32 %191, %181
+  %193 = lshr i32 %191, 8
+  %194 = sub i32 %192, %193
+  %195 = and i32 %194, 511
+  store i32 %195, i32* %3, align 4, !tbaa !16
+  %196 = call i8* inttoptr (i64 1 to i8* (i8*, i8*)*)(i8* bitcast (%struct.bpf_map_def* @destinations to i8*), i8* nonnull %157) #2
+  %197 = icmp eq i8* %196, null
+  br i1 %197, label %201, label %198
 
-; <label>:76:                                     ; preds = %72
-  %77 = load i64, i64* %74, align 8, !tbaa !2
-  %78 = add i64 %77, 1
-  store i64 %78, i64* %74, align 8, !tbaa !2
-  br label %81
+; <label>:198:                                    ; preds = %151
+  %199 = bitcast i8* %196 to i32*
+  %200 = load i32, i32* %199, align 4, !tbaa !16
+  store i32 %200, i32* %4, align 4, !tbaa !16
+  br label %203
 
-; <label>:79:                                     ; preds = %72
-  %80 = call i32 inttoptr (i64 2 to i32 (i8*, i8*, i8*, i64)*)(i8* bitcast (%struct.bpf_map_def* @ip_watchlist to i8*), i8* nonnull %18, i8* nonnull %17, i64 1) #2
-  br label %81
+; <label>:201:                                    ; preds = %151
+  %202 = load i32, i32* %4, align 4, !tbaa !16
+  br label %203
 
-; <label>:81:                                     ; preds = %79, %76
-  %82 = load i32, i32* %46, align 4, !tbaa !15
-  %83 = getelementptr inbounds i8, i8* %26, i64 30
-  %84 = bitcast i8* %83 to i32*
-  %85 = load i32, i32* %84, align 4, !tbaa !18
-  %86 = bitcast i8* %35 to i16*
-  %87 = load i16, i16* %86, align 4, !tbaa !19
-  %88 = zext i16 %87 to i32
-  %89 = getelementptr inbounds i8, i8* %26, i64 36
-  %90 = bitcast i8* %89 to i16*
-  %91 = load i16, i16* %90, align 2, !tbaa !21
-  %92 = zext i16 %91 to i32
-  %93 = shl nuw i32 %92, 16
-  %94 = or i32 %93, %88
-  %95 = bitcast i32* %13 to i8*
-  call void @llvm.lifetime.start.p0i8(i64 4, i8* nonnull %95) #2
-  %96 = call i32 asm "bswapl $0", "=r,0,~{dirflag},~{fpsr},~{flags}"(i32 %85) #3, !srcloc !16
-  store i32 %96, i32* %13, align 4, !tbaa !17
-  %97 = call i8* inttoptr (i64 1 to i8* (i8*, i8*)*)(i8* bitcast (%struct.bpf_map_def* @services to i8*), i8* nonnull %95) #2
-  %98 = icmp eq i8* %97, null
-  br i1 %98, label %539, label %99
+; <label>:203:                                    ; preds = %201, %198
+  %204 = phi i32 [ %202, %201 ], [ %200, %198 ]
+  %205 = icmp eq i32 %204, 513
+  br i1 %205, label %211, label %206
 
-; <label>:99:                                     ; preds = %81
-  %100 = getelementptr inbounds i8, i8* %26, i64 46
-  %101 = bitcast i8* %100 to i16*
-  %102 = load i16, i16* %101, align 4
-  %103 = and i16 %102, 512
-  %104 = icmp eq i16 %103, 0
-  br i1 %104, label %300, label %105
+; <label>:206:                                    ; preds = %203
+  %207 = call i8* inttoptr (i64 1 to i8* (i8*, i8*)*)(i8* bitcast (%struct.bpf_map_def* @servers to i8*), i8* nonnull %158) #2
+  %208 = icmp eq i8* %207, null
+  br i1 %208, label %211, label %209
 
-; <label>:105:                                    ; preds = %99
-  %106 = bitcast i32* %6 to i8*
-  call void @llvm.lifetime.start.p0i8(i64 4, i8* nonnull %106) #2
-  %107 = add i32 %82, -559038217
-  %108 = add i32 %94, -559038217
-  %109 = xor i32 %108, -559038217
-  %110 = shl i32 %108, 14
-  %111 = lshr i32 %108, 18
-  %112 = or i32 %111, %110
-  %113 = sub i32 %109, %112
-  %114 = xor i32 %113, %107
-  %115 = shl i32 %113, 11
-  %116 = lshr i32 %113, 21
-  %117 = or i32 %116, %115
-  %118 = sub i32 %114, %117
-  %119 = xor i32 %118, %108
-  %120 = shl i32 %118, 25
-  %121 = lshr i32 %118, 7
-  %122 = or i32 %121, %120
-  %123 = sub i32 %119, %122
-  %124 = xor i32 %123, %113
-  %125 = shl i32 %123, 16
-  %126 = lshr i32 %123, 16
-  %127 = or i32 %126, %125
-  %128 = sub i32 %124, %127
-  %129 = xor i32 %128, %118
-  %130 = shl i32 %128, 4
-  %131 = lshr i32 %128, 28
-  %132 = or i32 %131, %130
-  %133 = sub i32 %129, %132
-  %134 = xor i32 %133, %123
-  %135 = shl i32 %133, 14
-  %136 = lshr i32 %133, 18
-  %137 = or i32 %136, %135
-  %138 = sub i32 %134, %137
-  %139 = xor i32 %138, %128
-  %140 = lshr i32 %138, 8
-  %141 = sub i32 %139, %140
-  %142 = and i32 %141, 511
-  store i32 %142, i32* %6, align 4, !tbaa !17
-  %143 = bitcast i32* %7 to i8*
-  call void @llvm.lifetime.start.p0i8(i64 4, i8* nonnull %143) #2
-  store i32 %96, i32* %7, align 4, !tbaa !17
-  %144 = call i8* inttoptr (i64 1 to i8* (i8*, i8*)*)(i8* bitcast (%struct.bpf_map_def* @services to i8*), i8* nonnull %143) #2
-  %145 = bitcast i32* %8 to i8*
-  call void @llvm.lifetime.start.p0i8(i64 4, i8* nonnull %145) #2
-  store i32 513, i32* %8, align 4, !tbaa !17
-  %146 = icmp eq i8* %144, null
-  br i1 %146, label %299, label %147
+; <label>:209:                                    ; preds = %206
+  %210 = bitcast i8* %207 to %struct.dest_info*
+  br label %310
 
-; <label>:147:                                    ; preds = %105
-  %148 = getelementptr inbounds i8, i8* %144, i64 16
-  %149 = bitcast i8* %148 to i64*
-  %150 = load i64, i64* %149, align 8, !tbaa !22
-  %151 = bitcast i8* %144 to i64*
-  %152 = load i64, i64* %151, align 8, !tbaa !24
-  %153 = add i64 %152, 1
-  %154 = and i64 %153, 4294967295
-  %155 = urem i64 %154, %150
-  %156 = add i64 %155, %150
-  %157 = trunc i64 %156 to i32
-  store i32 %157, i32* %8, align 4, !tbaa !17
-  %158 = call i8* inttoptr (i64 1 to i8* (i8*, i8*)*)(i8* bitcast (%struct.bpf_map_def* @servers to i8*), i8* nonnull %145) #2
-  %159 = icmp eq i8* %158, null
-  br i1 %159, label %160, label %162
+; <label>:211:                                    ; preds = %206, %203
+  store i32 %148, i32* %2, align 4, !tbaa !16
+  %212 = call i8* inttoptr (i64 1 to i8* (i8*, i8*)*)(i8* bitcast (%struct.bpf_map_def* @services to i8*), i8* nonnull %156) #2
+  %213 = icmp eq i8* %212, null
+  br i1 %213, label %310, label %214
 
-; <label>:160:                                    ; preds = %147
-  %161 = load i32, i32* %8, align 4, !tbaa !17
-  br label %166
+; <label>:214:                                    ; preds = %211
+  %215 = getelementptr inbounds i8, i8* %212, i64 8
+  %216 = bitcast i8* %215 to i32*
+  %217 = load i32, i32* %216, align 4, !tbaa !28
+  %218 = zext i32 %217 to i64
+  %219 = bitcast i8* %212 to i32*
+  %220 = load i32, i32* %219, align 4, !tbaa !30
+  %221 = add i32 %217, 1
+  %222 = add i32 %221, %220
+  %223 = add nuw nsw i64 %218, 10
+  %224 = zext i32 %222 to i64
+  %225 = icmp ugt i64 %223, %224
+  %226 = select i1 %225, i32 %222, i32 %221
+  store i32 %226, i32* %4, align 4, !tbaa !16
+  %227 = call i8* inttoptr (i64 1 to i8* (i8*, i8*)*)(i8* bitcast (%struct.bpf_map_def* @servers to i8*), i8* nonnull %158) #2
+  %228 = icmp eq i8* %227, null
+  br i1 %228, label %229, label %237
 
-; <label>:162:                                    ; preds = %147
-  %163 = call i32 inttoptr (i64 2 to i32 (i8*, i8*, i8*, i64)*)(i8* bitcast (%struct.bpf_map_def* @destinations to i8*), i8* nonnull %106, i8* nonnull %145, i64 0) #2
-  %164 = load i32, i32* %8, align 4, !tbaa !17
-  %165 = zext i32 %164 to i64
-  store i64 %165, i64* %151, align 8, !tbaa !24
-  br label %166
+; <label>:229:                                    ; preds = %214
+  %230 = load i32, i32* %4, align 4, !tbaa !16
+  %231 = add i32 %230, 1
+  %232 = zext i32 %231 to i64
+  %233 = icmp ugt i64 %223, %232
+  %234 = select i1 %233, i32 %231, i32 %221
+  store i32 %234, i32* %4, align 4, !tbaa !16
+  %235 = call i8* inttoptr (i64 1 to i8* (i8*, i8*)*)(i8* bitcast (%struct.bpf_map_def* @servers to i8*), i8* nonnull %158) #2
+  %236 = icmp eq i8* %235, null
+  br i1 %236, label %243, label %237
 
-; <label>:166:                                    ; preds = %162, %160
-  %167 = phi i32 [ %161, %160 ], [ %164, %162 ]
-  %168 = add i32 %167, 1
-  %169 = zext i32 %168 to i64
-  %170 = urem i64 %169, %150
-  %171 = add i64 %170, %150
-  %172 = trunc i64 %171 to i32
-  store i32 %172, i32* %8, align 4, !tbaa !17
-  %173 = call i8* inttoptr (i64 1 to i8* (i8*, i8*)*)(i8* bitcast (%struct.bpf_map_def* @servers to i8*), i8* nonnull %145) #2
-  %174 = icmp eq i8* %173, null
-  br i1 %174, label %175, label %177
+; <label>:237:                                    ; preds = %299, %291, %283, %275, %267, %259, %251, %243, %229, %214
+  %238 = phi i8* [ %227, %214 ], [ %235, %229 ], [ %249, %243 ], [ %257, %251 ], [ %265, %259 ], [ %273, %267 ], [ %281, %275 ], [ %289, %283 ], [ %297, %291 ], [ %305, %299 ]
+  %239 = bitcast i8* %238 to %struct.dest_info*
+  %240 = call i32 inttoptr (i64 2 to i32 (i8*, i8*, i8*, i64)*)(i8* bitcast (%struct.bpf_map_def* @destinations to i8*), i8* nonnull %157, i8* nonnull %158, i64 0) #2
+  %241 = load i32, i32* %219, align 4, !tbaa !30
+  %242 = add i32 %241, 1
+  store i32 %242, i32* %219, align 4, !tbaa !30
+  br label %310
 
-; <label>:175:                                    ; preds = %166
-  %176 = load i32, i32* %8, align 4, !tbaa !17
-  br label %181
+; <label>:243:                                    ; preds = %229
+  %244 = load i32, i32* %4, align 4, !tbaa !16
+  %245 = add i32 %244, 1
+  %246 = zext i32 %245 to i64
+  %247 = icmp ugt i64 %223, %246
+  %248 = select i1 %247, i32 %245, i32 %221
+  store i32 %248, i32* %4, align 4, !tbaa !16
+  %249 = call i8* inttoptr (i64 1 to i8* (i8*, i8*)*)(i8* bitcast (%struct.bpf_map_def* @servers to i8*), i8* nonnull %158) #2
+  %250 = icmp eq i8* %249, null
+  br i1 %250, label %251, label %237
 
-; <label>:177:                                    ; preds = %166
-  %178 = call i32 inttoptr (i64 2 to i32 (i8*, i8*, i8*, i64)*)(i8* bitcast (%struct.bpf_map_def* @destinations to i8*), i8* nonnull %106, i8* nonnull %145, i64 0) #2
-  %179 = load i32, i32* %8, align 4, !tbaa !17
-  %180 = zext i32 %179 to i64
-  store i64 %180, i64* %151, align 8, !tbaa !24
-  br label %181
+; <label>:251:                                    ; preds = %243
+  %252 = load i32, i32* %4, align 4, !tbaa !16
+  %253 = add i32 %252, 1
+  %254 = zext i32 %253 to i64
+  %255 = icmp ugt i64 %223, %254
+  %256 = select i1 %255, i32 %253, i32 %221
+  store i32 %256, i32* %4, align 4, !tbaa !16
+  %257 = call i8* inttoptr (i64 1 to i8* (i8*, i8*)*)(i8* bitcast (%struct.bpf_map_def* @servers to i8*), i8* nonnull %158) #2
+  %258 = icmp eq i8* %257, null
+  br i1 %258, label %259, label %237
 
-; <label>:181:                                    ; preds = %177, %175
-  %182 = phi i32 [ %176, %175 ], [ %179, %177 ]
-  %183 = add i32 %182, 1
-  %184 = zext i32 %183 to i64
-  %185 = urem i64 %184, %150
-  %186 = add i64 %185, %150
-  %187 = trunc i64 %186 to i32
-  store i32 %187, i32* %8, align 4, !tbaa !17
-  %188 = call i8* inttoptr (i64 1 to i8* (i8*, i8*)*)(i8* bitcast (%struct.bpf_map_def* @servers to i8*), i8* nonnull %145) #2
-  %189 = icmp eq i8* %188, null
-  br i1 %189, label %190, label %192
+; <label>:259:                                    ; preds = %251
+  %260 = load i32, i32* %4, align 4, !tbaa !16
+  %261 = add i32 %260, 1
+  %262 = zext i32 %261 to i64
+  %263 = icmp ugt i64 %223, %262
+  %264 = select i1 %263, i32 %261, i32 %221
+  store i32 %264, i32* %4, align 4, !tbaa !16
+  %265 = call i8* inttoptr (i64 1 to i8* (i8*, i8*)*)(i8* bitcast (%struct.bpf_map_def* @servers to i8*), i8* nonnull %158) #2
+  %266 = icmp eq i8* %265, null
+  br i1 %266, label %267, label %237
 
-; <label>:190:                                    ; preds = %181
-  %191 = load i32, i32* %8, align 4, !tbaa !17
-  br label %196
-
-; <label>:192:                                    ; preds = %181
-  %193 = call i32 inttoptr (i64 2 to i32 (i8*, i8*, i8*, i64)*)(i8* bitcast (%struct.bpf_map_def* @destinations to i8*), i8* nonnull %106, i8* nonnull %145, i64 0) #2
-  %194 = load i32, i32* %8, align 4, !tbaa !17
-  %195 = zext i32 %194 to i64
-  store i64 %195, i64* %151, align 8, !tbaa !24
-  br label %196
-
-; <label>:196:                                    ; preds = %192, %190
-  %197 = phi i32 [ %191, %190 ], [ %194, %192 ]
-  %198 = add i32 %197, 1
-  %199 = zext i32 %198 to i64
-  %200 = urem i64 %199, %150
-  %201 = add i64 %200, %150
-  %202 = trunc i64 %201 to i32
-  store i32 %202, i32* %8, align 4, !tbaa !17
-  %203 = call i8* inttoptr (i64 1 to i8* (i8*, i8*)*)(i8* bitcast (%struct.bpf_map_def* @servers to i8*), i8* nonnull %145) #2
-  %204 = icmp eq i8* %203, null
-  br i1 %204, label %205, label %207
-
-; <label>:205:                                    ; preds = %196
-  %206 = load i32, i32* %8, align 4, !tbaa !17
-  br label %211
-
-; <label>:207:                                    ; preds = %196
-  %208 = call i32 inttoptr (i64 2 to i32 (i8*, i8*, i8*, i64)*)(i8* bitcast (%struct.bpf_map_def* @destinations to i8*), i8* nonnull %106, i8* nonnull %145, i64 0) #2
-  %209 = load i32, i32* %8, align 4, !tbaa !17
-  %210 = zext i32 %209 to i64
-  store i64 %210, i64* %151, align 8, !tbaa !24
-  br label %211
-
-; <label>:211:                                    ; preds = %207, %205
-  %212 = phi i32 [ %206, %205 ], [ %209, %207 ]
-  %213 = add i32 %212, 1
-  %214 = zext i32 %213 to i64
-  %215 = urem i64 %214, %150
-  %216 = add i64 %215, %150
-  %217 = trunc i64 %216 to i32
-  store i32 %217, i32* %8, align 4, !tbaa !17
-  %218 = call i8* inttoptr (i64 1 to i8* (i8*, i8*)*)(i8* bitcast (%struct.bpf_map_def* @servers to i8*), i8* nonnull %145) #2
-  %219 = icmp eq i8* %218, null
-  br i1 %219, label %220, label %222
-
-; <label>:220:                                    ; preds = %211
-  %221 = load i32, i32* %8, align 4, !tbaa !17
-  br label %226
-
-; <label>:222:                                    ; preds = %211
-  %223 = call i32 inttoptr (i64 2 to i32 (i8*, i8*, i8*, i64)*)(i8* bitcast (%struct.bpf_map_def* @destinations to i8*), i8* nonnull %106, i8* nonnull %145, i64 0) #2
-  %224 = load i32, i32* %8, align 4, !tbaa !17
-  %225 = zext i32 %224 to i64
-  store i64 %225, i64* %151, align 8, !tbaa !24
-  br label %226
-
-; <label>:226:                                    ; preds = %222, %220
-  %227 = phi i32 [ %221, %220 ], [ %224, %222 ]
-  %228 = add i32 %227, 1
-  %229 = zext i32 %228 to i64
-  %230 = urem i64 %229, %150
-  %231 = add i64 %230, %150
-  %232 = trunc i64 %231 to i32
-  store i32 %232, i32* %8, align 4, !tbaa !17
-  %233 = call i8* inttoptr (i64 1 to i8* (i8*, i8*)*)(i8* bitcast (%struct.bpf_map_def* @servers to i8*), i8* nonnull %145) #2
-  %234 = icmp eq i8* %233, null
-  br i1 %234, label %235, label %237
-
-; <label>:235:                                    ; preds = %226
-  %236 = load i32, i32* %8, align 4, !tbaa !17
-  br label %241
-
-; <label>:237:                                    ; preds = %226
-  %238 = call i32 inttoptr (i64 2 to i32 (i8*, i8*, i8*, i64)*)(i8* bitcast (%struct.bpf_map_def* @destinations to i8*), i8* nonnull %106, i8* nonnull %145, i64 0) #2
-  %239 = load i32, i32* %8, align 4, !tbaa !17
-  %240 = zext i32 %239 to i64
-  store i64 %240, i64* %151, align 8, !tbaa !24
-  br label %241
-
-; <label>:241:                                    ; preds = %237, %235
-  %242 = phi i32 [ %236, %235 ], [ %239, %237 ]
-  %243 = add i32 %242, 1
-  %244 = zext i32 %243 to i64
-  %245 = urem i64 %244, %150
-  %246 = add i64 %245, %150
-  %247 = trunc i64 %246 to i32
-  store i32 %247, i32* %8, align 4, !tbaa !17
-  %248 = call i8* inttoptr (i64 1 to i8* (i8*, i8*)*)(i8* bitcast (%struct.bpf_map_def* @servers to i8*), i8* nonnull %145) #2
-  %249 = icmp eq i8* %248, null
-  br i1 %249, label %250, label %252
-
-; <label>:250:                                    ; preds = %241
-  %251 = load i32, i32* %8, align 4, !tbaa !17
-  br label %256
-
-; <label>:252:                                    ; preds = %241
-  %253 = call i32 inttoptr (i64 2 to i32 (i8*, i8*, i8*, i64)*)(i8* bitcast (%struct.bpf_map_def* @destinations to i8*), i8* nonnull %106, i8* nonnull %145, i64 0) #2
-  %254 = load i32, i32* %8, align 4, !tbaa !17
-  %255 = zext i32 %254 to i64
-  store i64 %255, i64* %151, align 8, !tbaa !24
-  br label %256
-
-; <label>:256:                                    ; preds = %252, %250
-  %257 = phi i32 [ %251, %250 ], [ %254, %252 ]
-  %258 = add i32 %257, 1
-  %259 = zext i32 %258 to i64
-  %260 = urem i64 %259, %150
-  %261 = add i64 %260, %150
-  %262 = trunc i64 %261 to i32
-  store i32 %262, i32* %8, align 4, !tbaa !17
-  %263 = call i8* inttoptr (i64 1 to i8* (i8*, i8*)*)(i8* bitcast (%struct.bpf_map_def* @servers to i8*), i8* nonnull %145) #2
-  %264 = icmp eq i8* %263, null
-  br i1 %264, label %265, label %267
-
-; <label>:265:                                    ; preds = %256
-  %266 = load i32, i32* %8, align 4, !tbaa !17
-  br label %271
-
-; <label>:267:                                    ; preds = %256
-  %268 = call i32 inttoptr (i64 2 to i32 (i8*, i8*, i8*, i64)*)(i8* bitcast (%struct.bpf_map_def* @destinations to i8*), i8* nonnull %106, i8* nonnull %145, i64 0) #2
-  %269 = load i32, i32* %8, align 4, !tbaa !17
+; <label>:267:                                    ; preds = %259
+  %268 = load i32, i32* %4, align 4, !tbaa !16
+  %269 = add i32 %268, 1
   %270 = zext i32 %269 to i64
-  store i64 %270, i64* %151, align 8, !tbaa !24
-  br label %271
+  %271 = icmp ugt i64 %223, %270
+  %272 = select i1 %271, i32 %269, i32 %221
+  store i32 %272, i32* %4, align 4, !tbaa !16
+  %273 = call i8* inttoptr (i64 1 to i8* (i8*, i8*)*)(i8* bitcast (%struct.bpf_map_def* @servers to i8*), i8* nonnull %158) #2
+  %274 = icmp eq i8* %273, null
+  br i1 %274, label %275, label %237
 
-; <label>:271:                                    ; preds = %267, %265
-  %272 = phi i32 [ %266, %265 ], [ %269, %267 ]
-  %273 = add i32 %272, 1
-  %274 = zext i32 %273 to i64
-  %275 = urem i64 %274, %150
-  %276 = add i64 %275, %150
-  %277 = trunc i64 %276 to i32
-  store i32 %277, i32* %8, align 4, !tbaa !17
-  %278 = call i8* inttoptr (i64 1 to i8* (i8*, i8*)*)(i8* bitcast (%struct.bpf_map_def* @servers to i8*), i8* nonnull %145) #2
-  %279 = icmp eq i8* %278, null
-  br i1 %279, label %280, label %282
+; <label>:275:                                    ; preds = %267
+  %276 = load i32, i32* %4, align 4, !tbaa !16
+  %277 = add i32 %276, 1
+  %278 = zext i32 %277 to i64
+  %279 = icmp ugt i64 %223, %278
+  %280 = select i1 %279, i32 %277, i32 %221
+  store i32 %280, i32* %4, align 4, !tbaa !16
+  %281 = call i8* inttoptr (i64 1 to i8* (i8*, i8*)*)(i8* bitcast (%struct.bpf_map_def* @servers to i8*), i8* nonnull %158) #2
+  %282 = icmp eq i8* %281, null
+  br i1 %282, label %283, label %237
 
-; <label>:280:                                    ; preds = %271
-  %281 = load i32, i32* %8, align 4, !tbaa !17
-  br label %286
+; <label>:283:                                    ; preds = %275
+  %284 = load i32, i32* %4, align 4, !tbaa !16
+  %285 = add i32 %284, 1
+  %286 = zext i32 %285 to i64
+  %287 = icmp ugt i64 %223, %286
+  %288 = select i1 %287, i32 %285, i32 %221
+  store i32 %288, i32* %4, align 4, !tbaa !16
+  %289 = call i8* inttoptr (i64 1 to i8* (i8*, i8*)*)(i8* bitcast (%struct.bpf_map_def* @servers to i8*), i8* nonnull %158) #2
+  %290 = icmp eq i8* %289, null
+  br i1 %290, label %291, label %237
 
-; <label>:282:                                    ; preds = %271
-  %283 = call i32 inttoptr (i64 2 to i32 (i8*, i8*, i8*, i64)*)(i8* bitcast (%struct.bpf_map_def* @destinations to i8*), i8* nonnull %106, i8* nonnull %145, i64 0) #2
-  %284 = load i32, i32* %8, align 4, !tbaa !17
-  %285 = zext i32 %284 to i64
-  store i64 %285, i64* %151, align 8, !tbaa !24
-  br label %286
+; <label>:291:                                    ; preds = %283
+  %292 = load i32, i32* %4, align 4, !tbaa !16
+  %293 = add i32 %292, 1
+  %294 = zext i32 %293 to i64
+  %295 = icmp ugt i64 %223, %294
+  %296 = select i1 %295, i32 %293, i32 %221
+  store i32 %296, i32* %4, align 4, !tbaa !16
+  %297 = call i8* inttoptr (i64 1 to i8* (i8*, i8*)*)(i8* bitcast (%struct.bpf_map_def* @servers to i8*), i8* nonnull %158) #2
+  %298 = icmp eq i8* %297, null
+  br i1 %298, label %299, label %237
 
-; <label>:286:                                    ; preds = %282, %280
-  %287 = phi i32 [ %281, %280 ], [ %284, %282 ]
-  %288 = add i32 %287, 1
-  %289 = zext i32 %288 to i64
-  %290 = urem i64 %289, %150
-  %291 = add i64 %290, %150
-  %292 = trunc i64 %291 to i32
-  store i32 %292, i32* %8, align 4, !tbaa !17
-  %293 = call i8* inttoptr (i64 1 to i8* (i8*, i8*)*)(i8* bitcast (%struct.bpf_map_def* @servers to i8*), i8* nonnull %145) #2
-  %294 = icmp eq i8* %293, null
-  br i1 %294, label %299, label %295
+; <label>:299:                                    ; preds = %291
+  %300 = load i32, i32* %4, align 4, !tbaa !16
+  %301 = add i32 %300, 1
+  %302 = zext i32 %301 to i64
+  %303 = icmp ugt i64 %223, %302
+  %304 = select i1 %303, i32 %301, i32 %221
+  store i32 %304, i32* %4, align 4, !tbaa !16
+  %305 = call i8* inttoptr (i64 1 to i8* (i8*, i8*)*)(i8* bitcast (%struct.bpf_map_def* @servers to i8*), i8* nonnull %158) #2
+  %306 = icmp eq i8* %305, null
+  br i1 %306, label %307, label %237
 
-; <label>:295:                                    ; preds = %286
-  %296 = call i32 inttoptr (i64 2 to i32 (i8*, i8*, i8*, i64)*)(i8* bitcast (%struct.bpf_map_def* @destinations to i8*), i8* nonnull %106, i8* nonnull %145, i64 0) #2
-  %297 = load i32, i32* %8, align 4, !tbaa !17
-  %298 = zext i32 %297 to i64
-  store i64 %298, i64* %151, align 8, !tbaa !24
-  br label %299
+; <label>:307:                                    ; preds = %299
+  %308 = load i32, i32* %4, align 4, !tbaa !16
+  %309 = add i32 %308, 1
+  store i32 %309, i32* %4, align 4, !tbaa !16
+  br label %310
 
-; <label>:299:                                    ; preds = %105, %286, %295
-  call void @llvm.lifetime.end.p0i8(i64 4, i8* nonnull %145) #2
-  call void @llvm.lifetime.end.p0i8(i64 4, i8* nonnull %143) #2
-  call void @llvm.lifetime.end.p0i8(i64 4, i8* nonnull %106) #2
-  br label %379
+; <label>:310:                                    ; preds = %209, %211, %237, %307
+  %311 = phi %struct.dest_info* [ %210, %209 ], [ %239, %237 ], [ null, %211 ], [ null, %307 ]
+  call void @llvm.lifetime.end.p0i8(i64 4, i8* nonnull %158) #2
+  call void @llvm.lifetime.end.p0i8(i64 4, i8* nonnull %157) #2
+  call void @llvm.lifetime.end.p0i8(i64 4, i8* nonnull %156) #2
+  %312 = icmp eq %struct.dest_info* %311, null
+  br i1 %312, label %313, label %341
 
-; <label>:300:                                    ; preds = %99
-  %301 = and i16 %102, 256
-  %302 = icmp eq i16 %301, 0
-  br i1 %302, label %303, label %340
+; <label>:313:                                    ; preds = %310
+  %314 = bitcast %struct.log* %12 to i8*
+  call void @llvm.lifetime.start.p0i8(i64 24, i8* nonnull %314) #2
+  %315 = getelementptr inbounds %struct.log, %struct.log* %12, i64 0, i32 4, i64 0
+  %316 = bitcast i8* %315 to i64*
+  store i64 0, i64* %316, align 4
+  %317 = load i32, i32* %6, align 4, !tbaa !16
+  %318 = getelementptr inbounds %struct.log, %struct.log* %12, i64 0, i32 0
+  store i32 %317, i32* %318, align 4, !tbaa !18
+  %319 = getelementptr inbounds %struct.log, %struct.log* %12, i64 0, i32 1
+  store i32 2, i32* %319, align 4, !tbaa !20
+  %320 = getelementptr inbounds %struct.log, %struct.log* %12, i64 0, i32 2
+  store i32 2, i32* %320, align 4, !tbaa !21
+  %321 = getelementptr inbounds %struct.log, %struct.log* %12, i64 0, i32 3
+  store i32 %44, i32* %321, align 4, !tbaa !22
+  %322 = load i8, i8* %52, align 1, !tbaa !23
+  %323 = getelementptr inbounds %struct.log, %struct.log* %12, i64 0, i32 4, i64 0
+  store i8 %322, i8* %323, align 4, !tbaa !23
+  %324 = getelementptr inbounds %struct.ethhdr, %struct.ethhdr* %26, i64 0, i32 0, i64 1
+  %325 = load i8, i8* %324, align 1, !tbaa !23
+  %326 = getelementptr inbounds %struct.log, %struct.log* %12, i64 0, i32 4, i64 1
+  store i8 %325, i8* %326, align 1, !tbaa !23
+  %327 = getelementptr inbounds %struct.ethhdr, %struct.ethhdr* %26, i64 0, i32 0, i64 2
+  %328 = load i8, i8* %327, align 1, !tbaa !23
+  %329 = getelementptr inbounds %struct.log, %struct.log* %12, i64 0, i32 4, i64 2
+  store i8 %328, i8* %329, align 2, !tbaa !23
+  %330 = getelementptr inbounds %struct.ethhdr, %struct.ethhdr* %26, i64 0, i32 0, i64 3
+  %331 = load i8, i8* %330, align 1, !tbaa !23
+  %332 = getelementptr inbounds %struct.log, %struct.log* %12, i64 0, i32 4, i64 3
+  store i8 %331, i8* %332, align 1, !tbaa !23
+  %333 = getelementptr inbounds %struct.ethhdr, %struct.ethhdr* %26, i64 0, i32 0, i64 4
+  %334 = load i8, i8* %333, align 1, !tbaa !23
+  %335 = getelementptr inbounds %struct.log, %struct.log* %12, i64 0, i32 4, i64 4
+  store i8 %334, i8* %335, align 4, !tbaa !23
+  %336 = getelementptr inbounds %struct.ethhdr, %struct.ethhdr* %26, i64 0, i32 0, i64 5
+  %337 = load i8, i8* %336, align 1, !tbaa !23
+  %338 = getelementptr inbounds %struct.log, %struct.log* %12, i64 0, i32 4, i64 5
+  store i8 %337, i8* %338, align 1, !tbaa !23
+  %339 = call i64 inttoptr (i64 5 to i64 ()*)() #2
+  store i64 %339, i64* %7, align 8, !tbaa !2
+  %340 = call i32 inttoptr (i64 2 to i32 (i8*, i8*, i8*, i64)*)(i8* bitcast (%struct.bpf_map_def* @logs to i8*), i8* nonnull %17, i8* nonnull %314, i64 0) #2
+  call void @llvm.lifetime.end.p0i8(i64 24, i8* nonnull %314) #2
+  br label %407
 
-; <label>:303:                                    ; preds = %300
-  %304 = add i32 %82, -559038217
-  %305 = add i32 %94, -559038217
-  %306 = xor i32 %305, -559038217
-  %307 = shl i32 %305, 14
-  %308 = lshr i32 %305, 18
-  %309 = or i32 %308, %307
-  %310 = sub i32 %306, %309
-  %311 = xor i32 %310, %304
-  %312 = shl i32 %310, 11
-  %313 = lshr i32 %310, 21
-  %314 = or i32 %313, %312
-  %315 = sub i32 %311, %314
-  %316 = xor i32 %315, %305
-  %317 = shl i32 %315, 25
-  %318 = lshr i32 %315, 7
-  %319 = or i32 %318, %317
-  %320 = sub i32 %316, %319
-  %321 = xor i32 %320, %310
-  %322 = shl i32 %320, 16
-  %323 = lshr i32 %320, 16
-  %324 = or i32 %323, %322
-  %325 = sub i32 %321, %324
-  %326 = xor i32 %325, %315
-  %327 = shl i32 %325, 4
-  %328 = lshr i32 %325, 28
-  %329 = or i32 %328, %327
-  %330 = sub i32 %326, %329
-  %331 = xor i32 %330, %320
-  %332 = shl i32 %330, 14
-  %333 = lshr i32 %330, 18
-  %334 = or i32 %333, %332
-  %335 = sub i32 %331, %334
-  %336 = xor i32 %335, %325
-  %337 = lshr i32 %335, 8
-  %338 = sub i32 %336, %337
-  %339 = and i32 %338, 511
-  br label %379
+; <label>:341:                                    ; preds = %310
+  %342 = getelementptr inbounds %struct.dest_info, %struct.dest_info* %311, i64 0, i32 5, i64 0
+  %343 = load i8, i8* %342, align 8, !tbaa !23
+  store i8 %343, i8* %52, align 1, !tbaa !23
+  %344 = getelementptr inbounds %struct.dest_info, %struct.dest_info* %311, i64 0, i32 5, i64 1
+  %345 = load i8, i8* %344, align 1, !tbaa !23
+  %346 = getelementptr inbounds %struct.ethhdr, %struct.ethhdr* %26, i64 0, i32 0, i64 1
+  store i8 %345, i8* %346, align 1, !tbaa !23
+  %347 = getelementptr inbounds %struct.dest_info, %struct.dest_info* %311, i64 0, i32 5, i64 2
+  %348 = load i8, i8* %347, align 2, !tbaa !23
+  %349 = getelementptr inbounds %struct.ethhdr, %struct.ethhdr* %26, i64 0, i32 0, i64 2
+  store i8 %348, i8* %349, align 1, !tbaa !23
+  %350 = getelementptr inbounds %struct.dest_info, %struct.dest_info* %311, i64 0, i32 5, i64 3
+  %351 = load i8, i8* %350, align 1, !tbaa !23
+  %352 = getelementptr inbounds %struct.ethhdr, %struct.ethhdr* %26, i64 0, i32 0, i64 3
+  store i8 %351, i8* %352, align 1, !tbaa !23
+  %353 = getelementptr inbounds %struct.dest_info, %struct.dest_info* %311, i64 0, i32 5, i64 4
+  %354 = load i8, i8* %353, align 4, !tbaa !23
+  %355 = getelementptr inbounds %struct.ethhdr, %struct.ethhdr* %26, i64 0, i32 0, i64 4
+  store i8 %354, i8* %355, align 1, !tbaa !23
+  %356 = getelementptr inbounds %struct.dest_info, %struct.dest_info* %311, i64 0, i32 5, i64 5
+  %357 = load i8, i8* %356, align 1, !tbaa !23
+  %358 = getelementptr inbounds %struct.ethhdr, %struct.ethhdr* %26, i64 0, i32 0, i64 5
+  store i8 %357, i8* %358, align 1, !tbaa !23
+  %359 = bitcast %struct.log* %13 to i8*
+  call void @llvm.lifetime.start.p0i8(i64 24, i8* nonnull %359) #2
+  call void @llvm.memset.p0i8.i64(i8* nonnull %359, i8 0, i64 24, i32 4, i1 false)
+  %360 = load i32, i32* %6, align 4, !tbaa !16
+  %361 = getelementptr inbounds %struct.log, %struct.log* %13, i64 0, i32 0
+  store i32 %360, i32* %361, align 4, !tbaa !18
+  %362 = getelementptr inbounds %struct.log, %struct.log* %13, i64 0, i32 1
+  store i32 1, i32* %362, align 4, !tbaa !20
+  %363 = getelementptr inbounds %struct.log, %struct.log* %13, i64 0, i32 2
+  store i32 0, i32* %363, align 4, !tbaa !21
+  %364 = getelementptr inbounds %struct.log, %struct.log* %13, i64 0, i32 3
+  store i32 %44, i32* %364, align 4, !tbaa !22
+  %365 = load i8, i8* %342, align 8, !tbaa !23
+  %366 = getelementptr inbounds %struct.log, %struct.log* %13, i64 0, i32 4, i64 0
+  store i8 %365, i8* %366, align 4, !tbaa !23
+  %367 = load i8, i8* %344, align 1, !tbaa !23
+  %368 = getelementptr inbounds %struct.log, %struct.log* %13, i64 0, i32 4, i64 1
+  store i8 %367, i8* %368, align 1, !tbaa !23
+  %369 = load i8, i8* %347, align 2, !tbaa !23
+  %370 = getelementptr inbounds %struct.log, %struct.log* %13, i64 0, i32 4, i64 2
+  store i8 %369, i8* %370, align 2, !tbaa !23
+  %371 = load i8, i8* %350, align 1, !tbaa !23
+  %372 = getelementptr inbounds %struct.log, %struct.log* %13, i64 0, i32 4, i64 3
+  store i8 %371, i8* %372, align 1, !tbaa !23
+  %373 = load i8, i8* %353, align 4, !tbaa !23
+  %374 = getelementptr inbounds %struct.log, %struct.log* %13, i64 0, i32 4, i64 4
+  store i8 %373, i8* %374, align 4, !tbaa !23
+  %375 = load i8, i8* %356, align 1, !tbaa !23
+  %376 = getelementptr inbounds %struct.log, %struct.log* %13, i64 0, i32 4, i64 5
+  store i8 %375, i8* %376, align 1, !tbaa !23
+  %377 = call i64 inttoptr (i64 5 to i64 ()*)() #2
+  store i64 %377, i64* %7, align 8, !tbaa !2
+  %378 = call i32 inttoptr (i64 2 to i32 (i8*, i8*, i8*, i64)*)(i8* bitcast (%struct.bpf_map_def* @logs to i8*), i8* nonnull %17, i8* nonnull %359, i64 0) #2
+  call void @llvm.lifetime.end.p0i8(i64 24, i8* nonnull %359) #2
+  br label %407
 
-; <label>:340:                                    ; preds = %300
-  %341 = bitcast i32* %5 to i8*
-  call void @llvm.lifetime.start.p0i8(i64 4, i8* nonnull %341) #2
-  %342 = add i32 %82, -559038217
-  %343 = add i32 %94, -559038217
-  %344 = xor i32 %343, -559038217
-  %345 = shl i32 %343, 14
-  %346 = lshr i32 %343, 18
-  %347 = or i32 %346, %345
-  %348 = sub i32 %344, %347
-  %349 = xor i32 %348, %342
-  %350 = shl i32 %348, 11
-  %351 = lshr i32 %348, 21
-  %352 = or i32 %351, %350
-  %353 = sub i32 %349, %352
-  %354 = xor i32 %353, %343
-  %355 = shl i32 %353, 25
-  %356 = lshr i32 %353, 7
-  %357 = or i32 %356, %355
-  %358 = sub i32 %354, %357
-  %359 = xor i32 %358, %348
-  %360 = shl i32 %358, 16
-  %361 = lshr i32 %358, 16
-  %362 = or i32 %361, %360
-  %363 = sub i32 %359, %362
-  %364 = xor i32 %363, %353
-  %365 = shl i32 %363, 4
-  %366 = lshr i32 %363, 28
-  %367 = or i32 %366, %365
-  %368 = sub i32 %364, %367
-  %369 = xor i32 %368, %358
-  %370 = shl i32 %368, 14
-  %371 = lshr i32 %368, 18
-  %372 = or i32 %371, %370
-  %373 = sub i32 %369, %372
-  %374 = xor i32 %373, %363
-  %375 = lshr i32 %373, 8
-  %376 = sub i32 %374, %375
-  %377 = and i32 %376, 511
-  store i32 %377, i32* %5, align 4, !tbaa !17
-  %378 = call i32 inttoptr (i64 3 to i32 (i8*, i8*)*)(i8* bitcast (%struct.bpf_map_def* @destinations to i8*), i8* nonnull %341) #2
-  call void @llvm.lifetime.end.p0i8(i64 4, i8* nonnull %341) #2
-  br label %379
+; <label>:379:                                    ; preds = %139
+  %380 = bitcast %struct.log* %14 to i8*
+  call void @llvm.lifetime.start.p0i8(i64 24, i8* nonnull %380) #2
+  %381 = getelementptr inbounds %struct.log, %struct.log* %14, i64 0, i32 4, i64 0
+  %382 = bitcast i8* %381 to i64*
+  store i64 0, i64* %382, align 4
+  %383 = load i32, i32* %6, align 4, !tbaa !16
+  %384 = getelementptr inbounds %struct.log, %struct.log* %14, i64 0, i32 0
+  store i32 %383, i32* %384, align 4, !tbaa !18
+  %385 = getelementptr inbounds %struct.log, %struct.log* %14, i64 0, i32 1
+  store i32 1, i32* %385, align 4, !tbaa !20
+  %386 = getelementptr inbounds %struct.log, %struct.log* %14, i64 0, i32 2
+  store i32 0, i32* %386, align 4, !tbaa !21
+  %387 = getelementptr inbounds %struct.log, %struct.log* %14, i64 0, i32 3
+  store i32 %44, i32* %387, align 4, !tbaa !22
+  %388 = load i8, i8* %52, align 1, !tbaa !23
+  %389 = getelementptr inbounds %struct.log, %struct.log* %14, i64 0, i32 4, i64 0
+  store i8 %388, i8* %389, align 4, !tbaa !23
+  %390 = getelementptr inbounds %struct.ethhdr, %struct.ethhdr* %26, i64 0, i32 0, i64 1
+  %391 = load i8, i8* %390, align 1, !tbaa !23
+  %392 = getelementptr inbounds %struct.log, %struct.log* %14, i64 0, i32 4, i64 1
+  store i8 %391, i8* %392, align 1, !tbaa !23
+  %393 = getelementptr inbounds %struct.ethhdr, %struct.ethhdr* %26, i64 0, i32 0, i64 2
+  %394 = load i8, i8* %393, align 1, !tbaa !23
+  %395 = getelementptr inbounds %struct.log, %struct.log* %14, i64 0, i32 4, i64 2
+  store i8 %394, i8* %395, align 2, !tbaa !23
+  %396 = getelementptr inbounds %struct.ethhdr, %struct.ethhdr* %26, i64 0, i32 0, i64 3
+  %397 = load i8, i8* %396, align 1, !tbaa !23
+  %398 = getelementptr inbounds %struct.log, %struct.log* %14, i64 0, i32 4, i64 3
+  store i8 %397, i8* %398, align 1, !tbaa !23
+  %399 = getelementptr inbounds %struct.ethhdr, %struct.ethhdr* %26, i64 0, i32 0, i64 4
+  %400 = load i8, i8* %399, align 1, !tbaa !23
+  %401 = getelementptr inbounds %struct.log, %struct.log* %14, i64 0, i32 4, i64 4
+  store i8 %400, i8* %401, align 4, !tbaa !23
+  %402 = getelementptr inbounds %struct.ethhdr, %struct.ethhdr* %26, i64 0, i32 0, i64 5
+  %403 = load i8, i8* %402, align 1, !tbaa !23
+  %404 = getelementptr inbounds %struct.log, %struct.log* %14, i64 0, i32 4, i64 5
+  store i8 %403, i8* %404, align 1, !tbaa !23
+  %405 = call i64 inttoptr (i64 5 to i64 ()*)() #2
+  store i64 %405, i64* %7, align 8, !tbaa !2
+  %406 = call i32 inttoptr (i64 2 to i32 (i8*, i8*, i8*, i64)*)(i8* bitcast (%struct.bpf_map_def* @logs to i8*), i8* nonnull %17, i8* nonnull %380, i64 0) #2
+  call void @llvm.lifetime.end.p0i8(i64 24, i8* nonnull %380) #2
+  br label %407
 
-; <label>:379:                                    ; preds = %303, %340, %299
-  %380 = phi i32 [ %339, %303 ], [ %377, %340 ], [ %142, %299 ]
-  %381 = bitcast i32* %2 to i8*
-  call void @llvm.lifetime.start.p0i8(i64 4, i8* nonnull %381) #2
-  %382 = bitcast i32* %3 to i8*
-  call void @llvm.lifetime.start.p0i8(i64 4, i8* nonnull %382) #2
-  %383 = bitcast i32* %4 to i8*
-  call void @llvm.lifetime.start.p0i8(i64 4, i8* nonnull %383) #2
-  store i32 513, i32* %4, align 4, !tbaa !17
-  store i32 0, i32* %2, align 4, !tbaa !17
-  store i32 %380, i32* %3, align 4, !tbaa !17
-  %384 = call i8* inttoptr (i64 1 to i8* (i8*, i8*)*)(i8* bitcast (%struct.bpf_map_def* @destinations to i8*), i8* nonnull %382) #2
-  %385 = icmp eq i8* %384, null
-  br i1 %385, label %389, label %386
+; <label>:407:                                    ; preds = %379, %341, %313
+  %408 = phi i32 [ 1, %313 ], [ 3, %341 ], [ 2, %379 ]
+  call void @llvm.lifetime.end.p0i8(i64 4, i8* nonnull %147) #2
+  br label %409
 
-; <label>:386:                                    ; preds = %379
-  %387 = bitcast i8* %384 to i32*
-  %388 = load i32, i32* %387, align 4, !tbaa !17
-  store i32 %388, i32* %4, align 4, !tbaa !17
-  br label %391
+; <label>:409:                                    ; preds = %36, %407, %116, %73
+  %410 = phi i32 [ 1, %73 ], [ 2, %116 ], [ %408, %407 ], [ 1, %36 ]
+  call void @llvm.lifetime.end.p0i8(i64 24, i8* nonnull %45) #2
+  br label %411
 
-; <label>:389:                                    ; preds = %379
-  %390 = load i32, i32* %4, align 4, !tbaa !17
-  br label %391
-
-; <label>:391:                                    ; preds = %389, %386
-  %392 = phi i32 [ %390, %389 ], [ %388, %386 ]
-  %393 = icmp eq i32 %392, 513
-  br i1 %393, label %399, label %394
-
-; <label>:394:                                    ; preds = %391
-  %395 = call i8* inttoptr (i64 1 to i8* (i8*, i8*)*)(i8* bitcast (%struct.bpf_map_def* @servers to i8*), i8* nonnull %383) #2
-  %396 = icmp eq i8* %395, null
-  br i1 %396, label %399, label %397
-
-; <label>:397:                                    ; preds = %394
-  %398 = bitcast i8* %395 to %struct.dest_info*
-  br label %502
-
-; <label>:399:                                    ; preds = %394, %391
-  store i32 %96, i32* %2, align 4, !tbaa !17
-  %400 = call i8* inttoptr (i64 1 to i8* (i8*, i8*)*)(i8* bitcast (%struct.bpf_map_def* @services to i8*), i8* nonnull %381) #2
-  %401 = icmp eq i8* %400, null
-  br i1 %401, label %502, label %402
-
-; <label>:402:                                    ; preds = %399
-  %403 = getelementptr inbounds i8, i8* %400, i64 16
-  %404 = bitcast i8* %403 to i64*
-  %405 = load i64, i64* %404, align 8, !tbaa !22
-  %406 = bitcast i8* %400 to i64*
-  %407 = load i64, i64* %406, align 8, !tbaa !24
-  %408 = add i64 %407, 1
-  %409 = and i64 %408, 4294967295
-  %410 = urem i64 %409, %405
-  %411 = add i64 %410, %405
-  %412 = trunc i64 %411 to i32
-  store i32 %412, i32* %4, align 4, !tbaa !17
-  %413 = call i8* inttoptr (i64 1 to i8* (i8*, i8*)*)(i8* bitcast (%struct.bpf_map_def* @servers to i8*), i8* nonnull %383) #2
-  %414 = icmp eq i8* %413, null
-  br i1 %414, label %415, label %424
-
-; <label>:415:                                    ; preds = %402
-  %416 = load i32, i32* %4, align 4, !tbaa !17
-  %417 = add i32 %416, 1
-  %418 = zext i32 %417 to i64
-  %419 = urem i64 %418, %405
-  %420 = add i64 %419, %405
-  %421 = trunc i64 %420 to i32
-  store i32 %421, i32* %4, align 4, !tbaa !17
-  %422 = call i8* inttoptr (i64 1 to i8* (i8*, i8*)*)(i8* bitcast (%struct.bpf_map_def* @servers to i8*), i8* nonnull %383) #2
-  %423 = icmp eq i8* %422, null
-  br i1 %423, label %430, label %424
-
-; <label>:424:                                    ; preds = %493, %484, %475, %466, %457, %448, %439, %430, %415, %402
-  %425 = phi i8* [ %413, %402 ], [ %422, %415 ], [ %437, %430 ], [ %446, %439 ], [ %455, %448 ], [ %464, %457 ], [ %473, %466 ], [ %482, %475 ], [ %491, %484 ], [ %500, %493 ]
-  %426 = bitcast i8* %425 to %struct.dest_info*
-  %427 = call i32 inttoptr (i64 2 to i32 (i8*, i8*, i8*, i64)*)(i8* bitcast (%struct.bpf_map_def* @destinations to i8*), i8* nonnull %382, i8* nonnull %383, i64 0) #2
-  %428 = load i32, i32* %4, align 4, !tbaa !17
-  %429 = zext i32 %428 to i64
-  store i64 %429, i64* %406, align 8, !tbaa !24
-  br label %502
-
-; <label>:430:                                    ; preds = %415
-  %431 = load i32, i32* %4, align 4, !tbaa !17
-  %432 = add i32 %431, 1
-  %433 = zext i32 %432 to i64
-  %434 = urem i64 %433, %405
-  %435 = add i64 %434, %405
-  %436 = trunc i64 %435 to i32
-  store i32 %436, i32* %4, align 4, !tbaa !17
-  %437 = call i8* inttoptr (i64 1 to i8* (i8*, i8*)*)(i8* bitcast (%struct.bpf_map_def* @servers to i8*), i8* nonnull %383) #2
-  %438 = icmp eq i8* %437, null
-  br i1 %438, label %439, label %424
-
-; <label>:439:                                    ; preds = %430
-  %440 = load i32, i32* %4, align 4, !tbaa !17
-  %441 = add i32 %440, 1
-  %442 = zext i32 %441 to i64
-  %443 = urem i64 %442, %405
-  %444 = add i64 %443, %405
-  %445 = trunc i64 %444 to i32
-  store i32 %445, i32* %4, align 4, !tbaa !17
-  %446 = call i8* inttoptr (i64 1 to i8* (i8*, i8*)*)(i8* bitcast (%struct.bpf_map_def* @servers to i8*), i8* nonnull %383) #2
-  %447 = icmp eq i8* %446, null
-  br i1 %447, label %448, label %424
-
-; <label>:448:                                    ; preds = %439
-  %449 = load i32, i32* %4, align 4, !tbaa !17
-  %450 = add i32 %449, 1
-  %451 = zext i32 %450 to i64
-  %452 = urem i64 %451, %405
-  %453 = add i64 %452, %405
-  %454 = trunc i64 %453 to i32
-  store i32 %454, i32* %4, align 4, !tbaa !17
-  %455 = call i8* inttoptr (i64 1 to i8* (i8*, i8*)*)(i8* bitcast (%struct.bpf_map_def* @servers to i8*), i8* nonnull %383) #2
-  %456 = icmp eq i8* %455, null
-  br i1 %456, label %457, label %424
-
-; <label>:457:                                    ; preds = %448
-  %458 = load i32, i32* %4, align 4, !tbaa !17
-  %459 = add i32 %458, 1
-  %460 = zext i32 %459 to i64
-  %461 = urem i64 %460, %405
-  %462 = add i64 %461, %405
-  %463 = trunc i64 %462 to i32
-  store i32 %463, i32* %4, align 4, !tbaa !17
-  %464 = call i8* inttoptr (i64 1 to i8* (i8*, i8*)*)(i8* bitcast (%struct.bpf_map_def* @servers to i8*), i8* nonnull %383) #2
-  %465 = icmp eq i8* %464, null
-  br i1 %465, label %466, label %424
-
-; <label>:466:                                    ; preds = %457
-  %467 = load i32, i32* %4, align 4, !tbaa !17
-  %468 = add i32 %467, 1
-  %469 = zext i32 %468 to i64
-  %470 = urem i64 %469, %405
-  %471 = add i64 %470, %405
-  %472 = trunc i64 %471 to i32
-  store i32 %472, i32* %4, align 4, !tbaa !17
-  %473 = call i8* inttoptr (i64 1 to i8* (i8*, i8*)*)(i8* bitcast (%struct.bpf_map_def* @servers to i8*), i8* nonnull %383) #2
-  %474 = icmp eq i8* %473, null
-  br i1 %474, label %475, label %424
-
-; <label>:475:                                    ; preds = %466
-  %476 = load i32, i32* %4, align 4, !tbaa !17
-  %477 = add i32 %476, 1
-  %478 = zext i32 %477 to i64
-  %479 = urem i64 %478, %405
-  %480 = add i64 %479, %405
-  %481 = trunc i64 %480 to i32
-  store i32 %481, i32* %4, align 4, !tbaa !17
-  %482 = call i8* inttoptr (i64 1 to i8* (i8*, i8*)*)(i8* bitcast (%struct.bpf_map_def* @servers to i8*), i8* nonnull %383) #2
-  %483 = icmp eq i8* %482, null
-  br i1 %483, label %484, label %424
-
-; <label>:484:                                    ; preds = %475
-  %485 = load i32, i32* %4, align 4, !tbaa !17
-  %486 = add i32 %485, 1
-  %487 = zext i32 %486 to i64
-  %488 = urem i64 %487, %405
-  %489 = add i64 %488, %405
-  %490 = trunc i64 %489 to i32
-  store i32 %490, i32* %4, align 4, !tbaa !17
-  %491 = call i8* inttoptr (i64 1 to i8* (i8*, i8*)*)(i8* bitcast (%struct.bpf_map_def* @servers to i8*), i8* nonnull %383) #2
-  %492 = icmp eq i8* %491, null
-  br i1 %492, label %493, label %424
-
-; <label>:493:                                    ; preds = %484
-  %494 = load i32, i32* %4, align 4, !tbaa !17
-  %495 = add i32 %494, 1
-  %496 = zext i32 %495 to i64
-  %497 = urem i64 %496, %405
-  %498 = add i64 %497, %405
-  %499 = trunc i64 %498 to i32
-  store i32 %499, i32* %4, align 4, !tbaa !17
-  %500 = call i8* inttoptr (i64 1 to i8* (i8*, i8*)*)(i8* bitcast (%struct.bpf_map_def* @servers to i8*), i8* nonnull %383) #2
-  %501 = icmp eq i8* %500, null
-  br i1 %501, label %502, label %424
-
-; <label>:502:                                    ; preds = %397, %399, %424, %493
-  %503 = phi %struct.dest_info* [ %398, %397 ], [ %426, %424 ], [ null, %399 ], [ null, %493 ]
-  call void @llvm.lifetime.end.p0i8(i64 4, i8* nonnull %383) #2
-  call void @llvm.lifetime.end.p0i8(i64 4, i8* nonnull %382) #2
-  call void @llvm.lifetime.end.p0i8(i64 4, i8* nonnull %381) #2
-  %504 = icmp eq %struct.dest_info* %503, null
-  br i1 %504, label %505, label %507
-
-; <label>:505:                                    ; preds = %502
-  %506 = call i32 inttoptr (i64 2 to i32 (i8*, i8*, i8*, i64)*)(i8* bitcast (%struct.bpf_map_def* @drop_logs to i8*), i8* nonnull %18, i8* nonnull %15, i64 1) #2
-  br label %537
-
-; <label>:507:                                    ; preds = %502
-  %508 = getelementptr inbounds %struct.dest_info, %struct.dest_info* %503, i64 0, i32 5, i64 0
-  %509 = load i8, i8* %508, align 8, !tbaa !25
-  %510 = getelementptr inbounds %struct.ethhdr, %struct.ethhdr* %27, i64 0, i32 0, i64 0
-  store i8 %509, i8* %510, align 1, !tbaa !25
-  %511 = getelementptr inbounds %struct.dest_info, %struct.dest_info* %503, i64 0, i32 5, i64 1
-  %512 = load i8, i8* %511, align 1, !tbaa !25
-  %513 = getelementptr inbounds %struct.ethhdr, %struct.ethhdr* %27, i64 0, i32 0, i64 1
-  store i8 %512, i8* %513, align 1, !tbaa !25
-  %514 = getelementptr inbounds %struct.dest_info, %struct.dest_info* %503, i64 0, i32 5, i64 2
-  %515 = load i8, i8* %514, align 2, !tbaa !25
-  %516 = getelementptr inbounds %struct.ethhdr, %struct.ethhdr* %27, i64 0, i32 0, i64 2
-  store i8 %515, i8* %516, align 1, !tbaa !25
-  %517 = getelementptr inbounds %struct.dest_info, %struct.dest_info* %503, i64 0, i32 5, i64 3
-  %518 = load i8, i8* %517, align 1, !tbaa !25
-  %519 = getelementptr inbounds %struct.ethhdr, %struct.ethhdr* %27, i64 0, i32 0, i64 3
-  store i8 %518, i8* %519, align 1, !tbaa !25
-  %520 = getelementptr inbounds %struct.dest_info, %struct.dest_info* %503, i64 0, i32 5, i64 4
-  %521 = load i8, i8* %520, align 4, !tbaa !25
-  %522 = getelementptr inbounds %struct.ethhdr, %struct.ethhdr* %27, i64 0, i32 0, i64 4
-  store i8 %521, i8* %522, align 1, !tbaa !25
-  %523 = getelementptr inbounds %struct.dest_info, %struct.dest_info* %503, i64 0, i32 5, i64 5
-  %524 = load i8, i8* %523, align 1, !tbaa !25
-  %525 = getelementptr inbounds %struct.ethhdr, %struct.ethhdr* %27, i64 0, i32 0, i64 5
-  store i8 %524, i8* %525, align 1, !tbaa !25
-  %526 = bitcast i32* %14 to i8*
-  call void @llvm.lifetime.start.p0i8(i64 4, i8* nonnull %526) #2
-  %527 = getelementptr inbounds %struct.dest_info, %struct.dest_info* %503, i64 0, i32 1
-  %528 = load i32, i32* %527, align 4, !tbaa !26
-  %529 = call i32 asm "bswapl $0", "=r,0,~{dirflag},~{fpsr},~{flags}"(i32 %528) #3, !srcloc !16
-  store i32 %529, i32* %14, align 4, !tbaa !17
-  %530 = call i32 inttoptr (i64 2 to i32 (i8*, i8*, i8*, i64)*)(i8* bitcast (%struct.bpf_map_def* @pass_logs to i8*), i8* nonnull %18, i8* nonnull %526, i64 0) #2
-  %531 = sub nsw i64 %21, %25
-  %532 = getelementptr inbounds %struct.dest_info, %struct.dest_info* %503, i64 0, i32 4
-  %533 = atomicrmw add i64* %532, i64 1 seq_cst
-  %534 = getelementptr inbounds %struct.dest_info, %struct.dest_info* %503, i64 0, i32 3
-  %535 = and i64 %531, 65535
-  %536 = atomicrmw add i64* %534, i64 %535 seq_cst
-  call void @llvm.lifetime.end.p0i8(i64 4, i8* nonnull %526) #2
-  br label %537
-
-; <label>:537:                                    ; preds = %505, %507
-  %538 = phi i32 [ 3, %507 ], [ 1, %505 ]
-  call void @llvm.lifetime.end.p0i8(i64 4, i8* nonnull %95) #2
-  br label %540
-
-; <label>:539:                                    ; preds = %81
-  call void @llvm.lifetime.end.p0i8(i64 4, i8* nonnull %95) #2
-  br label %540
-
-; <label>:540:                                    ; preds = %539, %537, %34, %37, %67, %70, %41, %30, %1
-  %541 = phi i32 [ 1, %1 ], [ 2, %30 ], [ 1, %34 ], [ 2, %37 ], [ 1, %41 ], [ 1, %70 ], [ 1, %67 ], [ 2, %539 ], [ %538, %537 ]
-  call void @llvm.lifetime.end.p0i8(i64 4, i8* nonnull %18) #2
+; <label>:411:                                    ; preds = %409, %33, %29, %1
+  %412 = phi i32 [ 2, %1 ], [ 2, %29 ], [ %410, %409 ], [ 2, %33 ]
   call void @llvm.lifetime.end.p0i8(i64 8, i8* nonnull %17) #2
-  call void @llvm.lifetime.end.p0i8(i64 8, i8* nonnull %16) #2
+  call void @llvm.lifetime.end.p0i8(i64 4, i8* nonnull %16) #2
   call void @llvm.lifetime.end.p0i8(i64 8, i8* nonnull %15) #2
-  ret i32 %541
+  ret i32 %412
 }
 
 ; Function Attrs: argmemonly nounwind
 declare void @llvm.lifetime.start.p0i8(i64, i8* nocapture) #1
+
+; Function Attrs: argmemonly nounwind
+declare void @llvm.memset.p0i8.i64(i8* nocapture writeonly, i8, i64, i32, i1) #1
 
 ; Function Attrs: argmemonly nounwind
 declare void @llvm.lifetime.end.p0i8(i64, i8* nocapture) #1
@@ -826,18 +668,25 @@ attributes #3 = { nounwind readnone }
 !10 = !{!11, !12, i64 12}
 !11 = !{!"ethhdr", !4, i64 0, !4, i64 6, !12, i64 12}
 !12 = !{!"short", !4, i64 0}
-!13 = !{!14, !4, i64 9}
+!13 = !{!14, !8, i64 12}
 !14 = !{!"iphdr", !4, i64 0, !4, i64 0, !4, i64 1, !12, i64 2, !12, i64 4, !12, i64 6, !4, i64 8, !4, i64 9, !12, i64 10, !8, i64 12, !8, i64 16}
-!15 = !{!14, !8, i64 12}
-!16 = !{i32 548142}
-!17 = !{!8, !8, i64 0}
-!18 = !{!14, !8, i64 16}
-!19 = !{!20, !12, i64 0}
-!20 = !{!"tcphdr", !12, i64 0, !12, i64 2, !8, i64 4, !8, i64 8, !12, i64 12, !12, i64 12, !12, i64 13, !12, i64 13, !12, i64 13, !12, i64 13, !12, i64 13, !12, i64 13, !12, i64 13, !12, i64 13, !12, i64 14, !12, i64 16, !12, i64 18}
-!21 = !{!20, !12, i64 2}
-!22 = !{!23, !3, i64 16}
-!23 = !{!"service", !3, i64 0, !3, i64 8, !3, i64 16}
-!24 = !{!23, !3, i64 0}
-!25 = !{!4, !4, i64 0}
-!26 = !{!27, !8, i64 4}
-!27 = !{!"dest_info", !8, i64 0, !8, i64 4, !8, i64 8, !3, i64 16, !3, i64 24, !4, i64 32}
+<<<<<<< HEAD
+!15 = !{i32 551948}
+=======
+!15 = !{i32 555411}
+>>>>>>> load_balancing
+!16 = !{!8, !8, i64 0}
+!17 = !{!14, !8, i64 16}
+!18 = !{!19, !8, i64 0}
+!19 = !{!"log", !8, i64 0, !8, i64 4, !8, i64 8, !8, i64 12, !4, i64 16}
+!20 = !{!19, !8, i64 4}
+!21 = !{!19, !8, i64 8}
+!22 = !{!19, !8, i64 12}
+!23 = !{!4, !4, i64 0}
+!24 = !{!14, !4, i64 9}
+!25 = !{!26, !12, i64 0}
+!26 = !{!"tcphdr", !12, i64 0, !12, i64 2, !8, i64 4, !8, i64 8, !12, i64 12, !12, i64 12, !12, i64 13, !12, i64 13, !12, i64 13, !12, i64 13, !12, i64 13, !12, i64 13, !12, i64 13, !12, i64 13, !12, i64 14, !12, i64 16, !12, i64 18}
+!27 = !{!26, !12, i64 2}
+!28 = !{!29, !8, i64 8}
+!29 = !{!"service", !8, i64 0, !8, i64 4, !8, i64 8}
+!30 = !{!29, !8, i64 0}
