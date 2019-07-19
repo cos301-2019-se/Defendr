@@ -313,7 +313,7 @@ class UserManagement_window:
         self.Lbl_Change.place(relx=0.211, rely=0.707, height=26, width=84)
         self.Lbl_Change.configure(activebackground="#f9f9f9")
         self.Lbl_Change.configure(font=fnt_Header2)
-        self.Lbl_Change.configure(text='''Change:''')
+        self.Lbl_Change.configure(text="Change")
 
         self.Lbl_change_email = tk.Label(top)
         self.Lbl_change_email.place(relx=0.07, rely=0.771, height=26, width=59)

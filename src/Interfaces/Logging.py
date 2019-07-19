@@ -105,7 +105,7 @@ class win_Logging:
         _ana1color = '#d9d9d9' # X11 color: 'gray85'
         _ana2color = '#ececec' # Closest X11 color: 'gray92'
 
-        top.geometry("862x450+472+125")
+        top.geometry("900x450+472+125")
         top.title("Logs")
         top.configure(highlightcolor="black")
 

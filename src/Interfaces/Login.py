@@ -78,22 +78,22 @@ class win_Login:
 		# last = ["Botha","Carrim","Khoza","Opperman","Appana","Osbrone"]
 		# email = ["u17094446@tuks.co.za","u15019854@tuks.co.za","u15034993@tuks.co.za","u17023239@tuks.co.za","u14016304@tuks.co.za","Chris@gmail.com"]
 
-		Email = self.txtEmail.get()
-		passw = self.txtPass.get()
+		Email = self.txt_Email.get()
+		passw = self.txt_Pass.get()
 
 		if(not(Email=='') and not(passw=='')):
 			db = databaseCon.connect()
 			if(databaseCon.check_pass(db,Email,passw)):
 				roll =databaseCon.get_roll(db,Email)
 				messagebox.showinfo("Login Page", "Successfully logged in as "+roll)
-				self.txtEmail.delete(0, 'end')
-				self.txtPass.delete(0, 'end')
+				self.txt_Email.delete(0, 'end')
+				self.txt_Pass.delete(0, 'end')
 				Login_support.create_main(roll)
 			else:
-				self.txtPass.delete(0, 'end')
+				self.txt_Pass.delete(0, 'end')
 				messagebox.showwarning("Login Page", "Incorrect Email or Password")
 		else:
-			self.txtPass.delete(0, 'end')
+			self.txt_Pass.delete(0, 'end')
 			self.txtEmail.delete(0, 'end')
 			messagebox.showwarning("Login Page", "Please enter Email or Password")
 
@@ -153,34 +153,34 @@ class win_Login:
 		self.lblPass.place(relx=0.051, rely=0.444, height=21, width=73)
 		self.lblPass.configure(text='''Password:''')
 
-		self.txtEmail = tk.Entry(self.Frame1)
-		self.txtEmail.place(relx=0.532, rely=0.148,height=23, relwidth=0.42)
-		self.txtEmail.configure(background="white")
-		self.txtEmail.configure(font="TkFixedFont")
+		self.txt_Email = tk.Entry(self.Frame1)
+		self.txt_Email.place(relx=0.532, rely=0.148,height=23, relwidth=0.42)
+		self.txt_Email.configure(background="white")
+		self.txt_Email.configure(font="TkFixedFont")
 
-		self.txtPass = tk.Entry(self.Frame1)
-		self.txtPass.place(relx=0.532, rely=0.444,height=23, relwidth=0.42)
-		self.txtPass.configure(background="white")
-		self.txtPass.configure(font="TkFixedFont")
-		self.txtPass.configure(show="*")
+		self.txt_Pass = tk.Entry(self.Frame1)
+		self.txt_Pass.place(relx=0.532, rely=0.444,height=23, relwidth=0.42)
+		self.txt_Pass.configure(background="white")
+		self.txt_Pass.configure(font="TkFixedFont")
+		self.txt_Pass.configure(show="*")
 
-		self.btnLogin = tk.Button(self.Frame1)
-		self.btnLogin.place(relx=0.684, rely=0.667, height=31, width=68)
-		self.btnLogin.configure(text='''Login''')
-		self.btnLogin.configure(cursor="hand1")
-		self.btnLogin.configure(command=lambda: self.login_User())
+		self.btn_Login = tk.Button(self.Frame1)
+		self.btn_Login.place(relx=0.684, rely=0.667, height=31, width=68)
+		self.btn_Login.configure(text='''Login''')
+		self.btn_Login.configure(cursor="hand1")
+		self.btn_Login.configure(command=lambda: self.login_User())
 
-		self.btnCancel = tk.Button(self.Frame1)
-		self.btnCancel.place(relx=0.127, rely=0.667, height=31, width=76)
-		self.btnCancel.configure(text='''Cancel''')
-		self.btnCancel.configure(cursor="hand1")
-		self.btnCancel.configure(command=lambda: self.cancel_Login())
+		self.btn_Cancel = tk.Button(self.Frame1)
+		self.btn_Cancel.place(relx=0.127, rely=0.667, height=31, width=76)
+		self.btn_Cancel.configure(text='''Cancel''')
+		self.btn_Cancel.configure(cursor="hand1")
+		self.btn_Cancel.configure(command=lambda: self.cancel_Login())
 
-		self.btnRegister = tk.Button(self.Frame1)
-		self.btnRegister.place(relx=0.406, rely=0.667, height=31, width=76)
-		self.btnRegister.configure(text='''Register''')
-		self.btnRegister.configure(cursor="hand1")
-		self.btnRegister.configure(command=lambda: self.register())
+		#self.btn_Register = tk.Button(self.Frame1)
+		#self.btn_Register.place(relx=0.406, rely=0.667, height=31, width=76)
+		#self.btn_Register.configure(text='''Register''')
+		#self.btn_Register.configure(cursor="hand1")
+		#self.btn_Register.configure(command=lambda: self.register())
 
 		self.menubar = tk.Menu(top,font="TkMenuFont",bg=_bgcolor,fg=_fgcolor)
 		top.configure(menu = self.menubar)

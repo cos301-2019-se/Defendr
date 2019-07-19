@@ -119,7 +119,7 @@ def remove_user(db,name,roll,salt, password, lastname):
 #Function to get all user for the database
 def print_user(db):
     my_col = db["user"]
-    lines = "-------------------------------------------------------------------------"
+    lines = "-------------------------------------------------------------------------\n"
     for x in my_col.find({}, {"_id": 0, "salt": 0, "password": 0}):
         temp = str(x)
         array =temp.split('\'')
