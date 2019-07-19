@@ -1,4 +1,5 @@
 #! /bin/bash
+sudo apt-get install scite
 sudo scite /etc/ld.so.conf
 cd src/mongoDriver
 sudo apt-key adv --keyserver hkp://keyserver.ubuntu.com:80 --recv 9DA31620334BD75D9DCB49F368818C72E52529D4
