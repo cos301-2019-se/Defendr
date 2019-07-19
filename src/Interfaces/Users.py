@@ -59,21 +59,21 @@ class managementwindow:
         name=self.AddNametxt.get()
         password=self.Psdtxt.get()
         if(self.Repsdtxt.get()!=password):
-            messagebox.showwarning("Users Page", "Plaese check the password.")
+            messagebox.showwarning("Users Page", "Please check the password.")
         else:
-            msg = messagebox.askyesno("Roll", "Are "+name+" an admin?")
+            msg = messagebox.askyesno("Roll", "Is "+name+" an admin?")
             roll="user"
             if(msg):
                 roll="admin"
             answer=databaseCon.makeNewUser(db,name,password,roll)
-            messagebox.showinfo("Users mangement",answer)
+            messagebox.showinfo("User Management",answer)
 
     def removeUsers(self,db):
         name=self.RemoveNametxt.get()
-        msg = messagebox.askyesno("Remove users", "Are  sure you want to remove "+name+" ?")
+        msg = messagebox.askyesno("Remove Users", "Are  sure you want to remove "+name+" ?")
         if(msg):
             answer=databaseCon.remove(db,name)
-            messagebox.showinfo("Users mangement",answer)
+            messagebox.showinfo("User Management",answer)
             self.RemoveNametxt.insert(tk.END, "")
 
     def back(self):
@@ -81,11 +81,9 @@ class managementwindow:
         Home_support.root.deiconify()
 
     def refeshed(self,db):
-        line=databaseCon.printUsers(db)
-        lineArray = line.split('\n')
-        for x in lineArray:
-            print(x)
-            self.Userstxt.insert(tk.END, x)
+        line = databaseCon.printUsers(db)
+        self.Userstxt.delete(1.0, tk.END)
+        self.Userstxt.insert(tk.END, line)
 
     def __init__(self, top=None):
         db = databaseCon.connect()
@@ -103,14 +101,14 @@ class managementwindow:
         font9 = "-family {DejaVu Sans} -size 18 -weight bold -slant "  \
             "roman -underline 0 -overstrike 0"
 
-        top.geometry("531x371+378+132")
+        top.geometry("631x371+378+132")
         top.title("Users management")
 
         self.UsersManagementLBL = tk.Label(top)
         self.UsersManagementLBL.place(relx=0.358, rely=0.054, height=33
                 , width=262)
         self.UsersManagementLBL.configure(font=font9)
-        self.UsersManagementLBL.configure(text='''Users Management''')
+        self.UsersManagementLBL.configure(text='''User Management''')
 
         self.AddUsersLbl = tk.Label(top)
         self.AddUsersLbl.place(relx=0.094, rely=0.162, height=27, width=117)
@@ -178,7 +176,7 @@ class managementwindow:
         self.Repsdtxt.configure(font="TkFixedFont")
         self.Repsdtxt.configure(width=116)
 
-        self.Userstxt = tk.Entry(top)
+        self.Userstxt = tk.Text(top)
         self.Userstxt.place(relx=0.621, rely=0.243,height=213, relwidth=0.331)
         self.Userstxt.configure(background="white")
         self.Userstxt.configure(font="TkFixedFont")

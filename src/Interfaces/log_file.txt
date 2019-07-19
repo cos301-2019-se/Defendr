@@ -1,0 +1,70 @@
+. - Attempting to blacklist IP 113.193.108.75 success 
+. - Attempting to blacklist IP 12.169.111.217 success 
+. - Attempting to blacklist IP 96.225.100.218 success 
+. - Attempting to blacklist IP 235.253.49.193 success 
+. - Attempting to blacklist IP 38.144.76.151 success 
+. - Attempting to blacklist IP 73.147.177.113 success 
+. - Attempting to blacklist IP 115.150.73.170 success 
+. - Attempting to blacklist IP 152.130.120.51 success 
+. - Attempting to blacklist IP 219.184.40.203 success 
+. - Attempting to blacklist IP 99.94.90.250 success 
+. - Attempting to load xdp program.
+----------------------------------------------------------------------
+Ran 11 tests in 74.797s
+
+OK
+. - Attempting to blacklist IP 86.47.127.78 success 
+. - Attempting to blacklist IP 113.151.163.82 success 
+. - Attempting to blacklist IP 249.55.2.196 success 
+. - Attempting to blacklist IP 159.225.16.108 success 
+. - Attempting to blacklist IP 208.189.243.162 success 
+. - Attempting to blacklist IP 137.57.36.26 success 
+. - Attempting to blacklist IP 216.175.192.165 success 
+. - Attempting to blacklist IP 71.188.83.232 success 
+. - Attempting to blacklist IP 227.188.53.242 success 
+. - Attempting to blacklist IP 60.82.234.73 success 
+.E
+======================================================================
+ERROR: test_load (__main__.Test_Unit)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "test_file.py", line 18, in test_load
+    f.write(" - Attempting to load xdp program" + " " + result + " \n" )
+NameError: global name 'result' is not defined
+
+----------------------------------------------------------------------
+Ran 11 tests in 34.995s
+
+FAILED (errors=1)
+. - Attempting to blacklist IP 221.167.254.174 success 
+. - Attempting to blacklist IP 255.12.51.189 success 
+. - Attempting to blacklist IP 79.104.134.199 success 
+. - Attempting to blacklist IP 158.36.221.5 success 
+. - Attempting to blacklist IP 25.20.194.126 success 
+. - Attempting to blacklist IP 151.42.72.11 success 
+. - Attempting to blacklist IP 121.233.236.194 success 
+. - Attempting to blacklist IP 161.2.97.216 success 
+. - Attempting to blacklist IP 112.51.211.98 success 
+. - Attempting to blacklist IP 31.242.194.226 success 
+. - Attempting to load xdp program success 
+.
+----------------------------------------------------------------------
+Ran 11 tests in 3.850s
+
+OK
+. - Attempting to blacklist IP 218.113.217.247 success 
+. - Attempting to blacklist IP 43.93.251.188 success 
+. - Attempting to blacklist IP 120.107.19.216 success 
+. - Attempting to blacklist IP 20.137.134.71 success 
+. - Attempting to blacklist IP 193.112.109.40 success 
+. - Attempting to blacklist IP 145.214.249.29 success 
+. - Attempting to blacklist IP 113.173.235.142 success 
+. - Attempting to blacklist IP 36.26.79.28 success 
+. - Attempting to blacklist IP 169.222.239.152 success 
+. - Attempting to blacklist IP 166.79.129.227 success 
+. - Attempting to load xdp program success 
+.
+----------------------------------------------------------------------
+Ran 11 tests in 52.201s
+
+OK

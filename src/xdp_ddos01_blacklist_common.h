@@ -2,6 +2,7 @@
 #define __XDP_DDOS01_BLACKLIST_COMMON_H
 
 #include <time.h>
+#include "structs.h"
 
 /* Exit return codes */
 #define	EXIT_OK			0
@@ -18,7 +19,7 @@
 #define EXIT_FAIL_BPF_ELF	41
 #define EXIT_FAIL_BPF_RELOCATE	42
 
-static int verbose = 0;
+static int verbose = 1;
 
 /* Export eBPF map for IPv4 blacklist as a file
  * Gotcha need to mount:
@@ -27,16 +28,17 @@ static int verbose = 0;
 static const char *file_blacklist = "/sys/fs/bpf/ddos_blacklist";
 static const char *file_verdict   = "/sys/fs/bpf/ddos_blacklist_stat_verdict";
 static const char *file_ip_watchlist   = "/sys/fs/bpf/ddos_blacklist_ip_watchlist";
-static const char *file_enter_logs   = "/sys/fs/bpf/ddos_blacklist_enter_logs";
-static const char *file_drop_logs   = "/sys/fs/bpf/ddos_blacklist_drop_logs";
-static const char *file_pass_logs   = "/sys/fs/bpf/ddos_blacklist_pass_logs";
+static const char *file_logs   = "/sys/fs/bpf/ddos_blacklist_logs";
+static const char *file_servers   = "/sys/fs/bpf/ddos_blacklist_servers";
+static const char *file_services   = "/sys/fs/bpf/ddos_blacklist_services";
+static const char *file_destinations   = "/sys/fs/bpf/ddos_blacklist_destinations";
+
 
 static const char *file_port_blacklist = "/sys/fs/bpf/ddos_port_blacklist";
 static const char *file_port_blacklist_count[] = {
 	"/sys/fs/bpf/ddos_port_blacklist_count_tcp",
 	"/sys/fs/bpf/ddos_port_blacklist_count_udp"
 };
-
 
 // TODO: create subdir per ifname, to allow more XDP progs
 
@@ -117,6 +119,159 @@ static int blacklist_modify(int fd, char *ip_string, unsigned int action)
 	return EXIT_OK;
 }
 
+static int service_modify(int fd_services,int fd_servers, char *service_ip,char *backend_ip,unsigned int port,char* mac_addr, unsigned int action)
+{
+	int server_id;
+   	FILE *fptr;
+	fptr = fopen("id.txt","r");
+	  if(fptr != NULL){
+		fscanf(fptr,"%d", &server_id); 
+		fclose(fptr);          
+	  }
+
+	struct service *value = (struct service*)malloc(sizeof(struct service));
+	__u32 key,backendIP,backend_id,prev_key;
+	int res;
+	
+	//value = node;
+	//memset(value, 0, sizeof(__u64));
+
+	/* Convert IP-string into 32-bit network byte-order value */
+	res = inet_pton(AF_INET, service_ip, &key);
+	if (res <= 0) {
+		if (res == 0)
+			fprintf(stderr,
+				"ERR: IPv4 \"%s\" not in presentation format\n",
+				service_ip);
+		else
+			perror("inet_pton");
+		return EXIT_FAIL_IP;
+	}
+
+	res = inet_pton(AF_INET, backend_ip, &backendIP);
+	if (res <= 0) {
+		if (res == 0)
+			fprintf(stderr,
+				"ERR: IPv4 \"%s\" not in presentation format\n",
+				backend_ip);
+		else
+			perror("inet_pton");
+		return EXIT_FAIL_IP;
+	}
+
+	if (action == ACTION_ADD) {	
+		res = bpf_map_lookup_elem(fd_services,&key,value); 
+		if(res != 0){
+			value->last_used = 0;
+			value->num_servers = 1;
+			value->id = server_id;
+			//server_id += MAX_INSTANCES;
+			fptr = fopen("id.txt","w");
+	   		if(fptr != NULL){
+				fprintf(fptr,"%d",server_id+MAX_INSTANCES); 
+				fclose(fptr);          
+	        }
+
+			res = bpf_map_update_elem(fd_services, &key, value, BPF_NOEXIST);
+		}else{
+			value->num_servers = value->num_servers+1;	
+			res = bpf_map_update_elem(fd_services, &key, value, BPF_EXIST);
+		}
+		struct dest_info *backend = (struct dest_info*)malloc(sizeof(struct dest_info));
+		backend->daddr = backendIP;
+		backend->saddr = key;
+		backend->bytes = 0;
+		backend->pkts = 0;
+		backend->port = port;		
+
+		/*convert mac address into desired format*/
+		uint8_t bytes[6];
+		int values[6];
+		int i;
+
+		if( 6 == sscanf( mac_addr, "%x:%x:%x:%x:%x:%x%*c",
+			&values[0], &values[1], &values[2],
+			&values[3], &values[4], &values[5] ) )
+		{
+			/* convert to uint8_t */
+			for( i = 0; i < 6; ++i )
+				bytes[i] = (uint8_t) values[i];
+		}else{
+			printf("mac address in invalid format.\n");
+		}
+		
+		/*assign converted mac address to backend*/
+		backend->dmac[0] = bytes[0];
+		backend->dmac[1] = bytes[1];
+		backend->dmac[2] = bytes[2];
+		backend->dmac[3] = bytes[3];
+		backend->dmac[4] = bytes[4];
+		backend->dmac[5] = bytes[5];
+
+		key = NULL;
+		prev_key = NULL;
+		backend_id = value->id+1;
+		bool found = false;
+		while (!found && backend_id < (value->id+10)) {
+			struct dest_info *backend = (struct dest_info*)malloc(sizeof(struct dest_info));
+			res = bpf_map_lookup_elem(fd_servers,&backend_id,backend); 
+			if(res==0){
+				backend_id += 1;	
+			}else{
+				found = true;
+			}
+		 	prev_key = &key;
+		}
+		res = bpf_map_update_elem(fd_servers, &backend_id, backend, BPF_ANY);
+
+	} else if (action == ACTION_DEL) {
+		res = bpf_map_lookup_elem(fd_services,&key,value); 
+		if(res == 0){
+			value->last_used = 0;
+			if(value->num_servers > 0) value->num_servers = value->num_servers-1;
+			res = bpf_map_update_elem(fd_services, &key, value, BPF_EXIST);
+		}
+		backend_id = value->id;
+
+		key = NULL;
+		prev_key = NULL;
+		bool found = false;
+		while (bpf_map_get_next_key(fd_servers, prev_key, &key) == 0 && !found) {
+			struct dest_info *backend = (struct dest_info*)malloc(sizeof(struct dest_info));
+			res = bpf_map_lookup_elem(fd_servers,&key,backend); 
+			if(res==0){
+				if(backend->daddr == backendIP){
+					res = bpf_map_delete_elem(fd_servers, &backend_id);
+					found = true;
+				}
+			}
+		 	prev_key = &key;
+		}
+		
+	} else {
+		fprintf(stderr, "ERR: %s() invalid action 0x%x\n",
+			__func__, action);
+		return EXIT_FAIL_OPTION;
+	}
+
+	/*if (res != 0) {
+		fprintf(stderr,
+			"%s() IP:%s key:0x%X errno(%d/%s)",
+			__func__, ip_string, key, errno, strerror(errno));
+
+		if (errno == 17) {
+			fprintf(stderr, ": Already in blacklist\n");
+			return EXIT_OK;
+		}
+		fprintf(stderr, "\n");
+		return EXIT_FAIL_MAP_KEY;
+	}
+	if (verbose)
+		fprintf(stderr,
+			"%s() IP:%s key:0x%X\n", __func__, ip_string, key);
+	return EXIT_OK;*/
+}
+
 static int log_modify(int fd, char *ip_string, unsigned int action)
 {
 	unsigned int nr_cpus = bpf_num_possible_cpus();
@@ -165,6 +320,8 @@ static int log_modify(int fd, char *ip_string, unsigned int action)
 			"%s() IP:%s key:0x%X\n", __func__, ip_string, key);
 	return EXIT_OK;
 }
+
+
 
 static int watchlist_modify(int fd, char *ip_string, unsigned int action)
 {
