@@ -26,8 +26,8 @@ sudo apt install -y bcc bpfcc-tools
 sudo apt install -y python3
 sudo apt install -y python3-pip
 sudo apt install -y python3-tk
-sudo pip3 install -y pymongo
-sudo pip3 install -y dnspython
+sudo pip3 install pymongo
+sudo pip3 install dnspython
 sudo apt install -y gradle
 sudo apt install -y net-tools
 sudo apt install -y apache2
