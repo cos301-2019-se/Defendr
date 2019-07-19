@@ -44,5 +44,8 @@ cd data
 sudo perl ip-country.pl
 cd ../../
 make
-cd Interfaces/
+sudo chmod +x /Interfaces/Metrics/Prometheus/prometheus
+sudo chmod +x /Interfaces/Metrics/Prometheus/node_exporter
+sudo chmod +x /Interfaces/Metrics/Prometheus/grafana-server
+cd Interfaces
 python3 Login.py
