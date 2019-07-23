@@ -34,7 +34,7 @@ sudo apt install -y apache2
 sudo apt-get install -y libtool
 sudo apt-get install -y autoconf
 cd src
-sudo rm IP2Location-C-Library-master
+sudo rm -r IP2Location-C-Library-master
 unzip IP2Location-C-Library-master.zip
 cd IP2Location-C-Library-master
 sudo autoreconf -i -v --force
