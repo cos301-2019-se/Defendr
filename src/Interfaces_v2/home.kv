@@ -1,0 +1,22 @@
+#:import Toolbar kivymd.toolbar.Toolbar
+#:import MDCard kivymd.card.MDCard
+#:import MDList kivymd.list.MDList
+#:include nav_drawer.kv
+<home>:
+    BoxLayout:
+        orientation: 'vertical'
+        Toolbar:
+            id: toolbar
+            title: 'Defendr'
+            background_color: app.theme_cls.primary_dark
+            left_action_items: [['menu', lambda x: app.nav_drawer.toggle()]]
+        BoxLayout
+            id: home_layout
+            orientation: 'vertical'
+
+            MDLabel:
+                theme_text_color: 'Primary'
+                text: "Welcome To Defendr"
+                font_size: 38
+                halign: 'center'
+

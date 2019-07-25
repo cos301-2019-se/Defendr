@@ -1,0 +1,33 @@
+#:include blacklist_window.kv
+#:include logs_window.kv
+#:include home.kv
+#:include user_management_window.kv
+<Navigator>:
+    NavigationDrawerIconButton:
+        icon: 'home'
+        text: 'Home'
+        on_release: app.nav_to('home')
+    NavigationDrawerIconButton:
+        icon: 'tv'
+        text: 'Backends'
+        on_release: app.load_website('https://www.google.com/')
+    NavigationDrawerIconButton:
+        icon: 'chart'
+        text: 'Metrics'
+        on_release: app.load_website('https://www.google.com/')
+    NavigationDrawerIconButton:
+        icon: 'format-list-bulleted'
+        text: 'Blacklisting'
+        on_release: app.nav_to('blacklist_window')
+    NavigationDrawerIconButton:
+        icon: 'filter-list'
+        text: 'System logs'
+        on_release: app.nav_to('logs_window')
+    NavigationDrawerIconButton:
+        icon: 'face'
+        text: 'User management'
+        on_release: app.nav_to('user_management_window')
+    NavigationDrawerIconButton:
+        icon: 'arrow-left'
+        text: 'Logout'
+        on_release: app.nav_to('login')

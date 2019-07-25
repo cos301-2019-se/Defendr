@@ -1,8 +1,5 @@
-/*  XDP example: DDoS protection via IPv4 blacklist
- *
- *  Copyright(c) 2017 Jesper Dangaard Brouer, Red Hat, Inc.
- *  Copyright(c) 2017 Andy Gospodarek, Broadcom Limited, Inc.
- */
+/*  XDP program responsible for packet filtering and load balancing*/
+
 #define KBUILD_MODNAME "foo"
 #include <uapi/linux/bpf.h>
 #include <uapi/linux/if_ether.h>
@@ -10,9 +7,22 @@
 #include <uapi/linux/if_vlan.h>
 #include <uapi/linux/ip.h>
 #include <uapi/linux/in.h>
+#include <linux/ipv6.h>
 #include <uapi/linux/tcp.h>
 #include <uapi/linux/udp.h>
 #include "bpf_helpers.h"
+#include "structs.h"
+#include <net/checksum.h>
+#include <linux/skbuff.h>
+
+#define BPF_ANY       0 /* create new element or update existing */
+#define BPF_NOEXIST   1 /* create new element only if it didn't exist */
+#define BPF_EXIST     2 /* only update existing element */
+#define MAX_SERVERS 512
+#define JHASH_INITVAL	0xdeadbeef
+#define IP_FRAGMENTED 65343
+
+void *malloc(size_t);
 
 enum {
 	DDOS_FILTER_TCP = 0,
@@ -20,19 +30,26 @@ enum {
 	DDOS_FILTER_MAX,
 };
 
-struct vlan_hdr {
-	__be16 h_vlan_TCI;
-	__be16 h_vlan_encapsulated_proto;
+// Structure for storing packet meta data used for packet filtering.
+struct pkt_meta {
+	__be32 src;
+	__be32 dst;
+	union {
+		__u32 ports;
+		__u16 port16[2];
+	};
 };
 
+// Map containing blacklisted ips.
 struct bpf_map_def SEC("maps") blacklist = {
 	.type        = BPF_MAP_TYPE_PERCPU_HASH,
 	.key_size    = sizeof(u32),
-	.value_size  = sizeof(u64), /* Drop counter */
+	.value_size  = sizeof(u64),
 	.max_entries = 100000,
 	.map_flags   = BPF_F_NO_PREALLOC,
 };
 
+// Map keeping track of suspisous ips
 struct bpf_map_def SEC("maps") ip_watchlist = {
 	.type        = BPF_MAP_TYPE_PERCPU_HASH,
 	.key_size    = sizeof(u32),
@@ -41,9 +58,42 @@ struct bpf_map_def SEC("maps") ip_watchlist = {
 	.map_flags   = BPF_F_NO_PREALLOC,
 };
 
+// Map used for logging incoming trafic as well as decisions that have been made.
+struct bpf_map_def SEC("maps") logs = {
+    .type        = BPF_MAP_TYPE_HASH,
+	.key_size    = sizeof(u64),
+	.value_size  = sizeof(struct log), 
+	.max_entries = 100000,
+	.map_flags   = BPF_F_NO_PREALLOC,
+};
+
+// Map containing registered back-end instances
+struct bpf_map_def SEC("maps") servers = {
+	.type = BPF_MAP_TYPE_HASH,
+	.key_size = sizeof(u32),
+	.value_size = sizeof(struct dest_info),
+	.max_entries = MAX_SERVERS,
+};
+
+// Map containing registered services
+struct bpf_map_def SEC("maps") services = {
+	.type = BPF_MAP_TYPE_HASH,
+	.key_size = sizeof(u32),
+	.value_size = sizeof(struct service),
+	.max_entries = MAX_SERVERS,
+};
+
+// Map that keeps track of destinatin instances of tcp connections
+struct bpf_map_def SEC("maps") destinations = {
+	.type = BPF_MAP_TYPE_HASH,
+	.key_size = sizeof(u32),
+	.value_size = sizeof(u32),
+	.max_entries = MAX_SERVERS,
+};
+
 #define XDP_ACTION_MAX (XDP_TX + 1)
 
-/* Counter per XDP "action" verdict */
+// Map acting as counter per XDP "action" verdict */
 struct bpf_map_def SEC("maps") verdict_cnt = {
 	.type = BPF_MAP_TYPE_PERCPU_ARRAY,
 	.key_size = sizeof(u32),
@@ -58,9 +108,8 @@ struct bpf_map_def SEC("maps") port_blacklist = {
 	.max_entries = 65536,
 };
 
-/* Counter per XDP "action" verdict */
 
-/* TCP Drop counter */
+// Map for keeping tcp drop counter 
 struct bpf_map_def SEC("maps") port_blacklist_drop_count_tcp = {
 	.type        = BPF_MAP_TYPE_PERCPU_ARRAY,
 	.key_size    = sizeof(u32),
@@ -68,7 +117,7 @@ struct bpf_map_def SEC("maps") port_blacklist_drop_count_tcp = {
 	.max_entries = 65536,
 };
 
-/* UDP Drop counter */
+// Map for keeping udp drop counter 
 struct bpf_map_def SEC("maps") port_blacklist_drop_count_udp = {
 	.type        = BPF_MAP_TYPE_PERCPU_ARRAY,
 	.key_size    = sizeof(u32),
@@ -76,21 +125,29 @@ struct bpf_map_def SEC("maps") port_blacklist_drop_count_udp = {
 	.max_entries = 65536,
 };
 
-static inline struct bpf_map_def *drop_count_by_fproto(int fproto) {
+/* Computes hash based on packet meta data.
+ * @param a Packet ip source address.
+ * @param b Packet source and destination port.
+ * @param initval Maximum amount of servers.
+ * @return Calculated hash.
+ */
+static inline u32 hash(u32 a, u32 b,u32 c, u32 initval){
+	initval += JHASH_INITVAL + (2 << 2);
+	a += initval;
+	b += initval;
+	//u32 c = 0;
+	c += initval;
 
-	switch (fproto) {
-	case DDOS_FILTER_UDP:
-		return &port_blacklist_drop_count_udp;
-		break;
-	case DDOS_FILTER_TCP:
-		return &port_blacklist_drop_count_tcp;
-		break;
-	}
-	return NULL;
+    c ^= b; c -= rol32(b, 14);		
+	a ^= c; a -= rol32(c, 11);		
+	b ^= a; b -= rol32(a, 25);		
+	c ^= b; c -= rol32(b, 16);		
+	a ^= c; a -= rol32(c, 4);		
+	b ^= a; b -= rol32(a, 14);		
+	c ^= b; c -= rol32(b, 24); 
+
+	return c;
 }
-
-// TODO: Add map for controlling behavior
-
 //#define DEBUG 1
 #ifdef  DEBUG
 /* Only use this for debug output. Notice output from bpf_trace_printk()
@@ -106,7 +163,123 @@ static inline struct bpf_map_def *drop_count_by_fproto(int fproto) {
 #define bpf_debug(fmt, ...) { } while (0)
 #endif
 
-/* Keeps stats of XDP_DROP vs XDP_PASS */
+/* Calculates ip header checksum.
+ * @param buf Pointer to start of ip header.
+ * @param buf_size Size of ip header.
+ * @return Calculated ip header cheacksum.
+ * */
+static inline unsigned short checksumIP(unsigned short *buf, int buf_size) {
+    unsigned long sum = 0;
+
+    while (buf_size > 1) {
+        sum += *buf;
+        buf++;
+        buf_size -= 2;
+    }
+
+    if (buf_size == 1) {
+        sum += *(unsigned char *)buf;
+    }
+
+    sum = (sum & 0xffff) + (sum >> 16);
+    sum = (sum & 0xffff) + (sum >> 16);
+
+    return ~sum;
+}
+
+/* Adds destination for new tcp connection.
+ * @param pkt Packet meta data.
+ */
+/*static __always_inline void addDestination(struct pkt_meta *pkt){
+	struct dest_info *tnl;
+	__u32 hashKey = hash(pkt->src, pkt->ports, MAX_SERVERS) % MAX_SERVERS;
+	__u32 key = ntohl(pkt->dst);;
+	struct service *app = bpf_map_lookup_elem(&services, &key);
+	u32 server_id  = MAX_SERVERS+1;
+	u64 service_id = 10;
+	if(app){
+		service_id = app->id;
+		server_id = app->last_used;
+		#pragma clang loop unroll(full)
+		for(int i = 1;i < MAX_INSTANCES+1;++i){
+			server_id = (server_id + 1)%service_id + service_id;
+			tnl = bpf_map_lookup_elem(&servers, &server_id);
+			if(tnl){
+					bpf_map_update_elem(&destinations, &hashKey,&server_id,BPF_ANY);
+					app->last_used = server_id;
+			}
+		}
+	}
+}*/
+
+/* REmoves destination for closed tcp connection.
+ * @param pkt Packet meta data.
+ */
+/*static __always_inline void removeDestination(struct pkt_meta *pkt){
+	__u32 hashKey = hash(pkt->src, pkt->ports, MAX_SERVERS) % MAX_SERVERS;
+	bpf_map_delete_elem(&destinations, &hashKey);
+}*/
+
+/* Retrieves available back-end instance  
+ * @param pkt Packet meta data.
+ * @return selected back-end instance
+ */
+static __always_inline struct dest_info *hash_get_dest(struct pkt_meta *pkt){	
+	__u32 key,hashKey;
+	struct dest_info *tnl;	
+	struct service *app;
+	u32 *server_id_ptr;
+	u32 server_id  = MAX_SERVERS+1;
+	tnl =NULL;
+	key =0;
+	app = NULL;
+	
+	// Hash packet source ip with both ports to obtain a destination back-end.
+	hashKey = hash(pkt->src, pkt->ports,pkt->dst,MAX_SERVERS) % MAX_SERVERS;
+	//hashKey = pkt->src;
+	
+	// Try to get previous server used.
+	server_id_ptr = bpf_map_lookup_elem(&destinations, &hashKey);
+	
+	// Ensure key is not NULL.
+	if(server_id_ptr && server_id_ptr != NULL){
+		server_id = *server_id_ptr;	
+	}
+
+	if(server_id !=  MAX_SERVERS+1  ){			
+			tnl = bpf_map_lookup_elem(&servers, &server_id);
+			if (tnl) {
+				return tnl;
+			}
+	}
+	// Try to get alternative server.
+	key = ntohl(pkt->dst);
+	app = bpf_map_lookup_elem(&services, &key);
+	if (app) {
+		u64 service_id = app->id;	
+		server_id = app->last_used+service_id+1;
+		#pragma clang loop unroll(full)
+		for(int i = 0;i < MAX_INSTANCES;++i){
+			
+			if(server_id >= (service_id+MAX_INSTANCES)) server_id = service_id+1;
+			tnl = bpf_map_lookup_elem(&servers, &server_id);
+			if(tnl && tnl != NULL){
+					bpf_map_update_elem(&destinations, &hashKey,&server_id,BPF_ANY);
+					app->last_used = app->last_used+1;
+					return tnl;
+			}
+			tnl = NULL;
+			server_id = (server_id + 1);
+		}
+		
+	}
+	app = NULL;
+	// No available server to recieve packet
+	return NULL; 
+
+}
+
+// Keeps stats of XDP_DROP vs XDP_PASS.
 static __always_inline
 void stats_action_verdict(u32 action)
 {
@@ -120,186 +293,260 @@ void stats_action_verdict(u32 action)
 		*value += 1;
 }
 
-/* Parse Ethernet layer 2, extract network layer 3 offset and protocol
- *
- * Returns false on error and non-supported ether-type
+/*Extracts source and destination udp ports.
+ * @param off Udp header offset.
+ * @param data_end End of data packet.
+ * @return Port extraction success or failure.
  */
-static __always_inline
-bool parse_eth(struct ethhdr *eth, void *data_end,
-	       u16 *eth_proto, u64 *l3_offset)
+static __always_inline bool parse_udp(void *data, __u64 off, void *data_end,
+				      struct pkt_meta *pkt)
 {
-	u16 eth_type;
-	u64 offset;
+	struct udphdr *udp;
 
-	offset = sizeof(*eth);
-	if ((void *)eth + offset > data_end)
+	udp = data + off;
+	if (udp + 1 > data_end)
 		return false;
 
-	eth_type = eth->h_proto;
-	bpf_debug("Debug: eth_type:0x%x\n", ntohs(eth_type));
+	pkt->port16[0] = udp->source;
+	pkt->port16[1] = udp->dest;
 
-	/* Skip non 802.3 Ethertypes */
-	if (unlikely(ntohs(eth_type) < ETH_P_802_3_MIN))
-		return false;
-
-	/* Handle VLAN tagged packet */
-	if (eth_type == htons(ETH_P_8021Q) || eth_type == htons(ETH_P_8021AD)) {
-		struct vlan_hdr *vlan_hdr;
-
-		vlan_hdr = (void *)eth + offset;
-		offset += sizeof(*vlan_hdr);
-		if ((void *)eth + offset > data_end)
-			return false;
-		eth_type = vlan_hdr->h_vlan_encapsulated_proto;
-	}
-	/* Handle double VLAN tagged packet */
-	if (eth_type == htons(ETH_P_8021Q) || eth_type == htons(ETH_P_8021AD)) {
-		struct vlan_hdr *vlan_hdr;
-
-		vlan_hdr = (void *)eth + offset;
-		offset += sizeof(*vlan_hdr);
-		if ((void *)eth + offset > data_end)
-			return false;
-		eth_type = vlan_hdr->h_vlan_encapsulated_proto;
-	}
-
-	*eth_proto = ntohs(eth_type);
-	*l3_offset = offset;
 	return true;
 }
 
-u32 parse_port(struct xdp_md *ctx, u8 proto, void *hdr)
+/*Extracts source and destination udp ports.
+ * @param off Tcp header offset.
+ * @param data_end End of data packet.
+ * @return Port extraction success or failure.
+ */
+static __always_inline bool parse_tcp(void *data, __u64 off, void *data_end,
+				      struct pkt_meta *pkt)
 {
-	void *data_end = (void *)(long)ctx->data_end;
-	struct udphdr *udph;
-	struct tcphdr *tcph;
-	u32 *value;
-	u32 *drops;
-	u32 dport;
-	u32 dport_idx;
-	u32 fproto;
+	struct tcphdr *tcp;
 
-	switch (proto) {
-	case IPPROTO_UDP:
-		udph = hdr;
-		if (udph + 1 > data_end) {
-			bpf_debug("Invalid UDPv4 packet: L4off:%llu\n",
-				  sizeof(struct iphdr) + sizeof(struct udphdr));
-			return XDP_ABORTED;
-		}
-		dport = ntohs(udph->dest);
-		fproto = DDOS_FILTER_UDP;
-		break;
-	case IPPROTO_TCP:
-		tcph = hdr;
-		if (tcph + 1 > data_end) {
-			bpf_debug("Invalid TCPv4 packet: L4off:%llu\n",
-				  sizeof(struct iphdr) + sizeof(struct tcphdr));
-			return XDP_ABORTED;
-		}
-		dport = ntohs(tcph->dest);
-		fproto = DDOS_FILTER_TCP;
-		break;
-	default:
-		return XDP_PASS;
-	}
+	tcp = data + off;
+	if (tcp + 1 > data_end)
+		return false;
 
-	dport_idx = dport;
-	value = bpf_map_lookup_elem(&port_blacklist, &dport_idx);
+	pkt->port16[0] = tcp->source;
+	pkt->port16[1] = tcp->dest;
 
-	if (value) {
-		if (*value & (1 << fproto)) {
-			struct bpf_map_def *drop_counter = drop_count_by_fproto(fproto);
-			if (drop_counter) {
-				drops = bpf_map_lookup_elem(drop_counter , &dport_idx);
-				if (drops)
-					*drops += 1; /* Keep a counter for drop matches */
-			}
-			return XDP_DROP;
-		}
-	}
-	return XDP_PASS;
+	return true;
 }
 
-static __always_inline
-u32 parse_ipv4(struct xdp_md *ctx, u64 l3_offset)
-{
-	void *data_end = (void *)(long)ctx->data_end;
-	void *data     = (void *)(long)ctx->data;
-	struct iphdr *iph = data + l3_offset;
-	u64 *value;
-	u32 ip_src; /* type need to match map */
 
-	/* Hint: +1 is sizeof(struct iphdr) */
-	if (iph + 1 > data_end) {
-		bpf_debug("Invalid IPv4 packet: L3off:%llu\n", l3_offset);
-		return XDP_ABORTED;
-	}
-	/* Extract key */
-	ip_src = iph->saddr;
-
-
-/**************************************************************/
-	ip_src = ntohl(ip_src);  // ntohl does not work for some reason!?!
-
-/****************************************************************/
-
-	bpf_debug("Valid IPv4 packet: raw saddr:0x%x\n", ip_src);
-
-	value = bpf_map_lookup_elem(&blacklist, &ip_src);
-	if (value) {
-		/* Don't need __sync_fetch_and_add(); as percpu map */
-		*value += 1; /* Keep a counter for drop matches */
-		return XDP_DROP;
-	}else{
-		__u64 initialValue = 0;
-		bpf_map_update_elem(&ip_watchlist,&ip_src,&initialValue,0);
-		value = bpf_map_lookup_elem(&ip_watchlist,&ip_src);
-		if (value) {
-			*value += 1;
-		}
-	}
-
-	return parse_port(ctx, iph->protocol, iph + 1);
-}
-
-static __always_inline
-u32 handle_eth_protocol(struct xdp_md *ctx, u16 eth_proto, u64 l3_offset)
-{
-	switch (eth_proto) {
-	case ETH_P_IP:
-		return parse_ipv4(ctx, l3_offset);
-		break;
-	case ETH_P_IPV6: /* Not handler for IPv6 yet*/
-	case ETH_P_ARP:  /* Let OS handle ARP */
-		/* Fall-through */
-	default:
-		bpf_debug("Not handling eth_proto:0x%x\n", eth_proto);
-		return XDP_PASS;
-	}
-	return XDP_PASS;
-}
-
+/*Entry point for xdp program which gets packet data and keeps track of verdicts
+ *@param ctx given packet context to be evaluated
+ *@return action for given packet
+ */
 SEC("xdp_prog")
 int  xdp_program(struct xdp_md *ctx)
 {
-	void *data_end = (void *)(long)ctx->data_end;
-	void *data     = (void *)(long)ctx->data;
-	struct ethhdr *eth = data;
-	u16 eth_proto = 0;
-	u64 l3_offset = 0;
-	u32 action;
+    int rc = XDP_DROP;
+    uint64_t nh_off = 0;
 
-	if (!(parse_eth(eth, data_end, &eth_proto, &l3_offset))) {
-		bpf_debug("Cannot parse L2: L3off:%llu proto:0x%x\n",
-			  l3_offset, eth_proto);
-		return XDP_PASS; /* Skip */
-	}
-	bpf_debug("Reached L3: L3off:%llu proto:0x%x\n", l3_offset, eth_proto);
+    u64 *value;
+	__u64 initialValue = 1;
+	u32 ip_src;
+	__u16 payload_len;
+	struct pkt_meta pkt = {};
+	struct dest_info *tnl;
+	//__u16 pkt_size;
+	__u64 time;
 
-	action = handle_eth_protocol(ctx, eth_proto, l3_offset);
-	stats_action_verdict(action);
-	return action;
+    // Read data.
+    void* data_end = (void*)(long)ctx->data_end;
+    void* data = (void*)(long)ctx->data;
+
+    // Retrieve ethernet frame header.
+    struct ethhdr *eth = data;
+
+    // Check frame header size.
+    nh_off = sizeof(*eth);
+    if (data + nh_off > data_end) {
+        return XDP_PASS;
+    }
+
+    // Check protocol.
+    if (eth->h_proto != htons(ETH_P_IP)) {
+        // Non ETH_P_IP protocols not yet supported so just let pass.
+        return XDP_PASS;
+    }
+
+    // Check packet header size
+    struct iphdr *iph = data + nh_off;
+    nh_off += sizeof(struct iphdr);
+    if (data + nh_off > data_end) {
+        return XDP_PASS;
+    }
+    payload_len = ntohs(iph->tot_len);
+
+	ip_src = iph->saddr;
+	ip_src = ntohl(ip_src); 
+	__u32 destination_ip = ntohl(iph->daddr);
+
+	struct log enter_log = {};
+	enter_log.src_ip = ip_src;
+	enter_log.status = LOG_ENTER;
+	enter_log.reason = REASON_NONE;
+	enter_log.destination_ip = destination_ip;
+	enter_log.server[0] = eth->h_dest[0];
+	enter_log.server[1] = eth->h_dest[0];
+	enter_log.server[2] = eth->h_dest[0];
+	enter_log.server[3] = eth->h_dest[0];
+	enter_log.server[4] = eth->h_dest[0];
+	enter_log.server[5] = eth->h_dest[0];
+	time = bpf_ktime_get_ns();
+	bpf_map_update_elem(&logs,&time,&enter_log,BPF_ANY);
+
+    // Check tcp header size
+    struct tcphdr *tcph = data + nh_off;
+    nh_off += sizeof(struct tcphdr);
+    if (data + nh_off > data_end) {
+        return rc;
+    }
+	
+	value = bpf_map_lookup_elem(&blacklist, &ip_src);
+	if (value) {
+		*value += 1; 		
+			    
+		struct log drop_log = {};
+		drop_log.src_ip = ip_src;
+		drop_log.status = LOG_DROP;
+		drop_log.reason = REASON_BLACKLIST;
+		drop_log.destination_ip = destination_ip;
+		drop_log.server[0] = eth->h_dest[0];
+		drop_log.server[1] = eth->h_dest[1];
+		drop_log.server[2] = eth->h_dest[2];
+		drop_log.server[3] = eth->h_dest[3];
+		drop_log.server[4] = eth->h_dest[4];
+		drop_log.server[5] = eth->h_dest[5];
+	    time = bpf_ktime_get_ns();
+		bpf_map_update_elem(&logs,&time,&drop_log,BPF_ANY);
+		
+		return XDP_DROP;
+	}else{
+		value = bpf_map_lookup_elem(&ip_watchlist,&ip_src);
+		if (value) {
+			*value += 1;
+		}else{
+			bpf_map_update_elem(&ip_watchlist,&ip_src,&initialValue,BPF_NOEXIST);
+		}
+		
+		// Non IPPROTO_TCP protocols not yet supported so just let pass.
+		if (iph->protocol != IPPROTO_TCP) {
+				struct log pass_log = {};
+				pass_log.src_ip = ip_src;
+				pass_log.status = LOG_PASS;
+				pass_log.reason = REASON_NON_TCP;
+				pass_log.destination_ip = destination_ip;
+				pass_log.server[0] = eth->h_dest[0];
+				pass_log.server[1] = eth->h_dest[0];
+				pass_log.server[2] = eth->h_dest[0];
+				pass_log.server[3] = eth->h_dest[0];
+				pass_log.server[4] = eth->h_dest[0];
+				pass_log.server[5] = eth->h_dest[0];
+				time = bpf_ktime_get_ns();
+				bpf_map_update_elem(&logs,&time,&pass_log,BPF_ANY);
+		   return XDP_PASS;
+		}
+		
+		pkt.src = iph->saddr;
+		pkt.dst = iph->daddr;
+		pkt.port16[0] = tcph->source;
+		pkt.port16[1] = tcph->dest;		
+		
+		__u32 ip_dest = ntohl(iph->daddr); 
+		struct service *app = bpf_map_lookup_elem(&services,&ip_dest);
+		if(app){
+			app = NULL;
+			/*if(tcph->syn == 1){
+				addDestination(&pkt);
+			}else if (tcph->fin == 1){
+				removeDestination(&pkt);
+			}*/
+			//if (tcph->fin == 1) removeDestination(&pkt);
+			
+			tnl = NULL;		
+			tnl = hash_get_dest(&pkt);
+			if (tnl == NULL){ 
+				struct log no_server_log = {};
+				no_server_log.src_ip = ip_src;
+				no_server_log.status = LOG_DROP;
+				no_server_log.reason = REASON_NOSERVER;
+				no_server_log.destination_ip = destination_ip;
+				no_server_log.server[0] = eth->h_dest[0];
+				no_server_log.server[1] = eth->h_dest[1];
+				no_server_log.server[2] = eth->h_dest[2];
+				no_server_log.server[3] = eth->h_dest[3];
+				no_server_log.server[4] = eth->h_dest[4];
+				no_server_log.server[5] = eth->h_dest[5];
+				time = bpf_ktime_get_ns();
+				bpf_map_update_elem(&logs,&time,&no_server_log,BPF_ANY);
+				return XDP_DROP; 
+			}
+
+
+			// Overwrite destination ethernet address.
+			eth->h_dest[0] = tnl->dmac[0];
+			eth->h_dest[1] = tnl->dmac[1];
+			eth->h_dest[2] = tnl->dmac[2];
+			eth->h_dest[3] = tnl->dmac[3];
+			eth->h_dest[4] = tnl->dmac[4];
+			eth->h_dest[5] = tnl->dmac[5];			
+			
+			
+			struct log pass_log = {};
+			pass_log.src_ip = ip_src;
+			pass_log.status = LOG_PASS;
+			pass_log.reason = REASON_NONE;
+			pass_log.destination_ip = destination_ip;
+			pass_log.server[0] = tnl->dmac[0];
+			pass_log.server[1] = tnl->dmac[1];
+			pass_log.server[2] = tnl->dmac[2];
+			pass_log.server[3] = tnl->dmac[3];
+			pass_log.server[4] = tnl->dmac[4];
+			pass_log.server[5] = tnl->dmac[5];
+			time = bpf_ktime_get_ns();
+			bpf_map_update_elem(&logs,&time,&pass_log,BPF_ANY);			
+			
+			/*pkt_size = (__u16)(data_end - data);
+			__sync_fetch_and_add(&tnl->pkts, 1);
+			__sync_fetch_and_add(&tnl->bytes, pkt_size);*/
+			return XDP_TX;
+			
+		}else{
+			struct log pass_log = {};
+			pass_log.src_ip = ip_src;
+			pass_log.status = LOG_PASS;
+			pass_log.reason = REASON_NONE;
+			pass_log.destination_ip = destination_ip;
+			pass_log.server[0] = eth->h_dest[0];
+			pass_log.server[1] = eth->h_dest[1];
+			pass_log.server[2] = eth->h_dest[2];
+			pass_log.server[3] = eth->h_dest[3];
+			pass_log.server[4] = eth->h_dest[4];
+			pass_log.server[5] = eth->h_dest[5];
+			time = bpf_ktime_get_ns();
+			bpf_map_update_elem(&logs,&time,&pass_log,BPF_ANY);
+		}
+		return XDP_PASS;
+		
+	}		
+	
+	struct log pass_log = {};
+	pass_log.src_ip = ip_src;
+	pass_log.status = LOG_PASS;
+	pass_log.reason = REASON_NONE;
+	pass_log.destination_ip = destination_ip;
+	pass_log.server[0] = eth->h_dest[0];
+	pass_log.server[1] = eth->h_dest[1];
+	pass_log.server[2] = eth->h_dest[2];
+	pass_log.server[3] = eth->h_dest[3];
+	pass_log.server[4] = eth->h_dest[4];
+	pass_log.server[5] = eth->h_dest[5];
+	time = bpf_ktime_get_ns();
+	bpf_map_update_elem(&logs,&time,&pass_log,BPF_ANY);
+	return XDP_PASS;
 }
 
 char _license[] SEC("license") = "GPL";

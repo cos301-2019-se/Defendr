@@ -1,0 +1,181 @@
+#:import Toolbar kivymd.toolbar.Toolbar
+#:import MDCard kivymd.card.MDCard
+#:import MDList kivymd.list.MDList
+#:include nav_drawer.kv
+<user_management_window>:
+    BoxLayout:
+        orientation: 'vertical'
+        Toolbar:
+            id: toolbar
+            title: 'Defendr'
+            background_color: app.theme_cls.primary_dark
+            left_action_items: [['menu', lambda x: app.nav_drawer.toggle()]]
+
+        BoxLayout
+            padding: '20dp'
+            spacing: '5dp'
+            id: user_management_layout
+            orientation: 'vertical'
+            MDLabel:
+                theme_text_color: 'Primary'
+                text: "User Management"
+                size_hint_y:0.1
+                font_size: 32
+                halign: 'center'
+            GridLayout:
+                padding: '10dp'
+                spacing: '5dp'
+                size_hint_y:0.9
+                cols: 2
+                GridLayout:
+                    spacing: '5dp'
+                    rows: 10
+                    row_force_default: 1
+                    row_default_height: '35dp'
+                    MDLabel:
+                        theme_text_color: 'Primary'
+                        text: "Add User"
+                        font_size: 24
+                        halign: 'center'
+                        size_hint_x: None
+                        width: root.width/2.5
+                    BoxLayout:
+                        orientation: 'horizontal'
+                        spacing: '5dp'
+                        size_hint_x: None
+                        width: root.width/2.5
+                        MDLabel:
+                            theme_text_color: 'Primary'
+                            text: "Name"
+                            font_size: 18
+                            halign: 'right'
+                            size_hint_x: 0.3
+                        TextInput:
+                            id: user_name
+                            multiline:False
+                            font_size: 18
+                            size_hint_x: 0.7
+                    BoxLayout:
+                        orientation: 'horizontal'
+                        spacing: '5dp'
+                        size_hint_x: None
+                        width: root.width/2.5
+                        MDLabel:
+                            theme_text_color: 'Primary'
+                            text: "Surname"
+                            font_size: 18
+                            halign: 'right'
+                            size_hint_x: 0.3
+                        TextInput:
+                            id: user_surname
+                            multiline:False
+                            font_size: 18
+                            size_hint_x: 0.7
+                    BoxLayout:
+                        orientation: 'horizontal'
+                        spacing: '5dp'
+                        size_hint_x: None
+                        width: root.width/2.5
+                        MDLabel:
+                            theme_text_color: 'Primary'
+                            text: "Email"
+                            font_size: 18
+                            halign: 'right'
+                            size_hint_x: 0.3
+                        TextInput:
+                            id: user_email
+                            multiline:False
+                            font_size: 18
+                            size_hint_x: 0.7
+                    BoxLayout:
+                        orientation: 'horizontal'
+                        spacing: '5dp'
+                        size_hint_x: None
+                        width: root.width/2.5
+                        MDLabel:
+                            theme_text_color: 'Primary'
+                            text: "Password"
+                            font_size: 18
+                            halign: 'right'
+                            size_hint_x: 0.3
+                        TextInput:
+                            id: user_password
+                            multiline:False
+                            font_size: 18
+                            size_hint_x: 0.7
+                    BoxLayout:
+                        orientation: 'horizontal'
+                        spacing: '5dp'
+                        size_hint_x: None
+                        width: root.width/2.5
+                        MDLabel:
+                            theme_text_color: 'Primary'
+                            text: "Confirm Password"
+                            font_size: 18
+                            halign: 'right'
+                            size_hint_x: 0.3
+                        TextInput:
+                            id: user_password_confirm
+                            multiline:False
+                            font_size: 18
+                            size_hint_x: 0.7
+                    BoxLayout:
+                        orientation: 'horizontal'
+                        spacing: '20dp'
+                        size_hint_x: None
+                        width: root.width/10
+                        Button:
+                            font_size: 18
+                            text: 'Add'
+                    MDLabel:
+                        theme_text_color: 'Primary'
+                        text: "Modify User"
+                        font_size: 24
+                        halign: 'center'
+                        size_hint_x: None
+                        width: root.width/2.5
+                    BoxLayout:
+                        orientation: 'horizontal'
+                        spacing: '5dp'
+                        size_hint_x: None
+                        width: root.width/2.5
+                        MDLabel:
+                            theme_text_color: 'Primary'
+                            text: "Email"
+                            font_size: 18
+                            halign: 'right'
+                            size_hint_x: 0.3
+                        TextInput:
+                            id: user_email_to_modify
+                            multiline:False
+                            font_size: 18
+                            size_hint_x: 0.7
+                    BoxLayout:
+                        orientation: 'horizontal'
+                        spacing: '20dp'
+                        size_hint_x: None
+                        width: root.width/4
+                        Button:
+                            font_size: 18
+                            text: 'Remove'
+                            on_release: root.remove_user(user_email_to_modify.text)
+                        Button:
+                            font_size: 18
+                            text: 'Edit'
+                            on_release: root.edit_user(user_email_to_modify.text)
+                GridLayout:
+                    spacing: '5dp'
+                    rows: 2
+                    BoxLayout:
+                        orientation: 'horizontal'
+                        id: user_table
+                        size_hint_y:0.9
+                    BoxLayout:
+                        orientation: 'horizontal'
+                        size_hint_y:0.1
+                        Button:
+                            text: 'Refresh'
+                            size_hint_x:None
+                            width:'125dp'
+                            font_size: 16
+                            on_press: root.add_table(user_table,[{'Name':'name1','Surname':'surname1','Account':'admin','Email':'email@gmail.com'}])
