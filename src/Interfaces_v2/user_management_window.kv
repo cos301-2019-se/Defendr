@@ -127,6 +127,7 @@
                         Button:
                             font_size: 18
                             text: 'Add'
+                            on_release: root.add_user(user_table,user_name.text,user_surname.text,user_email.text,user_password.text,user_password_confirm.text)
                     MDLabel:
                         theme_text_color: 'Primary'
                         text: "Modify User"

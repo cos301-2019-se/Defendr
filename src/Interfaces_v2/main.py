@@ -32,6 +32,7 @@ class LoginApp(App):
     username = StringProperty(None)
     password = StringProperty(None)
     manager = ScreenManager()
+    roll="user"
 
     def build(self):
         self.manager.add_widget(Login(name='login'))
@@ -59,11 +60,17 @@ class LoginApp(App):
         )
 
     def nav_to(self, window):
+        print(self.roll)
         if(window == 'login'):
             self.manager.transition = SlideTransition(direction="right")
         else:
             self.manager.transition = SlideTransition(direction="left")
-        self.manager.current = window
+        if(self.roll=="admin"):
+            self.manager.current = window
+        else:
+            if(window=="logs_window" or window=="home" or window =="login"):
+                self.manager.current = window
+
 
     def load_website(self, web_url):
         sys.excepthook = cef.ExceptHook  # To shutdown all CEF processes on error

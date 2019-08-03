@@ -1,7 +1,6 @@
 import pymongo
 import hashlib, uuid
 import urllib.parse
-import re
 
 #Function to add an ip to the blacklist on the database
 def add_ip(db,ip):
@@ -19,13 +18,16 @@ def connect():
 #Function to find blacklisted ip in database of blacklisted ids
 def find_Blacklisted_IP(db, ip):
     col = db["blacklist"]
-    doc = col.find({"ip": ip},{"_id": 0})
-    string_output = "Not Found"
-    for x in doc:
-        string_output =str(x)
-    if(string_output!="Not Found"):
-        return string_output[8:len(string_output)-2]
-    return string_output
+    data = []
+    if ip == "":
+        for x in col.find({}, {"_id": 0}):
+            data.append(x)
+    else:
+        query = {"ip": ip}
+        for x in col.find(query, {"_id": 0}):
+            data.append(x)
+    return data
+
 
 #Function to remove blacklisted ip from database of blacklisted ips
 def rem_Blacklisted_IP(db, ip):
@@ -42,17 +44,20 @@ def rem_Blacklisted_IP(db, ip):
 #Function to get packets
 def find_packets(db, ip):
     col = db["packets_list"]
+    data =[]
     if ip=="":
-        doc=col.find({},{"_id": 0}).sort("timestamp", -1)
+        for x in col.find({},{"_id": 0}).sort("timestamp", -1):
+            data.append(x)
     else:
         query = {"ip_source": ip}
-        doc = col.find(query,{ "_id": 0}).sort("timestamp", -1)
-    return doc
+        for x in col.find(query,{"_id": 0}).sort("timestamp", -1):
+            data.append(x)
+    return data
 
 #Function to get the salt for an email
 def get_salt(db,email):
     col = db["user"]
-    doc = col.find({"email": email},{ "_id": 0, "name": 0, "roll": 0, "password": 0, "lastname": 0,"email": 0})
+    doc = col.find({"email": email},{ "_id": 0, "name": 0, "roll": 0, "password": 0, "lastname": 0,"email": 0,"sendEmail":0})
     string_output = "notFond"
     for x in doc:
         string_output =str(x)
@@ -63,7 +68,7 @@ def get_salt(db,email):
 #Function to get the password for an email
 def get_password(db,email):
     col = db["user"]
-    doc = col.find({"email": email},{ "_id": 0, "name": 0, "roll": 0, "salt": 0, "lastname": 0,"email": 0})
+    doc = col.find({"email": email},{ "_id": 0, "name": 0, "roll": 0, "salt": 0, "lastname": 0,"email": 0,"sendEmail":0})
     string_output = "notFond"
     for x in doc:
         string_output = str(x)
@@ -74,7 +79,7 @@ def get_password(db,email):
 #Function to get the roll for an email
 def get_roll(db,email):
     col = db["user"]
-    doc = col.find({"email": email},{ "_id": 0, "name": 0, "salt": 0, "password": 0, "lastname": 0,"email": 0})
+    doc = col.find({"email": email},{ "_id": 0, "name": 0, "salt": 0, "password": 0, "lastname": 0,"email": 0,"sendEmail":0})
     string_output="notFond"
     for x in doc:
         string_output = str(x)
@@ -85,7 +90,7 @@ def get_roll(db,email):
 #Function to get the name for an email
 def get_name(db,email):
     col = db["user"]
-    doc = col.find({"email": email},{ "_id": 0, "roll": 0, "salt": 0, "password": 0, "lastname": 0,"email": 0})
+    doc = col.find({"email": email},{ "_id": 0, "roll": 0, "salt": 0, "password": 0, "lastname": 0,"email": 0,"sendEmail":0})
     string_output="notFond"
     for x in doc:
         string_output = str(x)
@@ -96,13 +101,24 @@ def get_name(db,email):
 #Function to get the last name for an email
 def get_last_name(db,email):
     col = db["user"]
-    doc = col.find({"email": email},{ "_id": 0, "name": 0, "salt": 0, "password": 0, "roll": 0,"email": 0})
+    doc = col.find({"email": email},{ "_id": 0, "name": 0, "salt": 0, "password": 0, "roll": 0,"email": 0,"sendEmail":0})
     string_output="notFond"
     for x in doc:
         string_output = str(x)
     if(string_output!="notFond"):
         return string_output[14:len(string_output) - 2]
     return string_output
+
+#Function to get all email addresses for admin that wants mail
+def get_email_to_send_to(db):
+    col = db["user"]
+    doc = col.find({"roll": "admin","sendEmail":"yes"}, {"_id": 0, "name": 0, "salt": 0, "password": 0, "roll": 0, "lastname": 0,"sendEmail":0})
+    stringoutput =[]
+    for x in doc:
+        temp=str(x)
+        temp=temp[11:len(temp) - 2]
+        stringoutput.append(temp)
+    return stringoutput
 
 #Function to add an user to the database
 def save_user(db,name,lastName,roll,salt, password, email):
@@ -119,19 +135,10 @@ def remove_user(db,name,roll,salt, password, lastname):
 #Function to get all user for the database
 def print_user(db):
     my_col = db["user"]
-    lines = "-------------------------------------------------------------------------\n"
-    for x in my_col.find({}, {"_id": 0, "salt": 0, "password": 0}):
-        temp = str(x)
-        array =temp.split('\'')
-        name = array[3]
-        last = array[7]
-        roll = array[11]
-        email = array[15]
-        if(roll=="user"):
-            roll=roll+"    "
-        lines = lines + "|" + name + " \t\t| " + last + "\t\t| "+ roll + " | "+email + '\t|\n'
-    lines = lines + "-------------------------------------------------------------------------"
-    return lines
+    data =[]
+    for x in my_col.find({}, {"_id": 0, "salt": 0, "password": 0,"sendEmail":0}):
+        data.append(x)
+    return data
 
 #Function to check in an user is in the database
 def check_user(db):
@@ -179,7 +186,7 @@ def change_roll(db, email, roll):
 #Function to change an user's password in the databas
 def change_password(db, email, password):
   salt = get_salt(db, email)
-  pwd = hashFunction(password, salt)
+  pwd = hashed_function(password, salt)
   my_col = db["user"]
   my_query = {"email": email}
   new_values = {"$set": {"password": pwd}}
@@ -195,6 +202,13 @@ def check_pass(db, email, password):
         return True
     else:
         return False
+
+#Function to change in an admin wants email or not
+def change_state(db,email,state):
+    my_col = db["user"]
+    my_query = {"email": email}
+    new_values = {"$set": {"sendEmail": state}}
+    my_col.update_one(my_query, new_values)
 
 #Function to hash a password
 def hashed_function(password, salt):
@@ -238,3 +252,10 @@ def make_new_user(db, name, lastName, password, roll, email):
     hash_password = hashed_function(password, salt)
     save_user(db, name,lastName, roll, salt, hash_password, email)
     return True
+
+#db = connect()
+#print(print_user(db))
+#changeState(db,"u17094446@tuks.co.za","no")
+#changeState(db,"u14016304@tuks.co.za","no")
+#change_state(db,"u15034993@tuks.co.za","no")
+#changeState(db,"u15019854@tuks.co.za","no")
