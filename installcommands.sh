@@ -27,9 +27,17 @@ sudo apt install -y linux-headers-$(uname -r)
 sudo apt install -y bcc bpfcc-tools
 sudo apt install -y python3
 sudo apt install -y python3-pip
-sudo apt install -y python3-tk
+sudo apt-get install -y libsdl2-dev libsdl2-image-dev libsdl2-mixer-dev libsdl2-ttf-dev 
+sudo apt-get install -y zlib1g-dev
+sudo apt-get install -y libportmidi-dev libswscale-dev libavformat-dev libavcodec-dev zlib1g-dev
+sudo apt-get install -y libgles2-mesa-dev
 sudo pip3 install pymongo
 sudo pip3 install dnspython
+sudo pip3 install cefpython3==66.0
+sudo pip3 install pygments
+sudo pip3 install docutils
+sudo pip3 install cython
+sudo pip3 install kivy
 sudo apt install -y gradle
 sudo apt install -y net-tools
 sudo apt install -y apache2
