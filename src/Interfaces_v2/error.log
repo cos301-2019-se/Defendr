@@ -1,0 +1,41 @@
+
+[2019-07-24 10:35:18] Traceback (most recent call last):
+  File "kivy\properties.pyx", line 860, in kivy.properties.ObservableDict.__getattr__
+KeyError: 'scr_mngr'
+
+During handling of the above exception, another exception occurred:
+
+Traceback (most recent call last):
+  File "C:/Users/Jeandre Botha/Google Drive/UP/COS301/Interfaces_v2/main.py", line 68, in <module>
+    LoginApp().run()
+  File "D:\ProgramData\Anaconda3\lib\site-packages\kivy\app.py", line 855, in run
+    runTouchApp()
+  File "D:\ProgramData\Anaconda3\lib\site-packages\kivy\base.py", line 504, in runTouchApp
+    EventLoop.window.mainloop()
+  File "D:\ProgramData\Anaconda3\lib\site-packages\kivy\core\window\window_sdl2.py", line 747, in mainloop
+    self._mainloop()
+  File "D:\ProgramData\Anaconda3\lib\site-packages\kivy\core\window\window_sdl2.py", line 479, in _mainloop
+    EventLoop.idle()
+  File "D:\ProgramData\Anaconda3\lib\site-packages\kivy\base.py", line 342, in idle
+    self.dispatch_input()
+  File "D:\ProgramData\Anaconda3\lib\site-packages\kivy\base.py", line 327, in dispatch_input
+    post_dispatch_input(*pop(0))
+  File "D:\ProgramData\Anaconda3\lib\site-packages\kivy\base.py", line 293, in post_dispatch_input
+    wid.dispatch('on_touch_up', me)
+  File "kivy\_event.pyx", line 707, in kivy._event.EventDispatcher.dispatch
+  File "C:\Users\Jeandre Botha\Google Drive\UP\COS301\Interfaces_v2\kivymd\list.py", line 411, in on_touch_up
+    super(BaseListItem, self).on_touch_up(touch)
+  File "C:\Users\Jeandre Botha\Google Drive\UP\COS301\Interfaces_v2\kivymd\ripplebehavior.py", line 68, in on_touch_up
+    return super(CommonRipple, self).on_touch_up(touch)
+  File "D:\ProgramData\Anaconda3\lib\site-packages\kivy\uix\behaviors\button.py", line 179, in on_touch_up
+    self.dispatch('on_release')
+  File "kivy\_event.pyx", line 703, in kivy._event.EventDispatcher.dispatch
+  File "kivy\_event.pyx", line 1214, in kivy._event.EventObservers.dispatch
+  File "kivy\_event.pyx", line 1098, in kivy._event.EventObservers._dispatch
+  File "D:\ProgramData\Anaconda3\lib\site-packages\kivy\lang\builder.py", line 64, in custom_callback
+    exec(__kvlang__.co_value, idmap)
+  File "C:\Users\Jeandre Botha\Google Drive\UP\COS301\Interfaces_v2\home.kv", line 42, in <module>
+    on_release: app.root.get_screen('home').ids.scr_mngr.current = 'user_window'
+  File "kivy\properties.pyx", line 863, in kivy.properties.ObservableDict.__getattr__
+AttributeError: 'super' object has no attribute '__getattr__'
+
