@@ -5,9 +5,9 @@ import time
 gmail_sender='info@darknites.co.za'
 gmail_password='D@rkN1t3s'
 
-def emailAddNewUser(db,server,name):
+def emailAddNewUser(db,server,name, email):
     sub ='Verify user'
-    text ='Account verification needed for '+name+'\nDefendr'
+    text ='Account verification needed for '+name+'('+email+')\nDefendr'
     sendEmail(db,server, sub, text)
 
 def emailForHack(db,server,hacked_gmail):

@@ -151,9 +151,9 @@ def get_email_to_send_to(db):
     return stringoutput
 
 #Function to add an user to the database
-def save_user(db,name,lastName,roll,salt, password, email):
+def save_user(db,name,lastName,roll,salt, password, email, sendEmail):
     col = db["user"]
-    dict={"name": name, "lastname":lastName, "roll": roll, "salt": salt, "password": password, "email": email}
+    dict={"name": name, "lastname":lastName, "roll": roll, "salt": salt, "password": password, "email": email,"sendEmail": sendEmail}
     col.insert_one(dict)
 
 #Function to remove an user for the database
@@ -272,7 +272,7 @@ def remove(db,email):
     return name+" removed"
 
 #Function to make a new user
-def make_new_user(db, name, lastName, password, roll, email):
+def make_new_user(db, name, lastName, password, roll, email,sendEmail):
     # check if name is used
     check = get_salt(db, email)
     if check !="notFond":
@@ -280,7 +280,7 @@ def make_new_user(db, name, lastName, password, roll, email):
     # make salt and hash
     salt = makeSalt()
     hash_password = hashed_function(password, salt)
-    save_user(db, name,lastName, roll, salt, hash_password, email)
+    save_user(db, name,lastName, roll, salt, hash_password, email,sendEmail)
     return True
 
 #db = connect()
