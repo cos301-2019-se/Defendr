@@ -19,6 +19,7 @@ struct dest_info {
 	__u32 port;
 	__u64 bytes;
 	__u64 pkts;
+	__u64 cons;
 	__u8 dmac[6];
 };
 
