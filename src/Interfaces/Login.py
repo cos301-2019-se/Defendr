@@ -7,6 +7,7 @@
 
 import sys
 import databaseCon
+import Metrics
 
 try:
     import Tkinter as tk
@@ -30,6 +31,7 @@ import Login_support
 from controller import controller
 import os.path
 
+
 def vp_start_gui():
     '''Starting point when module is the main routine.'''
     global val, w, root
@@ -41,6 +43,7 @@ def vp_start_gui():
     Login_support.init(root, top)
     c = controller("../")
     c.loadXdp()
+    Metrics.start()
     root.mainloop()
 
 w = None
@@ -66,6 +69,7 @@ class win_Login:
     def cancelLogin(self):
         msg = messagebox.askyesno("Exit", "Are you sure?");
         if(msg):
+            Metrics.stop()
             exit()
 
     def loginUser(self):
