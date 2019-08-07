@@ -69,6 +69,7 @@ class win_Login:
     def cancelLogin(self):
         msg = messagebox.askyesno("Exit", "Are you sure?");
         if(msg):
+            Metrics.stop()
             exit()
 
     def loginUser(self):
