@@ -7193,3 +7193,18 @@ t=2019-08-07T13:24:57+0200 lvl=info msg="Initializing NotificationService" logge
 t=2019-08-07T13:24:57+0200 lvl=info msg="Initializing provisioningServiceImpl" logger=server
 t=2019-08-07T13:24:57+0200 lvl=info msg="Initializing Stream Manager"
 t=2019-08-07T13:24:57+0200 lvl=info msg="HTTP Server Listen" logger=http.server address=0.0.0.0:3000 protocol=http subUrl= socket=
+t=2019-08-07T13:27:12+0200 lvl=info msg="Shutdown started" logger=server reason="System signal: terminated"
+t=2019-08-07T13:27:12+0200 lvl=info msg="Stopped NotificationService" logger=server reason="context canceled"
+t=2019-08-07T13:27:12+0200 lvl=info msg="Stopped RemoteCache" logger=server reason="context canceled"
+t=2019-08-07T13:27:12+0200 lvl=info msg="Stopped RenderingService" logger=server reason=nil
+t=2019-08-07T13:27:12+0200 lvl=info msg="Stopped InternalMetricsService" logger=server reason="context canceled"
+t=2019-08-07T13:27:12+0200 lvl=info msg="Stopped UsageStatsService" logger=server reason="context canceled"
+t=2019-08-07T13:27:12+0200 lvl=info msg="Stopped Stream Manager"
+t=2019-08-07T13:27:12+0200 lvl=info msg="Stopped TracingService" logger=server reason=nil
+t=2019-08-07T13:27:12+0200 lvl=info msg="Stopped provisioningServiceImpl" logger=server reason="context canceled"
+t=2019-08-07T13:27:12+0200 lvl=info msg="Stopped UserAuthTokenService" logger=server reason="context canceled"
+t=2019-08-07T13:27:12+0200 lvl=info msg="Stopped CleanUpService" logger=server reason="context canceled"
+t=2019-08-07T13:27:12+0200 lvl=info msg="Stopped AlertingService" logger=server reason="context canceled"
+t=2019-08-07T13:27:12+0200 lvl=info msg="Stopped PluginManager" logger=server reason="context canceled"
+t=2019-08-07T13:27:12+0200 lvl=info msg="Stopped HTTPServer" logger=server reason=nil
+t=2019-08-07T13:27:12+0200 lvl=eror msg="Server shutdown" logger=server reason="System signal: terminated"
