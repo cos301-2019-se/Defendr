@@ -43,9 +43,9 @@ class LoginApp(App):
         self.manager.add_widget(Logs_Window(name='logs_window'))
         self.manager.add_widget(User_Management_Window(name='user_management_window'))
         self.nav_drawer = Navigator()
-        Window.size = (1000, 700)
-        Window.minimum_width = 800
-        Window.minimum_height = 600
+        Window.size = (1100, 700)
+        Window.minimum_width = 1100
+        Window.minimum_height = 700
         return self.manager
 
     def get_application_config(self):
