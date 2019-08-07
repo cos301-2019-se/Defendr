@@ -14,6 +14,7 @@ import sys
 
 from home import Home
 from blacklist_window import Blacklist_Window
+from whitelist_window import Whitelist_Window
 from logs_window import  Logs_Window
 from login import Login
 from user_management_window import User_Management_Window
@@ -38,6 +39,7 @@ class LoginApp(App):
         self.manager.add_widget(Login(name='login'))
         self.manager.add_widget(Home(name='home'))
         self.manager.add_widget(Blacklist_Window(name='blacklist_window'))
+        self.manager.add_widget(Whitelist_Window(name='whitelist_window'))
         self.manager.add_widget(Logs_Window(name='logs_window'))
         self.manager.add_widget(User_Management_Window(name='user_management_window'))
         self.nav_drawer = Navigator()

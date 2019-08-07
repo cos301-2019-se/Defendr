@@ -2,12 +2,6 @@ import pymongo
 import hashlib, uuid
 import urllib.parse
 
-#Function to add an ip to the blacklist on the database
-def add_ip(db,ip):
-    col = db["blacklist"]
-    data = {"adress": ip}
-    col.insert_one(data)
-
 #Function to connect
 def connect():
     mongo_uri = "mongodb+srv://darknites:" + urllib.parse.quote("D@rkN1t3s") + "@defendr-1vnvv.azure.mongodb.net/test?retryWrites=true"
@@ -28,10 +22,46 @@ def find_Blacklisted_IP(db, ip):
             data.append(x)
     return data
 
+#Function to add an ip to the blacklist on the database
+def add_ip(db,ip):
+    col = db["blacklist"]
+    data = {"adress": ip}
+    col.insert_one(data)
 
 #Function to remove blacklisted ip from database of blacklisted ips
 def rem_Blacklisted_IP(db, ip):
     col = db["blacklist"]
+    col.remove({"ip": ip})
+    doc = col.find({"ip": ip},{"_id": 0})
+    string_output = "Not Found"
+    for x in doc:
+        string_output =str(x)
+    if(string_output=="Not Found"):
+        return "Success"
+    return "Fail"
+
+#Function to find whitelist ip in database of blacklisted ids
+def find_whiteListed_IP(db,ip):
+    col = db["whitelist"]
+    data = []
+    if ip == "":
+        for x in col.find({}, {"_id": 0}):
+            data.append(x)
+    else:
+        query = {"ip": ip}
+        for x in col.find(query, {"_id": 0}):
+            data.append(x)
+    return data
+
+#Function to add an ip to the whitelist on the database
+def add_whiteListed_ip(db,ip):
+    col = db["whitelist"]
+    data = {"adress": ip}
+    col.insert_one(data)
+
+#Function to remove whitelist ip from database of blacklisted ips
+def rem_Whitelisted_IP(db, ip):
+    col = db["whitelist"]
     col.remove({"ip": ip})
     doc = col.find({"ip": ip},{"_id": 0})
     string_output = "Not Found"
