@@ -25,7 +25,17 @@ class Login(Screen):
     timer=datetime.datetime(2018, 6, 1,8,30)
     falid = False
     def do_login(self, loginText, passwordText):
+        app = App.get_running_app()
+        app.roll = "admin"
 
+        app.username = loginText
+        app.password = passwordText
+
+        self.manager.transition = SlideTransition(direction="left")
+        self.manager.current = 'home'
+
+        app.config.read(app.get_application_config())
+        app.config.write()
         # users = ["Jeandre", "Muhammed","Sisa","Christiaan","Ruslynn","Chris"]
         # passwds = ["jPass1","mPass1","sPass1","cPass1","rPass1","cPass1"]
         # last = ["Botha","Carrim","Khoza","Opperman","Appana","Osbrone"]

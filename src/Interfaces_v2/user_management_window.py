@@ -60,6 +60,10 @@ class Edit_User_Popup(Popup):
 
 class Delete_User_Popup(Popup):
     def confirm_delete(self):
+        app = App.get_running_app()
+        print(app.email)
+        db = databaseCon.connect()
+        databaseCon.remove(db,app.email)
         self.dismiss()
     pass
 
@@ -143,6 +147,8 @@ class User_Management_Window(Screen):
 
     def remove_user(self, user_email_to_delete):
         if(self.checkEmail(user_email_to_delete)):
+            app = App.get_running_app()
+            app.email=user_email_to_delete
             popup = Delete_User_Popup()
             popup.open()
             #if(popup.)
