@@ -192,7 +192,7 @@
                             font_size: 18
                             text: 'Add'
                             size_hint_x: 0.3
-                            on_release: root.add_user(user_table,user_name.text,user_surname.text,user_email.text,user_password.text,user_password_confirm.text)
+                            on_release: root.add_user(user_table,user_name.text,user_surname.text,user_email.text,user_password.text,user_password_confirm.text,email_notification_check.visible)
                     MDLabel:
                         theme_text_color: 'Primary'
                         text: "Modify User"
@@ -229,6 +229,10 @@
                             font_size: 18
                             text: 'Edit'
                             on_release: root.edit_user(user_email_to_modify.text)
+                        Button:
+                            font_size: 18
+                            text: 'Verify'
+                            on_release: root.verify_user(user_email_to_modify.text)
                 GridLayout:
                     spacing: '5dp'
                     rows: 2

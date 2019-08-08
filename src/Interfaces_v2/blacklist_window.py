@@ -19,7 +19,7 @@ class Blacklist_Window(Screen):
         self.xdp.black_list_IP(ip_addr)
         if self.check_IP(ip_addr):
             db = databaseCon.connect()
-            if not databaseCon.find_Blacklisted_IP(db, ip_addr):
+            if not databaseCon.find_Blacklisted_IP(db, ip_addr) and not databaseCon.find_whiteListed_IP(db, ip_addr):
                 databaseCon.add_ip(db,ip_addr)
         self.ids['txt_ip_addr'].text = ""
 

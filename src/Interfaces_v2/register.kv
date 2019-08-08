@@ -43,7 +43,7 @@
                         TextInput:
                             id: name
                             multiline:False
-                            font_size: 28
+                            font_size: 16
 
                     BoxLayout:
                         orientation: 'vertical'
@@ -57,8 +57,7 @@
                         TextInput:
                             id: surname
                             multiline:False
-                            password:True
-                            font_size: 28
+                            font_size: 14
 
                     BoxLayout:
                         orientation: 'vertical'
@@ -72,8 +71,7 @@
                         TextInput:
                             id: email
                             multiline:False
-                            password:True
-                            font_size: 28
+                            font_size: 14
 
                     BoxLayout:
                         orientation: 'vertical'
@@ -87,8 +85,8 @@
                         TextInput:
                             id: password
                             multiline:False
-                            password:True
-                            font_size: 28
+                            password:False
+                            font_size: 16
 
                     BoxLayout:
                         orientation: 'vertical'
@@ -102,8 +100,8 @@
                         TextInput:
                             id: confirm_pass
                             multiline:False
-                            password:True
-                            font_size: 28
+                            password:False
+                            font_size: 16
                     GridLayout:
                         cols:3
                         size_hint_y: None
@@ -119,7 +117,7 @@
                             text: 'Register'
                             font_size: 22
                             size_hint_x:0.25
-                            on_press: root.do_go_to_login(login.text, password.text)
+                            on_press: root.do_go_to_login(name.text,surname.text,email.text,password.text,confirm_pass.text)
 
             Label:
                 size_hint_x:0.1
