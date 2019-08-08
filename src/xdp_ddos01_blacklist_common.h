@@ -25,13 +25,15 @@ static int verbose = 1;
  * Gotcha need to mount:
  *   mount -t bpf bpf /sys/fs/bpf/
  */
-static const char *file_blacklist = "/sys/fs/bpf/ddos_blacklist";
-static const char *file_verdict   = "/sys/fs/bpf/ddos_blacklist_stat_verdict";
-static const char *file_ip_watchlist   = "/sys/fs/bpf/ddos_blacklist_ip_watchlist";
-static const char *file_logs   = "/sys/fs/bpf/ddos_blacklist_logs";
-static const char *file_servers   = "/sys/fs/bpf/ddos_blacklist_servers";
-static const char *file_services   = "/sys/fs/bpf/ddos_blacklist_services";
-static const char *file_destinations   = "/sys/fs/bpf/ddos_blacklist_destinations";
+static const char *file_blacklist = "/sys/fs/bpf/defendr_blacklist";
+static const char *file_whitelist = "/sys/fs/bpf/defendr_whitelist";
+static const char *file_system_stats   = "/sys/fs/bpf/defendr_system_stats";
+static const char *file_verdict   = "/sys/fs/bpf/defendr_stat_verdict";
+static const char *file_ip_watchlist   = "/sys/fs/bpf/defendr_ip_watchlist";
+static const char *file_logs   = "/sys/fs/bpf/defendr_logs";
+static const char *file_servers   = "/sys/fs/bpf/defendr_servers";
+static const char *file_services   = "/sys/fs/bpf/defendr_services";
+static const char *file_destinations   = "/sys/fs/bpf/defendr_destinations";
 
 
 static const char *file_port_blacklist = "/sys/fs/bpf/ddos_port_blacklist";
@@ -182,6 +184,7 @@ static int service_modify(int fd_services,int fd_servers, char *service_ip,char 
 		backend->saddr = key;
 		backend->bytes = 0;
 		backend->pkts = 0;
+		backend->cons = 0;
 		backend->port = port;		
 
 		/*convert mac address into desired format*/

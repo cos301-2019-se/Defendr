@@ -29,7 +29,7 @@
                 cols: 2
                 GridLayout:
                     spacing: '5dp'
-                    rows: 10
+                    rows: 12
                     row_force_default: 1
                     row_default_height: '35dp'
                     MDLabel:
@@ -121,12 +121,77 @@
                             size_hint_x: 0.7
                     BoxLayout:
                         orientation: 'horizontal'
+                        size_hint_x: None
+                        width: root.width/2.5
+                        MDLabel:
+                            theme_text_color: 'Primary'
+                            text: "Account type"
+                            font_size: 18
+                            halign: 'right'
+                            size_hint_x: 0.3
+                        MDLabel:
+                            size_hint_x: 0.22
+                        ToggleButton:
+                            text: 'Admin'
+                            group: 'user_type'
+                            size_hint_x: 0.24
+                            on_release:
+                                email_notification_check.visible = True
+                                email_notification_msg.visible = False
+                        ToggleButton:
+                            text: 'User'
+                            state: 'down'
+                            group: 'user_type'
+                            size_hint_x: 0.24
+                            on_release:
+                                email_notification_check.visible = False
+                                email_notification_msg.visible = True
+                    BoxLayout:
+                        orientation: 'horizontal'
+                        spacing: '2dp'
+                        size_hint_x: None
+                        width: root.width/2.5
+                        MDLabel:
+                            theme_text_color: 'Primary'
+                            text: "Enable email notifications"
+                            font_size: 18
+                            halign: 'right'
+                            size_hint_x: 0.65
+                        MDLabel:
+                            id: email_notification_msg
+                            theme_text_color: 'Primary'
+                            text: "(unavailable)"
+                            visible: True
+                            opacity: 1 if self.visible else 0
+                            font_size: 18
+                            halign: 'right'
+                            size_hint_x: 0.25
+                        CheckBox:
+                            id : email_notification_check
+                            visible: False
+                            canvas.before:
+                                Color:
+                                    rgb: 0,0,0
+                                Rectangle:
+                                    pos:self.center_x-8, self.center_y-8
+                                    size:[16,16]
+                                Color:
+                                    rgb: 0,0,0
+                            opacity: 1 if self.visible else 0
+                            disabled: not self.visible
+                            size_hint_x: 0.1
+
+                    BoxLayout:
+                        orientation: 'horizontal'
                         spacing: '20dp'
                         size_hint_x: None
-                        width: root.width/10
+                        width: root.width/2.5
+                        MDLabel:
+                            size_hint_x: 0.7
                         Button:
                             font_size: 18
                             text: 'Add'
+                            size_hint_x: 0.3
                             on_release: root.add_user(user_table,user_name.text,user_surname.text,user_email.text,user_password.text,user_password_confirm.text)
                     MDLabel:
                         theme_text_color: 'Primary'

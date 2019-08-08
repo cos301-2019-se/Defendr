@@ -46,7 +46,7 @@ static char ifname_buf[IF_NAMESIZE];
 static char *ifname = NULL;
 static int ifindex = -1;
 
-#define NR_MAPS 10
+#define NR_MAPS 12
 int maps_marked_for_export[MAX_MAPS] = { 0 };
 
 
@@ -93,31 +93,37 @@ static const char* map_idx_to_export_filename(int idx)
 	case 0: /* map_fd[0]: blacklist */
 		file =   file_blacklist;
 		break;
-	case 1: /* map_fd[1]: ip_watchlist */
+	case 1: /* map_fd[0]: blacklist */
+		file =   file_whitelist;
+		break;
+	case 2: /* map_fd[1]: ip_watchlist */
 		file =   file_ip_watchlist;
 		break;
-	case 2: /* map_fd[2]: enter_logs */
+	case 3: /* map_fd[2]: enter_logs */
 		file =   file_logs;
 		break;
-	case 3: /* map_fd[5]: verdict_cnt */
+	case 4: /* map_fd[5]: verdict_cnt */
 		file =   file_servers;
 		break;
-	case 4: /* map_fd[5]: verdict_cnt */
+	case 5: /* map_fd[5]: verdict_cnt */
 		file =   file_services;
 		break;
-	case 5: /* map_fd[5]: verdict_cnt */
+	case 6: /* map_fd[5]: verdict_cnt */
 		file =   file_destinations;
 		break;
-	case 6: /* map_fd[5]: verdict_cnt */
+	case 7: /* map_fd[5]: verdict_cnt */
+		file =   file_system_stats;
+		break;
+	case 8: /* map_fd[5]: verdict_cnt */
 		file =   file_verdict;
 		break;
-	case 7: /* map_fd[6]: port_blacklist */
+	case 9: /* map_fd[6]: port_blacklist */
 		file =   file_port_blacklist;
 		break;
-	case 8: /* map_fd[7]: port_blacklist_drop_count_tcp */
+	case 10: /* map_fd[7]: port_blacklist_drop_count_tcp */
 		file =   file_port_blacklist_count[DDOS_FILTER_TCP];
 		break;
-	case 9: /* map_fd[8]: port_blacklist_drop_count_udp */
+	case 11: /* map_fd[8]: port_blacklist_drop_count_udp */
 		file =   file_port_blacklist_count[DDOS_FILTER_UDP];
 		break;
 	default:
