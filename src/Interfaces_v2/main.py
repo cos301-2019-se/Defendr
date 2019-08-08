@@ -35,6 +35,7 @@ class LoginApp(App):
     password = StringProperty(None)
     manager = ScreenManager()
     roll="user"
+    email="12"
 
     def build(self):
         self.manager.add_widget(Login(name='login'))

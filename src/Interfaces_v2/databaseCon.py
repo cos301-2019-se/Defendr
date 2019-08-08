@@ -17,7 +17,7 @@ def find_Blacklisted_IP(db, ip):
         for x in col.find({}, {"_id": 0}):
             data.append(x)
     else:
-        query = {"ip": ip}
+        query = {"adress": ip}
         for x in col.find(query, {"_id": 0}):
             data.append(x)
     return data
@@ -31,8 +31,8 @@ def add_ip(db,ip):
 #Function to remove blacklisted ip from database of blacklisted ips
 def rem_Blacklisted_IP(db, ip):
     col = db["blacklist"]
-    col.remove({"ip": ip})
-    doc = col.find({"ip": ip},{"_id": 0})
+    col.remove({"adress": ip})
+    doc = col.find({"adress": ip},{"_id": 0})
     string_output = "Not Found"
     for x in doc:
         string_output =str(x)
@@ -48,7 +48,7 @@ def find_whiteListed_IP(db,ip):
         for x in col.find({}, {"_id": 0}):
             data.append(x)
     else:
-        query = {"ip": ip}
+        query = {"adress": ip}
         for x in col.find(query, {"_id": 0}):
             data.append(x)
     return data
@@ -150,7 +150,7 @@ def get_email_to_send_to(db):
         stringoutput.append(temp)
     return stringoutput
 
-#Function to add an user to the database
+#Function to add an admin user to the database
 def save_user(db,name,lastName,roll,salt, password, email, sendEmail):
     col = db["user"]
     dict={"name": name, "lastname":lastName, "roll": roll, "salt": salt, "password": password, "email": email,"sendEmail": sendEmail}
@@ -168,7 +168,6 @@ def print_user(db):
     data =[]
     for x in my_col.find({}, {"_id": 0, "salt": 0, "password": 0,"sendEmail":0}):
         data.append(x)
-    print (data)
     return data
 
 #Function to check in an user is in the database

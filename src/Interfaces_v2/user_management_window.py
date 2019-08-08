@@ -192,6 +192,10 @@ class Edit_User_Popup(Popup):
 
 class Delete_User_Popup(Popup):
     def confirm_delete(self):
+        app = App.get_running_app()
+        print(app.email)
+        db = databaseCon.connect()
+        databaseCon.remove(db,app.email)
         self.dismiss()
     pass
 
@@ -203,7 +207,7 @@ class User_Management_Window(Screen):
         data = databaseCon.print_user(db)
         id.add_widget(Table(table_content=data))
 
-    def add_user(self,id,name,surename,email,password,rePassword):
+    def add_user(self,id,name,surename,email,password,rePassword, admin):
         if(name==""):
             print("Name must not be enter")
         else:
@@ -216,7 +220,16 @@ class User_Management_Window(Screen):
                             print("Re-enter password")
                         else:
                             if(password==rePassword):
-                                print("Added")
+                                db=databaseCon.connect()
+                                if(admin):
+                                    if (self.ids['email_notification_check'].active):
+                                        output = databaseCon.make_new_user(db, name, surename, password, "admin", email, "yes")
+                                    else:
+                                        output = databaseCon.make_new_user(db, name, surename, password, "admin", email, "no")
+                                else:
+                                    output = databaseCon.make_new_user(db, name, surename, password, "user", email, "no")
+                                print(output)
+                                self.reset_add()
                             else:
                                 print("Password does not macth")
 
@@ -265,5 +278,22 @@ class User_Management_Window(Screen):
         popup.open()
 
     def remove_user(self, user_email_to_delete):
-        popup = Delete_User_Popup()
-        popup.open()
+        if(self.checkEmail(user_email_to_delete)):
+            app = App.get_running_app()
+            app.email=user_email_to_delete
+            popup = Delete_User_Popup()
+            popup.open()
+            #if(popup.)
+
+    def verify_user(self, user_email_to_verify):
+        if (self.checkEmail(user_email_to_verify)):
+            db= databaseCon.connect()
+            if(databaseCon.get_roll(db,user_email_to_verify)=="new"):
+                databaseCon.change_roll(db,user_email_to_verify,"user")
+
+    def reset_add(self):
+        self.ids['user_name'].text = ""
+        self.ids['user_surname'].text = ""
+        self.ids['user_email'].text = ""
+        self.ids['user_password'].text = ""
+        self.ids['user_password_confirm'].text = ""
