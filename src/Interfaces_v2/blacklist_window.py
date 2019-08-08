@@ -23,12 +23,12 @@ class Blacklist_Window(Screen):
                 databaseCon.add_ip(db,ip_addr)
         self.ids['txt_ip_addr'].text = ""
 
-    def remove_IP(self):
-        ip_addr =self.lst_IPs.get(self.lst_IPs.curselection())
+    def remove_IP(self, ip_addr):
         if self.check_IP(ip_addr):
             db = databaseCon.connect()
             databaseCon.rem_Blacklisted_IP(db, ip_addr)
             xdp.remove_Blacklisted_IP(ip_addr)
+            self.ids['txt_ip_addr'].text = ""
 
     def check_IP(self, IP):
         if(IP==""):

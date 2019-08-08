@@ -22,14 +22,14 @@ class Whitelist_Window(Screen):
                 print(ip_addr)
                 print(databaseCon.rem_Blacklisted_IP(db,ip_addr))
                 databaseCon.add_whiteListed_ip(db,ip_addr)
-                #xdp.remove_Blacklisted_IP(ip)
+                self.xdp.remove_Blacklisted_IP(ip)
         self.ids['txt_ip_addr'].text = ""
 
-    def remove_IP(self):
+    def remove_IP(self, ip_addr):
         db = databaseCon.connect()
-        ip =self.lst_IPs.get(self.lst_IPs.curselection())
-        if self.check_IP(ip):
-            databaseCon.rem_Whitelisted_IP(db, ip)
+        if self.check_IP(ip_addr):
+            databaseCon.rem_Whitelisted_IP(db, ip_addr)
+        self.ids['txt_ip_addr'].text = ""
 
 
     def check_IP(self, IP):
