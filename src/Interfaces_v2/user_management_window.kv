@@ -38,7 +38,7 @@
                         font_size: 24
                         halign: 'center'
                         size_hint_x: None
-                        width: root.width/2.5
+
                     BoxLayout:
                         orientation: 'horizontal'
                         spacing: '5dp'
@@ -46,15 +46,15 @@
                         width: root.width/2.5
                         MDLabel:
                             theme_text_color: 'Primary'
-                            text: "Name"
+                            text: "Name:"
                             font_size: 18
-                            halign: 'right'
-                            size_hint_x: 0.3
+                            halign: 'left'
+                            size_hint_x: 0.4
                         TextInput:
                             id: user_name
                             multiline:False
                             font_size: 18
-                            size_hint_x: 0.7
+                            size_hint_x: 0.6
                     BoxLayout:
                         orientation: 'horizontal'
                         spacing: '5dp'
@@ -62,15 +62,15 @@
                         width: root.width/2.5
                         MDLabel:
                             theme_text_color: 'Primary'
-                            text: "Surname"
+                            text: "Surname:"
                             font_size: 18
-                            halign: 'right'
-                            size_hint_x: 0.3
+                            halign: 'left'
+                            size_hint_x: 0.4
                         TextInput:
                             id: user_surname
                             multiline:False
                             font_size: 18
-                            size_hint_x: 0.7
+                            size_hint_x: 0.6
                     BoxLayout:
                         orientation: 'horizontal'
                         spacing: '5dp'
@@ -78,15 +78,15 @@
                         width: root.width/2.5
                         MDLabel:
                             theme_text_color: 'Primary'
-                            text: "Email"
+                            text: "Email:"
                             font_size: 18
-                            halign: 'right'
-                            size_hint_x: 0.3
+                            halign: 'left'
+                            size_hint_x: 0.4
                         TextInput:
                             id: user_email
                             multiline:False
                             font_size: 18
-                            size_hint_x: 0.7
+                            size_hint_x: 0.6
                     BoxLayout:
                         orientation: 'horizontal'
                         spacing: '5dp'
@@ -94,15 +94,15 @@
                         width: root.width/2.5
                         MDLabel:
                             theme_text_color: 'Primary'
-                            text: "Password"
+                            text: "Password:"
                             font_size: 18
-                            halign: 'right'
-                            size_hint_x: 0.3
+                            halign: 'left'
+                            size_hint_x: 0.4
                         TextInput:
                             id: user_password
                             multiline:False
                             font_size: 18
-                            size_hint_x: 0.7
+                            size_hint_x: 0.6
                     BoxLayout:
                         orientation: 'horizontal'
                         spacing: '5dp'
@@ -110,24 +110,24 @@
                         width: root.width/2.5
                         MDLabel:
                             theme_text_color: 'Primary'
-                            text: "Confirm Password"
+                            text: "Confirm Password:"
                             font_size: 18
-                            halign: 'right'
-                            size_hint_x: 0.3
+                            halign: 'left'
+                            size_hint_x: 0.4
                         TextInput:
                             id: user_password_confirm
                             multiline:False
                             font_size: 18
-                            size_hint_x: 0.7
+                            size_hint_x: 0.6
                     BoxLayout:
                         orientation: 'horizontal'
                         size_hint_x: None
                         width: root.width/2.5
                         MDLabel:
                             theme_text_color: 'Primary'
-                            text: "Account type"
+                            text: "Account type:"
                             font_size: 18
-                            halign: 'right'
+                            halign: 'left'
                             size_hint_x: 0.3
                         MDLabel:
                             size_hint_x: 0.22
@@ -153,9 +153,9 @@
                         width: root.width/2.5
                         MDLabel:
                             theme_text_color: 'Primary'
-                            text: "Enable email notifications"
+                            text: "Enable email notifications:"
                             font_size: 18
-                            halign: 'right'
+                            halign: 'left'
                             size_hint_x: 0.65
                         MDLabel:
                             id: email_notification_msg
@@ -164,7 +164,7 @@
                             visible: True
                             opacity: 1 if self.visible else 0
                             font_size: 18
-                            halign: 'right'
+                            halign: 'left'
                             size_hint_x: 0.25
                         CheckBox:
                             id : email_notification_check
@@ -197,7 +197,7 @@
                         theme_text_color: 'Primary'
                         text: "Modify User"
                         font_size: 24
-                        halign: 'center'
+                        halign: 'left'
                         size_hint_x: None
                         width: root.width/2.5
                     BoxLayout:
@@ -209,13 +209,13 @@
                             theme_text_color: 'Primary'
                             text: "Email"
                             font_size: 18
-                            halign: 'right'
-                            size_hint_x: 0.3
+                            halign: 'left'
+                            size_hint_x: 0.4
                         TextInput:
                             id: user_email_to_modify
                             multiline:False
                             font_size: 18
-                            size_hint_x: 0.7
+                            size_hint_x: 0.6
                     BoxLayout:
                         orientation: 'horizontal'
                         spacing: '20dp'

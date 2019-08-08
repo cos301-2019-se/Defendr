@@ -358,7 +358,7 @@ static void clear_system_stats(){
 		int res = bpf_map_lookup_elem(fd_servers,&key,backend); 
 		if(res==0){
 			backend->pkts = 0;
-			backend->cons = 0;
+			//backend->cons = 0;
 			backend->bytes = 0;
 			bpf_map_update_elem(fd_servers, &key, backend, BPF_EXIST);
 		}
@@ -618,7 +618,7 @@ static void get_stats(){
 	__u64 value = 0;
 	const char *catagories[5];
 	catagories[0] = "pps";
-	catagories[1] = "cps";
+	catagories[1] = "num_con";
 	catagories[2] = "bps";
 	catagories[3] = "pps_droped";
 	catagories[4] = "bps_droped";
@@ -655,7 +655,7 @@ static void get_stats(){
 								if (inet_ntop(AF_INET, &(backend->daddr), backend_ip_txt, sizeof(backend_ip_txt))) {	
 									printf("\"%s\":{\n",backend_ip_txt);		
 									printf("\%s\": %d\n","pps",backend->pkts);
-									printf("\%s\": %d\n","cps",backend->cons);
+									printf("\%s\": %d\n","num_con",backend->cons);
 									printf("\%s\": %d\n","bps",backend->bytes);
 									printf("}\n");										
 								}			

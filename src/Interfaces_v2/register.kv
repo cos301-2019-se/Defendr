@@ -6,27 +6,25 @@
     GridLayout:
         rows: 3
         Label:
-            size_hint_y:0.1
+            size_hint_y:0.075
         GridLayout:
             cols: 3
-            size_hint_y:0.8
+            size_hint_y:0.81
             Label:
-                size_hint_x:0.1
+                size_hint_x:0.3
             MDCard:
                 padding: '15dp'
-                size_hint_x:0.8
+                size_hint_x:0.4
                 BoxLayout:
                     id: register_layout
                     orientation: 'vertical'
-                    padding: [5,25,5,25]
-                    spacing: 10
-
+                    padding: ['60dp','25dp','60dp','25dp']
+                    spacing: '15dp'
 
                     MDLabel:
                         theme_text_color: 'Primary'
                         text: "Register"
                         font_size: 32
-                        size_hint_y: 0.2
                         halign: 'center'
 
                     BoxLayout:
@@ -34,7 +32,7 @@
 
                         MDLabel:
                             theme_text_color: 'Primary'
-                            text: 'Name'
+                            text: 'Name:'
                             font_size: 18
                             halign: 'left'
                             text_size: root.width-20, 20
@@ -43,13 +41,13 @@
                         TextInput:
                             id: name
                             multiline:False
-                            font_size: 28
+                            font_size: 14
 
                     BoxLayout:
                         orientation: 'vertical'
                         MDLabel:
                             theme_text_color: 'Primary'
-                            text: 'Surname'
+                            text: 'Surname:'
                             halign: 'left'
                             font_size: 18
                             text_size: root.width-20, 20
@@ -57,14 +55,13 @@
                         TextInput:
                             id: surname
                             multiline:False
-                            password:True
-                            font_size: 28
+                            font_size: 14
 
                     BoxLayout:
                         orientation: 'vertical'
                         MDLabel:
                             theme_text_color: 'Primary'
-                            text: 'Email'
+                            text: 'Email:'
                             halign: 'left'
                             font_size: 18
                             text_size: root.width-20, 20
@@ -72,14 +69,13 @@
                         TextInput:
                             id: email
                             multiline:False
-                            password:True
-                            font_size: 28
+                            font_size: 14
 
                     BoxLayout:
                         orientation: 'vertical'
                         MDLabel:
                             theme_text_color: 'Primary'
-                            text: 'Password'
+                            text: 'Password:'
                             halign: 'left'
                             font_size: 18
                             text_size: root.width-20, 20
@@ -88,13 +84,13 @@
                             id: password
                             multiline:False
                             password:True
-                            font_size: 28
+                            font_size: 14
 
                     BoxLayout:
                         orientation: 'vertical'
                         MDLabel:
                             theme_text_color: 'Primary'
-                            text: 'Confirm Password'
+                            text: 'Confirm Password:'
                             halign: 'left'
                             font_size: 18
                             text_size: root.width-20, 20
@@ -103,28 +99,29 @@
                             id: confirm_pass
                             multiline:False
                             password:True
-                            font_size: 28
+                            font_size: 14
                     GridLayout:
                         cols:3
                         size_hint_y: None
-                        height: '40dp'
+                        height: '35dp'
+                        spacing: '20dp'
+                        Label:
+                            size_hint_x:0.26
                         Button:
                             text: 'Back'
-                            font_size: 22
-                            size_hint_x:0.25
+                            font_size: 16
+                            size_hint_x:0.32
                             on_press: app.nav_to("login")
-                        Label:
-                            size_hint_x:0.5
                         Button:
                             text: 'Register'
-                            font_size: 22
-                            size_hint_x:0.25
+                            font_size: 16
+                            size_hint_x:0.32
                             on_press: root.do_go_to_login(login.text, password.text)
 
             Label:
-                size_hint_x:0.1
+                size_hint_x:0.3
         GridLayout:
-            size_hint_y:0.1
+            size_hint_y:0.075
             cols: 3
             Label
             Label

@@ -6,9 +6,9 @@
     GridLayout:
         rows: 3
         Label:
-            size_hint_y:0.3
+            size_hint_y:0.25
         GridLayout:
-            size_hint_y:0.4
+            size_hint_y:0.5
             cols: 3
             Label:
                 size_hint_x:0.25
@@ -19,7 +19,7 @@
                 BoxLayout
                     id: login_layout
                     GridLayout:
-                        rows:6
+                        rows:8
                         spacing: '15dp'
                         MDLabel:
                             theme_text_color: 'Primary'
@@ -27,39 +27,73 @@
                             font_size: 34
                             size_hint_y: 0.2
                             halign: 'center'
-                        MDLabel:
-                            theme_text_color: 'Primary'
-                            text: 'Email:'
-                            font_size: 24
-                            halign: 'left'
+                        Label:
+                            size_hint_y: 0.04
+                        BoxLayout:
+                            orientation: 'horizontal'
                             size_hint_y: 0.08
-                        TextInput:
-                            id: txt_login_email
-                            multiline:False
-                            font_size: 18
-                            size_hint_y: 0.2
-                        MDLabel:
-                            theme_text_color: 'Primary'
-                            text: 'Password:'
-                            font_size: 24
-                            halign: 'left'
+                            Label:
+                                size_hint_x: 0.2
+                            MDLabel:
+                                theme_text_color: 'Primary'
+                                text: 'Email:'
+                                font_size: 24
+                                halign: 'left'
+                                size_hint_x: 0.6
+                            Label:
+                                size_hint_x: 0.2
+                        BoxLayout:
+                            orientation: 'horizontal'
+                            size_hint_y: 0.16
+                            Label:
+                                size_hint_x: 0.2
+                            TextInput:
+                                id: txt_login_email
+                                multiline:False
+                                font_size: 18
+                                size_hint_x: 0.6
+                            Label:
+                                size_hint_x: 0.2
+                        BoxLayout:
+                            orientation: 'horizontal'
                             size_hint_y: 0.08
-                        TextInput:
-                            id: txt_login_password
-                            multiline:False
-                            password: True
-                            font_size: 18
-                            size_hint_y: 0.2
+                            Label:
+                                size_hint_x: 0.2
+                            MDLabel:
+                                theme_text_color: 'Primary'
+                                text: 'Password:'
+                                font_size: 24
+                                halign: 'left'
+                                size_hint_y: 0.08
+                                size_hint_x: 0.6
+                            Label:
+                                size_hint_x: 0.2
+                        BoxLayout:
+                            orientation: 'horizontal'
+                            size_hint_y: 0.16
+                            Label:
+                                size_hint_x: 0.2
+                            TextInput:
+                                id: txt_login_password
+                                multiline:False
+                                password: True
+                                font_size: 18
+                                size_hint_x: 0.6
+                            Label:
+                                size_hint_x: 0.2
+                        Label:
+                            size_hint_y: 0.08
                         GridLayout:
                             cols: 3
-                            size_hint_y: 0.24
+                            spacing: '20dp'
+                            size_hint_y: 0.2
+                            Label:
+                                size_hint_x: 0.4
                             Button:
                                 text: 'Register'
                                 font_size: 20
                                 size_hint_x: 0.3
                                 on_release: app.nav_to('register')
-                            Label:
-                                size_hint_x: 0.4
                             Button:
                                 text: 'Login'
                                 font_size: 20
@@ -68,7 +102,7 @@
             Label:
                 size_hint_x:0.25
         GridLayout:
-            size_hint_y:0.3
+            size_hint_y:0.25
             cols: 3
             Label
             Label

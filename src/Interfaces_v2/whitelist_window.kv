@@ -12,7 +12,7 @@
             left_action_items: [['menu', lambda x: app.nav_drawer.toggle()]]
         GridLayout:
             cols:2
-            padding: '10dp'
+            padding: '45dp'
             spacing: '10dp'
             GridLayout:
                 cols:2
@@ -22,25 +22,37 @@
                 spacing: '5dp'
                 row_force_default: 1
                 row_default_height: '50dp'
-                MDLabel:
-                    theme_text_color: 'Primary'
-                    text: "IP whitelist"
-                    font_size: 24
-                    halign: 'center'
-                    size_hint_x:0.8
-                MDLabel:
-                    size_hint_x:0.2
-                TextInput:
-                    id: txt_ip_addr
-                    multiline:False
-                    font_size: 18
-                    size_hint_x:0.8
-                    hint_text: 'IP Address'
-                Button:
-                    text: 'Add'
-                    font_size: 22
-                    size_hint_x:0.2
-                    on_release: root.add_IP(txt_ip_addr.text)
+                GridLayout:
+                    cols:2
+                    BoxLayout:
+                        orientation: 'vertical'
+                        size_hint_x: 0.5
+                        spacing: '30dp'
+                        MDLabel:
+                            theme_text_color: 'Primary'
+                            text: "IP Whitelist"
+                            font_size: 22
+                            halign: 'left'
+                            size_hint_x:0.4
+                        BoxLayout:
+                            orientation: 'horizontal'
+                            size_hint_y: None
+                            height: '40dp'
+                            spacing: '20dp'
+                            TextInput:
+                                id: txt_ip_addr
+                                multiline:False
+                                font_size: 18
+                                size_hint_x:0.8
+                                hint_text: 'IP Address'
+                            Button:
+                                text: 'Add'
+                                font_size: 22
+                                size_hint_x:0.2
+                                on_release: root.add_IP(txt_ip_addr.text)
+                    BoxLayout:
+                        orientation: 'vertical'
+                        size_hint_x: 0.5
             GridLayout:
                 rows: 2
                 padding: '10dp'

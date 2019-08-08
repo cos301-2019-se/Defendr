@@ -14,13 +14,146 @@ Builder.load_string('''
 
 <Edit_User_Popup>:
     id:edit_popup
-    size_hint: .4, .4
+    size_hint: .6, .6
     auto_dismiss: False
-    title: 'Hello world!!'
-    Button:
-        text: 'Click here to dismiss'
-        on_press: edit_popup.dismiss()
-
+    title: 'Edit user account'
+    GridLayout:
+        cols:3
+        Label:
+            size_hint_x: 0.1
+        GridLayout:
+            size_hint_x: 0.9
+            spacing: '5dp'
+            rows: 12
+            row_force_default: 1
+            row_default_height: '35dp'
+            MDLabel:
+                
+            BoxLayout:
+                orientation: 'horizontal'
+                spacing: '15dp'                
+                MDLabel:
+                    text: "Name:"
+                    font_size: 18
+                    halign: 'left'
+                    size_hint_x: 0.4
+                TextInput:
+                    id: edit_user_name
+                    multiline:False
+                    font_size: 18
+                    size_hint_x: 0.6
+            BoxLayout:
+                orientation: 'horizontal'
+                spacing: '15dp'
+                MDLabel:
+                    text: "Surname:"
+                    font_size: 18
+                    halign: 'left'
+                    size_hint_x: 0.4
+                TextInput:
+                    id: edit_user_surname
+                    multiline:False
+                    font_size: 18
+                    size_hint_x: 0.6
+            BoxLayout:
+                orientation: 'horizontal'
+                spacing: '15dp'
+                MDLabel:
+                    text: "Email:"
+                    font_size: 18
+                    halign: 'left'
+                    size_hint_x: 0.4
+                TextInput:
+                    id: edit_user_email
+                    multiline:False
+                    font_size: 18
+                    size_hint_x: 0.6
+            BoxLayout:
+                orientation: 'horizontal'
+                spacing: '15dp'
+                MDLabel:
+                    text: "Password:"
+                    font_size: 18
+                    halign: 'left'
+                    size_hint_x: 0.4
+                TextInput:
+                    id: edit_user_password
+                    multiline:False
+                    font_size: 18
+                    size_hint_x: 0.6
+            BoxLayout:
+                orientation: 'horizontal'
+                spacing: '15dp'
+                MDLabel:
+                    text: "Confirm Password:"
+                    font_size: 18
+                    halign: 'left'
+                    size_hint_x: 0.4
+                TextInput:
+                    id: edit_user_password_confirm
+                    multiline:False
+                    font_size: 18
+                    size_hint_x: 0.6
+            BoxLayout:
+                orientation: 'horizontal'
+                MDLabel:
+                    text: "Account type:"
+                    font_size: 18
+                    halign: 'left'
+                    size_hint_x: 0.3
+                MDLabel:
+                    size_hint_x: 0.22
+                ToggleButton:
+                    text: 'Admin'
+                    group: 'user_type'
+                    size_hint_x: 0.24
+                    on_release:
+                        edit_email_notification_check.visible = True
+                        edit_email_notification_msg.visible = False
+                ToggleButton:
+                    text: 'User'
+                    state: 'down'
+                    group: 'user_type'
+                    size_hint_x: 0.24
+                    on_release:
+                        edit_email_notification_check.visible = False
+                        edit_email_notification_msg.visible = True
+            BoxLayout:
+                orientation: 'horizontal'
+                spacing: '2dp'
+                MDLabel:
+                    text: "Enable email notifications:"
+                    font_size: 18
+                    halign: 'left'
+                    size_hint_x: 0.65
+                MDLabel:
+                    id: edit_email_notification_msg
+                    text: "(unavailable)"
+                    visible: True
+                    opacity: 1 if self.visible else 0
+                    font_size: 18
+                    halign: 'left'
+                    size_hint_x: 0.25
+                CheckBox:
+                    id : edit_email_notification_check
+                    visible: False
+                    opacity: 1 if self.visible else 0
+                    disabled: not self.visible
+                    size_hint_x: 0.1
+    
+            BoxLayout:
+                orientation: 'horizontal'
+                spacing: '20dp'
+                MDLabel:
+                    size_hint_x: 0.7
+                Button:
+                    font_size: 18
+                    text: 'Confirm'
+                    size_hint_x: 0.3
+                    on_press: delete_popup.dismiss()
+        Label:
+            size_hint_x: 0.2
+            
 <Delete_User_Popup>:
     id:delete_popup
     size_hint: .4, .4
@@ -35,7 +168,6 @@ Builder.load_string('''
             GridLayout:
                 rows: 2
                 MDLabel:
-                    theme_text_color: 'Primary'
                     text: 'Are you sure you want delete ?'
                     font_size: 14
                     halign: 'center'
