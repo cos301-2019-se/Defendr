@@ -168,6 +168,7 @@ def print_user(db):
     data =[]
     for x in my_col.find({}, {"_id": 0, "salt": 0, "password": 0,"sendEmail":0}):
         data.append(x)
+    print (data)
     return data
 
 #Function to check in an user is in the database

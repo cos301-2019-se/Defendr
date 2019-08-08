@@ -1,88 +1,138 @@
 #:include home.kv
+#:include login.kv
 
 <register>:
-    BoxLayout:
-        id: register_layout
-        orientation: 'vertical'
-        padding: [10,50,10,50]
-        spacing: 50
-
+    on_pre_enter: root.resetForm()
+    GridLayout:
+        rows: 3
         Label:
-            text: 'Register'
-            font_size: 32
+            size_hint_y:0.1
+        GridLayout:
+            cols: 3
+            size_hint_y:0.8
+            Label:
+                size_hint_x:0.1
+            MDCard:
+                padding: '15dp'
+                size_hint_x:0.8
+                BoxLayout:
+                    id: register_layout
+                    orientation: 'vertical'
+                    padding: [5,25,5,25]
+                    spacing: 10
 
-        BoxLayout:
-            orientation: 'vertical'
+
+                    MDLabel:
+                        theme_text_color: 'Primary'
+                        text: "Register"
+                        font_size: 32
+                        size_hint_y: 0.2
+                        halign: 'center'
+
+                    BoxLayout:
+                        orientation: 'vertical'
+
+                        MDLabel:
+                            theme_text_color: 'Primary'
+                            text: 'Name'
+                            font_size: 18
+                            halign: 'left'
+                            text_size: root.width-20, 20
+
+
+                        TextInput:
+                            id: name
+                            multiline:False
+                            font_size: 28
+
+                    BoxLayout:
+                        orientation: 'vertical'
+                        MDLabel:
+                            theme_text_color: 'Primary'
+                            text: 'Surname'
+                            halign: 'left'
+                            font_size: 18
+                            text_size: root.width-20, 20
+
+                        TextInput:
+                            id: surname
+                            multiline:False
+                            password:True
+                            font_size: 28
+
+                    BoxLayout:
+                        orientation: 'vertical'
+                        MDLabel:
+                            theme_text_color: 'Primary'
+                            text: 'Email'
+                            halign: 'left'
+                            font_size: 18
+                            text_size: root.width-20, 20
+
+                        TextInput:
+                            id: email
+                            multiline:False
+                            password:True
+                            font_size: 28
+
+                    BoxLayout:
+                        orientation: 'vertical'
+                        MDLabel:
+                            theme_text_color: 'Primary'
+                            text: 'Password'
+                            halign: 'left'
+                            font_size: 18
+                            text_size: root.width-20, 20
+
+                        TextInput:
+                            id: password
+                            multiline:False
+                            password:True
+                            font_size: 28
+
+                    BoxLayout:
+                        orientation: 'vertical'
+                        MDLabel:
+                            theme_text_color: 'Primary'
+                            text: 'Confirm Password'
+                            halign: 'left'
+                            font_size: 18
+                            text_size: root.width-20, 20
+
+                        TextInput:
+                            id: confirm_pass
+                            multiline:False
+                            password:True
+                            font_size: 28
+                    GridLayout:
+                        cols:3
+                        size_hint_y: None
+                        height: '40dp'
+                        Button:
+                            text: 'Back'
+                            font_size: 22
+                            size_hint_x:0.25
+                            on_press: app.nav_to("login")
+                        Label:
+                            size_hint_x:0.5
+                        Button:
+                            text: 'Register'
+                            font_size: 22
+                            size_hint_x:0.25
+                            on_press: root.do_go_to_login(login.text, password.text)
 
             Label:
-                text: 'Name'
-                font_size: 18
-                halign: 'left'
-                text_size: root.width-20, 20
+                size_hint_x:0.1
+        GridLayout:
+            size_hint_y:0.1
+            cols: 3
+            Label
+            Label
+            GridLayout:
+                rows: 3
+                Label
+                Label
+                Image:
+                    source: 'images/advance.png'
 
-            TextInput:
-                id: name
-                multiline:False
-                font_size: 28
 
-        BoxLayout:
-            orientation: 'vertical'
-            Label:
-                text: 'Surname'
-                halign: 'left'
-                font_size: 18
-                text_size: root.width-20, 20
-
-            TextInput:
-                id: surname
-                multiline:False
-                password:True
-                font_size: 28
-
-        BoxLayout:
-            orientation: 'vertical'
-            Label:
-                text: 'Email'
-                halign: 'left'
-                font_size: 18
-                text_size: root.width-20, 20
-
-            TextInput:
-                id: email
-                multiline:False
-                password:True
-                font_size: 28
-
-        BoxLayout:
-            orientation: 'vertical'
-            Label:
-                text: 'Password'
-                halign: 'left'
-                font_size: 18
-                text_size: root.width-20, 20
-
-            TextInput:
-                id: password
-                multiline:False
-                password:True
-                font_size: 28
-
-        BoxLayout:
-            orientation: 'vertical'
-            Label:
-                text: 'Confirm Password'
-                halign: 'left'
-                font_size: 18
-                text_size: root.width-20, 20
-
-            TextInput:
-                id: confirm_pass
-                multiline:False
-                password:True
-                font_size: 28
-
-        Button:
-            text: 'Register'
-            font_size: 24
-
-            on_press: root.do_go_to_login(login.text, password.text)

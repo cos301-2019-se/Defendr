@@ -1,59 +1,74 @@
 #:include home.kv
+#:include register.kv
 
 <login>:
     on_pre_enter: root.resetForm()
     GridLayout:
         rows: 3
         Label:
+            size_hint_y:0.3
         GridLayout:
+            size_hint_y:0.4
             cols: 3
-            Label
-            BoxLayout
-                id: login_layout
-                GridLayout:
-                    rows:6
-                    spacing: '15dp'
-                    MDLabel:
-                        theme_text_color: 'Primary'
-                        text: "Defendr Login"
-                        font_size: 34
-                        size_hint_y: 0.2
-                        halign: 'center'
-                    MDLabel:
-                        theme_text_color: 'Primary'
-                        text: 'Email:'
-                        font_size: 24
-                        halign: 'left'
-                        size_hint_y: 0.08
-                    TextInput:
-                        id: txt_login_email
-                        multiline:False
-                        font_size: 18
-                        size_hint_y: 0.2
-                    MDLabel:
-                        theme_text_color: 'Primary'
-                        text: 'Password:'
-                        font_size: 24
-                        halign: 'left'
-                        size_hint_y: 0.08
-                    TextInput:
-                        id: txt_login_password
-                        multiline:False
-                        password: True
-                        font_size: 18
-                        size_hint_y: 0.2
+            Label:
+                size_hint_x:0.25
+            MDCard:
+                size_hint_x:0.5
+                spacing: '15dp'
+                padding: '10dp'
+                BoxLayout
+                    id: login_layout
                     GridLayout:
-                        cols: 2
-                        size_hint_y: 0.24
-                        Label
-                        Button:
-                            text: 'Login'
-                            font_size: 20
-                            size_hint_x: None
-                            width: '100dp'
-                            on_press: root.do_login(txt_login_email.text, txt_login_password.text)
-            Label
+                        rows:6
+                        spacing: '15dp'
+                        MDLabel:
+                            theme_text_color: 'Primary'
+                            text: "Defendr Login"
+                            font_size: 34
+                            size_hint_y: 0.2
+                            halign: 'center'
+                        MDLabel:
+                            theme_text_color: 'Primary'
+                            text: 'Email:'
+                            font_size: 24
+                            halign: 'left'
+                            size_hint_y: 0.08
+                        TextInput:
+                            id: txt_login_email
+                            multiline:False
+                            font_size: 18
+                            size_hint_y: 0.2
+                        MDLabel:
+                            theme_text_color: 'Primary'
+                            text: 'Password:'
+                            font_size: 24
+                            halign: 'left'
+                            size_hint_y: 0.08
+                        TextInput:
+                            id: txt_login_password
+                            multiline:False
+                            password: True
+                            font_size: 18
+                            size_hint_y: 0.2
+                        GridLayout:
+                            cols: 3
+                            size_hint_y: 0.24
+                            Button:
+                                text: 'Register'
+                                font_size: 20
+                                size_hint_x: 0.3
+                                on_release: app.nav_to('register')
+                            Label:
+                                size_hint_x: 0.4
+                            Button:
+                                text: 'Login'
+                                font_size: 20
+                                size_hint_x: 0.3
+                                on_press: root.do_login(txt_login_email.text, txt_login_password.text)
+            Label:
+                size_hint_x:0.25
         GridLayout:
+            size_hint_y:0.3
             cols: 3
             Label
             Label

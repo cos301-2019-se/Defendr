@@ -17,6 +17,7 @@ from blacklist_window import Blacklist_Window
 from whitelist_window import Whitelist_Window
 from logs_window import  Logs_Window
 from login import Login
+from register import Register
 from user_management_window import User_Management_Window
 
 
@@ -37,6 +38,7 @@ class LoginApp(App):
 
     def build(self):
         self.manager.add_widget(Login(name='login'))
+        self.manager.add_widget(Register(name='register'))
         self.manager.add_widget(Home(name='home'))
         self.manager.add_widget(Blacklist_Window(name='blacklist_window'))
         self.manager.add_widget(Whitelist_Window(name='whitelist_window'))
@@ -70,7 +72,7 @@ class LoginApp(App):
         if(self.roll=="admin"):
             self.manager.current = window
         else:
-            if(window=="logs_window" or window=="home" or window =="login"):
+            if(window=="logs_window" or window=="home" or window =="login" or window =="register"):
                 self.manager.current = window
 
 
