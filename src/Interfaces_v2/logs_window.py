@@ -17,8 +17,6 @@ from MDTable import Table
 class Logs_Window(Screen):
 
     def add_table(self,id,list):
-        db = databaseCon.connect()
         ip =self.ids["log_search_text"].text
-        list = databaseCon.find_packets(db,ip)
-        id.add_widget(Table(table_content=list))
-
+        app = App.get_running_app()
+        id.add_widget(Table(table_content=app.facade.get_logs(ip)))

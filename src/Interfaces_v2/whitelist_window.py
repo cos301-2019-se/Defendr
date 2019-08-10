@@ -9,38 +9,17 @@ import databaseCon
 import re
 
 class Whitelist_Window(Screen):
-    xdp =  controller("../")
+
     def add_table(self,id,list):
-        db = databaseCon.connect()
-        list = databaseCon.find_whiteListed_IP(db,"")
-        id.add_widget(Table(table_content=list))
+        app = App.get_running_app()
+        id.add_widget(Table(table_content=app.facade.list_with_ip("")))
 
     def add_IP(self,ip_addr):
-        db = databaseCon.connect()
-        if self.check_IP(ip_addr):
-            if not databaseCon.find_whiteListed_IP(db,ip_addr):
-                print(ip_addr)
-                print(databaseCon.rem_Blacklisted_IP(db,ip_addr))
-                databaseCon.add_whiteListed_ip(db,ip_addr)
-                self.xdp.remove_Blacklisted_IP(ip)
+        app = App.get_running_app()
+        app.facade.add_with_ip(ip_addr)
         self.ids['txt_ip_addr'].text = ""
 
     def remove_IP(self, ip_addr):
-        db = databaseCon.connect()
-        if self.check_IP(ip_addr):
-            databaseCon.rem_Whitelisted_IP(db, ip_addr)
+        app = App.get_running_app()
+        app.facade.remove_with_ip(ip_addr)
         self.ids['txt_ip_addr'].text = ""
-
-
-    def check_IP(self, IP):
-        if(IP==""):
-            print("Enter an ip")
-            return False
-        check = re.search(
-            "([0-9])+\.([0-9])+\.([0-9])+\.([0-9])+",
-            IP)
-        if (check):
-            return True
-        else:
-            print("Invalid ip.")
-            return False

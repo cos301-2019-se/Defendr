@@ -188,14 +188,42 @@ Builder.load_string('''
 import databaseCon
 
 class Edit_User_Popup(Popup):
+    details=[]
+    def __init__(self):
+        app = App.get_running_app()
+        self.details = app.facade.get_user_detail(app.email)
+        self.ids['edit_user_name'].text = self.details[0]
+        self.ids['edit_user_surname'].text = self.details[1]
+        self.ids['edit_user_email'].text = self.details[2]
+        #if(self.details[3]=="Admin"):
+        #    self.ids['edit_email_notification_check'].visible = True
+        #    self.ids['edit_email_notification_msg'].visible = False
+        #    if(self.details[4]=="yes"):
+        #        self.ids['edit_email_notification_msg'].active=True
+        #    else:
+        #        self.ids['edit_email_notification_msg'].active=False
+        #else:
+        #    self.ids['edit_email_notification_check'].visible = False
+        #    self.ids['edit_email_notification_msg'].visible = True
+
+    def Confirm(self):
+        app = App.get_running_app()
+        if(self.details[0]==self.ids['edit_user_name'].text):
+            app.facade.update_user_detail(self.details[2],"name",self.ids['edit_user_name'].text)
+        else:
+            if (self.details[1] == self.ids['edit_user_surname'].text):
+                app.facade.update_user_detail(self.details[2], "surname", self.ids['edit_user_surname'].text)
+            else:
+                if (self.details[2] == self.ids['edit_user_email'].text):
+                    app.facade.update_user_detail(self.details[2], "email", self.ids['edit_user_email'].text)
+        self.dismiss()
     pass
+
 
 class Delete_User_Popup(Popup):
     def confirm_delete(self):
         app = App.get_running_app()
-        print(app.email)
-        db = databaseCon.connect()
-        databaseCon.remove(db,app.email)
+        app.facade.remove_user(app.email)
         self.dismiss()
     pass
 
@@ -203,53 +231,15 @@ class Delete_User_Popup(Popup):
 class User_Management_Window(Screen):
 
     def add_table(self,id,list):
-        db = databaseCon.connect()
-        data = databaseCon.print_user(db)
-        id.add_widget(Table(table_content=data))
+        app = App.get_running_app()
+        id.add_widget(Table(table_content=app.facade.list_user()))
 
     def add_user(self,id,name,surename,email,password,rePassword, admin):
-        if(name==""):
-            print("Name must not be enter")
-        else:
-            if(surename==""):
-                print("Surename must not be enter")
-            else:
-                if(self.checkEmail(email)):
-                    if(self.checkPassword(password)):
-                        if(rePassword==""):
-                            print("Re-enter password")
-                        else:
-                            if(password==rePassword):
-                                db=databaseCon.connect()
-                                if(admin):
-                                    if (self.ids['email_notification_check'].active):
-                                        output = databaseCon.make_new_user(db, name, surename, password, "admin", email, "yes")
-                                    else:
-                                        output = databaseCon.make_new_user(db, name, surename, password, "admin", email, "no")
-                                else:
-                                    output = databaseCon.make_new_user(db, name, surename, password, "user", email, "no")
-                                print(output)
-                                self.reset_add()
-                            else:
-                                print("Password does not macth")
+        app= App.get_running_app()
+        app.facade.add_user(name, surename,email, password, rePassword, admin, self.ids['email_notification_check'].active)
+        self.reset_add()
 
-    # check if the email is correct
-    def checkEmail(self, email):
-        mail = email
-        if(mail==""):
-            print("Enter an email")
-            return False
-        check = re.search(
-            "([a-z]|[A-Z]|[0-9])+\@([a-z]|[A-Z]|[0-9])+((\.(([A-Z]|[a-z]|[0-9])+))|(\.(([A-Z]|[a-z]|[0-9])+)){2})$",
-            mail)
-        if (check):
-            return True
-        else:
-            print("Invalid email.")
-            return False
-
-        # check if the password is correct
-
+    # check if the password is correct
     def checkPassword(self, psw):
         password = psw
         if(password==""):
@@ -274,22 +264,25 @@ class User_Management_Window(Screen):
         return True
 
     def edit_user(self,user_email_to_modify):
-        popup = Edit_User_Popup()
-        popup.open()
+        app = App.get_running_app()
+        if (app.facade.check_email(user_email_to_modify)):
+            app.email = user_email_to_modify
+            popup = Edit_User_Popup()
+            popup.open()
+            self.ids['user_email_to_modify']=""
 
     def remove_user(self, user_email_to_delete):
-        if(self.checkEmail(user_email_to_delete)):
-            app = App.get_running_app()
+        app = App.get_running_app()
+        if(app.facade.check_email(user_email_to_delete)):
             app.email=user_email_to_delete
             popup = Delete_User_Popup()
             popup.open()
-            #if(popup.)
+            self.ids['user_email_to_modify']=""
 
     def verify_user(self, user_email_to_verify):
-        if (self.checkEmail(user_email_to_verify)):
-            db= databaseCon.connect()
-            if(databaseCon.get_roll(db,user_email_to_verify)=="new"):
-                databaseCon.change_roll(db,user_email_to_verify,"user")
+        app = App.get_running_app()
+        app.facade.verify_user(user_email_to_verify)
+        self.ids['user_email_to_modify']=""
 
     def reset_add(self):
         self.ids['user_name'].text = ""

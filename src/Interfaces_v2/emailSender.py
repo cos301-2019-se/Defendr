@@ -1,38 +1,37 @@
 import smtplib
-import databaseCon
-import time
 
-gmail_sender='info@darknites.co.za'
-gmail_password='D@rkN1t3s'
+class email():
+    gmail_sender='info@darknites.co.za'
+    gmail_password='D@rkN1t3s'
 
-def emailAddNewUser(db,server,name, email):
-    sub ='Verify user'
-    text ='Account verification needed for '+name+'('+email+')\nDefendr'
-    sendEmail(db,server, sub, text)
+    def emailAddNewUser(self,db, database,server,name, email):
+        sub ='Verify user'
+        text ='Account verification needed for '+name+'('+email+')\nDefendr'
+        self.sendEmail(db, database,server, sub, text)
 
-def emailForHack(db,server,hacked_gmail):
-    sub ='Warning'
-    text ='Warning the user accunt\'s ('+hacked_gmail+') password may being focred.\nDefendr'
-    sendEmail(db,server,sub,text)
+    def emailForHack(self,db, database,server,hacked_gmail):
+        sub ='Warning'
+        text ='Warning the user accunt\'s ('+hacked_gmail+') password may being focred.\nDefendr'
+        self.sendEmail(db, database,server,sub,text)
 
-def sendEmail(db,server, subject, body):
-    try:
-        temp = databaseCon.get_email_to_send_to(db)
-        for TO in temp:
-            BODY = '\r\n'.join(['To: %s' % TO,
-                                'From: %s' % gmail_sender,
-                                'Subject: %s' % subject,
-                                '',
-                                body])
-            server.sendmail(gmail_sender, [TO], BODY)
-            print('email sent to ' + TO)
-    except:
-        print('error')
+    def sendEmail(self,db, database,server, subject, body):
+        try:
+            temp = database.get_email_to_send_to(db)
+            for TO in temp:
+                BODY = '\r\n'.join(['To: %s' % TO,
+                                    'From: %s' % self.gmail_sender,
+                                    'Subject: %s' % subject,
+                                    '',
+                                    body])
+                server.sendmail(self.gmail_sender, [TO], BODY)
+                print('Email sent to ' + TO)
+        except:
+            print('Mail not send.')
 
-def connectToSMTPserver():
-    server = smtplib.SMTP('mail.darknites.co.za', 587 )
-    server.ehlo()
-    server.starttls()
-    server.login(gmail_sender, gmail_password)
-    return server
+    def connectToSMTPserver(self):
+        server = smtplib.SMTP('mail.darknites.co.za', 587 )
+        server.ehlo()
+        server.starttls()
+        server.login(self.gmail_sender, self.gmail_password)
+        return server
 
