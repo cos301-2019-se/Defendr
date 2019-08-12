@@ -104,6 +104,7 @@ Builder.load_string('''
                 MDLabel:
                     size_hint_x: 0.22
                 ToggleButton:
+                    id: admin_button
                     text: 'Admin'
                     group: 'user_type'
                     size_hint_x: 0.24
@@ -111,6 +112,7 @@ Builder.load_string('''
                         edit_email_notification_check.visible = True
                         edit_email_notification_msg.visible = False
                 ToggleButton:
+                    id: user_button
                     text: 'User'
                     state: 'down'
                     group: 'user_type'
@@ -150,7 +152,7 @@ Builder.load_string('''
                     font_size: 18
                     text: 'Confirm'
                     size_hint_x: 0.3
-                    on_press: delete_popup.dismiss()
+                    on_press: root.Confirm()
         Label:
             size_hint_x: 0.2
             
@@ -189,33 +191,51 @@ import databaseCon
 
 class Edit_User_Popup(Popup):
     details=[]
-    def __init__(self):
+    def start(self):
         app = App.get_running_app()
         self.details = app.facade.get_user_detail(app.email)
         self.ids['edit_user_name'].text = self.details[0]
         self.ids['edit_user_surname'].text = self.details[1]
         self.ids['edit_user_email'].text = self.details[2]
-        #if(self.details[3]=="Admin"):
-        #    self.ids['edit_email_notification_check'].visible = True
-        #    self.ids['edit_email_notification_msg'].visible = False
-        #    if(self.details[4]=="yes"):
-        #        self.ids['edit_email_notification_msg'].active=True
-        #    else:
-        #        self.ids['edit_email_notification_msg'].active=False
-        #else:
-        #    self.ids['edit_email_notification_check'].visible = False
-        #    self.ids['edit_email_notification_msg'].visible = True
+        if(self.details[3]=="admin"):
+            self.ids['edit_email_notification_check'].visible = True
+            self.ids['edit_email_notification_msg'].visible = False
+            self.ids['admin_button'].state='down'
+            self.ids['user_button'].state='normal'
+            if(self.details[4]=="yes"):
+                self.ids['edit_email_notification_check'].active=True
+            else:
+                self.ids['edit_email_notification_check'].active=False
+        else:
+            self.ids['edit_email_notification_check'].visible = False
+            self.ids['edit_email_notification_msg'].visible = True
+            self.ids['admin_button'].state='normal'
+            self.ids['user_button'].state='down'
 
     def Confirm(self):
         app = App.get_running_app()
-        if(self.details[0]==self.ids['edit_user_name'].text):
+        if(not(self.details[0]==self.ids['edit_user_name'].text)):
             app.facade.update_user_detail(self.details[2],"name",self.ids['edit_user_name'].text)
-        else:
-            if (self.details[1] == self.ids['edit_user_surname'].text):
-                app.facade.update_user_detail(self.details[2], "surname", self.ids['edit_user_surname'].text)
+        if (not(self.details[1] == self.ids['edit_user_surname'].text)):
+            app.facade.update_user_detail(self.details[2], "surname", self.ids['edit_user_surname'].text)
+        if (not(self.details[2] == self.ids['edit_user_email'].text)):
+            app.facade.update_user_detail(self.details[2], "email", self.ids['edit_user_email'].text)
+        if(not(self.ids['edit_user_password'].text=="")):
+            if( not(self.ids['edit_user_password'].text==self.ids["edit_user_password_confirm"].text)):
+                print("Password needs to macth")
             else:
-                if (self.details[2] == self.ids['edit_user_email'].text):
-                    app.facade.update_user_detail(self.details[2], "email", self.ids['edit_user_email'].text)
+                app.facade.update_user_detail(self.details[2], "password", self.ids['edit_user_password'].text)
+        if(self.details[3]=="admin" and self.ids['edit_email_notification_check'].visible == False):
+            app.facade.update_user_detail(self.details[2],"roll","user")
+            app.facade.update_user_detail(self.details[2],"sendEmail","no")
+        if(self.ids['edit_email_notification_check'].visible == True):
+            if(self.details[3]=="user"):
+                app.facade.update_user_detail(self.details[2],"roll","admin")
+            if(self.details[4]=="yes" and self.ids['edit_email_notification_check'].active == False):
+                app.facade.update_user_detail(self.details[2], "sendEmail", "no")
+            else:
+                if (self.details[4] == "no" and self.ids['edit_email_notification_check'].active):
+                    app.facade.update_user_detail(self.details[2], "sendEmail", "yes")
         self.dismiss()
     pass
 
@@ -272,6 +292,7 @@ class User_Management_Window(Screen):
         if (app.facade.check_email(user_email_to_modify)):
             app.email = user_email_to_modify
             popup = Edit_User_Popup()
+            popup.start()
             popup.open()
             self.ids['user_email_to_modify']=""
 

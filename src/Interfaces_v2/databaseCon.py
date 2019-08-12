@@ -179,7 +179,7 @@ class database():
     def print_user(self,db):
         my_col = db["user"]
         data =[]
-        for x in my_col.find({}, {"_id": 0, "salt": 0, "password": 0,"sendEmail":0}):
+        for x in my_col.find({}, {"_id": 0, "salt": 0, "password": 0}):
             data.append(x)
         return data
 
