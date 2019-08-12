@@ -9,10 +9,14 @@ import databaseCon
 import re
 
 class Whitelist_Window(Screen):
+    table=""
 
     def add_table(self,id,list):
         app = App.get_running_app()
-        id.add_widget(Table(table_content=app.facade.list_with_ip("")))
+        if (not (self.table == "")):
+            id.remove_widget(self.table)
+        self.table = Table(table_content=app.facade.list_with_ip(""))
+        id.add_widget(self.table)
 
     def add_IP(self,ip_addr):
         app = App.get_running_app()

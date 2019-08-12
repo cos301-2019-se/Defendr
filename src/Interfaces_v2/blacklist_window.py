@@ -10,10 +10,14 @@ import databaseCon
 
 class Blacklist_Window(Screen):
     xdp =  controller("../")
+    table =""
 
     def add_table(self,id,list):
         app = App.get_running_app()
-        id.add_widget(Table(table_content=app.facade.list_black_ip("")))
+        if (not (self.table == "")):
+            id.remove_widget(self.table)
+        self.table = Table(table_content=app.facade.list_black_ip(""))
+        id.add_widget(self.table)
 
     def add_IP(self,ip_addr):
         app = App.get_running_app()

@@ -39,8 +39,7 @@ class FacadeClass():
         self.smpt.emailAddNewUser(self.db_connects,self.database,self.smpt_connects,name,email)
 
     def list_black_ip(self, ip):
-        if (self.check_IP(ip) or ip==""):
-            return self.database.find_Blacklisted_IP(self.db_connects, ip)
+        return self.database.find_Blacklisted_IP(self.db_connects, ip)
 
     def remove_black_ip(self, ip):
         if(self.check_IP(ip)):
@@ -54,12 +53,10 @@ class FacadeClass():
                 self.database.add_ip(self.db_connects, ip)
 
     def get_logs(self, ip):
-        if(self.check_IP(ip) or ip=="" ):
-            return self.database.find_packets(self.db_connects,ip)
+        return self.database.find_packets(self.db_connects,ip)
 
     def list_with_ip(self, ip):
-        if (self.check_IP(ip) or ip==""):
-            return self.database.find_whiteListed_IP(self.db_connects, ip)
+        return self.database.find_whiteListed_IP(self.db_connects, ip)
 
     def add_with_ip(self,ip):
         if self.check_IP(ip):

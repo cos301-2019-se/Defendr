@@ -229,10 +229,14 @@ class Delete_User_Popup(Popup):
 
 
 class User_Management_Window(Screen):
+    table=""
 
     def add_table(self,id,list):
         app = App.get_running_app()
-        id.add_widget(Table(table_content=app.facade.list_user()))
+        if (not (self.table == "")):
+            id.remove_widget(self.table)
+        self.table = Table(table_content=app.facade.list_user())
+        id.add_widget(self.table)
 
     def add_user(self,id,name,surename,email,password,rePassword, admin):
         app= App.get_running_app()
