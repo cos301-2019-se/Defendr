@@ -158,13 +158,18 @@ class FacadeClass():
         if(wait_to_chacnges=="email"):
             if(self.check_email(new_data)):
                 self.database.change_email(self.db_connects,email,new_data)
+            else:
+                return False
         if(wait_to_chacnges=="password"):
             if(self.check_password(new_data)):
                 self.database.change_password(self.db_connects,email,new_data)
+            else:
+                return False
         if(wait_to_chacnges=="roll"):
             self.database.change_roll(self.db_connects,email,new_data)
         if(wait_to_chacnges=="sendEmail"):
             self.database.change_state(self.db_connects,email,new_data)
+        return True
 
     # check if the email is correct
     def check_email(self, email):
