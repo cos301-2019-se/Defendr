@@ -71,25 +71,25 @@ class FacadeClass():
 
     def register(self,name, surname, email, password, confirm_pass):
         if (not self.database.print_user(self.db_connects)):
-            check = self.register_user(name, surname, email, password, confirm_pass, "admin")
+            result = self.register_user(name, surname, email, password, confirm_pass, "admin")
         else:
-            check = self.register_user(name, surname, email, password, confirm_pass, "new")
-        if (check):
+            result = self.register_user(name, surname, email, password, confirm_pass, "new")
+        if (result=="Add"):
             self.send_email_add(name, email)
-            return True
-        return False
+        return result
 
     def register_user(self,name,surename,email,password,rePassword,roll):
         if(name==""):
-            print("Name must not be enter")
+            return "Name must be entered."
         else:
             if(surename==""):
-                print("Surename must not be enter")
+                return "Surename must be entered."
             else:
                 if(self.check_email(email)):
-                    if(self.check_password(password)):
+                    password_output=self.check_password(password)
+                    if(password_output=="True"):
                         if(rePassword==""):
-                            print("Re-enter password")
+                            return "Re-enter password."
                         else:
                             if(password==rePassword):
                                 if(roll=="admin"):
@@ -97,37 +97,43 @@ class FacadeClass():
                                 else:
                                     output = self.database.make_new_user(self.db_connects,name,surename,password,roll,email,"no")
                                 if(not output):
-                                    print("Falid1")
-                                    return False
-                                print("Added")
-                                return True
+                                    return "Falid."
+                                return "Add"
                             else:
-                                print("Password does not macth")
-        return False
+                                return "Password does not macth."
+                    else:
+                        return password_output
+                else:
+                    return "Invalid email."
 
     def add_user(self,name,surename,email,password,rePassword,admin,sendEmail):
         if (name == ""):
-            print("Name must not be enter")
+            return "Name must not be enter"
         else:
             if (surename == ""):
-                print("Surename must not be enter")
+                return "Surename must not be enter"
             else:
                 if (self.check_email(email)):
-                    if (self.check_password(password)):
+                    password_output =self.check_password(password)
+                    if (password_output=="True"):
                         if (rePassword == ""):
-                            print("Re-enter password")
+                            return "Re-enter password"
                         else:
                             if (password == rePassword):
                                 if (admin):
                                     if (sendEmail):
-                                        output = self.database.make_new_user(self.db_connects, name, surename, password, "admin", email, "yes")
+                                        self.database.make_new_user(self.db_connects, name, surename, password, "admin", email, "yes")
                                     else:
-                                        output = self.database.make_new_user(self.db_connects, name, surename, password, "admin", email, "no")
+                                        self.database.make_new_user(self.db_connects, name, surename, password, "admin", email, "no")
                                 else:
-                                    output = self.database.make_new_user(self.db_connects, name, surename, password, "user", email, "no")
-                                print(output)
+                                    self.database.make_new_user(self.db_connects, name, surename, password, "user", email, "no")
+                                return "Add"
                             else:
-                                print("Password does not macth")
+                                return "Password does not macth"
+                    else:
+                        return password_output
+                else:
+                    return "Invalid email."
 
     def list_user(self):
         return self.database.print_user(self.db_connects)
@@ -152,24 +158,37 @@ class FacadeClass():
 
     def update_user_detail(self, email, wait_to_chacnges, new_data):
         if(wait_to_chacnges=="name"):
-            self.database.change_name(self.db_connects,email,new_data)
+            if(new_data!=""):
+                self.database.change_name(self.db_connects,email,new_data)
+            else:
+                return "Invalid name"
         if(wait_to_chacnges=="surname"):
-            self.database.change_lastname(self.db_connects,email,new_data)
+            if(new_data!=""):
+                self.database.change_lastname(self.db_connects,email,new_data)
+            else:
+                return "Invalid surname"
         if(wait_to_chacnges=="email"):
             if(self.check_email(new_data)):
                 self.database.change_email(self.db_connects,email,new_data)
             else:
-                return False
+                return "Invalid email"
         if(wait_to_chacnges=="password"):
-            if(self.check_password(new_data)):
+            output=self.check_password(new_data)
+            if(output=="True"):
                 self.database.change_password(self.db_connects,email,new_data)
             else:
-                return False
+                return output
         if(wait_to_chacnges=="roll"):
             self.database.change_roll(self.db_connects,email,new_data)
         if(wait_to_chacnges=="sendEmail"):
             self.database.change_state(self.db_connects,email,new_data)
-        return True
+        return "Update"
+
+    def get_name(self, email):
+        self.database.get_name(self.db_connects, email)
+
+    def get_roll(self, email):
+        self.database.get_roll(self.db_connects, email)
 
     # check if the email is correct
     def check_email(self, email):
@@ -189,28 +208,27 @@ class FacadeClass():
     def check_password(self, psw):
         password = psw
         if(password==""):
-            print("Enter a password")
-            return False
+            return "Enter a password"
+
         number = re.findall("[0-9]", password)
         if (not (number)):
-            print("Your password needs a number.")
-            return False
+            return "Your password needs a number."
+
         caps = re.findall("[A-Z]", password)
         if (not (caps)):
-            print("Your password needs a uppercase chatter.")
-            return False
+            return "Your password needs a uppercase chatter."
+
         lower = re.findall("[a-z]", password)
         if (not (lower)):
-            print("Users mangement", "Your password needs a lowercase chatter.")
-            return False
+            return "Users mangement", "Your password needs a lowercase chatter."
+
         symbols = re.findall("[!,@,#,$,%,^,&,*,.,?]", password)
         if (not (symbols)):
-            print( "Your password needs a symbol.")
-            return False
+            return "Your password needs a symbol."
+
         if(len(password)<6):
-            print( "Your password needs to be 6 chatters long.")
-            return False
-        return True
+            return "Your password needs to be 6 chatters long."
+        return "True"
 
     def check_IP(self, IP):
         if(IP==""):

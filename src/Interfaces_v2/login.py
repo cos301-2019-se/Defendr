@@ -24,17 +24,6 @@ class Login(Screen):
     timer=datetime.datetime(2018, 6, 1,8,30)
     falid = False
     def do_login(self, loginText, passwordText):
-        # app = App.get_running_app()
-        # app.roll = "admin"
-
-        # app.username = loginText
-        # app.password = passwordText
-
-        # self.manager.transition = SlideTransition(direction="left")
-        # self.manager.current = 'home'
-
-        # app.config.read(app.get_application_config())
-        # app.config.write()
         # users = ["Jeandre", "Muhammed","Sisa","Christiaan","Ruslynn","Chris"]
         # passwds = ["jPass1","mPass1","sPass1","cPass1","rPass1","cPass1"]
         # last = ["Botha","Carrim","Khoza","Opperman","Appana","Osbrone"]
@@ -42,25 +31,23 @@ class Login(Screen):
         facade = FacadeClass()
         self.ids['txt_login_email'].text = ""
         self.ids['txt_login_password'].text = ""
-        app = App.get_running_app()
-        app.roll = "admin"
+        #app = App.get_running_app()
+        #app.roll = "admin"
 
-        app.username = loginText
-        app.password = passwordText
-        app.facade = facade
+        #app.username = loginText
+        #app.password = passwordText
+        #app.facade = facade
 
-        self.manager.transition = SlideTransition(direction="left")
-        self.manager.current = 'home'
+        #self.manager.transition = SlideTransition(direction="left")
+        #self.manager.current = 'home'
 
-        app.config.read(app.get_application_config())
-        app.config.write()
+        #app.config.read(app.get_application_config())
+        #app.config.write()
 
         output= facade.login(loginText,passwordText)
         if (not self.falid):
             if(output=="user" or output=="admin"):
-                print("succeful")
-                self.ids['txt_login_email'].text = ""
-                self.ids['txt_login_password'].text = ""
+                self.resetForm()
                 app = App.get_running_app()
                 app.roll = output
 
@@ -78,19 +65,22 @@ class Login(Screen):
                     a = self.num - 1
                     self.num = a
                     if a == 0:
+                        attend="Wait a 1 min before trying again."
                         self.falid = True
                         facade.sendEmailHacked(loginText)
                         self.timer = datetime.datetime.now()
                         self.num = 3
                     else:
-                        print(str(a) + " attends left")
-                    print("re-enter info")
+                        attend=(str(a) + " attends left.")
+                    self.ids['btn_info'].visible=True
+                    self.ids['lbl_error'].text="Invalid login details. "+attend
                 else:
-                    print(output)
+                    self.ids['btn_info'].visible=True
+                    self.ids['lbl_error'].text =output
         else:
             now = datetime.datetime.now()
             min = now.minute - self.timer.minute
-            print('Wait for ' + str(min) + ' minunte before tiering again')
+            self.ids['lbl_error'].text = "Invalid login details. Wait a " + str(min) + " min before trying again."
             if min >= 1:
                 self.falid = False
 
@@ -99,3 +89,5 @@ class Login(Screen):
     def resetForm(self):
         self.ids['txt_login_email'].text = ""
         self.ids['txt_login_password'].text = ""
+        self.ids['lbl_error'].text = ""
+        self.ids['btn_info'].visible = False

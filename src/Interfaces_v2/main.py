@@ -66,7 +66,6 @@ class LoginApp(App):
         )
 
     def nav_to(self, window):
-        print(self.roll)
         if(window == 'login'):
             self.manager.transition = SlideTransition(direction="right")
         else:
