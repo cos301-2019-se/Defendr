@@ -27,7 +27,19 @@ Builder.load_string('''
             rows: 12
             row_force_default: 1
             row_default_height: '35dp'
-            MDLabel:
+            BoxLayout:
+                orientation: 'horizontal'
+                size_hint_x: 0.7
+                MDIconButton:
+                    icon: 'info'
+                    size_hint_x: 0.2
+                MDLabel:
+                    theme_text_color: 'Primary'
+                    size_hint_x: 0.8
+                    color: 1,0,0,1
+                    text: 'beach, you are wrong'
+                    font_size: 14
+                    halign: 'left'
                 
             BoxLayout:
                 orientation: 'horizontal'
@@ -147,7 +159,12 @@ Builder.load_string('''
                 orientation: 'horizontal'
                 spacing: '20dp'
                 MDLabel:
-                    size_hint_x: 0.7
+                    size_hint_x: 0.4
+                Button:
+                    font_size: 18
+                    text: 'Cancel'
+                    size_hint_x: 0.3
+                    on_press: root.Confirm()
                 Button:
                     font_size: 18
                     text: 'Confirm'
