@@ -186,8 +186,20 @@
                         spacing: '20dp'
                         size_hint_x: None
                         width: root.width/2.5
-                        MDLabel:
+                        BoxLayout:
+                            orientation: 'horizontal'
                             size_hint_x: 0.7
+                            MDIconButton:
+                                icon: 'info'
+                                size_hint_x: 0.2
+                            MDLabel:
+                                theme_text_color: 'Primary'
+                                size_hint_x: 0.8
+                                color: 1,0,0,1
+                                text: 'beach, you are wrong'
+                                font_size: 14
+                                halign: 'left'
+
                         Button:
                             font_size: 18
                             text: 'Add'

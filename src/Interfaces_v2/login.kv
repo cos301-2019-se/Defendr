@@ -19,14 +19,29 @@
                 BoxLayout
                     id: login_layout
                     GridLayout:
-                        rows:8
+                        rows:9
                         spacing: '15dp'
                         MDLabel:
                             theme_text_color: 'Primary'
                             text: "Defendr Login"
                             font_size: 34
-                            size_hint_y: 0.2
+                            size_hint_y: 0.18
                             halign: 'center'
+                        BoxLayout:
+                            orientation: 'horizontal'
+                            size_hint_y: 0.04
+                            MDLabel:
+                                size_hint_x: 0.1
+                            MDIconButton:
+                                icon: 'info'
+                                size_hint_x: 0.1
+                            MDLabel:
+                                theme_text_color: 'Primary'
+                                size_hint_x: 0.8
+                                color: 1,0,0,1
+                                text: 'beach, you are wrong'
+                                font_size: 14
+                                halign: 'left'
                         Label:
                             size_hint_y: 0.04
                         BoxLayout:
@@ -86,7 +101,7 @@
                         GridLayout:
                             cols: 3
                             spacing: '20dp'
-                            size_hint_y: 0.2
+                            size_hint_y: 0.18
                             Label:
                                 size_hint_x: 0.4
                             Button:
