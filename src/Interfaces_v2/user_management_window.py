@@ -90,6 +90,7 @@ Builder.load_string('''
                 spacing: '15dp'
                 MDLabel:
                     text: "Password:"
+                    password: True
                     font_size: 18
                     halign: 'left'
                     size_hint_x: 0.4
@@ -103,6 +104,7 @@ Builder.load_string('''
                 spacing: '15dp'
                 MDLabel:
                     text: "Confirm Password:"
+                    password: True
                     font_size: 18
                     halign: 'left'
                     size_hint_x: 0.4
