@@ -41,6 +41,8 @@ static const char *__doc__=
 static const struct option long_options[] = {
 	{"help",	no_argument,		NULL, 'h' },
 	{"add",		no_argument,		NULL, 'a' },
+	{"blacklist",		no_argument,		NULL, 'z' },
+	{"whitelist",		no_argument,		NULL, 'w' },
 	{"del",		no_argument,		NULL, 'x' },
 	{"ip",		required_argument,	NULL, 'i' },
 	{"stats",	no_argument,		NULL, 's' },
@@ -698,6 +700,8 @@ int main(int argc, char **argv)
 	bool do_list = false;
 	bool dynamic_blacklist = false;
 	bool log = false;
+	bool modify_blacklist = false;
+	bool modify_whitelist = false;
 	int opt;
 	int dport = 0;
 	int proto = IPPROTO_TCP;
@@ -710,6 +714,12 @@ int main(int argc, char **argv)
 			break;
 		case 'x':
 			action |= ACTION_DEL;
+			break;
+		case 'z':
+			modify_blacklist = true;
+			break;
+		case 'w':
+			modify_whitelist = true;
 			break;
 		case 'i':
 			if (!optarg || strlen(optarg) >= STR_MAX) {
@@ -790,13 +800,21 @@ int main(int argc, char **argv)
 				removeBackend(service_ip,ip_string);
 			}
 		}else if (ip_string) {
-			fd_blacklist = open_bpf_map(file_blacklist);
+			if(modify_whitelist){
+				fd_blacklist = open_bpf_map(file_whitelist);
+			}else{
+				fd_blacklist = open_bpf_map(file_blacklist);
+			}
 			res = blacklist_modify(fd_blacklist, ip_string, action);
 			close(fd_blacklist);
 			if(action == ACTION_ADD){
-				init_db();
-				insert_into_blacklist(ip_string);
-				close_db();
+				if(modify_whitelist){
+					
+				}else{
+					init_db();
+					insert_into_blacklist(ip_string);
+					close_db();
+				}
 			}
 			
 		}
@@ -825,8 +843,12 @@ int main(int argc, char **argv)
 			printf("{");
 			int fd_port_blacklist_count_array[DDOS_FILTER_MAX];
 			int i;
-
-			fd_blacklist = open_bpf_map(file_blacklist);
+			if(modify_whitelist){
+				fd_blacklist = open_bpf_map(file_whitelist);
+			}else{
+				fd_blacklist = open_bpf_map(file_blacklist);
+			}
+			
 			blacklist_list_all_ipv4(fd_blacklist);
 			close(fd_blacklist);
 
