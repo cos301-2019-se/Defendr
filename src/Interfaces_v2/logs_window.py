@@ -15,10 +15,11 @@ import databaseCon
 from MDTable import Table
 
 class Logs_Window(Screen):
-
+    table =""
     def add_table(self,id,list):
-        db = databaseCon.connect()
         ip =self.ids["log_search_text"].text
-        list = databaseCon.find_packets(db,ip)
-        id.add_widget(Table(table_content=list))
-
+        app = App.get_running_app()
+        if(not(self.table=="")):
+            id.remove_widget(self.table)
+        self.table=Table(table_content=app.facade.get_logs(ip))
+        id.add_widget(self.table)

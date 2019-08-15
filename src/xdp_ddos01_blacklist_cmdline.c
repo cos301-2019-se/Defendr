@@ -59,6 +59,13 @@ static const struct option long_options[] = {
 
 #define XDP_ACTION_MAX (XDP_TX + 1)
 #define XDP_ACTION_MAX_STRLEN 11
+#define TOTAL_PPS 0
+#define TOTAL_CPS 1
+#define TOTAL_BPS 2
+#define TOTAL_PPS_DROPED 3
+#define TOTAL_BPS_DROPED 4
+#define STATS_CATAGORIES_MAX 5
+
 static const char *xdp_action_names[XDP_ACTION_MAX] = {
 	[XDP_ABORTED]	= "XDP_ABORTED",
 	[XDP_DROP]	= "XDP_DROP",
@@ -177,7 +184,7 @@ void insert_into_blacklist (const char *ip)
 	}
 
 	string = bson_as_canonical_extended_json (bson, NULL);
-	printf("%s\n", string);
+	//printf("%s\n", string);
 
 	if(!mongoc_collection_insert_one(collection, bson, NULL, NULL, &error))
 		fprintf(stderr, "%s\n", error.message);
@@ -261,82 +268,7 @@ static __u64 get_key32_value64_percpu(int fd, __u32 key)
 	return sum;
 }
 
-static void stats_print_headers(void)
-{
-	/* clear screen */
-	printf("\033[2J");
-	printf("%-12s %-10s %-8s %-9s\n",
-	       "XDP_action", "pps ", "#packets", "period/sec");
-}
-
-static void stats_print(struct stats_record *record,
-			struct stats_record *prev)
-{
-	int i;
-	static int actionCounters[] = {0,0,0,0};
-	int total = 0;
-
-	for (i = 0; i < XDP_ACTION_MAX; i++) {
-		struct record *r = &record->xdp_action[i];
-		struct record *p = &prev->xdp_action[i];
-		__u64 period  = 0;
-		__u64 packets = 0;
-		double pps = 0;
-		double period_ = 0;
-
-		actionCounters[i]  = r->counter;
-		if (p->timestamp) {
-			packets = r->counter - p->counter;
-			period  = r->timestamp - p->timestamp;
-			pps = packets;
-			if (period > 0) {
-				period_ = ((double) period / NANOSEC_PER_SEC);
-				pps = packets / period_;
-			}
-		}
-		
-		total  = total +actionCounters[i];
-		printf("%-12s %-10.0f %'-18d %f\n",
-		       action2str(i), pps, actionCounters[i], period_);
-	}
-	printf("%-13s  %-9d\n","Total_Packets", total);
-}
-
-static void stats_collect(int fd, struct stats_record *rec)
-{
-	int i;
-
-	for (i = 0; i < XDP_ACTION_MAX; i++) {
-		rec->xdp_action[i].timestamp = gettime();
-		rec->xdp_action[i].counter = get_key32_value64_percpu(fd, i);
-	}
-}
-
-static void stats_poll(int interval)
-{
-	struct stats_record record, prev;
-	int fd;
-
-	/* TODO: Howto handle reload and clearing of maps */
-	fd = open_bpf_map(file_verdict);
-
-	memset(&record, 0, sizeof(record));
-
-	/* Trick to pretty printf with thousands separators use %' */
-	setlocale(LC_NUMERIC, "en_US");
-
-	while (1) {
-		memcpy(&prev, &record, sizeof(record));
-		stats_print_headers();
-		stats_collect(fd, &record);
-		stats_print(&record, &prev);
-		sleep(interval);
-	}
-	/* Not reached, but (hint) remember to close fd in other code */
-	close(fd);
-}
-
-static void blacklist_print_ipv4(__u32 ip, __u64 count)
+static void blacklist_print_ipv4(__u32 ip)
 {
 	char ip_txt[INET_ADDRSTRLEN] = {0};
 
@@ -346,7 +278,7 @@ static void blacklist_print_ipv4(__u32 ip, __u64 count)
 			"ERR: Cannot convert u32 IP:0x%X to IP-txt\n", ip);
 		exit(EXIT_FAIL_IP);
 	}
-	printf("\n \"%s\" : %llu", ip_txt, count);
+	printf("\n \"%s\"", ip_txt);
 }
 
 static void blacklist_print_proto(int key, __u64 count)
@@ -379,12 +311,11 @@ static void blacklist_list_all_ipv4(int fd)
 	__u64 value;
 
 	while (bpf_map_get_next_key(fd, prev_key, &key) == 0) {
-		printf("%s", key ? "," : "" );
-		value = get_key32_value64_percpu(fd, key);
-		blacklist_print_ipv4(key, value);
+		//value = get_key32_value64_percpu(fd, key);
+		blacklist_print_ipv4(key);
 		prev_key = &key;
+		printf("%s", key ? "," : "" );
 	}
-	printf("%s", key ? "," : "");
 
 }
 
@@ -410,10 +341,37 @@ static void blacklist_list_all_ports(int portfd, int countfds[])
 	}
 }
 
+static void clear_system_stats(){
+	int fd_system_stats = open_bpf_map(file_system_stats);	
+	for (int i = 0; i < STATS_CATAGORIES_MAX; i++) {
+		long zero = 0;
+		bpf_map_update_elem(fd_system_stats, &i, &zero, BPF_EXIST);
+	}
+	close(fd_system_stats);
+	
+	__u64 key, *prev_key = NULL;	
+	key = NULL;
+	prev_key = NULL;
+	int fd_servers= open_bpf_map(file_servers);
+	while (bpf_map_get_next_key(fd_servers, prev_key, &key) == 0) {
+		 struct dest_info *backend =(struct dest_info*)malloc(sizeof(struct dest_info));
+		int res = bpf_map_lookup_elem(fd_servers,&key,backend); 
+		if(res==0){
+			backend->pkts = 0;
+			//backend->cons = 0;
+			backend->bytes = 0;
+			bpf_map_update_elem(fd_servers, &key, backend, BPF_EXIST);
+		}
+		
+		prev_key = &key;
+	}
+	close(fd_servers);
+}
+
 static  void activate_dynamic_blacklist(){
 		IP2Location *IP2LocationObj = IP2Location_open("data/IP-COUNTRY.BIN");
 
-	    int fd_watchlist;		
+	        int fd_watchlist;
 
 		//startup run
 			sleep(1);
@@ -443,9 +401,9 @@ static  void activate_dynamic_blacklist(){
 		while(1){
 			sleep(1);
 			fd_watchlist = open_bpf_map(file_ip_watchlist);
-		    __u32 key, *prev_key = NULL;
-	        __u64 value;
-	        char* ipsToRemove[1000];
+			__u32 key, *prev_key = NULL;
+			__u64 value;
+			char* ipsToRemove[1000];
 			int numToRemove = 0;
 			while (bpf_map_get_next_key(fd_watchlist, prev_key, &key) == 0) {
 				value = get_key32_value64_percpu(fd_watchlist, key);
@@ -497,6 +455,7 @@ static  void activate_dynamic_blacklist(){
 				free(ipsToRemove[i]);
 			}
 			close(fd_watchlist);
+			clear_system_stats();
 		}		
 		IP2Location_close(IP2LocationObj);
 }
@@ -652,6 +611,66 @@ static void printServiceBackends(char* service_ip){
 	 }
 	 close(fd_services);
 	 close(fd_servers);
+}
+
+static void get_stats(){
+	int fd_system_stats = open_bpf_map(file_system_stats);	
+	__u64 value = 0;
+	const char *catagories[5];
+	catagories[0] = "pps";
+	catagories[1] = "num_con";
+	catagories[2] = "bps";
+	catagories[3] = "pps_droped";
+	catagories[4] = "bps_droped";
+	printf("{\n");
+	
+	printf("\"system\":{\n");
+	for (int i = 0; i < STATS_CATAGORIES_MAX; i++) {
+		value = get_key32_value64_percpu(fd_system_stats,i);
+		printf("\%s\": %d\n",catagories[i],value);
+	}
+	printf("},\n");
+	close(fd_system_stats);
+	
+	printf("\"services\":[\n");
+	__u64 service_key, *service_prev_key = NULL;	
+	service_key = NULL;
+	service_prev_key = NULL;
+	int fd_services = open_bpf_map(file_services);
+	while (bpf_map_get_next_key(fd_services, service_prev_key, &service_key) == 0) {
+		char service_ip_txt[INET_ADDRSTRLEN] = {0};
+		if (inet_ntop(AF_INET, &service_key, service_ip_txt, sizeof(service_ip_txt))){
+			printf("\"%s\":{\n",service_ip_txt);
+			printf("\"backends\":[\n");
+				 struct service *app = (struct service*)malloc(sizeof(struct service));
+				 int fd_servers = open_bpf_map(file_servers);  
+				 int res = bpf_map_lookup_elem(fd_services,&service_key,app); 
+				 if(res == 0){
+					for(int i = 0;i < app->num_servers;++i){
+						 struct dest_info *backend =(struct dest_info*)malloc(sizeof(struct dest_info));
+						__u32 id = app->id+i+1;
+						res = bpf_map_lookup_elem(fd_servers,&id,backend); 
+						if(res==0){
+								char backend_ip_txt[INET_ADDRSTRLEN] = {0};
+								if (inet_ntop(AF_INET, &(backend->daddr), backend_ip_txt, sizeof(backend_ip_txt))) {	
+									printf("\"%s\":{\n",backend_ip_txt);		
+									printf("\%s\": %d\n","pps",backend->pkts);
+									printf("\%s\": %d\n","num_con",backend->cons);
+									printf("\%s\": %d\n","bps",backend->bytes);
+									printf("}\n");										
+								}			
+						}
+
+					 }	
+				 }
+			printf("]\n");
+			printf("}\n");
+		}			
+		service_prev_key = &service_key;
+	}
+	close(fd_services);
+	printf("]\n");
+	printf("}\n");
 }
 
 /*Interface for interacting with bpf maps*/
@@ -824,7 +843,7 @@ int main(int argc, char **argv)
 
 	// Show statistics by polling
 	if (stats) {
-		stats_poll(interval);
+		get_stats();
 	}
 	
 	if(dynamic_blacklist){

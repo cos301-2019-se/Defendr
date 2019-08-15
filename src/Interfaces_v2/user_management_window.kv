@@ -29,7 +29,7 @@
                 cols: 2
                 GridLayout:
                     spacing: '5dp'
-                    rows: 10
+                    rows: 12
                     row_force_default: 1
                     row_default_height: '35dp'
                     MDLabel:
@@ -38,7 +38,7 @@
                         font_size: 24
                         halign: 'center'
                         size_hint_x: None
-                        width: root.width/2.5
+
                     BoxLayout:
                         orientation: 'horizontal'
                         spacing: '5dp'
@@ -46,15 +46,15 @@
                         width: root.width/2.5
                         MDLabel:
                             theme_text_color: 'Primary'
-                            text: "Name"
+                            text: "Name:"
                             font_size: 18
-                            halign: 'right'
-                            size_hint_x: 0.3
+                            halign: 'left'
+                            size_hint_x: 0.4
                         TextInput:
                             id: user_name
                             multiline:False
                             font_size: 18
-                            size_hint_x: 0.7
+                            size_hint_x: 0.6
                     BoxLayout:
                         orientation: 'horizontal'
                         spacing: '5dp'
@@ -62,15 +62,15 @@
                         width: root.width/2.5
                         MDLabel:
                             theme_text_color: 'Primary'
-                            text: "Surname"
+                            text: "Surname:"
                             font_size: 18
-                            halign: 'right'
-                            size_hint_x: 0.3
+                            halign: 'left'
+                            size_hint_x: 0.4
                         TextInput:
                             id: user_surname
                             multiline:False
                             font_size: 18
-                            size_hint_x: 0.7
+                            size_hint_x: 0.6
                     BoxLayout:
                         orientation: 'horizontal'
                         spacing: '5dp'
@@ -78,15 +78,15 @@
                         width: root.width/2.5
                         MDLabel:
                             theme_text_color: 'Primary'
-                            text: "Email"
+                            text: "Email:"
                             font_size: 18
-                            halign: 'right'
-                            size_hint_x: 0.3
+                            halign: 'left'
+                            size_hint_x: 0.4
                         TextInput:
                             id: user_email
                             multiline:False
                             font_size: 18
-                            size_hint_x: 0.7
+                            size_hint_x: 0.6
                     BoxLayout:
                         orientation: 'horizontal'
                         spacing: '5dp'
@@ -94,15 +94,16 @@
                         width: root.width/2.5
                         MDLabel:
                             theme_text_color: 'Primary'
-                            text: "Password"
+                            text: "Password:"
                             font_size: 18
-                            halign: 'right'
-                            size_hint_x: 0.3
+                            halign: 'left'
+                            size_hint_x: 0.4
                         TextInput:
                             id: user_password
                             multiline:False
+                            password: True
                             font_size: 18
-                            size_hint_x: 0.7
+                            size_hint_x: 0.6
                     BoxLayout:
                         orientation: 'horizontal'
                         spacing: '5dp'
@@ -110,29 +111,112 @@
                         width: root.width/2.5
                         MDLabel:
                             theme_text_color: 'Primary'
-                            text: "Confirm Password"
+                            text: "Confirm Password:"
                             font_size: 18
-                            halign: 'right'
-                            size_hint_x: 0.3
+                            halign: 'left'
+                            size_hint_x: 0.4
                         TextInput:
                             id: user_password_confirm
                             multiline:False
+                            password: True
                             font_size: 18
-                            size_hint_x: 0.7
+                            size_hint_x: 0.6
+                    BoxLayout:
+                        orientation: 'horizontal'
+                        size_hint_x: None
+                        width: root.width/2.5
+                        MDLabel:
+                            theme_text_color: 'Primary'
+                            text: "Account type:"
+                            font_size: 18
+                            halign: 'left'
+                            size_hint_x: 0.3
+                        MDLabel:
+                            size_hint_x: 0.22
+                        ToggleButton:
+                            text: 'Admin'
+                            group: 'user_type'
+                            size_hint_x: 0.24
+                            on_release:
+                                email_notification_check.visible = True
+                                email_notification_msg.visible = False
+                        ToggleButton:
+                            text: 'User'
+                            state: 'down'
+                            group: 'user_type'
+                            size_hint_x: 0.24
+                            on_release:
+                                email_notification_check.visible = False
+                                email_notification_msg.visible = True
+                    BoxLayout:
+                        orientation: 'horizontal'
+                        spacing: '2dp'
+                        size_hint_x: None
+                        width: root.width/2.5
+                        MDLabel:
+                            theme_text_color: 'Primary'
+                            text: "Enable email notifications:"
+                            font_size: 18
+                            halign: 'left'
+                            size_hint_x: 0.65
+                        MDLabel:
+                            id: email_notification_msg
+                            theme_text_color: 'Primary'
+                            text: "(unavailable)"
+                            visible: True
+                            opacity: 1 if self.visible else 0
+                            font_size: 18
+                            halign: 'left'
+                            size_hint_x: 0.25
+                        CheckBox:
+                            id : email_notification_check
+                            visible: False
+                            canvas.before:
+                                Color:
+                                    rgb: 0,0,0
+                                Rectangle:
+                                    pos:self.center_x-8, self.center_y-8
+                                    size:[16,16]
+                                Color:
+                                    rgb: 0,0,0
+                            opacity: 1 if self.visible else 0
+                            disabled: not self.visible
+                            size_hint_x: 0.1
+
                     BoxLayout:
                         orientation: 'horizontal'
                         spacing: '20dp'
                         size_hint_x: None
-                        width: root.width/10
+                        width: root.width/2.5
+                        BoxLayout:
+                            orientation: 'horizontal'
+                            size_hint_x: 0.7
+                            MDIconButton:
+                                id: btn_info
+                                visible: False
+                                opacity: 1 if self.visible else 0
+                                disabled: not self.visible
+                                icon: 'info'
+                                size_hint_x: 0.2
+                            MDLabel:
+                                id: lbl_error
+                                theme_text_color: 'Primary'
+                                size_hint_x: 0.8
+                                color: 1,0,0,1
+                                text: ''
+                                font_size: 14
+                                halign: 'left'
+
                         Button:
                             font_size: 18
                             text: 'Add'
-                            on_release: root.add_user(user_table,user_name.text,user_surname.text,user_email.text,user_password.text,user_password_confirm.text)
+                            size_hint_x: 0.3
+                            on_release: root.add_user(user_table,user_name.text,user_surname.text,user_email.text,user_password.text,user_password_confirm.text,email_notification_check.visible)
                     MDLabel:
                         theme_text_color: 'Primary'
                         text: "Modify User"
                         font_size: 24
-                        halign: 'center'
+                        halign: 'left'
                         size_hint_x: None
                         width: root.width/2.5
                     BoxLayout:
@@ -144,13 +228,13 @@
                             theme_text_color: 'Primary'
                             text: "Email"
                             font_size: 18
-                            halign: 'right'
-                            size_hint_x: 0.3
+                            halign: 'left'
+                            size_hint_x: 0.4
                         TextInput:
                             id: user_email_to_modify
                             multiline:False
                             font_size: 18
-                            size_hint_x: 0.7
+                            size_hint_x: 0.6
                     BoxLayout:
                         orientation: 'horizontal'
                         spacing: '20dp'
@@ -164,6 +248,10 @@
                             font_size: 18
                             text: 'Edit'
                             on_release: root.edit_user(user_email_to_modify.text)
+                        Button:
+                            font_size: 18
+                            text: 'Verify'
+                            on_release: root.verify_user(user_email_to_modify.text)
                 GridLayout:
                     spacing: '5dp'
                     rows: 2

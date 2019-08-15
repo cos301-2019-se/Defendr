@@ -20,7 +20,13 @@
 #define BPF_EXIST     2 /* only update existing element */
 #define MAX_SERVERS 512
 #define JHASH_INITVAL	0xdeadbeef
-#define IP_FRAGMENTED 65343
+#define IP_FRAGMENTED 
+
+#define  TOTAL_PPS 0
+#define TOTAL_CPS 1
+#define TOTAL_BPS 2
+#define TOTAL_PPS_DROPED 3
+#define TOTAL_BPS_DROPED 4
 
 void *malloc(size_t);
 
@@ -42,6 +48,14 @@ struct pkt_meta {
 
 // Map containing blacklisted ips.
 struct bpf_map_def SEC("maps") blacklist = {
+	.type        = BPF_MAP_TYPE_PERCPU_HASH,
+	.key_size    = sizeof(u32),
+	.value_size  = sizeof(u64),
+	.max_entries = 100000,
+	.map_flags   = BPF_F_NO_PREALLOC,
+};
+
+struct bpf_map_def SEC("maps") whitelist = {
 	.type        = BPF_MAP_TYPE_PERCPU_HASH,
 	.key_size    = sizeof(u32),
 	.value_size  = sizeof(u64),
@@ -92,6 +106,14 @@ struct bpf_map_def SEC("maps") destinations = {
 };
 
 #define XDP_ACTION_MAX (XDP_TX + 1)
+#define STATS_CATAGORIES_MAX 5
+
+struct bpf_map_def SEC("maps") system_stats = {
+	.type = BPF_MAP_TYPE_PERCPU_ARRAY,
+	.key_size = sizeof(u32),
+	.value_size = sizeof(long),
+	.max_entries = STATS_CATAGORIES_MAX,
+};
 
 // Map acting as counter per XDP "action" verdict */
 struct bpf_map_def SEC("maps") verdict_cnt = {
@@ -293,6 +315,19 @@ void stats_action_verdict(u32 action)
 		*value += 1;
 }
 
+//Keeps system metrics  updated
+void add_to_system_stats(u32 stat_catagory,u64 value_to_add)
+{
+	u64 *value;
+
+	if (stat_catagory >= STATS_CATAGORIES_MAX)
+		return;
+
+	value = bpf_map_lookup_elem(&system_stats, &stat_catagory);
+	if (value)
+		*value += value_to_add;
+}
+
 /*Extracts source and destination udp ports.
  * @param off Udp header offset.
  * @param data_end End of data packet.
@@ -350,7 +385,7 @@ int  xdp_program(struct xdp_md *ctx)
 	__u16 payload_len;
 	struct pkt_meta pkt = {};
 	struct dest_info *tnl;
-	//__u16 pkt_size;
+	__u16 pkt_size;
 	__u64 time;
 
     // Read data.
@@ -398,6 +433,11 @@ int  xdp_program(struct xdp_md *ctx)
 	time = bpf_ktime_get_ns();
 	bpf_map_update_elem(&logs,&time,&enter_log,BPF_ANY);
 
+	pkt_size = (__u16)(data_end - data);
+	add_to_system_stats(TOTAL_PPS,1);
+	add_to_system_stats(TOTAL_CPS,0);
+	add_to_system_stats(TOTAL_BPS,pkt_size);
+	
     // Check tcp header size
     struct tcphdr *tcph = data + nh_off;
     nh_off += sizeof(struct tcphdr);
@@ -420,9 +460,10 @@ int  xdp_program(struct xdp_md *ctx)
 		drop_log.server[3] = eth->h_dest[3];
 		drop_log.server[4] = eth->h_dest[4];
 		drop_log.server[5] = eth->h_dest[5];
-	    time = bpf_ktime_get_ns();
+                time = bpf_ktime_get_ns();
 		bpf_map_update_elem(&logs,&time,&drop_log,BPF_ANY);
-		
+		add_to_system_stats(TOTAL_PPS_DROPED,1);
+		add_to_system_stats(TOTAL_BPS_DROPED,pkt_size);		
 		return XDP_DROP;
 	}else{
 		value = bpf_map_lookup_elem(&ip_watchlist,&ip_src);
@@ -482,6 +523,8 @@ int  xdp_program(struct xdp_md *ctx)
 				no_server_log.server[5] = eth->h_dest[5];
 				time = bpf_ktime_get_ns();
 				bpf_map_update_elem(&logs,&time,&no_server_log,BPF_ANY);
+				add_to_system_stats(TOTAL_PPS_DROPED,1);
+				add_to_system_stats(TOTAL_BPS_DROPED,pkt_size);	
 				return XDP_DROP; 
 			}
 
@@ -509,9 +552,9 @@ int  xdp_program(struct xdp_md *ctx)
 			time = bpf_ktime_get_ns();
 			bpf_map_update_elem(&logs,&time,&pass_log,BPF_ANY);			
 			
-			/*pkt_size = (__u16)(data_end - data);
 			__sync_fetch_and_add(&tnl->pkts, 1);
-			__sync_fetch_and_add(&tnl->bytes, pkt_size);*/
+			__sync_fetch_and_add(&tnl->bytes, pkt_size);
+			__sync_fetch_and_add(&tnl->cons, 0);
 			return XDP_TX;
 			
 		}else{

@@ -4,24 +4,27 @@ from cefpython3 import cefpython as cef
 import platform
 import sys
 from MDTable import Table
+from Facade import FacadeClass
 from controller import controller
 import databaseCon
 
 class Blacklist_Window(Screen):
     xdp =  controller("../")
-    def add_table(self,id,list):
-        db = databaseCon.connect()
-        list = databaseCon.find_Blacklisted_IP(db,"")
-        id.add_widget(Table(table_content=list))
+    table =""
 
+    def add_table(self,id,list):
+        app = App.get_running_app()
+        if (not (self.table == "")):
+            id.remove_widget(self.table)
+        self.table = Table(table_content=app.facade.list_black_ip(""))
+        id.add_widget(self.table)
 
     def add_IP(self,ip_addr):
-        self.xdp.black_list_IP(ip_addr)
-        db = databaseCon.connect()
-        databaseCon.add_ip(db,ip_addr)
+        app = App.get_running_app()
+        app.facade.add_black_ip(ip_addr)
         self.ids['txt_ip_addr'].text = ""
 
-    def remove_IP(self):
-        db = databaseCon.connect()
-        databaseCon.rem_Blacklisted_IP(db, self.lst_IPs.get(self.lst_IPs.curselection()))
-        xdp.remove_Blacklisted_IP(self.lst_IPs.get(self.lst_IPs.curselection()))
+    def remove_IP(self, ip_addr):
+        app = App.get_running_app()
+        app.remove_black_ip(ip_addr)
+        self.ids['txt_ip_addr'].text = ""
