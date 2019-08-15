@@ -3,6 +3,7 @@
 #:import MDList kivymd.list.MDList
 #:include nav_drawer.kv
 <home>:
+    on_pre_enter: root.load_message()
     BoxLayout:
         orientation: 'vertical'
         Toolbar:
@@ -20,4 +21,5 @@
                 text: "Welcome To Defendr"
                 font_size: 38
                 halign: 'center'
+
 

@@ -19,6 +19,6 @@ class Home(Screen):
         self.manager.current = 'login'
         self.manager.get_screen('login').resetForm()
 
-    def load_messag(self):
+    def load_message(self):
         app = App.get_running_app()
-        self.ids['lbl_welcome_masseg'].text="Welcome To Defendr,"+app.facade.get_name(app.username)+". Your are login as an "+app.facade.get_roll(app.username)
+        self.ids['lbl_welcome_masseg'].text="Welcome To Defendr, "+str(app.facade.get_name(app.username))+". Your are login as an "+str(app.facade.get_roll(app.username))

@@ -23,12 +23,19 @@ class Login(Screen):
     num =3
     timer=datetime.datetime(2018, 6, 1,8,30)
     falid = False
+
+    def connect(self):
+        app = App.get_running_app()
+        if(app.facade=="start"):
+            facade = FacadeClass()
+            app.facade = facade
+
     def do_login(self, loginText, passwordText):
         # users = ["Jeandre", "Muhammed","Sisa","Christiaan","Ruslynn","Chris"]
         # passwds = ["jPass1","mPass1","sPass1","cPass1","rPass1","cPass1"]
         # last = ["Botha","Carrim","Khoza","Opperman","Appana","Osbrone"]
         # email = ["u17094446@tuks.co.za","u15019854@tuks.co.za","u15034993@tuks.co.za","u17023239@tuks.co.za","u14016304@tuks.co.za","Chris@gmail.com"]
-        facade = FacadeClass()
+
         self.ids['txt_login_email'].text = ""
         self.ids['txt_login_password'].text = ""
         #app = App.get_running_app()
@@ -44,16 +51,15 @@ class Login(Screen):
         #app.config.read(app.get_application_config())
         #app.config.write()
 
-        output= facade.login(loginText,passwordText)
+        app = App.get_running_app()
+        output= app.facade.login(loginText,passwordText)
         if (not self.falid):
             if(output=="user" or output=="admin"):
                 self.resetForm()
-                app = App.get_running_app()
                 app.roll = output
 
                 app.username = loginText
                 app.password = passwordText
-                app.facade = facade
 
                 self.manager.transition = SlideTransition(direction="left")
                 self.manager.current = 'home'
@@ -67,7 +73,7 @@ class Login(Screen):
                     if a == 0:
                         attend="Wait a 1 min before trying again."
                         self.falid = True
-                        facade.sendEmailHacked(loginText)
+                        app.facade.sendEmailHacked(loginText)
                         self.timer = datetime.datetime.now()
                         self.num = 3
                     else:

@@ -36,9 +36,10 @@ class LoginApp(App):
     manager = ScreenManager()
     roll="user"
     email="12"
-    facade=""
+    facade="start"
 
     def build(self):
+        self.title = "Defendr"
         self.manager.add_widget(Login(name='login'))
         self.manager.add_widget(Register(name='register'))
         self.manager.add_widget(Home(name='home'))

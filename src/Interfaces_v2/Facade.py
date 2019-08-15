@@ -185,10 +185,10 @@ class FacadeClass():
         return "Update"
 
     def get_name(self, email):
-        self.database.get_name(self.db_connects, email)
+        return self.database.get_name(self.db_connects, email)
 
     def get_roll(self, email):
-        self.database.get_roll(self.db_connects, email)
+        return self.database.get_roll(self.db_connects, email)
 
     # check if the email is correct
     def check_email(self, email):
