@@ -39,6 +39,7 @@ class LoginApp(App):
     facade=""
 
     def build(self):
+        self.title = "Defendr"
         self.manager.add_widget(Login(name='login'))
         self.manager.add_widget(Register(name='register'))
         self.manager.add_widget(Home(name='home'))
