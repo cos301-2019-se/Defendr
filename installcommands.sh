@@ -58,5 +58,5 @@ make
 sudo chmod +x /Interfaces/Metrics/Prometheus/prometheus
 sudo chmod +x /Interfaces/Metrics/node_exporter/node_exporter
 sudo chmod +x /Interfaces/Metrics/Grafana/bin/grafana-server
-cd Interfaces
-python3 Login.py
+cd Interfaces_v2
+python3 main.py
