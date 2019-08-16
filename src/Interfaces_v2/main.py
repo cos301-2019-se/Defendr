@@ -37,6 +37,10 @@ class LoginApp(App):
     roll="user"
     email="12"
     facade="start"
+    sys.excepthook = cef.ExceptHook  # To shutdown all CEF processes on error
+    cef.Initialize()
+    def on_stop(self):
+        cef.Shutdown()
 
     def build(self):
         self.title = "Defendr"
@@ -78,13 +82,12 @@ class LoginApp(App):
                 self.manager.current = window
 
 
-    def load_website(self, web_url):
-        sys.excepthook = cef.ExceptHook  # To shutdown all CEF processes on error
-        cef.Initialize()
+    def load_website(self, web_url,title):
+
         cef.CreateBrowserSync(url=web_url,
-                              window_title="Hello World!")
+                              window_title=title)
         cef.MessageLoop()
-        cef.Shutdown()
+
 
 
 
