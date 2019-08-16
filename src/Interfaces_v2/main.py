@@ -19,6 +19,7 @@ from logs_window import  Logs_Window
 from login import Login
 from register import Register
 from user_management_window import User_Management_Window
+import Metrics
 
 
 class Navigator(NavigationDrawer):
@@ -39,8 +40,11 @@ class LoginApp(App):
     facade="start"
     sys.excepthook = cef.ExceptHook  # To shutdown all CEF processes on error
     cef.Initialize()
+    Metrics.start()
+
     def on_stop(self):
         cef.Shutdown()
+        Metrics.stop()
 
     def build(self):
         self.title = "Defendr"
