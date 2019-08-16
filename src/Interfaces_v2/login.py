@@ -43,7 +43,6 @@ class Login(Screen):
 
         #app.username = loginText
         #app.password = passwordText
-        #app.facade = facade
 
         #self.manager.transition = SlideTransition(direction="left")
         #self.manager.current = 'home'
@@ -71,13 +70,13 @@ class Login(Screen):
                     a = self.num - 1
                     self.num = a
                     if a == 0:
-                        attend="Wait a 1 min before trying again."
+                        attend="Wait 1 min before trying again."
                         self.falid = True
                         app.facade.sendEmailHacked(loginText)
                         self.timer = datetime.datetime.now()
                         self.num = 3
                     else:
-                        attend=(str(a) + " attends left.")
+                        attend=(str(a) + " attempts left.")
                     self.ids['btn_info'].visible=True
                     self.ids['lbl_error'].text="Invalid login details. "+attend
                 else:
@@ -86,7 +85,7 @@ class Login(Screen):
         else:
             now = datetime.datetime.now()
             min = now.minute - self.timer.minute
-            self.ids['lbl_error'].text = "Invalid login details. Wait a " + str(min) + " min before trying again."
+            self.ids['lbl_error'].text = "Invalid login details. Wait " + str(min) + " min(s) before trying again."
             if min >= 1:
                 self.falid = False
 
