@@ -2,6 +2,7 @@ from prometheus_client import start_http_server
 from prometheus_client import Histogram
 from prometheus_client import Info
 from prometheus_client import Summary
+from prometheus_client.core import CounterMetricFamily, REGISTRY
 
 import webbrowser
 import subprocess
@@ -37,6 +38,18 @@ def stop():
 h = Histogram('request_latency_seconds', 'Histogram depicting the latency in seconds per request')
 i = Info('Defendr', 'DoS protection and Network load-balancer')
 i.info({'version' : '1.0', 'buildhost' : 'defendr@darknites'})
+
+#Mock counters
+class CustomCollector(object):
+	def collect(self):
+		c = CounterMetricFamily('my_test_counter_total', 'Help', labels=['country'])
+		c.add_metric(['GB'], 4)
+		c.add_metric(['US'], 15)
+		c.add_metric(['IE'], 10)
+		c.add_metric(['FR'], 7)
+		c.add_metric(['ZA'], 9)
+		yield c
+REGISTRY.register(CustomCollector())
 
 #c = controller("../")
 #c.load_xdp()

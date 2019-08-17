@@ -1,0 +1,17 @@
+{
+	"ulid": "01DJGVDETW2FAQQ151APW9Z9GA",
+	"minTime": 1565949600000,
+	"maxTime": 1565956800000,
+	"stats": {
+		"numSamples": 4515445,
+		"numSeries": 1246,
+		"numChunks": 31275
+	},
+	"compaction": {
+		"level": 1,
+		"sources": [
+			"01DJGVDETW2FAQQ151APW9Z9GA"
+		]
+	},
+	"version": 1
+}
