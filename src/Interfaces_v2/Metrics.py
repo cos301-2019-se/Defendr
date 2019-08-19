@@ -8,7 +8,7 @@ import webbrowser
 import subprocess
 import sys
 import time
-from controller import controller
+import os
 
 #Ensure all requisite libraries are installed
 def install(package):
@@ -17,22 +17,30 @@ def install(package):
 def start():
 	h.observe(4.7)
 	#s.observe(4.7)
+	commands = ["tar -xf Metrics.tar.gz", "rm Metrics.tar.gz"]
+	for command in commands:
+		os.popen(command)
+	time.sleep(5)
+
 	start_http_server(8000)
+
 	subprocess.Popen('./node_exporter', cwd='Metrics/node_exporter')
 	time.sleep(2)
 	subprocess.Popen('./prometheus', cwd='Metrics/Prometheus')
 	time.sleep(2)
 	subprocess.Popen('./grafana-server', cwd='Metrics/Grafana/bin')
+	#subprocess.run("rm Metrics.tar.gz")
 
 def execute():
 	webbrowser.open("http://localhost:3000/d/L7frhkNWk/defendr-system-load?orgId=1", new=2)
 
 def stop():
-	subprocess.call(['killall grafana-server'], shell=True)
-	#time.sleep(1)
-	subprocess.call(['killall prometheus'], shell=True)
-	#time.sleep(1)
-	subprocess.call(['killall node_exporter'], shell=True)
+	commands = ["killall grafana-server", "killall prometheus", "killall node_exporter", "tput setaf 1; \"Please do not close this window, the system is performing Metrics system compression\";tput sgr0", "tar -czf Metrics.tar.gz Metrics", "tput setaf 2; \"Metrics compression complete; it is now safe to close this window.\";tput sgr0", "rm -r Metrics"]
+
+	for command in commands:
+		subprocess.call([command], shell=True)
+	#os.popen("rm -r Metrics")
+	
 
 #Instance of data types
 h = Histogram('request_latency_seconds', 'Histogram depicting the latency in seconds per request')
@@ -50,7 +58,3 @@ class CustomCollector(object):
 		c.add_metric(['ZA'], 9)
 		yield c
 REGISTRY.register(CustomCollector())
-
-#c = controller("../")
-#c.load_xdp()
-#c.get_blacklisted_IP_list()
