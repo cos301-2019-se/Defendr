@@ -135,8 +135,8 @@ class FacadeClass():
                 else:
                     return "Invalid email."
 
-    def list_user(self):
-        return self.database.print_user(self.db_connects)
+    def list_user(self, name):
+        return self.database.print_user(self.db_connects,name)
 
     def remove_user(self, email):
         if (self.check_email(email)):

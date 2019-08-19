@@ -5,13 +5,11 @@ import platform
 import sys
 from MDTable import Table
 from controller import controller
-import databaseCon
-import re
 
 class Whitelist_Window(Screen):
     table=""
 
-    def add_table(self,id,list):
+    def add_table(self,id):
         app = App.get_running_app()
         if (not (self.table == "")):
             id.remove_widget(self.table)

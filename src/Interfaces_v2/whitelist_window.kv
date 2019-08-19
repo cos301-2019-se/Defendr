@@ -3,6 +3,7 @@
 #:import MDList kivymd.list.MDList
 #:include nav_drawer.kv
 <whitelist_window>:
+    on_pre_enter: root.add_table(ip_table)
     BoxLayout:
         orientation: 'vertical'
         Toolbar:
@@ -86,4 +87,4 @@
                         width:'125dp'
                         size_hint_y:0.15
                         font_size: 16
-                        on_press: root.add_table(ip_table,[{'IP':'10.0.0.10'}])
+                        on_press: root.add_table(ip_table)

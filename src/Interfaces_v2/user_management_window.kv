@@ -3,6 +3,7 @@
 #:import MDList kivymd.list.MDList
 #:include nav_drawer.kv
 <user_management_window>:
+    on_pre_enter: root.add_table(user_table)
     BoxLayout:
         orientation: 'vertical'
         Toolbar:
@@ -267,4 +268,4 @@
                             size_hint_x:None
                             width:'125dp'
                             font_size: 16
-                            on_press: root.add_table(user_table,[{'Name':'name1','Surname':'surname1','Account':'admin','Email':'email@gmail.com'}])
+                            on_press: root.add_table(user_table)
