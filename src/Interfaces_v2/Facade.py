@@ -22,7 +22,7 @@ class FacadeClass():
         if (not (loginText == '') and not (passwordText == '')):
             roll=self.database.get_roll(self.db_connects,loginText)
             if(roll=='new'):
-                return "Please let admin valid your account."
+                return "Please let an admin validate your account."
             else:
                 output = self.database.check_pass(self.db_connects,loginText,passwordText)
                 if(output):
@@ -55,19 +55,21 @@ class FacadeClass():
     def get_logs(self, ip):
         return self.database.find_packets(self.db_connects,ip)
 
-    def list_with_ip(self, ip):
+    def list_white_ip(self, ip):
         return self.database.find_whiteListed_IP(self.db_connects, ip)
 
-    def add_with_ip(self,ip):
+    def add_white_ip(self,ip):
         if self.check_IP(ip):
             if not self.database.find_whiteListed_IP(self.db_connects, ip):
                 self.database.rem_Blacklisted_IP(self.db_connects, ip)
                 self.database.add_whiteListed_ip(self.db_connects, ip)
                 self.xdp.remove_Blacklisted_IP(ip)
+                self.xdp.white_list_IP(ip)
 
-    def remove_with_ip(self,ip):
+    def remove_white_ip(self,ip):
         if self.check_IP(ip):
             self.database.rem_Whitelisted_IP(self.db_connects, ip)
+            self.xdp.remove_whitelisted_IP(ip)
 
     def register(self,name, surname, email, password, confirm_pass):
         if (not self.database.print_user(self.db_connects)):
@@ -80,10 +82,10 @@ class FacadeClass():
 
     def register_user(self,name,surename,email,password,rePassword,roll):
         if(name==""):
-            return "Name must be entered."
+            return "Please enter name."
         else:
             if(surename==""):
-                return "Surename must be entered."
+                return "Please enter surname."
             else:
                 if(self.check_email(email)):
                     password_output=self.check_password(password)
@@ -100,7 +102,7 @@ class FacadeClass():
                                     return "Falid."
                                 return "Add"
                             else:
-                                return "Password does not macth."
+                                return "Passwords does not match."
                     else:
                         return password_output
                 else:
@@ -108,10 +110,10 @@ class FacadeClass():
 
     def add_user(self,name,surename,email,password,rePassword,admin,sendEmail):
         if (name == ""):
-            return "Name must not be enter"
+            return "Please enter name"
         else:
             if (surename == ""):
-                return "Surename must not be enter"
+                return "Please enter surname."
             else:
                 if (self.check_email(email)):
                     password_output =self.check_password(password)
@@ -129,7 +131,7 @@ class FacadeClass():
                                     self.database.make_new_user(self.db_connects, name, surename, password, "user", email, "no")
                                 return "Add"
                             else:
-                                return "Password does not macth"
+                                return "Passwords do not match"
                     else:
                         return password_output
                 else:
@@ -208,26 +210,26 @@ class FacadeClass():
     def check_password(self, psw):
         password = psw
         if(password==""):
-            return "Enter a password"
+            return "Enter password"
 
         number = re.findall("[0-9]", password)
         if (not (number)):
-            return "Your password needs a number."
+            return "Password must contain a number."
 
         caps = re.findall("[A-Z]", password)
         if (not (caps)):
-            return "Your password needs a uppercase chatter."
+            return "Password must contain a uppercase character."
 
         lower = re.findall("[a-z]", password)
         if (not (lower)):
-            return "Users mangement", "Your password needs a lowercase chatter."
+            return "Users mangement", "Password must contain a lowercase character."
 
         symbols = re.findall("[!,@,#,$,%,^,&,*,.,?]", password)
         if (not (symbols)):
-            return "Your password needs a symbol."
+            return "Password must contain a special character."
 
         if(len(password)<6):
-            return "Your password needs to be 6 chatters long."
+            return "Password must contain at least 6 characters."
         return "True"
 
     def check_IP(self, IP):
