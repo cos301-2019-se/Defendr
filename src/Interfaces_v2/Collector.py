@@ -1,6 +1,10 @@
 from prometheus_client.core import CounterMetricFamily, REGISTRY
 
 class CustomCollector(object):
+    countries
+    __init__(self,metric):
+
+    
 	def collect(self):
 		c = CounterMetricFamily('my_test_counter_total', 'Help', labels=['country'])
 		c.add_metric(['GB'], 4)
