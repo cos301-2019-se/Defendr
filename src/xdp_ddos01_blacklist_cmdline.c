@@ -371,95 +371,104 @@ static void clear_system_stats(){
 }
 
 static  void activate_dynamic_blacklist(){
-		IP2Location *IP2LocationObj = IP2Location_open("data/IP-COUNTRY.BIN");
+	IP2Location *IP2LocationObj = IP2Location_open("data/IP-COUNTRY.BIN");
 
-	        int fd_watchlist;
+	int fd_watchlist,fd_whitelist;
+	int is_in_whitelist = -1;
+	//startup run
+		sleep(1);
+		fd_watchlist = open_bpf_map(file_ip_watchlist);
+		__u32 key, *prev_key = NULL;
+		__u64 value;
+		char* ipsToRemove[1000];
+		int numToRemove = 0;
+		while (bpf_map_get_next_key(fd_watchlist, prev_key, &key) == 0) {
+			value = get_key32_value64_percpu(fd_watchlist, key);
+			char ip_txt[INET_ADDRSTRLEN] = {0};
+			if (inet_ntop(AF_INET, &key, ip_txt, sizeof(ip_txt))) {	
+				ipsToRemove[numToRemove] = malloc(strlen(ip_txt) + 1); 
+				strcpy(ipsToRemove[numToRemove], ip_txt);
+				++numToRemove;	
+			}				
+			prev_key = &key;
+		}
+		for(int i = 0; i < numToRemove;++i){
+			watchlist_modify(fd_watchlist,ipsToRemove[i], ACTION_DEL);
+			free(ipsToRemove[i]);
+		}
+		close(fd_watchlist);
 
-		//startup run
-			sleep(1);
-			fd_watchlist = open_bpf_map(file_ip_watchlist);
-		    __u32 key, *prev_key = NULL;
-	        __u64 value;
-	        char* ipsToRemove[1000];
-			int numToRemove = 0;
-			while (bpf_map_get_next_key(fd_watchlist, prev_key, &key) == 0) {
-				value = get_key32_value64_percpu(fd_watchlist, key);
-				char ip_txt[INET_ADDRSTRLEN] = {0};
-				if (inet_ntop(AF_INET, &key, ip_txt, sizeof(ip_txt))) {	
-					ipsToRemove[numToRemove] = malloc(strlen(ip_txt) + 1); 
-					strcpy(ipsToRemove[numToRemove], ip_txt);
-					++numToRemove;	
-				}				
-				prev_key = &key;
-			}
-			for(int i = 0; i < numToRemove;++i){
-				watchlist_modify(fd_watchlist,ipsToRemove[i], ACTION_DEL);
-				free(ipsToRemove[i]);
-			}
-			close(fd_watchlist);
+	// continous monitor
 
-		// continous monitor
+	while(1){
+		sleep(1);
+		fd_watchlist = open_bpf_map(file_ip_watchlist);
+		fd_whitelist = open_bpf_map(file_whitelist);
+		
+		__u32 key, *prev_key = NULL;
+		__u64 value;
+		__u64 whitelist_value;
+		char* ipsToRemove[1000];
+		int numToRemove = 0;
 
-		while(1){
-			sleep(1);
-			fd_watchlist = open_bpf_map(file_ip_watchlist);
-			__u32 key, *prev_key = NULL;
-			__u64 value;
-			char* ipsToRemove[1000];
-			int numToRemove = 0;
-			while (bpf_map_get_next_key(fd_watchlist, prev_key, &key) == 0) {
-				value = get_key32_value64_percpu(fd_watchlist, key);
-				char ip_txt[INET_ADDRSTRLEN] = {0};
-				if (inet_ntop(AF_INET, &key, ip_txt, sizeof(ip_txt))) {	
-					printf("%s %s %llu \n","monitor ", ip_txt,value);							
-					if(value > 3){
-						IP2LocationRecord *record = IP2Location_get_all(IP2LocationObj,ip_txt);
-						char* country = record->country_short;
-						init_db();
-						int risk = get_status_by_country_id(country);
-						close_db();
-							if(risk == HIGH){
+		while (bpf_map_get_next_key(fd_watchlist, prev_key, &key) == 0) {
+			value = get_key32_value64_percpu(fd_watchlist, key);
+			char ip_txt[INET_ADDRSTRLEN] = {0};
+			if (inet_ntop(AF_INET, &key, ip_txt, sizeof(ip_txt))) {	
+				printf("%s %s %llu \n","monitor ", ip_txt,value);							
+				if(value > 3){
+					IP2LocationRecord *record = IP2Location_get_all(IP2LocationObj,ip_txt);
+					char* country = record->country_short;
+					init_db();
+					int risk = get_status_by_country_id(country);
+					is_in_whitelist = bpf_map_lookup_elem(fd_whitelist,&key,whitelist_value);
+					if(is_in_whitelist != 0){
+						if(risk == HIGH ){
 							int fd_blacklist = open_bpf_map(file_blacklist);						
 							blacklist_modify(fd_blacklist,ip_txt, ACTION_ADD);
 							close(fd_blacklist);	
 							printf("blacklisted %s with count %llu and risk %d\n",ip_txt,value,risk);
-							init_db();
+							//init_db();
 							insert_into_blacklist(ip_txt);
-							close_db();							
+							//close_db();							
 						}else if (risk == MED && value > 5){
 							int fd_blacklist = open_bpf_map(file_blacklist);						
 							blacklist_modify(fd_blacklist,ip_txt, ACTION_ADD);
 							close(fd_blacklist);	
 							printf("blacklisted %s with count %llu and risk %d\n",ip_txt,value,risk);	
-							init_db();
+							//init_db();
 							insert_into_blacklist(ip_txt);
-							close_db();							
+							//close_db();							
 						}else if (risk == LOW && value > 10){
 							int fd_blacklist = open_bpf_map(file_blacklist);						
 							blacklist_modify(fd_blacklist,ip_txt, ACTION_ADD);
 							close(fd_blacklist);	
 							printf("blacklisted %s with count %llu and risk %d\n",ip_txt,value,risk);	
-							init_db();
+							//init_db();
 							insert_into_blacklist(ip_txt);
-							close_db();						
+							//close_db();						
 						}
-						IP2Location_free_record(record);
+					}
 
-					}	
-					ipsToRemove[numToRemove] = malloc(strlen(ip_txt) + 1); 
-					strcpy(ipsToRemove[numToRemove], ip_txt);
-					++numToRemove;	
-				}				
-				prev_key = &key;
-			}
-			for(int i = 0; i < numToRemove;++i){
-				watchlist_modify(fd_watchlist,ipsToRemove[i], ACTION_DEL);
-				free(ipsToRemove[i]);
-			}
-			close(fd_watchlist);
-			clear_system_stats();
-		}		
-		IP2Location_close(IP2LocationObj);
+					close_db();
+					IP2Location_free_record(record);
+
+				}	
+				ipsToRemove[numToRemove] = malloc(strlen(ip_txt) + 1); 
+				strcpy(ipsToRemove[numToRemove], ip_txt);
+				++numToRemove;	
+			}				
+			prev_key = &key;
+		}
+		for(int i = 0; i < numToRemove;++i){
+			watchlist_modify(fd_watchlist,ipsToRemove[i], ACTION_DEL);
+			free(ipsToRemove[i]);
+		}
+		close(fd_watchlist);
+		close(fd_whitelist);
+		clear_system_stats();
+	}		
+	IP2Location_close(IP2LocationObj);
 }
 
 
@@ -598,8 +607,9 @@ static void printServiceBackends(char* service_ip){
 	 int fd_servers = open_bpf_map(file_servers);  
 	 res = bpf_map_lookup_elem(fd_services,&key,value); 
 	 if(res == 0){
-		for(int i = 0;i < value->num_servers;++i){
-			 struct dest_info *backend =(struct dest_info*)malloc(sizeof(struct dest_info));
+		struct dest_info *backend = NULL;
+		for(int i = 0;i < MAX_INSTANCES;++i){
+			/* struct dest_info *backend =(struct dest_info*)malloc(sizeof(struct dest_info));
 			__u32 id = value->id+i+1;
 			res = bpf_map_lookup_elem(fd_servers,&id,backend); 
 			if(res==0){
@@ -607,6 +617,13 @@ static void printServiceBackends(char* service_ip){
 					if (inet_ntop(AF_INET, &(backend->daddr), ip_txt, sizeof(ip_txt))) {	
 						printf("server %s with id %d listening on port %d \n", ip_txt,id,backend->port);								
 					}			
+			}*/
+			if(value->backend_active[i] == 1){
+				backend = &(value->backends[i]);
+				char ip_txt[INET_ADDRSTRLEN] = {0};
+				if (inet_ntop(AF_INET, &(backend->daddr), ip_txt, sizeof(ip_txt))) {	
+					printf("server %s with id %d listening on port %d \n", ip_txt,i,backend->port);								
+				}					
 			}
 
 		 }	
@@ -648,19 +665,18 @@ static void get_stats(){
 				 int fd_servers = open_bpf_map(file_servers);  
 				 int res = bpf_map_lookup_elem(fd_services,&service_key,app); 
 				 if(res == 0){
-					for(int i = 0;i < app->num_servers;++i){
-						 struct dest_info *backend =(struct dest_info*)malloc(sizeof(struct dest_info));
-						__u32 id = app->id+i+1;
-						res = bpf_map_lookup_elem(fd_servers,&id,backend); 
-						if(res==0){
-								char backend_ip_txt[INET_ADDRSTRLEN] = {0};
-								if (inet_ntop(AF_INET, &(backend->daddr), backend_ip_txt, sizeof(backend_ip_txt))) {	
-									printf("\"%s\":{\n",backend_ip_txt);		
-									printf("\%s\": %d\n","pps",backend->pkts);
-									printf("\%s\": %d\n","num_con",backend->cons);
-									printf("\%s\": %d\n","bps",backend->bytes);
-									printf("}\n");										
-								}			
+					struct dest_info *backend = NULL;
+					for(int i = 0;i < MAX_INSTANCES;++i){
+						if(app->backend_active[i] == 1){
+							backend = &(app->backends[i]);
+							char backend_ip_txt[INET_ADDRSTRLEN] = {0};
+							if (inet_ntop(AF_INET, &(backend->daddr), backend_ip_txt, sizeof(backend_ip_txt))) {	
+								printf("\"%s\":{\n",backend_ip_txt);		
+								printf("\%s\": %d\n","pps",backend->pkts);
+								printf("\%s\": %d\n","num_con",backend->cons);
+								printf("\%s\": %d\n","bps",backend->bytes);
+								printf("}\n");										
+							}					
 						}
 
 					 }	

@@ -162,6 +162,35 @@ static int service_modify(int fd_services,int fd_servers, char *service_ip,char 
 	}
 
 	if (action == ACTION_ADD) {	
+	struct dest_info *backend = (struct dest_info*)malloc(sizeof(struct dest_info));
+		backend->daddr = backendIP;
+		backend->saddr = key;
+		backend->bytes = 0;
+		backend->pkts = 0;
+		backend->cons = 0;
+		backend->port = port;		
+		uint8_t bytes[6];
+		int values[6];
+		int i;
+
+		if( 6 == sscanf( mac_addr, "%x:%x:%x:%x:%x:%x%*c",
+			&values[0], &values[1], &values[2],
+			&values[3], &values[4], &values[5] ) )
+		{
+			for( i = 0; i < 6; ++i )
+				bytes[i] = (uint8_t) values[i];
+		}else{
+			printf("mac address in invalid format.\n");
+		}
+		
+	
+		backend->dmac[0] = bytes[0];
+		backend->dmac[1] = bytes[1];
+		backend->dmac[2] = bytes[2];
+		backend->dmac[3] = bytes[3];
+		backend->dmac[4] = bytes[4];
+		backend->dmac[5] = bytes[5];
+		
 		res = bpf_map_lookup_elem(fd_services,&key,value); 
 		if(res != 0){
 			value->last_used = 0;
@@ -173,21 +202,30 @@ static int service_modify(int fd_services,int fd_servers, char *service_ip,char 
 				fprintf(fptr,"%d",server_id+MAX_INSTANCES); 
 				fclose(fptr);          
 	        }
-
-			res = bpf_map_update_elem(fd_services, &key, value, BPF_NOEXIST);
+			for (int counter = 0; counter < MAX_INSTANCES;++counter){
+				value->backend_active[counter] = 0;
+			}
+			value->backends[0] = *backend;
+			value->backend_active[0] = 1;
+			res = bpf_map_update_elem(fd_services, &key, value, BPF_ANY);
 		}else{
+			for (int counter = 0; counter < MAX_INSTANCES;++counter){
+				if(value->backend_active[counter] == 0){
+					value->backends[counter] = *backend;
+					value->backend_active[counter] = 1;
+					break;
+				}
+			}
 			value->num_servers = value->num_servers+1;	
 			res = bpf_map_update_elem(fd_services, &key, value, BPF_EXIST);
 		}
-		struct dest_info *backend = (struct dest_info*)malloc(sizeof(struct dest_info));
+		/*struct dest_info *backend = (struct dest_info*)malloc(sizeof(struct dest_info));
 		backend->daddr = backendIP;
 		backend->saddr = key;
 		backend->bytes = 0;
 		backend->pkts = 0;
 		backend->cons = 0;
 		backend->port = port;		
-
-		/*convert mac address into desired format*/
 		uint8_t bytes[6];
 		int values[6];
 		int i;
@@ -196,14 +234,13 @@ static int service_modify(int fd_services,int fd_servers, char *service_ip,char 
 			&values[0], &values[1], &values[2],
 			&values[3], &values[4], &values[5] ) )
 		{
-			/* convert to uint8_t */
 			for( i = 0; i < 6; ++i )
 				bytes[i] = (uint8_t) values[i];
 		}else{
 			printf("mac address in invalid format.\n");
 		}
 		
-		/*assign converted mac address to backend*/
+	
 		backend->dmac[0] = bytes[0];
 		backend->dmac[1] = bytes[1];
 		backend->dmac[2] = bytes[2];
@@ -225,18 +262,30 @@ static int service_modify(int fd_services,int fd_servers, char *service_ip,char 
 			}
 		 	prev_key = &key;
 		}
-		res = bpf_map_update_elem(fd_servers, &backend_id, backend, BPF_ANY);
+		res = bpf_map_update_elem(fd_servers, &backend_id, backend, BPF_ANY);*/
 
 	} else if (action == ACTION_DEL) {
 		res = bpf_map_lookup_elem(fd_services,&key,value); 
 		if(res == 0){
 			value->last_used = 0;
 			if(value->num_servers > 0) value->num_servers = value->num_servers-1;
+			else value->num_servers = 0;
+			for (int counter = 0; counter < MAX_INSTANCES;++counter){
+				if(value->backends[counter].daddr == backendIP){
+					value->backend_active[counter] = 0;
+					for (int counter2 = counter; counter2 < MAX_INSTANCES-1;++counter2){
+						value->backend_active[counter2] = value->backend_active[counter2+1];
+						value->backends[counter2] = value->backends[counter2+1];
+					}
+					value->backend_active[MAX_INSTANCES-1] = 0;
+					break;
+				}
+			}
 			res = bpf_map_update_elem(fd_services, &key, value, BPF_EXIST);
 		}
 		backend_id = value->id;
-
-		key = NULL;
+		
+		/*key = NULL;
 		prev_key = NULL;
 		bool found = false;
 		while (bpf_map_get_next_key(fd_servers, prev_key, &key) == 0 && !found) {
@@ -249,7 +298,7 @@ static int service_modify(int fd_services,int fd_servers, char *service_ip,char 
 				}
 			}
 		 	prev_key = &key;
-		}
+		}*/
 		
 	} else {
 		fprintf(stderr, "ERR: %s() invalid action 0x%x\n",

@@ -278,7 +278,34 @@ static __always_inline struct dest_info *hash_get_dest(struct pkt_meta *pkt){
 	key = ntohl(pkt->dst);
 	app = bpf_map_lookup_elem(&services, &key);
 	if (app) {
-		u64 service_id = app->id;	
+		if(app->last_used+1 < MAX_INSTANCES) app->last_used++;
+		else app->last_used = 0;
+		if(app->backend_active[app->last_used] != 0){
+			tnl = &(app->backends[app->last_used]);
+		}else{
+			app->last_used = 0;
+			if(app->backend_active[0] != 0){
+				tnl = &(app->backends[0]);
+			}else{
+				tnl = NULL;
+			}
+		}
+		bpf_map_update_elem(&services, &key,app,BPF_ANY);
+		/*if(app->last_used >= MAX_INSTANCES ) app->last_used = 0;
+		u64 backend_num = app->last_used;
+		#pragma clang loop unroll(full)
+		for(u64 i = 0;i < MAX_INSTANCES;++i){
+			backend_num = backend_num + i;
+			if(backend_num >= MAX_INSTANCES) backend_num = 0;
+			if(app->backend_active[backend_num] != 0){
+				if(backend_num < MAX_INSTANCES && backend_num > 0){
+					tnl = &(app->backends[backend_num]);
+					break;
+				}
+			}
+		}*/
+		//return &(app->backends[0]);
+		/*u64 service_id = app->id;	
 		server_id = app->last_used+service_id+1;
 		#pragma clang loop unroll(full)
 		for(int i = 0;i < MAX_INSTANCES;++i){
@@ -292,12 +319,18 @@ static __always_inline struct dest_info *hash_get_dest(struct pkt_meta *pkt){
 			}
 			tnl = NULL;
 			server_id = (server_id + 1);
-		}
+		}*/
+		
 		
 	}
-	app = NULL;
-	// No available server to recieve packet
-	return NULL; 
+	
+	if(tnl && tnl != NULL){
+		return tnl;
+	}else{
+		// No available server to recieve packet
+		return NULL; 
+	}
+
 
 }
 
