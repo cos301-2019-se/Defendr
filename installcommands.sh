@@ -38,9 +38,11 @@ sudo pip3 install pygments
 sudo pip3 install docutils
 sudo pip3 install cython
 sudo pip3 install kivy
+sudo pip3 install prometheus-client
 sudo apt install -y gradle
 sudo apt install -y net-tools
 sudo apt install -y apache2
+sudo apt-get install -y arptables
 sudo apt-get install -y libtool
 sudo apt-get install -y autoconf
 cd src
