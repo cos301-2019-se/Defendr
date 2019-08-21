@@ -54,7 +54,7 @@ sudo make install
 cd data
 sudo perl ip-country.pl
 cd ../../
-make
 sudo ldconfig
+make
 cd Interfaces_v2
 python3 main.py
