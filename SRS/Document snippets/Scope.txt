@@ -1,0 +1,16 @@
+Defendr is to be a blackbox implementation of a DoS protection service, as well as a  network load-balancer for various back-end applications (henceforth called service collectively).  The service is to be situated between the client and server; request from the client are to pass through the service, dropping/blacklisting offending packets/IPs. The service should employ direct server return; responses from the server are to be sent directly back to the client, and not routed back via the service.\\
+    \\
+    Packets that are permitted to pass through DoS protection will then be subject to the load-balancer.  Various load-balancing pools with multiple instances of a back-end situated in them.  According to the algorithm that is managing the particular pool's load-balancing, packets will get passed to the intended back-end instance.\\
+    \\
+    The service will measure the validity of request packets sent to a protected service by two criteria: \# of packets per second, and \# of connections.  The limitations will be specified by the owner of the back-end being protected.\\
+    \\
+    The service will also comprise of two user interfaces; an administration interface, and an interface that is to be used by the back-end application's clients.  The former will provide access to metrics detailing:
+    \begin{itemize}
+        \item Current servers being protected
+        \item Current status of the server, i.e. total \# of packets, \# of packets being let through (success rate), \# of packets being dropped (failure rate)
+        \item A heat-map that displays the geo-location of the origin of client request to protected back-ends
+        \item List of blacklisted IPs
+        \item Internal overhead
+    \end{itemize}
+    in a raw and graphical data format
+    \newpage

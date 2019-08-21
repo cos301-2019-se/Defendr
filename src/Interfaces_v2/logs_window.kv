@@ -1,0 +1,41 @@
+#:import Toolbar kivymd.toolbar.Toolbar
+#:import MDCard kivymd.card.MDCard
+#:import MDList kivymd.list.MDList
+#:include nav_drawer.kv
+
+<logs_window>:
+    BoxLayout:
+        orientation: 'vertical'
+        Toolbar:
+            id: toolbar
+            title: 'Defendr'
+            background_color: app.theme_cls.primary_dark
+            left_action_items: [['menu', lambda x: app.nav_drawer.toggle()]]
+
+        GridLayout:
+            rows:2
+            padding: '5dp'
+            spacing: '5dp'
+            GridLayout:
+                size_hint_y: None
+                height: '40dp'
+                cols:2
+                padding: '10dp'
+                spacing: '5dp'
+                row_force_default: 1
+                row_default_height: '40dp'
+                TextInput:
+                    id: log_search_text
+                    multiline:False
+                    font_size: 18
+                    size_hint_x:None
+                    hint_text: 'Search'
+                    width: '250dp'
+                MDIconButton:
+                    size_hint_x: None
+                    width: '50dp'
+                    icon: 'search'
+                    on_press: root.add_table(log_table)
+            BoxLayout:
+                orientation: 'horizontal'
+                id: log_table

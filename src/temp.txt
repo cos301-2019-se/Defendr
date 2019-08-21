@@ -1,0 +1,13 @@
+Documentation:
+ XDP: DDoS protection via IPv4 blacklist
+
+This program loads the XDP eBPF program into the kernel.
+Use the cmdline tool for add/removing source IPs to the blacklist
+and read statistics.
+
+ - Attached to device:enp0s3 (ifindex:2)
+ - Loaded bpf-map:blacklist                      from file:/sys/fs/bpf/ddos_blacklist
+ - Loaded bpf-map:verdict_cnt                    from file:/sys/fs/bpf/ddos_blacklist_stat_verdict
+ - Loaded bpf-map:port_blacklist                 from file:/sys/fs/bpf/ddos_port_blacklist
+ - Loaded bpf-map:port_blacklist_drop_count_tcp  from file:/sys/fs/bpf/ddos_port_blacklist_count_tcp
+ - Loaded bpf-map:port_blacklist_drop_count_udp  from file:/sys/fs/bpf/ddos_port_blacklist_count_udp

@@ -1,0 +1,17 @@
+{
+	"ulid": "01DJA834TND98XSXPK21F5R73F",
+	"minTime": 1565258400000,
+	"maxTime": 1565265600000,
+	"stats": {
+		"numSamples": 2923,
+		"numSeries": 1011,
+		"numChunks": 1011
+	},
+	"compaction": {
+		"level": 1,
+		"sources": [
+			"01DJA834TND98XSXPK21F5R73F"
+		]
+	},
+	"version": 1
+}
