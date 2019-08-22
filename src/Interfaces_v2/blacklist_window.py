@@ -26,5 +26,5 @@ class Blacklist_Window(Screen):
 
     def remove_IP(self, ip_addr):
         app = App.get_running_app()
-        app.remove_black_ip(ip_addr)
+        app.facade.remove_black_ip(ip_addr)
         self.ids['txt_ip_addr'].text = ""
