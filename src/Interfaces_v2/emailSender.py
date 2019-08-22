@@ -14,6 +14,14 @@ class email():
         text ='Warning the user accunt\'s ('+hacked_gmail+') password may being focred.\nDefendr'
         self.sendEmail(db, database,server,sub,text)
 
+    def emailForAttack(self,db, database,server,meta):
+        sub ='Warning'
+        if(meta == "cps"):
+            text = 'Warining! System under extreme stress. Please see Defendr metrics'
+        else:
+            text ='Ip \''+ip+'\' blacklisted because of possible attack attempt.'
+        self.sendEmail(db, database,server,sub,text)
+
     def sendEmail(self,db, database,server, subject, body):
         try:
             temp = database.get_email_to_send_to(db)
@@ -24,7 +32,7 @@ class email():
                                     '',
                                     body])
                 server.sendmail(self.gmail_sender, [TO], BODY)
-                print('Email sent to ' + TO)
+                //print('Email sent to ' + TO)
         except:
             print('Mail not send.')
 
