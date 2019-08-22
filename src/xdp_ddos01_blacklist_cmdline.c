@@ -214,7 +214,7 @@ int get_status_by_country_id(const char* country_id)
 
 	if(!doc || !cursor)
 	{
-		printf("The id %s cannot be found.  Assigning status type HIGH", country_id);
+		printf("The id %s cannot be found.  Assigning status type HIGH\n", country_id);
 		return HIGH;
 	}
 
@@ -371,6 +371,7 @@ static void clear_system_stats(){
 }
 
 static  void activate_dynamic_blacklist(){
+	printf("Monitoring incoming traffic\n");	
 	IP2Location *IP2LocationObj = IP2Location_open("data/IP-COUNTRY.BIN");
 
 	int fd_watchlist,fd_whitelist;
@@ -410,12 +411,12 @@ static  void activate_dynamic_blacklist(){
 		__u64 whitelist_value;
 		char* ipsToRemove[1000];
 		int numToRemove = 0;
-
+		verbose = 0;
 		while (bpf_map_get_next_key(fd_watchlist, prev_key, &key) == 0) {
 			value = get_key32_value64_percpu(fd_watchlist, key);
 			char ip_txt[INET_ADDRSTRLEN] = {0};
 			if (inet_ntop(AF_INET, &key, ip_txt, sizeof(ip_txt))) {	
-				printf("%s %s %llu \n","monitor ", ip_txt,value);							
+				//printf("%s %s %llu \n","monitor ", ip_txt,value);							
 				if(value > 250){
 					IP2LocationRecord *record = IP2Location_get_all(IP2LocationObj,ip_txt);
 					char* country = record->country_short;
@@ -428,25 +429,19 @@ static  void activate_dynamic_blacklist(){
 							blacklist_modify(fd_blacklist,ip_txt, ACTION_ADD);
 							close(fd_blacklist);	
 							printf("blacklisted %s with count %llu and risk %d\n",ip_txt,value,risk);
-							//init_db();
-							insert_into_blacklist(ip_txt);
-							//close_db();							
+							insert_into_blacklist(ip_txt);							
 						}else if (risk == MED && value > 500){
 							int fd_blacklist = open_bpf_map(file_blacklist);						
 							blacklist_modify(fd_blacklist,ip_txt, ACTION_ADD);
 							close(fd_blacklist);	
 							printf("blacklisted %s with count %llu and risk %d\n",ip_txt,value,risk);	
-							//init_db();
-							insert_into_blacklist(ip_txt);
-							//close_db();							
+							insert_into_blacklist(ip_txt);							
 						}else if (risk == LOW && value > 1000){
 							int fd_blacklist = open_bpf_map(file_blacklist);						
 							blacklist_modify(fd_blacklist,ip_txt, ACTION_ADD);
 							close(fd_blacklist);	
 							printf("blacklisted %s with count %llu and risk %d\n",ip_txt,value,risk);	
-							//init_db();
-							insert_into_blacklist(ip_txt);
-							//close_db();						
+							insert_into_blacklist(ip_txt);						
 						}
 					}
 
@@ -823,15 +818,6 @@ int main(int argc, char **argv)
 			}
 			res = blacklist_modify(fd_blacklist, ip_string, action);
 			close(fd_blacklist);
-			if(action == ACTION_ADD){
-				if(modify_whitelist){
-					
-				}else{
-					init_db();
-					insert_into_blacklist(ip_string);
-					close_db();
-				}
-			}
 			
 		}
 
