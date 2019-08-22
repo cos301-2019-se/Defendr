@@ -262,35 +262,34 @@ static __always_inline struct dest_info *hash_get_dest(struct pkt_meta *pkt){
 	
 	// Try to get previous server used.
 	server_id_ptr = bpf_map_lookup_elem(&destinations, &hashKey);
-	
-	// Ensure key is not NULL.
-	if(server_id_ptr && server_id_ptr != NULL){
-		server_id = *server_id_ptr;	
-	}
 
-	if(server_id !=  MAX_SERVERS+1  ){			
-			tnl = bpf_map_lookup_elem(&servers, &server_id);
-			if (tnl) {
-				return tnl;
-			}
-	}
+
 	// Try to get alternative server.
 	key = ntohl(pkt->dst);
 	app = bpf_map_lookup_elem(&services, &key);
 	if (app) {
-		if(app->last_used+1 < MAX_INSTANCES) app->last_used++;
-		else app->last_used = 0;
-		if(app->backend_active[app->last_used] != 0){
-			tnl = &(app->backends[app->last_used]);
+		if(server_id_ptr && server_id_ptr != NULL){	
+			server_id = *server_id_ptr;
+			if(server_id >= MAX_INSTANCES) server_id = 0;
+			tnl = &(app->backends[server_id]);
 		}else{
-			app->last_used = 0;
-			if(app->backend_active[0] != 0){
-				tnl = &(app->backends[0]);
+			if(app->last_used+1 < MAX_INSTANCES) app->last_used++;
+			else app->last_used = 0;
+			if(app->backend_active[app->last_used] != 0){
+				tnl = &(app->backends[app->last_used]);
 			}else{
-				tnl = NULL;
+				app->last_used = 0;
+				if(app->backend_active[0] != 0){
+					tnl = &(app->backends[0]);
+				}else{
+					tnl = NULL;
+				}
 			}
+			bpf_map_update_elem(&services, &key,app,BPF_ANY);
 		}
-		bpf_map_update_elem(&services, &key,app,BPF_ANY);
+		server_id = app->last_used;
+		bpf_map_update_elem(&destinations, &hashKey,&server_id,BPF_ANY);
+		
 		/*if(app->last_used >= MAX_INSTANCES ) app->last_used = 0;
 		u64 backend_num = app->last_used;
 		#pragma clang loop unroll(full)

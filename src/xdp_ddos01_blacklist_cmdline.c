@@ -175,7 +175,7 @@ void insert_into_blacklist (const char *ip)
 	collection = mongoc_client_get_collection (client, "Defendr", "blacklist");
 	char *string;
 	char* json;
-	asprintf(&json,"{\"ip\":\"%s\"}", ip);
+	asprintf(&json,"{\"adress\":\"%s\"}", ip);
 	if(verbose) printf("%s\n", json);
 	bson = bson_new_from_json ((const uint8_t *)json, -1, &error);
 
@@ -416,7 +416,7 @@ static  void activate_dynamic_blacklist(){
 			char ip_txt[INET_ADDRSTRLEN] = {0};
 			if (inet_ntop(AF_INET, &key, ip_txt, sizeof(ip_txt))) {	
 				printf("%s %s %llu \n","monitor ", ip_txt,value);							
-				if(value > 3){
+				if(value > 250){
 					IP2LocationRecord *record = IP2Location_get_all(IP2LocationObj,ip_txt);
 					char* country = record->country_short;
 					init_db();
@@ -431,7 +431,7 @@ static  void activate_dynamic_blacklist(){
 							//init_db();
 							insert_into_blacklist(ip_txt);
 							//close_db();							
-						}else if (risk == MED && value > 5){
+						}else if (risk == MED && value > 500){
 							int fd_blacklist = open_bpf_map(file_blacklist);						
 							blacklist_modify(fd_blacklist,ip_txt, ACTION_ADD);
 							close(fd_blacklist);	
@@ -439,7 +439,7 @@ static  void activate_dynamic_blacklist(){
 							//init_db();
 							insert_into_blacklist(ip_txt);
 							//close_db();							
-						}else if (risk == LOW && value > 10){
+						}else if (risk == LOW && value > 1000){
 							int fd_blacklist = open_bpf_map(file_blacklist);						
 							blacklist_modify(fd_blacklist,ip_txt, ACTION_ADD);
 							close(fd_blacklist);	
