@@ -9,15 +9,15 @@ class FacadeClass():
     smpt=""
     smpt_connects=""
     xdp = controller("../")
-
+    # Initializing database.
     def __init__(self):
         self.database = database()
         if (self.db_connects == ""):
             self.db_connects = self.database.connect()
         self.smpt = email()
         if (self.smpt_connects == ""):
-            self.smpt_connects = self.smpt.connectToSMTPserver()
-
+            self.smpt_connects = self.smpt.connect_To_SMTP_server()
+    # Function for logging into program.
     def login(self,loginText,passwordText):
         if (not (loginText == '') and not (passwordText == '')):
             roll=self.database.get_roll(self.db_connects,loginText)
@@ -31,33 +31,33 @@ class FacadeClass():
                     return "Error"
         else:
             return "Enter info"
-
-    def sendEmailHacked(self,hacked):
-        self.smpt.emailForHack(self.db_connects,self.database,self.smpt_connects,hacked)
-
+    # Send email for hack attempt.
+    def send_Email_Hacked(self,hacked):
+        self.smpt.email_For_Hack(self.db_connects,self.database,self.smpt_connects,hacked)
+    # Send email for new user being added.
     def send_email_add(self, name, email):
-        self.smpt.emailAddNewUser(self.db_connects,self.database,self.smpt_connects,name,email)
-
+        self.smpt.email_Add_New_User(self.db_connects,self.database,self.smpt_connects,name,email)
+    # List the blacklist.
     def list_black_ip(self, ip):
         return self.database.find_Blacklisted_IP(self.db_connects, ip)
-
+    # Remove a blacklisted an IP.
     def remove_black_ip(self, ip):
         if(self.check_IP(ip)):
             self.xdp.remove_Blacklisted_IP(ip)
             self.database.rem_Blacklisted_IP(self.db_connects, ip)
-
+    # Blacklist an IP.
     def add_black_ip(self, ip):
         if(self.check_IP(ip)):
             if not self.database.find_Blacklisted_IP(self.db_connects, ip) and not self.database.find_whiteListed_IP(self.db_connects, ip):
                 self.xdp.black_list_IP(ip)
                 self.database.add_ip(self.db_connects, ip)
-
+    # Get the logs from database.
     def get_logs(self, ip):
         return self.database.find_packets(self.db_connects,ip)
-
+    # List the whitelist.
     def list_white_ip(self, ip):
         return self.database.find_whiteListed_IP(self.db_connects, ip)
-
+    # Whitelist an IP.
     def add_white_ip(self,ip):
         if self.check_IP(ip):
             if not self.database.find_whiteListed_IP(self.db_connects, ip):
@@ -65,12 +65,12 @@ class FacadeClass():
                 self.database.add_whiteListed_ip(self.db_connects, ip)
                 self.xdp.remove_Blacklisted_IP(ip)
                 self.xdp.white_list_IP(ip)
-
+    #Remove an IP from whitelist.
     def remove_white_ip(self,ip):
         if self.check_IP(ip):
             self.database.rem_Whitelisted_IP(self.db_connects, ip)
             self.xdp.remove_whitelisted_IP(ip)
-
+    # Function to register a new user.
     def register(self,name, surname, email, password, confirm_pass):
         if (not self.database.print_user(self.db_connects)):
             result = self.register_user(name, surname, email, password, confirm_pass, "admin")

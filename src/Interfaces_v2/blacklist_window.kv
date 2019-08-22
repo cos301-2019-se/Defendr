@@ -2,6 +2,8 @@
 #:import MDCard kivymd.card.MDCard
 #:import MDList kivymd.list.MDList
 #:include nav_drawer.kv
+
+# Black List IP Screen Layout.
 <blacklist_window>:
     on_pre_enter: root.add_table(ip_table)
     BoxLayout:
@@ -76,16 +78,15 @@
                 BoxLayout:
                     orientation: 'horizontal'
                     id: ip_table
-                    size_hint_y:0.88
+                    size_hint_y:0.85
                 BoxLayout:
                     orientation: 'horizontal'
                     padding: '10dp'
                     spacing: '10dp'
-                    size_hint_y:0.12
                     Button:
                         text: 'Refresh'
                         size_hint_x:None
                         width:'125dp'
-
+                        size_hint_y:0.15
                         font_size: 16
                         on_press: root.add_table(ip_table)

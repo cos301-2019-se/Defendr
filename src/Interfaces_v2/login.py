@@ -72,7 +72,7 @@ class Login(Screen):
                     if a == 0:
                         attend="Wait 1 min before trying again."
                         self.falid = True
-                        app.facade.sendEmailHacked(loginText)
+                        app.facade.send_Email_Hacked(loginText)
                         self.timer = datetime.datetime.now()
                         self.num = 3
                     else:

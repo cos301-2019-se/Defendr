@@ -9,7 +9,7 @@ import sys
 import time
 from controller import controller
 
-#Ensure all requisite libraries are installed
+# Ensure all requisite libraries are installed.
 def install(package):
 	subprocess.call([sys.executable, "-m", "pip", "install", package])
 
@@ -33,7 +33,7 @@ def stop():
 	#time.sleep(1)
 	subprocess.call(['killall node_exporter'], shell=True)
 
-#Instance of data types
+# Instance of data types.
 h = Histogram('request_latency_seconds', 'Histogram depicting the latency in seconds per request')
 i = Info('Defendr', 'DoS protection and Network load-balancer')
 i.info({'version' : '1.0', 'buildhost' : 'defendr@darknites'})
