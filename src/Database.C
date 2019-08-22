@@ -174,7 +174,7 @@ int Database::get_status_by_country_name (const char* country_name)
 	return status;
 }
 
-int Database::get_status_by_country_id(const char* country_id)
+int Database::get_status_by_country_id (const char* country_id)
 {
 	collection = mongoc_client_get_collection (client, "Defendr", "country");
 	const bson_t *doc;
@@ -209,4 +209,40 @@ int Database::get_status_by_country_id(const char* country_id)
 	mongoc_cursor_destroy (cursor);
 	mongoc_collection_destroy (collection);
 	return status;
+}
+
+char* Database::mailing_list ()
+{
+	collection = mongoc_client_get_collection (client, "Defendr", "user");
+	const bson_t *doc;
+	char *str;
+	
+	query = bson_new ();
+	BSON_APPEND_UTF8 (query, "sendEmail", "yes");
+	cursor = mongoc_collection_find_with_opts (collection, query, NULL, NULL);
+	
+	mongoc_cursor_next (cursor, &doc);
+
+	str = bson_as_canonical_extended_json (doc, NULL);
+	
+	 while (mongoc_cursor_next (cursor, &doc)) {
+      str = bson_as_canonical_extended_json (doc, NULL);
+      printf ("%s\n", str);
+      bson_free (str);
+   }
+
+	bson_destroy (query);
+	mongoc_cursor_destroy (cursor);
+	mongoc_collection_destroy (collection);
+	return status;
+}
+
+void remove_from_blacklist(const char*)
+{
+
+}
+
+void remove_from_whitelist(const char*)
+{
+
 }
