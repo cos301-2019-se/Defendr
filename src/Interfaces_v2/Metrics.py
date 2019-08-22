@@ -19,6 +19,7 @@ ips = []
 locator = IP2Location.IP2Location()
 locator.open("Metrics/IP-COUNTRY.BIN")
 countries = dict()
+thread = ""
 
 #Initial information metrics
 h = Histogram('request_latency_seconds', 'Histogram depicting the latency in seconds per request')
@@ -56,12 +57,12 @@ def stop():
 		subprocess.call([command], shell=True)
 	#os.popen("rm -r Metrics")
 	stopThread = True
+	thread.stop()
 
-def worker(database,database_connects, now, ips, locator, countries, metric):
+def worker(database,database_connects, now, ips, locator, countries, metric, stopThread):
 	registered = []
 	database_connects = database.connect()
 	ips = database.get_connection_ips(database_connects, now)
-	global stopThread
 
 	while True:
 		if stopThread == True:
@@ -87,6 +88,6 @@ def worker(database,database_connects, now, ips, locator, countries, metric):
 		database_connects = database.connect()
 		ips = database.get_connection_ips(database_connects, now)
 	
-
-thread = threading.Thread(target=worker, args=(database,database_connects, now, ips, locator, countries, connections_per_country))
+stopThread = False
+thread = threading.Thread(target=worker, args=(database,database_connects, now, ips, locator, countries, connections_per_country,stopThread))
 thread.start()
