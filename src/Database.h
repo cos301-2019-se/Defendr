@@ -23,6 +23,9 @@ class Database
         void insert_into_country (const char*, const char*, const char*);
         int get_status_by_country_name(const char*);
         int get_status_by_country_id(const char*);
+        void mailing_list();
+        void remove_from_blacklist(const char*);
+        void remove_from_whitelist(const char*);
 
     protected:
         Database ();

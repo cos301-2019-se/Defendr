@@ -1,0 +1,6 @@
+{
+    "files.associations": {
+        "Database.C": "cpp",
+        "DatabaseTest.C": "cpp"
+    }
+}
