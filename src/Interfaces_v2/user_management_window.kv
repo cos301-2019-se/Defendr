@@ -2,6 +2,8 @@
 #:import MDCard kivymd.card.MDCard
 #:import MDList kivymd.list.MDList
 #:include nav_drawer.kv
+
+# User management screen layout
 <user_management_window>:
     on_pre_enter: root.add_table(user_table)
     BoxLayout:

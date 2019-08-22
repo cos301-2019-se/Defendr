@@ -1,15 +1,17 @@
 import smtplib
 
+
+# Implementation of email sending for alerts.
 class email():
     gmail_sender='info@darknites.co.za'
     gmail_password='D@rkN1t3s'
-
-    def emailAddNewUser(self,db, database,server,name, email):
+    # Send email to new user.
+    def email_Add_New_User(self,db, database,server,name, email):
         sub ='Verify user'
         text ='Account verification needed for '+name+'('+email+')\nDefendr'
         self.sendEmail(db, database,server, sub, text)
-
-    def emailForHack(self,db, database,server,hacked_gmail):
+    # Send email to notify of a hack attempt.
+    def email_For_Hack(self,db, database,server,hacked_gmail):
         sub ='Warning'
         text ='Warning the user accunt\'s ('+hacked_gmail+') password may being focred.\nDefendr'
         self.sendEmail(db, database,server,sub,text)
@@ -35,8 +37,8 @@ class email():
                 //print('Email sent to ' + TO)
         except:
             print('Mail not send.')
-
-    def connectToSMTPserver(self):
+    # Connect to SMTP server.
+    def connect_To_SMTP_server(self):
         server = smtplib.SMTP('mail.darknites.co.za', 587 )
         server.ehlo()
         server.starttls()

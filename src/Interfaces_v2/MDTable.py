@@ -60,8 +60,7 @@ Builder.load_string('''
     height:dp(48)
     MDLabel:
         id:cell
-        text:root.text 
-        font_size: '14dp'              
+        text:root.text               
 ''')
 
 class Header(BoxLayout):

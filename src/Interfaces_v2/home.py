@@ -7,7 +7,8 @@ import sys
 class Home(Screen):
 
     def load_website(self,web_url):
-        sys.excepthook = cef.ExceptHook  # To shutdown all CEF processes on error
+        # To shutdown all CEF processes on error.
+        sys.excepthook = cef.ExceptHook  
         cef.Initialize()
         cef.CreateBrowserSync(url=web_url,
                               window_title="Hello World!")

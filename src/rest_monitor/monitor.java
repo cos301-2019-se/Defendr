@@ -33,7 +33,7 @@ class Monitor extends Thread{
 		}
 	}
 		
-	private static JSONObject sendGET() throws IOException {
+	private static JSONObject send_GET() throws IOException{
 		URL obj = new URL(GET_URL);
 		HttpURLConnection con = (HttpURLConnection) obj.openConnection();
 		con.setRequestMethod("GET");
@@ -42,13 +42,14 @@ class Monitor extends Thread{
 		con.setRequestProperty("Accept",ACCEPT_TYPE);
 		int responseCode = con.getResponseCode();
 		System.out.println("GET Response Code :: " + responseCode);
-		if (responseCode == HttpURLConnection.HTTP_OK) { // success
+		if (responseCode == HttpURLConnection.HTTP_OK){ 
+			// success.
 			BufferedReader in = new BufferedReader(new InputStreamReader(
 					con.getInputStream()));
 			String inputLine;
 			StringBuffer response = new StringBuffer();
 
-			while ((inputLine = in.readLine()) != null) {
+			while ((inputLine = in.readLine()) != null){
 				response.append(inputLine);
 			}
 			in.close();			
@@ -60,14 +61,14 @@ class Monitor extends Thread{
 		}
 	}
 	
-	public printOutput getStreamWrapper(InputStream is, String type) {
-		return new printOutput(is, type);
+	public print_output getStreamWrapper(InputStream is, String type){
+		return new print_output(is, type);
 	}
 	
-	private class printOutput extends Thread {
+	private class print_output extends Thread{
 		InputStream is = null;
  
-		printOutput(InputStream is, String type) {
+		print_output(InputStream is, String type){
 			this.is = is;
 		}
  
@@ -76,10 +77,10 @@ class Monitor extends Thread{
 			try {
 				BufferedReader br = new BufferedReader(
 						new InputStreamReader(is));
-				while ((s = br.readLine()) != null) {
+				while ((s = br.readLine()) != null){
 					System.out.println(s);
 				}
-			} catch (IOException ioe) {
+			} catch (IOException ioe){
 				ioe.printStackTrace();
 			}
 		}
@@ -87,10 +88,10 @@ class Monitor extends Thread{
 
 	public void run(){  
 		HashMap<String,Server> servers = new HashMap<String,Server>(); 
-		printOutput errorReported, outputMessage;
+		print_output errorReported, outputMessage;
 		while(true){
 			try{
-				JSONObject res = sendGET();
+				JSONObject res = send_GET();
 				JSONArray apps = res.getJSONObject("applications").getJSONArray("application");
 				JSONObject instance = null;
 				for (int i = 0; i < apps.length(); i++) {
