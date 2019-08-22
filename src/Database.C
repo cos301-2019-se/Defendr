@@ -1,4 +1,4 @@
-#include "Database.H"
+#include "Database.h"
 
 Database::Database ()
 {
@@ -179,18 +179,16 @@ int Database::get_status_by_country_id (const char* country_id){
 	if(!doc || !cursor)
 	{
 		printf("The id %s cannot be found.  Assigning status type HIGH", country_id);
-		return HIGH;
-	}
-
-	str = bson_as_canonical_extended_json (doc, NULL);
-	
-	if(strstr(str,"High"))
-	{
 		status = HIGH;
-	}
-	else if(strstr(str,"Low"))
-	{
-		status = LOW;
+	}else{
+		str = bson_as_canonical_extended_json (doc, NULL);
+	
+		if(strstr (str,"High")){
+			status = HIGH;
+		}
+		else if (strstr(str,"Low")){
+			status = LOW;
+		}
 	}
 
 	bson_free (str);
@@ -212,12 +210,7 @@ char* Database::mailing_list (){
 	mongoc_cursor_next (cursor, &doc);
 
 	str = bson_as_canonical_extended_json (doc, NULL);
-	
-	 while (mongoc_cursor_next (cursor, &doc)) {
-      str = bson_as_canonical_extended_json (doc, NULL);
-      printf ("%s\n", str);
-      bson_free (str);
-   }
+	printf(str);
 
 	bson_destroy (query);
 	mongoc_cursor_destroy (cursor);
@@ -225,10 +218,46 @@ char* Database::mailing_list (){
 	return str;
 }
 
-void Database::remove_from_blacklist (const char*){
+void Database::remove_from_blacklist (const char* ip_address){
+	collection = mongoc_client_get_collection (client, "Defendr", "blacklist");
+	
+	query = bson_new ();
+	BSON_APPEND_UTF8 (query, "adress", ip_address);
+	
+	if(!mongoc_collection_delete_one (collection, query, NULL, NULL, &error)){
+		printf("The IP %s is not in the blacklist", ip_address);
+	}
+
+	bson_destroy (query);
+	mongoc_collection_destroy (collection);
 	return;
 }
 
-bool Database::in_whitelist (const char*){
-	return false;
+bool Database::in_whitelist (const char* ip_address){
+	collection = mongoc_client_get_collection (client, "Defendr", "whitelist");
+	const bson_t *doc;
+	char *str;
+	bool result = false;
+	
+	query = bson_new ();
+	BSON_APPEND_UTF8 (query, "adress", ip_address);
+	cursor = mongoc_collection_find_with_opts (collection, query, NULL, NULL);
+	
+	mongoc_cursor_next (cursor, &doc);
+
+	if(!doc || !cursor)
+	{
+		printf("The IP address %s cannot be found.", ip_address);
+	}else{
+		str = bson_as_canonical_extended_json (doc, NULL);
+		if(strstr(str,ip_address))
+			result = true;
+	}
+	
+
+	bson_free (str);
+	bson_destroy (query);
+	mongoc_cursor_destroy (cursor);
+	mongoc_collection_destroy (collection);
+	return result;
 }
