@@ -38,11 +38,9 @@ sudo pip3 install pygments
 sudo pip3 install docutils
 sudo pip3 install cython
 sudo pip3 install kivy
-sudo pip3 install prometheus-client
 sudo apt install -y gradle
 sudo apt install -y net-tools
 sudo apt install -y apache2
-sudo apt-get install -y arptables
 sudo apt-get install -y libtool
 sudo apt-get install -y autoconf
 cd src
@@ -56,14 +54,7 @@ sudo make install
 cd data
 sudo perl ip-country.pl
 cd ../../
-sudo ldconfig
 make
+sudo ldconfig
 cd Interfaces_v2
-wget https://github.com/chrislim2888/IP2Location-Python/archive/master.zip
-unzip master.zip
-rm master.zip
-sudo IP2Location-Python-master/python3 setup.py build
-sudo python3 IP2Location-Python-master/setup.py install
-mv IP2Location-Python-master/bin/IP-COUNTRY.BIN Metrics
-rm -r IP2Location-Python-master
 python3 main.py
