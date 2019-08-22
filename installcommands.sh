@@ -59,4 +59,12 @@ sudo chmod +x /Interfaces/Metrics/Prometheus/prometheus
 sudo chmod +x /Interfaces/Metrics/node_exporter/node_exporter
 sudo chmod +x /Interfaces/Metrics/Grafana/bin/grafana-server
 cd Interfaces_v2
+wget https://github.com/chrislim2888/IP2Location-Python/archive/master.zip
+unzip master.zip
+rm master.zip
+cd IP2Location-Python-master
+sudo python3 setup.py build
+sudo python3 setup.py install
+cd ..
+rm -r IP2Location-Python-master
 python3 main.py

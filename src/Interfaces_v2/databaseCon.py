@@ -296,6 +296,18 @@ class database():
         self.save_user(db, name,lastName, roll, salt, hash_password, email,sendEmail)
         return True
 
+        #Function to get all user for the database
+    def get_connection_ips(self,db,timestamp):
+        print("get_connection_ips")
+        my_col = db["packets_list"]
+        result = my_col.distinct("ip_source", {"timestamp": {"$gte": str(timestamp)}, "status": "enter"})
+        countries = []
+        for x in result:
+            countries.append(str(x))
+        return countries
+
+    
+
 #db = connect()
 #print(print_user(db))
 #changeState(db,"u17094446@tuks.co.za","no")
