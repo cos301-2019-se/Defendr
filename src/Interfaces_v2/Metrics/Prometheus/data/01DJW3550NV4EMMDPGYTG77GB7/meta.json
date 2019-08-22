@@ -1,0 +1,17 @@
+{
+	"ulid": "01DJW3550NV4EMMDPGYTG77GB7",
+	"minTime": 1566432000000,
+	"maxTime": 1566439200000,
+	"stats": {
+		"numSamples": 1619474,
+		"numSeries": 1098,
+		"numChunks": 14815
+	},
+	"compaction": {
+		"level": 1,
+		"sources": [
+			"01DJW3550NV4EMMDPGYTG77GB7"
+		]
+	},
+	"version": 1
+}

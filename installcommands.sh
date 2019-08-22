@@ -62,9 +62,8 @@ cd Interfaces_v2
 wget https://github.com/chrislim2888/IP2Location-Python/archive/master.zip
 unzip master.zip
 rm master.zip
-cd IP2Location-Python-master
-sudo python3 setup.py build
-sudo python3 setup.py install
-cd ..
+sudo IP2Location-Python-master/python3 setup.py build
+sudo python3 IP2Location-Python-master/setup.py install
+mv IP2Location-Python-master/bin/IP-COUNTRY.BIN Metrics
 rm -r IP2Location-Python-master
 python3 main.py

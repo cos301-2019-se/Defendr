@@ -263,3 +263,50 @@ AttributeError: 'Thread' object has no attribute 'stop'
     thread.stop()
 AttributeError: 'Thread' object has no attribute 'stop'
 
+
+[2019-08-22 09:20:27] Traceback (most recent call last):
+  File "/usr/lib/python3.6/smtplib.py", line 387, in getreply
+    line = self.file.readline(_MAXLINE + 1)
+  File "/usr/lib/python3.6/socket.py", line 586, in readinto
+    return self._sock.recv_into(b)
+ConnectionResetError: [Errno 104] Connection reset by peer
+
+During handling of the above exception, another exception occurred:
+
+Traceback (most recent call last):
+  File "main.py", line 103, in <module>
+    LoginApp().run()
+  File "/usr/lib/python3/dist-packages/kivy/app.py", line 829, in run
+    root = self.build()
+  File "main.py", line 51, in build
+    self.manager.add_widget(Login(name='login'))
+  File "/usr/lib/python3/dist-packages/kivy/uix/screenmanager.py", line 992, in add_widget
+    self.current = screen.name
+  File "kivy/properties.pyx", line 497, in kivy.properties.Property.__set__
+  File "kivy/properties.pyx", line 544, in kivy.properties.Property.set
+  File "kivy/properties.pyx", line 599, in kivy.properties.Property.dispatch
+  File "kivy/_event.pyx", line 1214, in kivy._event.EventObservers.dispatch
+  File "kivy/_event.pyx", line 1120, in kivy._event.EventObservers._dispatch
+  File "/usr/lib/python3/dist-packages/kivy/uix/screenmanager.py", line 1054, in on_current
+    screen.dispatch('on_pre_enter')
+  File "kivy/_event.pyx", line 703, in kivy._event.EventDispatcher.dispatch
+  File "kivy/_event.pyx", line 1214, in kivy._event.EventObservers.dispatch
+  File "kivy/_event.pyx", line 1098, in kivy._event.EventObservers._dispatch
+  File "/usr/lib/python3/dist-packages/kivy/lang/builder.py", line 64, in custom_callback
+    exec(__kvlang__.co_value, idmap)
+  File "/home/sisa/Documents/COS301/Defendr/src/Interfaces_v2/login.kv", line 6, in <module>
+    on_pre_enter: root.connect()
+  File "/home/sisa/Documents/COS301/Defendr/src/Interfaces_v2/login.py", line 30, in connect
+    facade = FacadeClass()
+  File "/home/sisa/Documents/COS301/Defendr/src/Interfaces_v2/Facade.py", line 19, in __init__
+    self.smpt_connects = self.smpt.connectToSMTPserver()
+  File "/home/sisa/Documents/COS301/Defendr/src/Interfaces_v2/emailSender.py", line 32, in connectToSMTPserver
+    server = smtplib.SMTP('mail.darknites.co.za', 587 )
+  File "/usr/lib/python3.6/smtplib.py", line 251, in __init__
+    (code, msg) = self.connect(host, port)
+  File "/usr/lib/python3.6/smtplib.py", line 338, in connect
+    (code, msg) = self.getreply()
+  File "/usr/lib/python3.6/smtplib.py", line 391, in getreply
+    + str(e))
+smtplib.SMTPServerDisconnected: Connection unexpectedly closed: [Errno 104] Connection reset by peer
+
