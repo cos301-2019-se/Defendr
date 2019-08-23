@@ -1,0 +1,10 @@
+07:30:12.716557 IP6 fe80::a00:27ff:fea5:f095 > ff02::16: HBH ICMP6, multicast listener report v2, 3 group record(s), length 68
+07:30:13.252031 ARP, Request who-has 196.248.93.125 tell 196.248.93.125, length 46
+07:30:13.559241 ARP, Request who-has 196.249.9.126 tell 196.249.9.126, length 46
+07:30:13.866580 ARP, Request who-has 196.249.10.254 tell 196.249.10.254, length 46
+07:30:14.395159 IP 196.248.89.82.63017 > 239.255.255.250.1900: UDP, length 137
+07:30:15.813359 ARP, Request who-has 196.248.92.163 tell 196.248.92.163, length 46
+07:30:16.427782 ARP, Request who-has 169.254.255.255 tell 169.254.255.255, length 46
+07:30:17.397961 IP 196.248.89.82.63017 > 239.255.255.250.1900: UDP, length 137
+07:30:18.886730 ARP, Request who-has 169.254.255.255 tell 169.254.255.255, length 46
+07:30:19.091836 ARP, Request who-has 10.99.120.226 tell 10.99.120.226, length 46

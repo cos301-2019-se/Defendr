@@ -13,22 +13,32 @@ Defendr is a blackbox implementation of a DoS protection service, as well as a n
 `
 `
 
-### <a href="https://drive.google.com/open?id=1UAk2N9ZLeGox6dzq6b_dwOLdDoai-QAD" target="_blank">Architectural Designs Documentation</a>
+### <a href="https://drive.google.com/file/d/1hR0j3fSVDyHWPes38qg3WsU3CEKUnghQ/view?usp=sharing" target="_blank">Software Requirements Document (Demo 3)</a>
 
 `
 `
 
-### <a href="" target="https://github.com/cos301-2019-se/Defendr/blob/documentation/SRS/Defendr%20-%20User%20manual.pdf">User Manual</a>
+### <a href="https://drive.google.com/file/d/1KIa0Rp27dmP_SayKDEoJ897g3Y9T9_E6/view?usp=sharing" target="_blank">Software Requirements Document (Demo 2)</a>
 
 `
 `
 
-### <a href="" target="_blank">Coding Standard Document</a>
+### <a href="https://drive.google.com/file/d/1iBiAUn9Z2I8EpoNARxNiEECTwpGjxXim/view?usp=sharing" target="_blank">Software Requirements Document (Demo 1)</a>
 
 `
 `
 
-### <a href="https://drive.google.com/file/d/1YpIKjrMkexBQUJt1kwayPFfWzewIW0qs/view" target="_blank">Software Requirements Document</a>
+### <a href="https://drive.google.com/file/d/1ozC61SHbWyGSOasmRO3glmpFbCWPG8-t/view?usp=sharing" target="_blank">User Manual</a>
+
+`
+`
+
+### <a href="https://drive.google.com/file/d/1e0YlB_-IqQ3uM476uTTa4XBMNXe2gJPN/view?usp=sharing" target="_blank">Coding Standard</a>
+
+`
+`
+
+### <a href="https://drive.google.com/file/d/1khAOdUIoiPt9F8vz61K2TXLu7uXjTsiB/view?usp=sharing" target="_blank">Testing Policy</a>
 
 `
 `
@@ -48,7 +58,7 @@ Defendr is a blackbox implementation of a DoS protection service, as well as a n
  `
 
  
-![image](https://media.licdn.com/dms/image/C4D03AQFWIUl2J6e8wQ/profile-displayphoto-shrink_200_200/0?e=1562198400&v=beta&t=O83MvAzLuKANuQ5bpX6HocdqgED9dniiceO2emz6Ulk)
+![image](https://media.licdn.com/dms/image/C4D03AQFWIUl2J6e8wQ/profile-displayphoto-shrink_800_800/0?e=1568246400&v=beta&t=PRpolwWr9AKJhMN5BfrHZYuepV8JYWW6wXRAHQ8mMzI)
 
 ###### **Name and surname:**
 >   *Jeandre Botha*
@@ -63,11 +73,11 @@ Defendr is a blackbox implementation of a DoS protection service, as well as a n
 > *[Jeandre Botha](https://www.linkedin.com/in/jeandre-botha-654053b7/)*
 
 ###### **Interests:**
->  Exploring new technologies,
->  Programming,
->  Cooking,
->  Fantasy genre,
->  Video games
+>*  Exploring new technologies
+>*  Programming
+>*  Cooking
+>*  Fantasy genre
+>*  Video games
 
 ###### **Skills:**
 >*    Adaptable programmer
@@ -77,9 +87,9 @@ Defendr is a blackbox implementation of a DoS protection service, as well as a n
 > **
 
 ###### **Attitudes:**
->   diligent worker,
->   Up for any task,
->   Always willing to compromise
+>*   Diligent worker
+>*   Up for any task
+>*   Always willing to compromise
 
 
 `
@@ -100,7 +110,7 @@ Defendr is a blackbox implementation of a DoS protection service, as well as a n
 `
 `
 
-![image](https://media.licdn.com/dms/image/C5603AQEcRaGu0KZwUg/profile-displayphoto-shrink_800_800/0?e=1562198400&v=beta&t=kv-s95xApHY9iEgiK4pzpJFORObmn_9qXCQN6VISBtE)
+![image](https://media.licdn.com/dms/image/C5603AQEcRaGu0KZwUg/profile-displayphoto-shrink_800_800/0?e=1568246400&v=beta&t=p--RAkds7f-HHZbdNsYkG22_fKuUjQtNebe51gyoah4)
 
 ###### **Name and surname:**
 > *Christiaan Opperman*
@@ -164,7 +174,7 @@ stead. Negativity never accomplishes much.
 `
 `
 
-![image](https://media.licdn.com/dms/image/C4D03AQH8fDsAcRQH4w/profile-displayphoto-shrink_800_800/0?e=1557360000&v=beta&t=-Ob051JQyHnBh_km79iusE_eRnGIvRuawz0vm_wbkLU)
+![image](https://media.licdn.com/dms/image/C4D03AQFTSE8JZvAYxg/profile-displayphoto-shrink_800_800/0?e=1568246400&v=beta&t=Gkpn2YEJ0pipopHcOXVtECx8cVktZvoMvXCVS9vGbSI)
 
 ###### **Name and surname:**
 >*Muhammed Carrim*
@@ -182,13 +192,19 @@ Thereafter I became addicted to gaming and always wanted to know how they are cr
 I like playing Tennis and Squash.*
 
 ###### **Skills:**
-> *C++, C#, SQL, Web Development, Java*
+>* C++
+>* C#
+>* SQL
+>* Web Development
+>* Java
 
 ###### **Work Experience:**
-> *Part Time At an Accounting Firm*
+>* Part Time At an Accounting Firm
 
 ###### **Attitudes:**
-> *Dedicated, Calm, Outgoing and Reserved*
+>* Dedicated
+>* Calm
+>* Outgoing and reserved
 
 
 `
@@ -241,7 +257,7 @@ My duties were the same in the adult ministry, except my position was that of a 
 > - Camarero @ Aandklas (Feb 2017 - Jul 2017) - A small stint in the hospitality industry, whilst at university, to earn some extra pocket money as well as to try to take on new responsibilities, and experience a working world environment with duties and deadlines.  The responsibilities of a waiter included hosting and tending to guest needs by; ensuring the general seating areas were clean and tidy before, during and after shifts, reception of new patrons, bridging the bar, kitchen, and main guest areas as well as tending to performing artists or members that would require the venue for events.
 
 ###### **Attitudes:**
-> ***"In every mistake I make is a nuggest of learning I can take"***
+> ***"In every mistake I make is a nugget of learning I can take"***
 >
 > I am an energetic, determined character that conducts myself with courage and discipline. I have a creative, resilient mind that overcomes obstacles with a pragmatic solution. This is coupled by my need to see tasks to completion; one could perceive as insitent, yet it is a motivator that enables me to go to lengths. I am enthusiastic to learn, and have a sincere interest in software and technology.
 
@@ -281,7 +297,7 @@ My duties were the same in the adult ministry, except my position was that of a 
 > - Tattoos
 
 ###### **Skills:**
-> - c++
+> - C++
 > - Java
 > - Database Management (SQL and MongoDB)
 > - HTML
