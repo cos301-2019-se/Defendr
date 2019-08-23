@@ -7,6 +7,9 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
+#include <vector>
+
+using namespace std;
 
 
 class Database
@@ -23,7 +26,7 @@ class Database
         void insert_into_country (const char*, const char*, const char*);
         int get_status_by_country_name (const char*);
         int get_status_by_country_id (const char*);
-        char* mailing_list ();
+        vector<char*> mailing_list ();
         void remove_from_blacklist (const char*);
         bool in_whitelist (const char*);
 

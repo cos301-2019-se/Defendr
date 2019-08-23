@@ -1,5 +1,6 @@
 #include "Database.h"
 
+
 Database::Database ()
 {
     mongoc_init ();
@@ -198,24 +199,29 @@ int Database::get_status_by_country_id (const char* country_id){
 	return status;
 }
 
-char* Database::mailing_list (){
+vector<char*> Database::mailing_list (){
 	collection = mongoc_client_get_collection (client, "Defendr", "user");
 	const bson_t *doc;
 	char *str;
+	vector<char*> temp;
 	
 	query = bson_new ();
 	BSON_APPEND_UTF8 (query, "sendEmail", "yes");
 	cursor = mongoc_collection_find_with_opts (collection, query, NULL, NULL);
 	
-	mongoc_cursor_next (cursor, &doc);
+	if (!cursor){
+		printf ("There are no available emails");
+	}else{
+		while (mongoc_cursor_next (cursor, &doc)){
+			str = bson_as_canonical_extended_json (doc, NULL);
+			temp.push_back (str);
+		}
+	}
 
-	str = bson_as_canonical_extended_json (doc, NULL);
-	printf(str);
-
-	bson_destroy (query);
+	bson_free(query);
 	mongoc_cursor_destroy (cursor);
 	mongoc_collection_destroy (collection);
-	return str;
+	return temp;
 }
 
 void Database::remove_from_blacklist (const char* ip_address){
@@ -224,7 +230,7 @@ void Database::remove_from_blacklist (const char* ip_address){
 	query = bson_new ();
 	BSON_APPEND_UTF8 (query, "adress", ip_address);
 	
-	if(!mongoc_collection_delete_one (collection, query, NULL, NULL, &error)){
+	if(!mongoc_collection_delete_many (collection, query, NULL, NULL, &error)){
 		printf("The IP %s is not in the blacklist", ip_address);
 	}
 
