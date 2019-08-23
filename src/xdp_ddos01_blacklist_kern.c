@@ -15,12 +15,18 @@
 #include <net/checksum.h>
 #include <linux/skbuff.h>
 
-#define BPF_ANY       0 /* create new element or update existing */
-#define BPF_NOEXIST   1 /* create new element only if it didn't exist */
-#define BPF_EXIST     2 /* only update existing element */
+#define BPF_ANY       0 
+#define BPF_NOEXIST   1 
+#define BPF_EXIST     2 
 #define MAX_SERVERS 512
 #define JHASH_INITVAL	0xdeadbeef
-#define IP_FRAGMENTED 65343
+#define IP_FRAGMENTED 
+
+#define  TOTAL_PPS 0
+#define TOTAL_CPS 1
+#define TOTAL_BPS 2
+#define TOTAL_PPS_DROPED 3
+#define TOTAL_BPS_DROPED 4
 
 void *malloc(size_t);
 
@@ -49,7 +55,16 @@ struct bpf_map_def SEC("maps") blacklist = {
 	.map_flags   = BPF_F_NO_PREALLOC,
 };
 
-// Map keeping track of suspisous ips
+// Map containing whitelisted ips.
+struct bpf_map_def SEC("maps") whitelist = {
+	.type        = BPF_MAP_TYPE_PERCPU_HASH,
+	.key_size    = sizeof(u32),
+	.value_size  = sizeof(u64),
+	.max_entries = 100000,
+	.map_flags   = BPF_F_NO_PREALLOC,
+};
+
+// Map keeping track of suspisous ips.
 struct bpf_map_def SEC("maps") ip_watchlist = {
 	.type        = BPF_MAP_TYPE_PERCPU_HASH,
 	.key_size    = sizeof(u32),
@@ -67,7 +82,7 @@ struct bpf_map_def SEC("maps") logs = {
 	.map_flags   = BPF_F_NO_PREALLOC,
 };
 
-// Map containing registered back-end instances
+// Map containing registered back-end instances.
 struct bpf_map_def SEC("maps") servers = {
 	.type = BPF_MAP_TYPE_HASH,
 	.key_size = sizeof(u32),
@@ -75,7 +90,7 @@ struct bpf_map_def SEC("maps") servers = {
 	.max_entries = MAX_SERVERS,
 };
 
-// Map containing registered services
+// Map containing registered services.
 struct bpf_map_def SEC("maps") services = {
 	.type = BPF_MAP_TYPE_HASH,
 	.key_size = sizeof(u32),
@@ -83,7 +98,7 @@ struct bpf_map_def SEC("maps") services = {
 	.max_entries = MAX_SERVERS,
 };
 
-// Map that keeps track of destinatin instances of tcp connections
+// Map that keeps track of destinatin instances of tcp connections.
 struct bpf_map_def SEC("maps") destinations = {
 	.type = BPF_MAP_TYPE_HASH,
 	.key_size = sizeof(u32),
@@ -92,8 +107,17 @@ struct bpf_map_def SEC("maps") destinations = {
 };
 
 #define XDP_ACTION_MAX (XDP_TX + 1)
+#define STATS_CATAGORIES_MAX 5
 
-// Map acting as counter per XDP "action" verdict */
+// MAp that keeps track of system wide metrics.
+struct bpf_map_def SEC("maps") system_stats = {
+	.type = BPF_MAP_TYPE_PERCPU_ARRAY,
+	.key_size = sizeof(u32),
+	.value_size = sizeof(long),
+	.max_entries = STATS_CATAGORIES_MAX,
+};
+
+// Map acting as counter per XDP "action" verdict.
 struct bpf_map_def SEC("maps") verdict_cnt = {
 	.type = BPF_MAP_TYPE_PERCPU_ARRAY,
 	.key_size = sizeof(u32),
@@ -101,6 +125,7 @@ struct bpf_map_def SEC("maps") verdict_cnt = {
 	.max_entries = XDP_ACTION_MAX,
 };
 
+// Map containing blacklisted ports.
 struct bpf_map_def SEC("maps") port_blacklist = {
 	.type        = BPF_MAP_TYPE_PERCPU_ARRAY,
 	.key_size    = sizeof(u32),
@@ -109,7 +134,7 @@ struct bpf_map_def SEC("maps") port_blacklist = {
 };
 
 
-// Map for keeping tcp drop counter 
+// Map for keeping tcp drop counter.
 struct bpf_map_def SEC("maps") port_blacklist_drop_count_tcp = {
 	.type        = BPF_MAP_TYPE_PERCPU_ARRAY,
 	.key_size    = sizeof(u32),
@@ -117,7 +142,7 @@ struct bpf_map_def SEC("maps") port_blacklist_drop_count_tcp = {
 	.max_entries = 65536,
 };
 
-// Map for keeping udp drop counter 
+// Map for keeping udp drop counter.
 struct bpf_map_def SEC("maps") port_blacklist_drop_count_udp = {
 	.type        = BPF_MAP_TYPE_PERCPU_ARRAY,
 	.key_size    = sizeof(u32),
@@ -150,9 +175,6 @@ static inline u32 hash(u32 a, u32 b,u32 c, u32 initval){
 }
 //#define DEBUG 1
 #ifdef  DEBUG
-/* Only use this for debug output. Notice output from bpf_trace_printk()
- * end-up in /sys/kernel/debug/tracing/trace_pipe
- */
 #define bpf_debug(fmt, ...)						\
 		({							\
 			char ____fmt[] = fmt;				\
@@ -185,6 +207,20 @@ static inline unsigned short checksumIP(unsigned short *buf, int buf_size) {
     sum = (sum & 0xffff) + (sum >> 16);
 
     return ~sum;
+}
+
+
+// Keeps system metrics updated.
+void add_to_system_stats(u32 stat_catagory,u64 value_to_add)
+{
+	u64 *value;
+
+	if (stat_catagory >= STATS_CATAGORIES_MAX)
+		return;
+
+	value = bpf_map_lookup_elem(&system_stats, &stat_catagory);
+	if (value)
+		*value += value_to_add;
 }
 
 /* Adds destination for new tcp connection.
@@ -221,8 +257,8 @@ static inline unsigned short checksumIP(unsigned short *buf, int buf_size) {
 }*/
 
 /* Retrieves available back-end instance  
- * @param pkt Packet meta data.
- * @return selected back-end instance
+ * @param pkt Packet meta data..
+ * @return selected back-end instance.
  */
 static __always_inline struct dest_info *hash_get_dest(struct pkt_meta *pkt){	
 	__u32 key,hashKey;
@@ -240,42 +276,44 @@ static __always_inline struct dest_info *hash_get_dest(struct pkt_meta *pkt){
 	
 	// Try to get previous server used.
 	server_id_ptr = bpf_map_lookup_elem(&destinations, &hashKey);
-	
-	// Ensure key is not NULL.
-	if(server_id_ptr && server_id_ptr != NULL){
-		server_id = *server_id_ptr;	
-	}
 
-	if(server_id !=  MAX_SERVERS+1  ){			
-			tnl = bpf_map_lookup_elem(&servers, &server_id);
-			if (tnl) {
-				return tnl;
-			}
-	}
+
 	// Try to get alternative server.
 	key = ntohl(pkt->dst);
 	app = bpf_map_lookup_elem(&services, &key);
 	if (app) {
-		u64 service_id = app->id;	
-		server_id = app->last_used+service_id+1;
-		#pragma clang loop unroll(full)
-		for(int i = 0;i < MAX_INSTANCES;++i){
-			
-			if(server_id >= (service_id+MAX_INSTANCES)) server_id = service_id+1;
-			tnl = bpf_map_lookup_elem(&servers, &server_id);
-			if(tnl && tnl != NULL){
-					bpf_map_update_elem(&destinations, &hashKey,&server_id,BPF_ANY);
-					app->last_used = app->last_used+1;
-					return tnl;
+		if(server_id_ptr && server_id_ptr != NULL){	
+			server_id = *server_id_ptr;
+			if(server_id >= MAX_INSTANCES) server_id = 0;
+			tnl = &(app->backends[server_id]);
+		}else{
+			if(app->last_used+1 < MAX_INSTANCES) app->last_used++;
+			else app->last_used = 0;
+			if(app->backend_active[app->last_used] != 0){
+				tnl = &(app->backends[app->last_used]);
+			}else{
+				app->last_used = 0;
+				if(app->backend_active[0] != 0){
+					tnl = &(app->backends[0]);
+				}else{
+					tnl = NULL;
+				}
 			}
-			tnl = NULL;
-			server_id = (server_id + 1);
+			bpf_map_update_elem(&services, &key,app,BPF_ANY);
+			//add_to_system_stats(TOTAL_CPS,1);
 		}
-		
+		server_id = app->last_used;
+		bpf_map_update_elem(&destinations, &hashKey,&server_id,BPF_ANY);
+				
 	}
-	app = NULL;
-	// No available server to recieve packet
-	return NULL; 
+	
+	if(tnl && tnl != NULL){
+		return tnl;
+	}else{
+		// No available server to recieve packet.
+		return NULL; 
+	}
+
 
 }
 
@@ -293,7 +331,7 @@ void stats_action_verdict(u32 action)
 		*value += 1;
 }
 
-/*Extracts source and destination udp ports.
+/* Extracts source and destination udp ports.
  * @param off Udp header offset.
  * @param data_end End of data packet.
  * @return Port extraction success or failure.
@@ -313,7 +351,7 @@ static __always_inline bool parse_udp(void *data, __u64 off, void *data_end,
 	return true;
 }
 
-/*Extracts source and destination udp ports.
+/* Extracts source and destination udp ports.
  * @param off Tcp header offset.
  * @param data_end End of data packet.
  * @return Port extraction success or failure.
@@ -334,9 +372,9 @@ static __always_inline bool parse_tcp(void *data, __u64 off, void *data_end,
 }
 
 
-/*Entry point for xdp program which gets packet data and keeps track of verdicts
- *@param ctx given packet context to be evaluated
- *@return action for given packet
+/* Entry point for xdp program which gets packet data and keeps track of verdicts.
+ * @param ctx given packet context to be evaluated.
+ * @return action for given packet.
  */
 SEC("xdp_prog")
 int  xdp_program(struct xdp_md *ctx)
@@ -350,7 +388,7 @@ int  xdp_program(struct xdp_md *ctx)
 	__u16 payload_len;
 	struct pkt_meta pkt = {};
 	struct dest_info *tnl;
-	//__u16 pkt_size;
+	__u16 pkt_size;
 	__u64 time;
 
     // Read data.
@@ -398,6 +436,11 @@ int  xdp_program(struct xdp_md *ctx)
 	time = bpf_ktime_get_ns();
 	bpf_map_update_elem(&logs,&time,&enter_log,BPF_ANY);
 
+	pkt_size = (__u16)(data_end - data);
+	add_to_system_stats(TOTAL_PPS,1);
+	add_to_system_stats(TOTAL_CPS,0);
+	add_to_system_stats(TOTAL_BPS,pkt_size);
+	
     // Check tcp header size
     struct tcphdr *tcph = data + nh_off;
     nh_off += sizeof(struct tcphdr);
@@ -420,9 +463,10 @@ int  xdp_program(struct xdp_md *ctx)
 		drop_log.server[3] = eth->h_dest[3];
 		drop_log.server[4] = eth->h_dest[4];
 		drop_log.server[5] = eth->h_dest[5];
-	    time = bpf_ktime_get_ns();
+                time = bpf_ktime_get_ns();
 		bpf_map_update_elem(&logs,&time,&drop_log,BPF_ANY);
-		
+		add_to_system_stats(TOTAL_PPS_DROPED,1);
+		add_to_system_stats(TOTAL_BPS_DROPED,pkt_size);		
 		return XDP_DROP;
 	}else{
 		value = bpf_map_lookup_elem(&ip_watchlist,&ip_src);
@@ -455,17 +499,17 @@ int  xdp_program(struct xdp_md *ctx)
 		pkt.port16[0] = tcph->source;
 		pkt.port16[1] = tcph->dest;		
 		
+		if(tcph->syn == 1){
+			add_to_system_stats(TOTAL_CPS,1);
+		}else if (tcph->fin == 1){
+			//deduct_from_system_stats(TOTAL_CPS,1);
+		}
+		
 		__u32 ip_dest = ntohl(iph->daddr); 
 		struct service *app = bpf_map_lookup_elem(&services,&ip_dest);
 		if(app){
 			app = NULL;
-			/*if(tcph->syn == 1){
-				addDestination(&pkt);
-			}else if (tcph->fin == 1){
-				removeDestination(&pkt);
-			}*/
-			//if (tcph->fin == 1) removeDestination(&pkt);
-			
+	
 			tnl = NULL;		
 			tnl = hash_get_dest(&pkt);
 			if (tnl == NULL){ 
@@ -482,6 +526,8 @@ int  xdp_program(struct xdp_md *ctx)
 				no_server_log.server[5] = eth->h_dest[5];
 				time = bpf_ktime_get_ns();
 				bpf_map_update_elem(&logs,&time,&no_server_log,BPF_ANY);
+				add_to_system_stats(TOTAL_PPS_DROPED,1);
+				add_to_system_stats(TOTAL_BPS_DROPED,pkt_size);	
 				return XDP_DROP; 
 			}
 
@@ -509,9 +555,9 @@ int  xdp_program(struct xdp_md *ctx)
 			time = bpf_ktime_get_ns();
 			bpf_map_update_elem(&logs,&time,&pass_log,BPF_ANY);			
 			
-			/*pkt_size = (__u16)(data_end - data);
 			__sync_fetch_and_add(&tnl->pkts, 1);
-			__sync_fetch_and_add(&tnl->bytes, pkt_size);*/
+			__sync_fetch_and_add(&tnl->bytes, pkt_size);
+			__sync_fetch_and_add(&tnl->cons, 0);
 			return XDP_TX;
 			
 		}else{
