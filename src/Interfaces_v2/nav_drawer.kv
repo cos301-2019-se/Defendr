@@ -3,8 +3,6 @@
 #:include logs_window.kv
 #:include home.kv
 #:include user_management_window.kv
-
-# Navbar Layout for entire program.
 <Navigator>:
     NavigationDrawerIconButton:
         icon: 'home'
@@ -17,7 +15,8 @@
     NavigationDrawerIconButton:
         icon: 'chart'
         text: 'Metrics'
-        on_release: app.load_website('http://localhost:3000/d/L7frhkNWk/defendr-system-load?orgId=1','System Metrics')
+        on_release: app.load_website('http://localhost:3000/d/u_DVKhQiz/defendr-software-load?orgId=1','System Metrics')
+
     NavigationDrawerIconButton:
         icon: 'format-list-bulleted'
         text: 'System logs'
