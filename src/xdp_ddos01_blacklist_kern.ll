@@ -48,50 +48,11 @@ define void @add_to_system_stats(i32, i64) local_unnamed_addr #0 {
   ret void
 }
 
-; <label>:112:                                    ; preds = %110, %107
-  %113 = getelementptr inbounds i8, i8* %25, i64 23
-  %114 = load i8, i8* %113, align 1, !tbaa !24
-  %115 = icmp eq i8 %114, 6
-  br i1 %115, label %139, label %116
+; Function Attrs: argmemonly nounwind
+declare void @llvm.lifetime.start.p0i8(i64, i8* nocapture) #1
 
-; <label>:116:                                    ; preds = %112
-  %117 = bitcast %struct.log* %10 to i8*
-  call void @llvm.lifetime.start.p0i8(i64 24, i8* nonnull %117) #2
-  %118 = getelementptr inbounds %struct.log, %struct.log* %10, i64 0, i32 4, i64 0
-  %119 = bitcast i8* %118 to i64*
-  store i64 0, i64* %119, align 4
-  %120 = load i32, i32* %6, align 4, !tbaa !16
-  %121 = getelementptr inbounds %struct.log, %struct.log* %10, i64 0, i32 0
-  store i32 %120, i32* %121, align 4, !tbaa !18
-  %122 = getelementptr inbounds %struct.log, %struct.log* %10, i64 0, i32 1
-  store i32 1, i32* %122, align 4, !tbaa !20
-  %123 = getelementptr inbounds %struct.log, %struct.log* %10, i64 0, i32 2
-  store i32 4, i32* %123, align 4, !tbaa !21
-  %124 = getelementptr inbounds %struct.log, %struct.log* %10, i64 0, i32 3
-  store i32 %44, i32* %124, align 4, !tbaa !22
-  %125 = load i8, i8* %52, align 1, !tbaa !23
-  %126 = getelementptr inbounds %struct.log, %struct.log* %10, i64 0, i32 4, i64 0
-  store i8 %125, i8* %126, align 4, !tbaa !23
-  %127 = load i8, i8* %52, align 1, !tbaa !23
-  %128 = getelementptr inbounds %struct.log, %struct.log* %10, i64 0, i32 4, i64 1
-  store i8 %127, i8* %128, align 1, !tbaa !23
-  %129 = load i8, i8* %52, align 1, !tbaa !23
-  %130 = getelementptr inbounds %struct.log, %struct.log* %10, i64 0, i32 4, i64 2
-  store i8 %129, i8* %130, align 2, !tbaa !23
-  %131 = load i8, i8* %52, align 1, !tbaa !23
-  %132 = getelementptr inbounds %struct.log, %struct.log* %10, i64 0, i32 4, i64 3
-  store i8 %131, i8* %132, align 1, !tbaa !23
-  %133 = load i8, i8* %52, align 1, !tbaa !23
-  %134 = getelementptr inbounds %struct.log, %struct.log* %10, i64 0, i32 4, i64 4
-  store i8 %133, i8* %134, align 4, !tbaa !23
-  %135 = load i8, i8* %52, align 1, !tbaa !23
-  %136 = getelementptr inbounds %struct.log, %struct.log* %10, i64 0, i32 4, i64 5
-  store i8 %135, i8* %136, align 1, !tbaa !23
-  %137 = call i64 inttoptr (i64 5 to i64 ()*)() #2
-  store i64 %137, i64* %7, align 8, !tbaa !2
-  %138 = call i32 inttoptr (i64 2 to i32 (i8*, i8*, i8*, i64)*)(i8* bitcast (%struct.bpf_map_def* @logs to i8*), i8* nonnull %17, i8* nonnull %117, i64 0) #2
-  call void @llvm.lifetime.end.p0i8(i64 24, i8* nonnull %117) #2
-  br label %409
+; Function Attrs: argmemonly nounwind
+declare void @llvm.lifetime.end.p0i8(i64, i8* nocapture) #1
 
 ; Function Attrs: nounwind uwtable
 define i32 @xdp_program(%struct.xdp_md* nocapture readonly) #0 section "xdp_prog" {
@@ -760,12 +721,6 @@ define i32 @xdp_program(%struct.xdp_md* nocapture readonly) #0 section "xdp_prog
 
 ; Function Attrs: argmemonly nounwind
 declare void @llvm.memset.p0i8.i64(i8* nocapture writeonly, i8, i64, i32, i1) #1
-
-; Function Attrs: argmemonly nounwind
-declare void @llvm.memset.p0i8.i64(i8* nocapture writeonly, i8, i64, i32, i1) #1
-
-; Function Attrs: argmemonly nounwind
-declare void @llvm.lifetime.end.p0i8(i64, i8* nocapture) #1
 
 attributes #0 = { nounwind uwtable "correctly-rounded-divide-sqrt-fp-math"="false" "disable-tail-calls"="false" "less-precise-fpmad"="false" "no-frame-pointer-elim"="false" "no-infs-fp-math"="false" "no-jump-tables"="false" "no-nans-fp-math"="false" "no-signed-zeros-fp-math"="false" "no-trapping-math"="false" "stack-protector-buffer-size"="8" "target-cpu"="x86-64" "target-features"="+fxsr,+mmx,+sse,+sse2,+x87" "unsafe-fp-math"="false" "use-soft-float"="false" }
 attributes #1 = { argmemonly nounwind }
