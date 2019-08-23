@@ -19,13 +19,16 @@ struct dest_info {
 	__u32 port;
 	__u64 bytes;
 	__u64 pkts;
+	__u64 cons;
 	__u8 dmac[6];
 };
 
 struct service{
-	__u32 last_used;
+	__u64 last_used;
 	__u32 num_servers;
 	__u32 id;
+	__u64 backend_active[MAX_INSTANCES];
+	struct dest_info backends[MAX_INSTANCES];
 };
 
 struct log{

@@ -41,6 +41,8 @@ static const char *__doc__=
 static const struct option long_options[] = {
 	{"help",	no_argument,		NULL, 'h' },
 	{"add",		no_argument,		NULL, 'a' },
+	{"blacklist",		no_argument,		NULL, 'z' },
+	{"whitelist",		no_argument,		NULL, 'w' },
 	{"del",		no_argument,		NULL, 'x' },
 	{"ip",		required_argument,	NULL, 'i' },
 	{"stats",	no_argument,		NULL, 's' },
@@ -59,6 +61,13 @@ static const struct option long_options[] = {
 
 #define XDP_ACTION_MAX (XDP_TX + 1)
 #define XDP_ACTION_MAX_STRLEN 11
+#define TOTAL_PPS 0
+#define TOTAL_CPS 1
+#define TOTAL_BPS 2
+#define TOTAL_PPS_DROPED 3
+#define TOTAL_BPS_DROPED 4
+#define STATS_CATAGORIES_MAX 5
+
 static const char *xdp_action_names[XDP_ACTION_MAX] = {
 	[XDP_ABORTED]	= "XDP_ABORTED",
 	[XDP_DROP]	= "XDP_DROP",
@@ -87,8 +96,7 @@ struct stats_record {
 	struct record xdp_action[XDP_ACTION_MAX];
 };
 
-static void usage(char *argv[])
-{
+static void usage(char *argv[]){
 	int i;
 	printf("\nDOCUMENTATION:\n%s\n", __doc__);
 	printf("\n");
@@ -133,8 +141,7 @@ static void close_db(){
 	mongoc_cleanup (); 
 }
 
-static void insert_into_packets_list ( char* ip_source,  char* status,  char* timestamp,  char* country_id,  char* ip_destination,  char* server,  char* reason)
-{
+static void insert_into_packets_list ( char* ip_source,  char* status,  char* timestamp,  char* country_id,  char* ip_destination,  char* server,  char* reason){
     collection = mongoc_client_get_collection (client, "Defendr", "packets_list");
 	char *string;
 	char *json;
@@ -161,12 +168,11 @@ static void insert_into_packets_list ( char* ip_source,  char* status,  char* ti
 	return;
 }
 
-void insert_into_blacklist (const char *ip)
-{
+void insert_into_blacklist (const char *ip){
 	collection = mongoc_client_get_collection (client, "Defendr", "blacklist");
 	char *string;
 	char* json;
-	asprintf(&json,"{\"ip\":\"%s\"}", ip);
+	asprintf(&json,"{\"adress\":\"%s\"}", ip);
 	if(verbose) printf("%s\n", json);
 	bson = bson_new_from_json ((const uint8_t *)json, -1, &error);
 
@@ -177,7 +183,7 @@ void insert_into_blacklist (const char *ip)
 	}
 
 	string = bson_as_canonical_extended_json (bson, NULL);
-	printf("%s\n", string);
+	//printf("%s\n", string);
 
 	if(!mongoc_collection_insert_one(collection, bson, NULL, NULL, &error))
 		fprintf(stderr, "%s\n", error.message);
@@ -190,8 +196,7 @@ void insert_into_blacklist (const char *ip)
 	return;
 }
 
-int get_status_by_country_id(const char* country_id)
-{
+int get_status_by_country_id(const char* country_id){
 	collection = mongoc_client_get_collection (client, "Defendr", "country");
 	const bson_t *doc;
 	char *str;
@@ -205,7 +210,7 @@ int get_status_by_country_id(const char* country_id)
 
 	if(!doc || !cursor)
 	{
-		printf("The id %s cannot be found.  Assigning status type HIGH", country_id);
+		printf("The id %s cannot be found.  Assigning status type HIGH\n", country_id);
 		return HIGH;
 	}
 
@@ -227,8 +232,46 @@ int get_status_by_country_id(const char* country_id)
 	return status;
 }
 
-int open_bpf_map(const char *file)
-{
+int mailing_list (char* results[]){
+	collection = mongoc_client_get_collection (client, "Defendr", "user");
+	const bson_t *doc;
+	char *str;
+	bson_t *opts;
+	query = bson_new ();
+	int num_results = 0;
+    const char *opts_json = "{\"projection\": {\"email\":1, \"_id\":0}}";
+    opts = bson_new_from_json ((const uint8_t *)opts_json, -1, &error);
+
+	
+	BSON_APPEND_UTF8 (query, "sendEmail", "yes");
+	cursor = mongoc_collection_find_with_opts (collection, query, opts, NULL);
+	
+	mongoc_cursor_next (cursor, &doc);
+
+	str = bson_as_canonical_extended_json (doc, NULL);
+	
+	while (mongoc_cursor_next (cursor, &doc)) {
+		str = bson_as_canonical_extended_json (doc, NULL);
+		//printf ("%s\n", str);
+		char* newStr = str +8;
+		char line[256];
+		char *subString;
+		strcpy(line, newStr);
+		subString = strtok(line,"\""); 
+		subString=strtok(NULL,"\"");  
+		results[num_results] = malloc(strlen(subString) + 1); 
+		strcpy(results[num_results],subString);
+		num_results++;
+		bson_free (str);
+   }
+
+	bson_destroy (query);
+	mongoc_cursor_destroy (cursor);
+	mongoc_collection_destroy (collection);
+	return num_results;
+}
+
+int open_bpf_map(const char *file){
 	int fd;
 
 	fd = bpf_obj_get(file);
@@ -240,8 +283,7 @@ int open_bpf_map(const char *file)
 	return fd;
 }
 
-static __u64 get_key32_value64_percpu(int fd, __u32 key)
-{
+static __u64 get_key32_value64_percpu(int fd, __u32 key){
 	/* For percpu maps, userspace gets a value per possible CPU */
 	unsigned int nr_cpus = bpf_num_possible_cpus();
 	__u64 values[nr_cpus];
@@ -261,83 +303,7 @@ static __u64 get_key32_value64_percpu(int fd, __u32 key)
 	return sum;
 }
 
-static void stats_print_headers(void)
-{
-	/* clear screen */
-	printf("\033[2J");
-	printf("%-12s %-10s %-8s %-9s\n",
-	       "XDP_action", "pps ", "#packets", "period/sec");
-}
-
-static void stats_print(struct stats_record *record,
-			struct stats_record *prev)
-{
-	int i;
-	static int actionCounters[] = {0,0,0,0};
-	int total = 0;
-
-	for (i = 0; i < XDP_ACTION_MAX; i++) {
-		struct record *r = &record->xdp_action[i];
-		struct record *p = &prev->xdp_action[i];
-		__u64 period  = 0;
-		__u64 packets = 0;
-		double pps = 0;
-		double period_ = 0;
-
-		actionCounters[i]  = r->counter;
-		if (p->timestamp) {
-			packets = r->counter - p->counter;
-			period  = r->timestamp - p->timestamp;
-			pps = packets;
-			if (period > 0) {
-				period_ = ((double) period / NANOSEC_PER_SEC);
-				pps = packets / period_;
-			}
-		}
-		
-		total  = total +actionCounters[i];
-		printf("%-12s %-10.0f %'-18d %f\n",
-		       action2str(i), pps, actionCounters[i], period_);
-	}
-	printf("%-13s  %-9d\n","Total_Packets", total);
-}
-
-static void stats_collect(int fd, struct stats_record *rec)
-{
-	int i;
-
-	for (i = 0; i < XDP_ACTION_MAX; i++) {
-		rec->xdp_action[i].timestamp = gettime();
-		rec->xdp_action[i].counter = get_key32_value64_percpu(fd, i);
-	}
-}
-
-static void stats_poll(int interval)
-{
-	struct stats_record record, prev;
-	int fd;
-
-	/* TODO: Howto handle reload and clearing of maps */
-	fd = open_bpf_map(file_verdict);
-
-	memset(&record, 0, sizeof(record));
-
-	/* Trick to pretty printf with thousands separators use %' */
-	setlocale(LC_NUMERIC, "en_US");
-
-	while (1) {
-		memcpy(&prev, &record, sizeof(record));
-		stats_print_headers();
-		stats_collect(fd, &record);
-		stats_print(&record, &prev);
-		sleep(interval);
-	}
-	/* Not reached, but (hint) remember to close fd in other code */
-	close(fd);
-}
-
-static void blacklist_print_ipv4(__u32 ip, __u64 count)
-{
+static void blacklist_print_ipv4(__u32 ip){
 	char ip_txt[INET_ADDRSTRLEN] = {0};
 
 	/* Convert IPv4 addresses from binary to text form */
@@ -346,16 +312,14 @@ static void blacklist_print_ipv4(__u32 ip, __u64 count)
 			"ERR: Cannot convert u32 IP:0x%X to IP-txt\n", ip);
 		exit(EXIT_FAIL_IP);
 	}
-	printf("\n \"%s\" : %llu", ip_txt, count);
+	printf("\n \"%s\"", ip_txt);
 }
 
-static void blacklist_print_proto(int key, __u64 count)
-{
+static void blacklist_print_proto(int key, __u64 count){
 	printf("\n\t\"%s\" : %llu", xdp_proto_filter_names[key], count);
 }
 
-static void blacklist_print_port(int key, __u32 val, int countfds[])
-{
+static void blacklist_print_port(int key, __u32 val, int countfds[]){
 	int i;
 	__u64 count;
 	bool started = false;
@@ -373,23 +337,20 @@ static void blacklist_print_port(int key, __u32 val, int countfds[])
 		printf("\n }");
 }
 
-static void blacklist_list_all_ipv4(int fd)
-{
+static void blacklist_list_all_ipv4(int fd){
 	__u32 key, *prev_key = NULL;
 	__u64 value;
 
 	while (bpf_map_get_next_key(fd, prev_key, &key) == 0) {
-		printf("%s", key ? "," : "" );
-		value = get_key32_value64_percpu(fd, key);
-		blacklist_print_ipv4(key, value);
+		//value = get_key32_value64_percpu(fd, key);
+		blacklist_print_ipv4(key);
 		prev_key = &key;
+		printf("%s", key ? "," : "" );
 	}
-	printf("%s", key ? "," : "");
 
 }
 
-static void blacklist_list_all_ports(int portfd, int countfds[])
-{
+static void blacklist_list_all_ports(int portfd, int countfds[]){
 	__u32 key, *prev_key = NULL;
 	__u64 value;
 	bool started = false;
@@ -410,95 +371,163 @@ static void blacklist_list_all_ports(int portfd, int countfds[])
 	}
 }
 
+static void clear_system_stats(){
+	int fd_system_stats = open_bpf_map(file_system_stats);	
+	for (int i = 0; i < STATS_CATAGORIES_MAX; i++) {
+		long zero = 0;
+		bpf_map_update_elem(fd_system_stats, &i, &zero, BPF_EXIST);
+	}
+	close(fd_system_stats);
+	
+	__u64 key, *prev_key = NULL;	
+	key = NULL;
+	prev_key = NULL;
+	int fd_servers= open_bpf_map(file_servers);
+	while (bpf_map_get_next_key(fd_servers, prev_key, &key) == 0) {
+		 struct dest_info *backend =(struct dest_info*)malloc(sizeof(struct dest_info));
+		int res = bpf_map_lookup_elem(fd_servers,&key,backend); 
+		if(res==0){
+			backend->pkts = 0;
+			backend->cons = 0;
+			backend->bytes = 0;
+			bpf_map_update_elem(fd_servers, &key, backend, BPF_EXIST);
+		}
+		
+		prev_key = &key;
+	}
+	close(fd_servers);
+}
+
 static  void activate_dynamic_blacklist(){
-		IP2Location *IP2LocationObj = IP2Location_open("data/IP-COUNTRY.BIN");
+	printf("Monitoring incoming traffic\n");
+	
+	/*init_db();
+	char* emails[50];
+	int num_emails = mailing_list(emails);
+	close_db();
+	int email_count = 0;*/
 
-	    int fd_watchlist;		
+	char* send_notification_command = "sudo python3 Interfaces_v2/terminal_send_mail_tool.py ";
+	
+	IP2Location *IP2LocationObj = IP2Location_open("data/IP-COUNTRY.BIN");
 
-		//startup run
-			sleep(1);
-			fd_watchlist = open_bpf_map(file_ip_watchlist);
-		    __u32 key, *prev_key = NULL;
-	        __u64 value;
-	        char* ipsToRemove[1000];
-			int numToRemove = 0;
-			while (bpf_map_get_next_key(fd_watchlist, prev_key, &key) == 0) {
-				value = get_key32_value64_percpu(fd_watchlist, key);
-				char ip_txt[INET_ADDRSTRLEN] = {0};
-				if (inet_ntop(AF_INET, &key, ip_txt, sizeof(ip_txt))) {	
-					ipsToRemove[numToRemove] = malloc(strlen(ip_txt) + 1); 
-					strcpy(ipsToRemove[numToRemove], ip_txt);
-					++numToRemove;	
-				}				
-				prev_key = &key;
-			}
-			for(int i = 0; i < numToRemove;++i){
-				watchlist_modify(fd_watchlist,ipsToRemove[i], ACTION_DEL);
-				free(ipsToRemove[i]);
-			}
-			close(fd_watchlist);
+	int fd_watchlist,fd_whitelist;
+	int is_in_whitelist = -1;
+	//startup run
+		sleep(1);
+		fd_watchlist = open_bpf_map(file_ip_watchlist);
+		__u32 key, *prev_key = NULL;
+		__u64 value;
+		char* ipsToRemove[1000];
+		int numToRemove = 0;
+		while (bpf_map_get_next_key(fd_watchlist, prev_key, &key) == 0) {
+			value = get_key32_value64_percpu(fd_watchlist, key);
+			char ip_txt[INET_ADDRSTRLEN] = {0};
+			if (inet_ntop(AF_INET, &key, ip_txt, sizeof(ip_txt))) {	
+				ipsToRemove[numToRemove] = malloc(strlen(ip_txt) + 1); 
+				strcpy(ipsToRemove[numToRemove], ip_txt);
+				++numToRemove;	
+			}				
+			prev_key = &key;
+		}
+		for(int i = 0; i < numToRemove;++i){
+			watchlist_modify(fd_watchlist,ipsToRemove[i], ACTION_DEL);
+			free(ipsToRemove[i]);
+		}
+		close(fd_watchlist);
 
-		// continous monitor
-
-		while(1){
-			sleep(1);
-			fd_watchlist = open_bpf_map(file_ip_watchlist);
-		    __u32 key, *prev_key = NULL;
-	        __u64 value;
-	        char* ipsToRemove[1000];
-			int numToRemove = 0;
-			while (bpf_map_get_next_key(fd_watchlist, prev_key, &key) == 0) {
-				value = get_key32_value64_percpu(fd_watchlist, key);
-				char ip_txt[INET_ADDRSTRLEN] = {0};
-				if (inet_ntop(AF_INET, &key, ip_txt, sizeof(ip_txt))) {	
-					printf("%s %s %llu \n","monitor ", ip_txt,value);							
-					if(value > 3){
-						IP2LocationRecord *record = IP2Location_get_all(IP2LocationObj,ip_txt);
-						char* country = record->country_short;
-						init_db();
-						int risk = get_status_by_country_id(country);
-						close_db();
-							if(risk == HIGH){
+	// continous monitor
+	bool ip_blacklisted = false;
+	char* blacklisted_ip;
+	while(1){
+		sleep(1);
+		
+		int fd_system_stats = open_bpf_map(file_system_stats);	
+		__u64 cps = 0;
+		int index = TOTAL_CPS;
+		cps = get_key32_value64_percpu(fd_system_stats,index);
+		if(cps > 15){
+			char cmd[100] = "";
+			strcat(cmd, send_notification_command);
+			strcat(cmd, "cps");
+			system(cmd);			
+		}
+		close(fd_system_stats);
+		
+		fd_watchlist = open_bpf_map(file_ip_watchlist);
+		fd_whitelist = open_bpf_map(file_whitelist);
+		
+		__u32 key, *prev_key = NULL;
+		__u64 value;
+		__u64 whitelist_value;
+		char* ipsToRemove[1000];
+		int numToRemove = 0;
+		verbose = 0;
+		while (bpf_map_get_next_key(fd_watchlist, prev_key, &key) == 0) {
+			value = get_key32_value64_percpu(fd_watchlist, key);
+			char ip_txt[INET_ADDRSTRLEN] = {0};
+			if (inet_ntop(AF_INET, &key, ip_txt, sizeof(ip_txt))) {	
+				//printf("%s %s %llu \n","monitor ", ip_txt,value);							
+				if(value > 250){
+					IP2LocationRecord *record = IP2Location_get_all(IP2LocationObj,ip_txt);
+					char* country = record->country_short;
+					init_db();
+					int risk = get_status_by_country_id(country);
+					is_in_whitelist = bpf_map_lookup_elem(fd_whitelist,&key,whitelist_value);
+					if(is_in_whitelist != 0){
+						if(risk == HIGH ){
 							int fd_blacklist = open_bpf_map(file_blacklist);						
 							blacklist_modify(fd_blacklist,ip_txt, ACTION_ADD);
 							close(fd_blacklist);	
 							printf("blacklisted %s with count %llu and risk %d\n",ip_txt,value,risk);
-							init_db();
-							insert_into_blacklist(ip_txt);
-							close_db();							
-						}else if (risk == MED && value > 5){
+							insert_into_blacklist(ip_txt);	
+							ip_blacklisted = true;
+							blacklisted_ip = ip_txt;
+						}else if (risk == MED && value > 500){
 							int fd_blacklist = open_bpf_map(file_blacklist);						
 							blacklist_modify(fd_blacklist,ip_txt, ACTION_ADD);
 							close(fd_blacklist);	
 							printf("blacklisted %s with count %llu and risk %d\n",ip_txt,value,risk);	
-							init_db();
-							insert_into_blacklist(ip_txt);
-							close_db();							
-						}else if (risk == LOW && value > 10){
+							insert_into_blacklist(ip_txt);		
+							ip_blacklisted = true;
+							blacklisted_ip = ip_txt;							
+						}else if (risk == LOW && value > 1000){
 							int fd_blacklist = open_bpf_map(file_blacklist);						
 							blacklist_modify(fd_blacklist,ip_txt, ACTION_ADD);
 							close(fd_blacklist);	
 							printf("blacklisted %s with count %llu and risk %d\n",ip_txt,value,risk);	
-							init_db();
-							insert_into_blacklist(ip_txt);
-							close_db();						
+							insert_into_blacklist(ip_txt);	
+							ip_blacklisted = true;
+							blacklisted_ip = ip_txt;							
 						}
-						IP2Location_free_record(record);
+					}
 
-					}	
-					ipsToRemove[numToRemove] = malloc(strlen(ip_txt) + 1); 
-					strcpy(ipsToRemove[numToRemove], ip_txt);
-					++numToRemove;	
-				}				
-				prev_key = &key;
-			}
-			for(int i = 0; i < numToRemove;++i){
-				watchlist_modify(fd_watchlist,ipsToRemove[i], ACTION_DEL);
-				free(ipsToRemove[i]);
-			}
-			close(fd_watchlist);
-		}		
-		IP2Location_close(IP2LocationObj);
+					close_db();
+					IP2Location_free_record(record);
+					if(ip_blacklisted){
+						char cmd[100] = "";
+						strcat(cmd, send_notification_command);
+						strcat(cmd, blacklisted_ip);
+						system(cmd);
+					}
+
+				}	
+				ipsToRemove[numToRemove] = malloc(strlen(ip_txt) + 1); 
+				strcpy(ipsToRemove[numToRemove], ip_txt);
+				++numToRemove;	
+			}				
+			prev_key = &key;
+		}
+		for(int i = 0; i < numToRemove;++i){
+			watchlist_modify(fd_watchlist,ipsToRemove[i], ACTION_DEL);
+			free(ipsToRemove[i]);
+		}
+		close(fd_watchlist);
+		close(fd_whitelist);
+		clear_system_stats();
+		
+	}		
+	IP2Location_close(IP2LocationObj);
 }
 
 
@@ -637,8 +666,9 @@ static void printServiceBackends(char* service_ip){
 	 int fd_servers = open_bpf_map(file_servers);  
 	 res = bpf_map_lookup_elem(fd_services,&key,value); 
 	 if(res == 0){
-		for(int i = 0;i < value->num_servers;++i){
-			 struct dest_info *backend =(struct dest_info*)malloc(sizeof(struct dest_info));
+		struct dest_info *backend = NULL;
+		for(int i = 0;i < MAX_INSTANCES;++i){
+			/* struct dest_info *backend =(struct dest_info*)malloc(sizeof(struct dest_info));
 			__u32 id = value->id+i+1;
 			res = bpf_map_lookup_elem(fd_servers,&id,backend); 
 			if(res==0){
@@ -646,6 +676,13 @@ static void printServiceBackends(char* service_ip){
 					if (inet_ntop(AF_INET, &(backend->daddr), ip_txt, sizeof(ip_txt))) {	
 						printf("server %s with id %d listening on port %d \n", ip_txt,id,backend->port);								
 					}			
+			}*/
+			if(value->backend_active[i] == 1){
+				backend = &(value->backends[i]);
+				char ip_txt[INET_ADDRSTRLEN] = {0};
+				if (inet_ntop(AF_INET, &(backend->daddr), ip_txt, sizeof(ip_txt))) {	
+					printf("server %s with id %d listening on port %d \n", ip_txt,i,backend->port);								
+				}					
 			}
 
 		 }	
@@ -654,16 +691,74 @@ static void printServiceBackends(char* service_ip){
 	 close(fd_servers);
 }
 
-/*Interface for interacting with bpf maps*/
+static void get_stats(){
+	int fd_system_stats = open_bpf_map(file_system_stats);	
+	__u64 value = 0;
+	const char *catagories[5];
+	catagories[0] = "pps";
+	catagories[1] = "cps";
+	catagories[2] = "bps";
+	catagories[3] = "pps_droped";
+	catagories[4] = "bps_droped";
+	printf("{\n");
+	
+	printf("\"system\":{\n");
+	for (int i = 0; i < STATS_CATAGORIES_MAX; i++) {
+		value = get_key32_value64_percpu(fd_system_stats,i);
+		printf("\%s\": %d\n",catagories[i],value);
+	}
+	printf("},\n");
+	close(fd_system_stats);
+	
+	printf("\"services\":[\n");
+	__u64 service_key, *service_prev_key = NULL;	
+	service_key = NULL;
+	service_prev_key = NULL;
+	int fd_services = open_bpf_map(file_services);
+	while (bpf_map_get_next_key(fd_services, service_prev_key, &service_key) == 0) {
+		char service_ip_txt[INET_ADDRSTRLEN] = {0};
+		if (inet_ntop(AF_INET, &service_key, service_ip_txt, sizeof(service_ip_txt))){
+			printf("\"%s\":{\n",service_ip_txt);
+			printf("\"backends\":[\n");
+				 struct service *app = (struct service*)malloc(sizeof(struct service));
+				 int fd_servers = open_bpf_map(file_servers);  
+				 int res = bpf_map_lookup_elem(fd_services,&service_key,app); 
+				 if(res == 0){
+					struct dest_info *backend = NULL;
+					for(int i = 0;i < MAX_INSTANCES;++i){
+						if(app->backend_active[i] == 1){
+							backend = &(app->backends[i]);
+							char backend_ip_txt[INET_ADDRSTRLEN] = {0};
+							if (inet_ntop(AF_INET, &(backend->daddr), backend_ip_txt, sizeof(backend_ip_txt))) {	
+								printf("\"%s\":{\n",backend_ip_txt);		
+								printf("\%s\": %d\n","pps",backend->pkts);
+								printf("\%s\": %d\n","cps",backend->cons);
+								printf("\%s\": %d\n","bps",backend->bytes);
+								printf("}\n");										
+							}					
+						}
+
+					 }	
+				 }
+			printf("]\n");
+			printf("}\n");
+		}			
+		service_prev_key = &service_key;
+	}
+	close(fd_services);
+	printf("]\n");
+	printf("}\n");
+}
+
+// Interface for interacting with bpf maps.
 int main(int argc, char **argv)
 {
-#	define STR_MAX 42 /* For trivial input validation */
+#	define STR_MAX 42 
 	char _ip_string_buf[STR_MAX] = {};
 	char *ip_string = NULL;
 	char _service_ip_buf[STR_MAX] = {};
 	char *service_ip = NULL;
-	/*char _backend_ip_buf[STR_MAX] = {};
-	char *backend_ip = NULL;*/
+
 	char _mac_addr_buf[STR_MAX] = {};
 	char *mac_addr = NULL;
 	char _backend_port_buf[STR_MAX] = {};
@@ -679,6 +774,8 @@ int main(int argc, char **argv)
 	bool do_list = false;
 	bool dynamic_blacklist = false;
 	bool log = false;
+	bool modify_blacklist = false;
+	bool modify_whitelist = false;
 	int opt;
 	int dport = 0;
 	int proto = IPPROTO_TCP;
@@ -691,6 +788,12 @@ int main(int argc, char **argv)
 			break;
 		case 'x':
 			action |= ACTION_DEL;
+			break;
+		case 'z':
+			modify_blacklist = true;
+			break;
+		case 'w':
+			modify_whitelist = true;
 			break;
 		case 'i':
 			if (!optarg || strlen(optarg) >= STR_MAX) {
@@ -731,7 +834,7 @@ int main(int argc, char **argv)
 			if (optarg)
 				dport = atoi(optarg);
 			break;
-		case 's': /* shared: --stats && --sec */
+		case 's': 
 			stats = true;
 			if (optarg)
 				interval = atoi(optarg);
@@ -771,14 +874,13 @@ int main(int argc, char **argv)
 				removeBackend(service_ip,ip_string);
 			}
 		}else if (ip_string) {
-			fd_blacklist = open_bpf_map(file_blacklist);
+			if(modify_whitelist){
+				fd_blacklist = open_bpf_map(file_whitelist);
+			}else{
+				fd_blacklist = open_bpf_map(file_blacklist);
+			}
 			res = blacklist_modify(fd_blacklist, ip_string, action);
 			close(fd_blacklist);
-			if(action == ACTION_ADD){
-				init_db();
-				insert_into_blacklist(ip_string);
-				close_db();
-			}
 			
 		}
 
@@ -792,7 +894,6 @@ int main(int argc, char **argv)
 		return res;
 	}
 
-	/* Catch non-option arguments */
 	if (argv[optind] != NULL) {
 		fprintf(stderr, "ERR: Unknown non-option argument: %s\n",
 			argv[optind]);
@@ -806,8 +907,12 @@ int main(int argc, char **argv)
 			printf("{");
 			int fd_port_blacklist_count_array[DDOS_FILTER_MAX];
 			int i;
-
-			fd_blacklist = open_bpf_map(file_blacklist);
+			if(modify_whitelist){
+				fd_blacklist = open_bpf_map(file_whitelist);
+			}else{
+				fd_blacklist = open_bpf_map(file_blacklist);
+			}
+			
 			blacklist_list_all_ipv4(fd_blacklist);
 			close(fd_blacklist);
 
@@ -822,9 +927,8 @@ int main(int argc, char **argv)
 		}
 	}
 
-	// Show statistics by polling
 	if (stats) {
-		stats_poll(interval);
+		get_stats();
 	}
 	
 	if(dynamic_blacklist){
@@ -834,7 +938,7 @@ int main(int argc, char **argv)
 	if(log){
 		start_logging();
 	}
-	// TODO: implement stats for verdicts
+
 	close(fd_verdict);
 }
 
