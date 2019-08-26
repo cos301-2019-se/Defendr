@@ -82,13 +82,6 @@ struct bpf_map_def SEC("maps") logs = {
 	.map_flags   = BPF_F_NO_PREALLOC,
 };
 
-// Map containing registered back-end instances.
-struct bpf_map_def SEC("maps") servers = {
-	.type = BPF_MAP_TYPE_HASH,
-	.key_size = sizeof(u32),
-	.value_size = sizeof(struct dest_info),
-	.max_entries = MAX_SERVERS,
-};
 
 // Map containing registered services.
 struct bpf_map_def SEC("maps") services = {
@@ -117,38 +110,6 @@ struct bpf_map_def SEC("maps") system_stats = {
 	.max_entries = STATS_CATAGORIES_MAX,
 };
 
-// Map acting as counter per XDP "action" verdict.
-struct bpf_map_def SEC("maps") verdict_cnt = {
-	.type = BPF_MAP_TYPE_PERCPU_ARRAY,
-	.key_size = sizeof(u32),
-	.value_size = sizeof(long),
-	.max_entries = XDP_ACTION_MAX,
-};
-
-// Map containing blacklisted ports.
-struct bpf_map_def SEC("maps") port_blacklist = {
-	.type        = BPF_MAP_TYPE_PERCPU_ARRAY,
-	.key_size    = sizeof(u32),
-	.value_size  = sizeof(u32),
-	.max_entries = 65536,
-};
-
-
-// Map for keeping tcp drop counter.
-struct bpf_map_def SEC("maps") port_blacklist_drop_count_tcp = {
-	.type        = BPF_MAP_TYPE_PERCPU_ARRAY,
-	.key_size    = sizeof(u32),
-	.value_size  = sizeof(u64),
-	.max_entries = 65536,
-};
-
-// Map for keeping udp drop counter.
-struct bpf_map_def SEC("maps") port_blacklist_drop_count_udp = {
-	.type        = BPF_MAP_TYPE_PERCPU_ARRAY,
-	.key_size    = sizeof(u32),
-	.value_size  = sizeof(u64),
-	.max_entries = 65536,
-};
 
 /* Computes hash based on packet meta data.
  * @param a Packet ip source address.
@@ -315,60 +276,6 @@ static __always_inline struct dest_info *hash_get_dest(struct pkt_meta *pkt){
 	}
 
 
-}
-
-// Keeps stats of XDP_DROP vs XDP_PASS.
-static __always_inline
-void stats_action_verdict(u32 action)
-{
-	u64 *value;
-
-	if (action >= XDP_ACTION_MAX)
-		return;
-
-	value = bpf_map_lookup_elem(&verdict_cnt, &action);
-	if (value)
-		*value += 1;
-}
-
-/* Extracts source and destination udp ports.
- * @param off Udp header offset.
- * @param data_end End of data packet.
- * @return Port extraction success or failure.
- */
-static __always_inline bool parse_udp(void *data, __u64 off, void *data_end,
-				      struct pkt_meta *pkt)
-{
-	struct udphdr *udp;
-
-	udp = data + off;
-	if (udp + 1 > data_end)
-		return false;
-
-	pkt->port16[0] = udp->source;
-	pkt->port16[1] = udp->dest;
-
-	return true;
-}
-
-/* Extracts source and destination udp ports.
- * @param off Tcp header offset.
- * @param data_end End of data packet.
- * @return Port extraction success or failure.
- */
-static __always_inline bool parse_tcp(void *data, __u64 off, void *data_end,
-				      struct pkt_meta *pkt)
-{
-	struct tcphdr *tcp;
-
-	tcp = data + off;
-	if (tcp + 1 > data_end)
-		return false;
-
-	pkt->port16[0] = tcp->source;
-	pkt->port16[1] = tcp->dest;
-
-	return true;
 }
 
 

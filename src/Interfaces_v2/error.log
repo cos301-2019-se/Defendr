@@ -260,3 +260,18 @@ AttributeError: 'Thread' object has no attribute 'stop'
     thread.stop()
 AttributeError: 'Thread' object has no attribute 'stop'
 
+
+[2019-08-26 19:23:55] Traceback (most recent call last):
+  File "main.py", line 98, in <module>
+    LoginApp().run()
+  File "/home/darknites/.local/lib/python3.6/site-packages/kivy/app.py", line 951, in run
+    self.stop()
+  File "/home/darknites/.local/lib/python3.6/site-packages/kivy/app.py", line 971, in stop
+    self.dispatch('on_stop')
+  File "kivy/_event.pyx", line 709, in kivy._event.EventDispatcher.dispatch
+  File "main.py", line 48, in on_stop
+    Metrics.stop()
+  File "/home/darknites/shared/Defendr/src/Interfaces_v2/Metrics.py", line 60, in stop
+    thread.stop()
+AttributeError: 'Thread' object has no attribute 'stop'
+

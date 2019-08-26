@@ -40,35 +40,17 @@ static const char *__doc__=
 #include "bpf_util.h"
 #include "libbpf.h"
 
-#include "xdp_ddos01_blacklist_common.h"
+#include "defendr_xdp_common.h"
 
 static char ifname_buf[IF_NAMESIZE];
 static char *ifname = NULL;
 static int ifindex = -1;
 
-#define NR_MAPS 12
+#define NR_MAPS 7
 int maps_marked_for_export[MAX_MAPS] = { 0 };
 
 // Retreives sum of values on each cpu for given map file descriptor and key.
 
-static __u64 get_key32_value64_percpu(int fd, __u32 key){
-
-	unsigned int nr_cpus = bpf_num_possible_cpus();
-	__u64 values[nr_cpus];
-	__u64 sum = 0;
-	int i;
-
-	if ((bpf_map_lookup_elem(fd, &key, values)) != 0) {
-		fprintf(stderr,
-			"ERR: bpf_map_lookup_elem failed key:0x%X\n", key);
-		return 0;
-	}
-
-	for (i = 0; i < nr_cpus; i++) {
-		sum += values[i];
-	}
-	return sum;
-}
 
 static void print_ipv4(__u32 ip, __u64 count)
 {
@@ -100,28 +82,13 @@ static const char* map_idx_to_export_filename(int idx)
 		file =   file_logs;
 		break;
 	case 4: 
-		file =   file_servers;
-		break;
-	case 5: 
 		file =   file_services;
 		break;
-	case 6: 
+	case 5: 
 		file =   file_destinations;
 		break;
-	case 7: 
+	case 6: 
 		file =   file_system_stats;
-		break;
-	case 8: 
-		file =   file_verdict;
-		break;
-	case 9: 
-		file =   file_port_blacklist;
-		break;
-	case 10: 
-		file =   file_port_blacklist_count[DDOS_FILTER_TCP];
-		break;
-	case 11: 
-		file =   file_port_blacklist_count[DDOS_FILTER_UDP];
 		break;
 	default:
 		break;
