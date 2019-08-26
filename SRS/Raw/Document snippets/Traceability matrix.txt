@@ -1,0 +1,14 @@
+\section{ Trace-ability Matrix}
+        \begin{tabular}{|p{2.2cm}|p{1.6cm}|p{1.4cm}|p{1.4cm}|p{1.4cm}|}
+        \hline
+        \textbf{Requirement} & \textbf{Priorily}& \textbf{DoS}& \textbf{Load-balancer}& \textbf{U.I.}\\ \hline
+        R1.1 & 1 & X &  &  \\ \hline
+        R1.2 & 1 & X &  &  \\ \hline
+        R2.1 & 1 &  & X &   \\ \hline
+        R2.2 & 1 &  & X &   \\ \hline
+        R2.3 & 1 &  & X &   \\ \hline
+        R2.4 & 1 &  & X &   \\ \hline
+        R3.1 & 1 &  &  & X  \\ \hline
+        R3.2 & 1 &  &  & X  \\ \hline
+        R3.3 & 1 &  &  & X  \\ \hline
+        \end{tabular}

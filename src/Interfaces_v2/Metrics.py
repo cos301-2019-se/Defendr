@@ -87,7 +87,14 @@ def worker(database,database_connects, now, ips, locator, countries, metric, sto
 		ips = ""
 		database_connects = database.connect()
 		ips = database.get_connection_ips(database_connects, now)
-	
+connections_per_country.labels('AF').set(2)
+connections_per_country.labels('ZA').set(4)
+connections_per_country.labels('CN').set(6)
+connections_per_country.labels('AU').set(3)
+connections_per_country.labels('BS').set(8)
+connections_per_country.labels('FR').set(10)
+connections_per_country.labels('DE').set(12)
+
 stopThread = False
 thread = threading.Thread(target=worker, args=(database,database_connects, now, ips, locator, countries, connections_per_country,stopThread))
 thread.start()
