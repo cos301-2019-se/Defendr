@@ -310,3 +310,18 @@ Traceback (most recent call last):
     + str(e))
 smtplib.SMTPServerDisconnected: Connection unexpectedly closed: [Errno 104] Connection reset by peer
 
+
+[2019-08-28 13:31:46] Traceback (most recent call last):
+  File "main.py", line 103, in <module>
+    LoginApp().run()
+  File "/usr/lib/python3/dist-packages/kivy/app.py", line 856, in run
+    self.stop()
+  File "/usr/lib/python3/dist-packages/kivy/app.py", line 864, in stop
+    self.dispatch('on_stop')
+  File "kivy/_event.pyx", line 707, in kivy._event.EventDispatcher.dispatch
+  File "main.py", line 47, in on_stop
+    Metrics.stop()
+  File "/home/sisa/Documents/COS301/Defendr/src/Interfaces_v2/Metrics.py", line 60, in stop
+    thread.stop()
+AttributeError: 'Thread' object has no attribute 'stop'
+
