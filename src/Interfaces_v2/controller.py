@@ -11,23 +11,23 @@ class controller:
 	# Load the XDP program to start running.
 	def load_xdp(self):
 		my_Cmd = os.popen("cd " + self.pathToSource + " && sudo mount -t bpf bpf /sys/fs/bpf/").read()
-		my_Cmd = os.popen("cd " + self.pathToSource + " && sudo ./xdp_ddos01_blacklist --dev enp0s3 --remove --owner $USER").read()
-		my_Cmd = os.popen("cd " + self.pathToSource + " && sudo ./xdp_ddos01_blacklist --dev enp0s3 --owner $USER").read()
+		my_Cmd = os.popen("cd " + self.pathToSource + " && sudo ./defendr_xdp_cmdline --dev enp0s3 --remove --owner $USER").read()
+		my_Cmd = os.popen("cd " + self.pathToSource + " && sudo ./defendr_xdp_cmdline --dev enp0s3 --owner $USER").read()
 		return;
 		
 	# Function to add blacklisted IP's to blacklisted map.	
 	def black_list_IP(self,ip):
-		my_Cmd = os.popen("cd " + self.pathToSource + " && sudo ./xdp_ddos01_blacklist_cmdline --blacklist --add --ip " + ip).read()
+		my_Cmd = os.popen("cd " + self.pathToSource + " && sudo ./defendr_xdp_cmdline --blacklist --add --ip " + ip).read()
 		return;
 		
 	# Function to remove blacklisted ip's from blacklist map.
 	def remove_Blacklisted_IP(self,ip):
-		my_Cmd = os.popen("cd " + self.pathToSource + " && sudo ./xdp_ddos01_blacklist_cmdline --blacklist --del --ip " + ip).read()
+		my_Cmd = os.popen("cd " + self.pathToSource + " && sudo ./defendr_xdp_cmdline --blacklist --del --ip " + ip).read()
 		return;
 		
 	# Function to return all ip's from blacklist map as a string array.
 	def get_blacklisted_IP_list(self):
-		data_String = os.popen("cd " + self.pathToSource + " && sudo ./xdp_ddos01_blacklist_cmdline --blacklist --list ").read()
+		data_String = os.popen("cd " + self.pathToSource + " && sudo ./defendr_xdp_cmdline --blacklist --list ").read()
 		data_String = data_String.replace("\"80\" : {\t\"UDP\" : 0 }","")
 		data_String = data_String.replace(" : 0","")
 		data_String = data_String.replace(", }","")
@@ -48,17 +48,17 @@ class controller:
 
 	# Function to add whitelisted IP's to whitelist map.
 	def white_list_IP(self, ip):
-		my_Cmd = os.popen("cd " + self.pathToSource + " && sudo ./xdp_ddos01_blacklist_cmdline --whitelist --add --ip " + ip).read()
+		my_Cmd = os.popen("cd " + self.pathToSource + " && sudo ./defendr_xdp_cmdline --whitelist --add --ip " + ip).read()
 		return;
 
 	# Function to remove whitelisted ip's from whitelist map.
 	def remove_whitelisted_IP(self, ip):
-		my_Cmd = os.popen("cd " + self.pathToSource + " && sudo ./xdp_ddos01_blacklist_cmdline --whitelist --del --ip " + ip).read()
+		my_Cmd = os.popen("cd " + self.pathToSource + " && sudo ./defendr_xdp_cmdline --whitelist --del --ip " + ip).read()
 		return;
 
 	# Function to return all ip's from whitelist map as a string array.
 	def get_whitelisted_IP_list(self):
-		data_String = os.popen("cd " + self.pathToSource + " && sudo ./xdp_ddos01_blacklist_cmdline --whitelist --list ").read()
+		data_String = os.popen("cd " + self.pathToSource + " && sudo ./defendr_xdp_cmdline --whitelist --list ").read()
 		data_String = data_String.replace("\"80\" : {\t\"UDP\" : 0 }", "")
 		data_String = data_String.replace(" : 0", "")
 		data_String = data_String.replace(", }", "")
@@ -79,5 +79,5 @@ class controller:
 
 	# Function to return current system and recourse statistics.
 	def get_stats(self):
-		data_String = os.popen("cd " + self.pathToSource + " && sudo ./xdp_ddos01_blacklist_cmdline --stats ").read()
+		data_String = os.popen("cd " + self.pathToSource + " && sudo ./defendr_xdp_cmdline --stats ").read()
 		return data_String;
