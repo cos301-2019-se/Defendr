@@ -5,6 +5,7 @@
 
 # Log screen layout.
 <logs_window>:
+    on_pre_enter: root.add_table(log_table)
     BoxLayout:
         orientation: 'vertical'
         Toolbar:
@@ -20,7 +21,7 @@
             GridLayout:
                 size_hint_y: None
                 height: '40dp'
-                cols:2
+                cols:4
                 padding: '10dp'
                 spacing: '5dp'
                 row_force_default: 1
@@ -37,6 +38,16 @@
                     width: '50dp'
                     icon: 'search'
                     on_press: root.add_table(log_table)
+                MDIconButton:
+                    size_hint_x: None
+                    width: '50dp'
+                    icon: 'skip-previous'
+                    on_press: root.prev_pages(log_table)
+                MDIconButton:
+                    size_hint_x: None
+                    width: '50dp'
+                    icon: 'skip-next'
+                    on_press: root.next_pages(log_table)
             BoxLayout:
                 orientation: 'horizontal'
                 id: log_table

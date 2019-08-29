@@ -8,7 +8,27 @@ COS 301: Software Engineering
 
 ---
 
-### <a href="https://drive.google.com/file/d/1YpIKjrMkexBQUJt1kwayPFfWzewIW0qs/view" target="_blank">Software Requirements Document</a>
+Defendr is a blackbox implementation of a DoS protection service, as well as a net-work load-balancer for various back-end applications.The service is to be situated between the client and server where requests from the clients are to pass through the service, dropping/blacklisting offending packets/IPs.  The service should employ direct server return andresponses from the server are to be sent directly back to the client, and not routed back via the service
+
+`
+`
+
+### <a href="https://drive.google.com/file/d/1_syMPQGBAT6020fEeqEiUO-8ArlYwjXO/view?usp=sharing" target="_blank">Software Requirements Document (Demo 1)</a>
+
+`
+`
+
+### <a href="https://drive.google.com/file/d/1AWSwSsIuIKsj7wd_CvkUBbHMW9_cLq4Z/view?usp=sharing" target="_blank">User Manual</a>
+
+`
+`
+
+### <a href="https://drive.google.com/file/d/1hm-trz5-VJ8yMaATb7RwewtH19qgfXDL/view?usp=sharing" target="_blank">Coding Standard</a>
+
+`
+`
+
+### <a href="https://drive.google.com/file/d/1hm-trz5-VJ8yMaATb7RwewtH19qgfXDL/view?usp=sharing" target="_blank">Testing Policy</a>
 
 `
 `
@@ -28,7 +48,7 @@ COS 301: Software Engineering
  `
 
  
-![image](https://media.licdn.com/dms/image/C4D03AQFWIUl2J6e8wQ/profile-displayphoto-shrink_200_200/0?e=1562198400&v=beta&t=O83MvAzLuKANuQ5bpX6HocdqgED9dniiceO2emz6Ulk)
+![image](https://media.licdn.com/dms/image/C4D03AQFWIUl2J6e8wQ/profile-displayphoto-shrink_800_800/0?e=1568246400&v=beta&t=PRpolwWr9AKJhMN5BfrHZYuepV8JYWW6wXRAHQ8mMzI)
 
 ###### **Name and surname:**
 >   *Jeandre Botha*
@@ -42,12 +62,15 @@ COS 301: Software Engineering
 ###### **Link to LinkedIn account:**
 > *[Jeandre Botha](https://www.linkedin.com/in/jeandre-botha-654053b7/)*
 
+###### **Link to Github account:**
+> *[Jeandre Botha](https://github.com/jeandre-botha)*
+
 ###### **Interests:**
->  Exploring new technologies,
->  Programming,
->  Cooking,
->  Fantasy genre,
->  Video games
+>*  Exploring new technologies
+>*  Programming
+>*  Cooking
+>*  Fantasy genre
+>*  Video games
 
 ###### **Skills:**
 >*    Adaptable programmer
@@ -57,9 +80,9 @@ COS 301: Software Engineering
 > **
 
 ###### **Attitudes:**
->   diligent worker,
->   Up for any task,
->   Always willing to compromise
+>*   Diligent worker
+>*   Up for any task
+>*   Always willing to compromise
 
 
 `
@@ -80,7 +103,7 @@ COS 301: Software Engineering
 `
 `
 
-![image](https://media.licdn.com/dms/image/C5603AQEcRaGu0KZwUg/profile-displayphoto-shrink_800_800/0?e=1562198400&v=beta&t=kv-s95xApHY9iEgiK4pzpJFORObmn_9qXCQN6VISBtE)
+![image](https://media.licdn.com/dms/image/C5603AQEcRaGu0KZwUg/profile-displayphoto-shrink_800_800/0?e=1568246400&v=beta&t=p--RAkds7f-HHZbdNsYkG22_fKuUjQtNebe51gyoah4)
 
 ###### **Name and surname:**
 > *Christiaan Opperman*
@@ -90,6 +113,9 @@ COS 301: Software Engineering
 
 ###### **Link to LinkedIn account:**
 > *[Christiaan Opperman](https://www.linkedin.com/in/christiaan-opperman-7a369b184/)*
+
+###### **Link to Github account:**
+> *[Christiaan Opperman](https://github.com/Christo08)*
 
 ###### **Interests:**
 > - Fly fishing
@@ -144,7 +170,7 @@ stead. Negativity never accomplishes much.
 `
 `
 
-![image](https://media.licdn.com/dms/image/C4D03AQH8fDsAcRQH4w/profile-displayphoto-shrink_800_800/0?e=1557360000&v=beta&t=-Ob051JQyHnBh_km79iusE_eRnGIvRuawz0vm_wbkLU)
+![image](https://media.licdn.com/dms/image/C4D03AQFTSE8JZvAYxg/profile-displayphoto-shrink_800_800/0?e=1568246400&v=beta&t=Gkpn2YEJ0pipopHcOXVtECx8cVktZvoMvXCVS9vGbSI)
 
 ###### **Name and surname:**
 >*Muhammed Carrim*
@@ -155,6 +181,9 @@ stead. Negativity never accomplishes much.
 ###### **Link to LinkedIn account:**
 > *[Muhammed Carrim](https://www.linkedin.com/in/muhammed-ismail-carrim/)*
 
+###### **Link to Github account:**
+> *[Muhammed Carrim](https://github.com/MoeCarrim)*
+
 ###### **Interests:**
 > *I am a proud final year student at the University of Pretoria studying BSc IT (Software Development).
 I have always been fascinated with computers ever since I was a child. It started out because I wished to be like my mother who is also a programmer.
@@ -162,13 +191,19 @@ Thereafter I became addicted to gaming and always wanted to know how they are cr
 I like playing Tennis and Squash.*
 
 ###### **Skills:**
-> *C++, C#, SQL, Web Development, Java*
+>* C++
+>* C#
+>* SQL
+>* Web Development
+>* Java
 
 ###### **Work Experience:**
-> *Part Time At an Accounting Firm*
+>* Part Time At an Accounting Firm
 
 ###### **Attitudes:**
-> *Dedicated, Calm, Outgoing and Reserved*
+>* Dedicated
+>* Calm
+>* Outgoing and reserved
 
 
 `
@@ -201,6 +236,9 @@ I like playing Tennis and Squash.*
 ###### **Link to LinkedIn account:**
 > *[Sisa Khoza](https://www.linkedin.com/in/sisa-khoza-1b54a9100/)*
 
+###### **Link to Github account:**
+> *[Sisa Khoza](https://github.com/SisaKhoza)*
+
 ###### **Interests:**
 > - Music (playing and reading)
 > - Gaming
@@ -221,7 +259,7 @@ My duties were the same in the adult ministry, except my position was that of a 
 > - Camarero @ Aandklas (Feb 2017 - Jul 2017) - A small stint in the hospitality industry, whilst at university, to earn some extra pocket money as well as to try to take on new responsibilities, and experience a working world environment with duties and deadlines.  The responsibilities of a waiter included hosting and tending to guest needs by; ensuring the general seating areas were clean and tidy before, during and after shifts, reception of new patrons, bridging the bar, kitchen, and main guest areas as well as tending to performing artists or members that would require the venue for events.
 
 ###### **Attitudes:**
-> ***"In every mistake I make is a nuggest of learning I can take"***
+> ***"In every mistake I make is a nugget of learning I can take"***
 >
 > I am an energetic, determined character that conducts myself with courage and discipline. I have a creative, resilient mind that overcomes obstacles with a pragmatic solution. This is coupled by my need to see tasks to completion; one could perceive as insitent, yet it is a motivator that enables me to go to lengths. I am enthusiastic to learn, and have a sincere interest in software and technology.
 
@@ -252,6 +290,9 @@ My duties were the same in the adult ministry, except my position was that of a 
 ###### **Link to LinkedIn account:**
 > *[Ruslynn Appana](https://www.linkedin.com/in/ruslynn-appana-77a019155/)*
 
+###### **Link to Github account:**
+> *[Ruslynn Appana](https://github.com/Ryperior)*
+
 ###### **Interests:**
 > - Gaming
 > - Football
@@ -261,7 +302,7 @@ My duties were the same in the adult ministry, except my position was that of a 
 > - Tattoos
 
 ###### **Skills:**
-> - c++
+> - C++
 > - Java
 > - Database Management (SQL and MongoDB)
 > - HTML

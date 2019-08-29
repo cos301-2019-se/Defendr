@@ -19,43 +19,9 @@
 
 #include "bpf_util.h"
 
-#include "xdp_ddos01_blacklist_common.h"
+#include "defendr_xdp_common.h"
 //static const char *file_blacklist = "/sys/fs/bpf/ddos_blacklist";
 
-int open_bpf_map(const char *file)
-{
-	int fd;
-
-	fd = bpf_obj_get(file);
-	if (fd < 0) {
-		printf("ERR: Failed to open bpf map file:%s err(%d):%s\n",
-		       file, errno, strerror(errno));
-		exit(EXIT_FAIL_MAP_FILE);
-	}
-	return fd;
-}
-
-
-static __u64 get_key32_value64_percpu(int fd, __u32 key)
-{
-	/* For percpu maps, userspace gets a value per possible CPU */
-	unsigned int nr_cpus = bpf_num_possible_cpus();
-	__u64 values[nr_cpus];
-	__u64 sum = 0;
-	int i;
-
-	if ((bpf_map_lookup_elem(fd, &key, values)) != 0) {
-		fprintf(stderr,
-			"ERR: bpf_map_lookup_elem failed key:0x%X\n", key);
-		return 0;
-	}
-
-	/* Sum values from each CPU */
-	for (i = 0; i < nr_cpus; i++) {
-		sum += values[i];
-	}
-	return sum;
-}
 
 int main(){
 	FILE *fp,*file;
