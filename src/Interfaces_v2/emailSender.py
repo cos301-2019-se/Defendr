@@ -16,12 +16,12 @@ class email():
         text ='Warning the user accunt\'s ('+hacked_gmail+') password may being focred.\nDefendr'
         self.sendEmail(db, database,server,sub,text)
 
-    def emailForAttack(self,db, database,server,meta):
+    def email_for_attack(self,db, database,server,meta):
         sub ='Warning'
         if(meta == "cps"):
             text = 'Warining! System under extreme stress. Please see Defendr metrics'
         else:
-            text ='Ip \''+ip+'\' blacklisted because of possible attack attempt.'
+            text ='Ip \''+meta+'\' blacklisted because of possible attack attempt.'
         self.sendEmail(db, database,server,sub,text)
 
     def sendEmail(self,db, database,server, subject, body):
