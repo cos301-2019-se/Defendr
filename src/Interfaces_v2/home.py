@@ -22,4 +22,4 @@ class Home(Screen):
 
     def load_message(self):
         app = App.get_running_app()
-        self.ids['lbl_welcome_masseg'].text="Welcome To Defendr, "+str(app.facade.get_name(app.username))+". Your are login as an "+str(app.facade.get_roll(app.username)+".")
+        self.ids['lbl_welcome_masseg'].text="Welcome To Defendr, "+str(app.facade.get_name(app.username))+". Your are loged in as an "+str(app.facade.get_roll(app.username)+".")

@@ -52,8 +52,8 @@ class FacadeClass():
                 self.xdp.black_list_IP(ip)
                 self.database.add_ip(self.db_connects, ip)
     # Get the logs from database.
-    def get_logs(self, ip):
-        return self.database.find_packets(self.db_connects,ip)
+    def get_logs(self,  input, searchOn, insort, sort, skipNr, limitNr):
+        return self.database.find_packets(self.db_connects,input, searchOn, insort, sort, skipNr, limitNr)
     # List the whitelist.
     def list_white_ip(self, ip):
         return self.database.find_whiteListed_IP(self.db_connects, ip)
@@ -72,7 +72,7 @@ class FacadeClass():
             self.xdp.remove_whitelisted_IP(ip)
     # Function to register a new user.
     def register(self,name, surname, email, password, confirm_pass):
-        if (not self.database.print_user(self.db_connects)):
+        if (not self.database.print_user(self.db_connects,surname, "lastname", "lastname", 1)):
             result = self.register_user(name, surname, email, password, confirm_pass, "admin")
         else:
             result = self.register_user(name, surname, email, password, confirm_pass, "new")
@@ -137,8 +137,8 @@ class FacadeClass():
                 else:
                     return "Invalid email."
 
-    def list_user(self, name):
-        return self.database.print_user(self.db_connects,name)
+    def list_user(self, name, searchOn, insort, sort):
+        return self.database.print_user(self.db_connects,name, searchOn, insort, sort)
 
     def remove_user(self, email):
         if (self.check_email(email)):

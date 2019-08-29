@@ -86,6 +86,254 @@ AttributeError: 'LoginApp' object has no attribute 'cef'
 AttributeError: 'bool' object has no attribute 'CreateBrowserSync'
 
 
+<<<<<<< HEAD
+[2019-08-24 14:26:49] Traceback (most recent call last):
+  File "C:/Users/Chris/OneDrive/tuks/COS 301/capstone/Git/Defendr2/Defendr/src/Interfaces_v2/main.py", line 29, in <module>
+    class LoginApp(App):
+  File "C:/Users/Chris/OneDrive/tuks/COS 301/capstone/Git/Defendr2/Defendr/src/Interfaces_v2/main.py", line 44, in LoginApp
+    Metrics.start()
+NameError: name 'Metrics' is not defined
+
+
+[2019-08-29 10:15:30] Traceback (most recent call last):
+  File "C:\Users\Chris\AppData\Local\Programs\Python\Python37\lib\site-packages\kivy\lang\builder.py", line 700, in _apply_rule
+    setattr(widget_set, key, value)
+  File "kivy\weakproxy.pyx", line 35, in kivy.weakproxy.WeakProxy.__setattr__
+  File "kivy\properties.pyx", line 497, in kivy.properties.Property.__set__
+  File "kivy\properties.pyx", line 544, in kivy.properties.Property.set
+  File "kivy\properties.pyx", line 599, in kivy.properties.Property.dispatch
+  File "kivy\_event.pyx", line 1214, in kivy._event.EventObservers.dispatch
+  File "kivy\_event.pyx", line 1096, in kivy._event.EventObservers._dispatch
+  File "C:\Users\Chris\AppData\Local\Programs\Python\Python37\lib\site-packages\kivy\lang\builder.py", line 73, in call_fn
+    e_value = eval(value, idmap)
+  File "<string>", line 13, in <module>
+KeyError: 'Next Page'
+
+During handling of the above exception, another exception occurred:
+
+Traceback (most recent call last):
+  File "C:/Users/Chris/OneDrive/tuks/COS 301/capstone/Git/Defendr2/Defendr/src/Interfaces_v2/main.py", line 98, in <module>
+    LoginApp().run()
+  File "C:\Users\Chris\AppData\Local\Programs\Python\Python37\lib\site-packages\kivy\app.py", line 829, in run
+    root = self.build()
+  File "C:/Users/Chris/OneDrive/tuks/COS 301/capstone/Git/Defendr2/Defendr/src/Interfaces_v2/main.py", line 57, in build
+    self.manager.add_widget(Logs_Window(name='logs_window'))
+  File "C:\Users\Chris\AppData\Local\Programs\Python\Python37\lib\site-packages\kivy\uix\relativelayout.py", line 265, in __init__
+    super(RelativeLayout, self).__init__(**kw)
+  File "C:\Users\Chris\AppData\Local\Programs\Python\Python37\lib\site-packages\kivy\uix\floatlayout.py", line 65, in __init__
+    super(FloatLayout, self).__init__(**kwargs)
+  File "C:\Users\Chris\AppData\Local\Programs\Python\Python37\lib\site-packages\kivy\uix\layout.py", line 76, in __init__
+    super(Layout, self).__init__(**kwargs)
+  File "C:\Users\Chris\AppData\Local\Programs\Python\Python37\lib\site-packages\kivy\uix\widget.py", line 361, in __init__
+    rule_children=rule_children)
+  File "C:\Users\Chris\AppData\Local\Programs\Python\Python37\lib\site-packages\kivy\uix\widget.py", line 469, in apply_class_lang_rules
+    rule_children=rule_children)
+  File "C:\Users\Chris\AppData\Local\Programs\Python\Python37\lib\site-packages\kivy\lang\builder.py", line 538, in apply
+    rule_children=rule_children)
+  File "C:\Users\Chris\AppData\Local\Programs\Python\Python37\lib\site-packages\kivy\lang\builder.py", line 707, in _apply_rule
+    e), cause=tb)
+kivy.lang.builder.BuilderException: Parser: File "C:\Users\Chris\OneDrive\tuks\COS 301\capstone\Git\Defendr2\Defendr\src\Interfaces_v2\logs_window.kv", line 50:
+...
+     48:                    size_hint_x: None
+     49:                    width: '50dp'
+>>   50:                    icon: 'Next Page'
+     51:                    on_press: root.next_pages(log_table)
+     52:            BoxLayout:
+...
+KeyError: 'Next Page'
+  File "C:\Users\Chris\AppData\Local\Programs\Python\Python37\lib\site-packages\kivy\lang\builder.py", line 700, in _apply_rule
+    setattr(widget_set, key, value)
+  File "kivy\weakproxy.pyx", line 35, in kivy.weakproxy.WeakProxy.__setattr__
+  File "kivy\properties.pyx", line 497, in kivy.properties.Property.__set__
+  File "kivy\properties.pyx", line 544, in kivy.properties.Property.set
+  File "kivy\properties.pyx", line 599, in kivy.properties.Property.dispatch
+  File "kivy\_event.pyx", line 1214, in kivy._event.EventObservers.dispatch
+  File "kivy\_event.pyx", line 1096, in kivy._event.EventObservers._dispatch
+  File "C:\Users\Chris\AppData\Local\Programs\Python\Python37\lib\site-packages\kivy\lang\builder.py", line 73, in call_fn
+    e_value = eval(value, idmap)
+  File "<string>", line 13, in <module>
+
+
+
+[2019-08-29 10:16:09] Traceback (most recent call last):
+  File "C:\Users\Chris\AppData\Local\Programs\Python\Python37\lib\site-packages\kivy\lang\builder.py", line 700, in _apply_rule
+    setattr(widget_set, key, value)
+  File "kivy\weakproxy.pyx", line 35, in kivy.weakproxy.WeakProxy.__setattr__
+  File "kivy\properties.pyx", line 497, in kivy.properties.Property.__set__
+  File "kivy\properties.pyx", line 544, in kivy.properties.Property.set
+  File "kivy\properties.pyx", line 599, in kivy.properties.Property.dispatch
+  File "kivy\_event.pyx", line 1214, in kivy._event.EventObservers.dispatch
+  File "kivy\_event.pyx", line 1096, in kivy._event.EventObservers._dispatch
+  File "C:\Users\Chris\AppData\Local\Programs\Python\Python37\lib\site-packages\kivy\lang\builder.py", line 73, in call_fn
+    e_value = eval(value, idmap)
+  File "<string>", line 13, in <module>
+KeyError: 'Next Page'
+
+During handling of the above exception, another exception occurred:
+
+Traceback (most recent call last):
+  File "C:/Users/Chris/OneDrive/tuks/COS 301/capstone/Git/Defendr2/Defendr/src/Interfaces_v2/main.py", line 98, in <module>
+    LoginApp().run()
+  File "C:\Users\Chris\AppData\Local\Programs\Python\Python37\lib\site-packages\kivy\app.py", line 829, in run
+    root = self.build()
+  File "C:/Users/Chris/OneDrive/tuks/COS 301/capstone/Git/Defendr2/Defendr/src/Interfaces_v2/main.py", line 57, in build
+    self.manager.add_widget(Logs_Window(name='logs_window'))
+  File "C:\Users\Chris\AppData\Local\Programs\Python\Python37\lib\site-packages\kivy\uix\relativelayout.py", line 265, in __init__
+    super(RelativeLayout, self).__init__(**kw)
+  File "C:\Users\Chris\AppData\Local\Programs\Python\Python37\lib\site-packages\kivy\uix\floatlayout.py", line 65, in __init__
+    super(FloatLayout, self).__init__(**kwargs)
+  File "C:\Users\Chris\AppData\Local\Programs\Python\Python37\lib\site-packages\kivy\uix\layout.py", line 76, in __init__
+    super(Layout, self).__init__(**kwargs)
+  File "C:\Users\Chris\AppData\Local\Programs\Python\Python37\lib\site-packages\kivy\uix\widget.py", line 361, in __init__
+    rule_children=rule_children)
+  File "C:\Users\Chris\AppData\Local\Programs\Python\Python37\lib\site-packages\kivy\uix\widget.py", line 469, in apply_class_lang_rules
+    rule_children=rule_children)
+  File "C:\Users\Chris\AppData\Local\Programs\Python\Python37\lib\site-packages\kivy\lang\builder.py", line 538, in apply
+    rule_children=rule_children)
+  File "C:\Users\Chris\AppData\Local\Programs\Python\Python37\lib\site-packages\kivy\lang\builder.py", line 707, in _apply_rule
+    e), cause=tb)
+kivy.lang.builder.BuilderException: Parser: File "C:\Users\Chris\OneDrive\tuks\COS 301\capstone\Git\Defendr2\Defendr\src\Interfaces_v2\logs_window.kv", line 50:
+...
+     48:                    size_hint_x: None
+     49:                    width: '50dp'
+>>   50:                    icon: 'Next Page'
+     51:                    on_press: root.next_pages(log_table)
+     52:            BoxLayout:
+...
+KeyError: 'Next Page'
+  File "C:\Users\Chris\AppData\Local\Programs\Python\Python37\lib\site-packages\kivy\lang\builder.py", line 700, in _apply_rule
+    setattr(widget_set, key, value)
+  File "kivy\weakproxy.pyx", line 35, in kivy.weakproxy.WeakProxy.__setattr__
+  File "kivy\properties.pyx", line 497, in kivy.properties.Property.__set__
+  File "kivy\properties.pyx", line 544, in kivy.properties.Property.set
+  File "kivy\properties.pyx", line 599, in kivy.properties.Property.dispatch
+  File "kivy\_event.pyx", line 1214, in kivy._event.EventObservers.dispatch
+  File "kivy\_event.pyx", line 1096, in kivy._event.EventObservers._dispatch
+  File "C:\Users\Chris\AppData\Local\Programs\Python\Python37\lib\site-packages\kivy\lang\builder.py", line 73, in call_fn
+    e_value = eval(value, idmap)
+  File "<string>", line 13, in <module>
+
+
+
+[2019-08-29 10:16:53] Traceback (most recent call last):
+  File "C:\Users\Chris\AppData\Local\Programs\Python\Python37\lib\site-packages\kivy\lang\builder.py", line 700, in _apply_rule
+    setattr(widget_set, key, value)
+  File "kivy\weakproxy.pyx", line 35, in kivy.weakproxy.WeakProxy.__setattr__
+  File "kivy\properties.pyx", line 497, in kivy.properties.Property.__set__
+  File "kivy\properties.pyx", line 544, in kivy.properties.Property.set
+  File "kivy\properties.pyx", line 599, in kivy.properties.Property.dispatch
+  File "kivy\_event.pyx", line 1214, in kivy._event.EventObservers.dispatch
+  File "kivy\_event.pyx", line 1096, in kivy._event.EventObservers._dispatch
+  File "C:\Users\Chris\AppData\Local\Programs\Python\Python37\lib\site-packages\kivy\lang\builder.py", line 73, in call_fn
+    e_value = eval(value, idmap)
+  File "<string>", line 13, in <module>
+KeyError: 'Next Page'
+
+During handling of the above exception, another exception occurred:
+
+Traceback (most recent call last):
+  File "C:/Users/Chris/OneDrive/tuks/COS 301/capstone/Git/Defendr2/Defendr/src/Interfaces_v2/main.py", line 98, in <module>
+    LoginApp().run()
+  File "C:\Users\Chris\AppData\Local\Programs\Python\Python37\lib\site-packages\kivy\app.py", line 829, in run
+    root = self.build()
+  File "C:/Users/Chris/OneDrive/tuks/COS 301/capstone/Git/Defendr2/Defendr/src/Interfaces_v2/main.py", line 57, in build
+    self.manager.add_widget(Logs_Window(name='logs_window'))
+  File "C:\Users\Chris\AppData\Local\Programs\Python\Python37\lib\site-packages\kivy\uix\relativelayout.py", line 265, in __init__
+    super(RelativeLayout, self).__init__(**kw)
+  File "C:\Users\Chris\AppData\Local\Programs\Python\Python37\lib\site-packages\kivy\uix\floatlayout.py", line 65, in __init__
+    super(FloatLayout, self).__init__(**kwargs)
+  File "C:\Users\Chris\AppData\Local\Programs\Python\Python37\lib\site-packages\kivy\uix\layout.py", line 76, in __init__
+    super(Layout, self).__init__(**kwargs)
+  File "C:\Users\Chris\AppData\Local\Programs\Python\Python37\lib\site-packages\kivy\uix\widget.py", line 361, in __init__
+    rule_children=rule_children)
+  File "C:\Users\Chris\AppData\Local\Programs\Python\Python37\lib\site-packages\kivy\uix\widget.py", line 469, in apply_class_lang_rules
+    rule_children=rule_children)
+  File "C:\Users\Chris\AppData\Local\Programs\Python\Python37\lib\site-packages\kivy\lang\builder.py", line 538, in apply
+    rule_children=rule_children)
+  File "C:\Users\Chris\AppData\Local\Programs\Python\Python37\lib\site-packages\kivy\lang\builder.py", line 707, in _apply_rule
+    e), cause=tb)
+kivy.lang.builder.BuilderException: Parser: File "C:\Users\Chris\OneDrive\tuks\COS 301\capstone\Git\Defendr2\Defendr\src\Interfaces_v2\logs_window.kv", line 39:
+...
+     37:                    size_hint_x: None
+     38:                    width: '50dp'
+>>   39:                    icon: 'Next Page'
+     40:                    on_press: root.next_pages(log_table)
+     41:            BoxLayout:
+...
+KeyError: 'Next Page'
+  File "C:\Users\Chris\AppData\Local\Programs\Python\Python37\lib\site-packages\kivy\lang\builder.py", line 700, in _apply_rule
+    setattr(widget_set, key, value)
+  File "kivy\weakproxy.pyx", line 35, in kivy.weakproxy.WeakProxy.__setattr__
+  File "kivy\properties.pyx", line 497, in kivy.properties.Property.__set__
+  File "kivy\properties.pyx", line 544, in kivy.properties.Property.set
+  File "kivy\properties.pyx", line 599, in kivy.properties.Property.dispatch
+  File "kivy\_event.pyx", line 1214, in kivy._event.EventObservers.dispatch
+  File "kivy\_event.pyx", line 1096, in kivy._event.EventObservers._dispatch
+  File "C:\Users\Chris\AppData\Local\Programs\Python\Python37\lib\site-packages\kivy\lang\builder.py", line 73, in call_fn
+    e_value = eval(value, idmap)
+  File "<string>", line 13, in <module>
+
+
+
+[2019-08-29 10:18:32] Traceback (most recent call last):
+  File "C:\Users\Chris\AppData\Local\Programs\Python\Python37\lib\site-packages\kivy\lang\builder.py", line 700, in _apply_rule
+    setattr(widget_set, key, value)
+  File "kivy\weakproxy.pyx", line 35, in kivy.weakproxy.WeakProxy.__setattr__
+  File "kivy\properties.pyx", line 497, in kivy.properties.Property.__set__
+  File "kivy\properties.pyx", line 544, in kivy.properties.Property.set
+  File "kivy\properties.pyx", line 599, in kivy.properties.Property.dispatch
+  File "kivy\_event.pyx", line 1214, in kivy._event.EventObservers.dispatch
+  File "kivy\_event.pyx", line 1096, in kivy._event.EventObservers._dispatch
+  File "C:\Users\Chris\AppData\Local\Programs\Python\Python37\lib\site-packages\kivy\lang\builder.py", line 73, in call_fn
+    e_value = eval(value, idmap)
+  File "<string>", line 13, in <module>
+KeyError: 'next'
+
+During handling of the above exception, another exception occurred:
+
+Traceback (most recent call last):
+  File "C:/Users/Chris/OneDrive/tuks/COS 301/capstone/Git/Defendr2/Defendr/src/Interfaces_v2/main.py", line 98, in <module>
+    LoginApp().run()
+  File "C:\Users\Chris\AppData\Local\Programs\Python\Python37\lib\site-packages\kivy\app.py", line 829, in run
+    root = self.build()
+  File "C:/Users/Chris/OneDrive/tuks/COS 301/capstone/Git/Defendr2/Defendr/src/Interfaces_v2/main.py", line 57, in build
+    self.manager.add_widget(Logs_Window(name='logs_window'))
+  File "C:\Users\Chris\AppData\Local\Programs\Python\Python37\lib\site-packages\kivy\uix\relativelayout.py", line 265, in __init__
+    super(RelativeLayout, self).__init__(**kw)
+  File "C:\Users\Chris\AppData\Local\Programs\Python\Python37\lib\site-packages\kivy\uix\floatlayout.py", line 65, in __init__
+    super(FloatLayout, self).__init__(**kwargs)
+  File "C:\Users\Chris\AppData\Local\Programs\Python\Python37\lib\site-packages\kivy\uix\layout.py", line 76, in __init__
+    super(Layout, self).__init__(**kwargs)
+  File "C:\Users\Chris\AppData\Local\Programs\Python\Python37\lib\site-packages\kivy\uix\widget.py", line 361, in __init__
+    rule_children=rule_children)
+  File "C:\Users\Chris\AppData\Local\Programs\Python\Python37\lib\site-packages\kivy\uix\widget.py", line 469, in apply_class_lang_rules
+    rule_children=rule_children)
+  File "C:\Users\Chris\AppData\Local\Programs\Python\Python37\lib\site-packages\kivy\lang\builder.py", line 538, in apply
+    rule_children=rule_children)
+  File "C:\Users\Chris\AppData\Local\Programs\Python\Python37\lib\site-packages\kivy\lang\builder.py", line 707, in _apply_rule
+    e), cause=tb)
+kivy.lang.builder.BuilderException: Parser: File "C:\Users\Chris\OneDrive\tuks\COS 301\capstone\Git\Defendr2\Defendr\src\Interfaces_v2\logs_window.kv", line 48:
+...
+     46:                    size_hint_x: None
+     47:                    width: '50dp'
+>>   48:                    icon: 'next'
+     49:                    on_press: root.next_pages(log_table)
+     50:            BoxLayout:
+...
+KeyError: 'next'
+  File "C:\Users\Chris\AppData\Local\Programs\Python\Python37\lib\site-packages\kivy\lang\builder.py", line 700, in _apply_rule
+    setattr(widget_set, key, value)
+  File "kivy\weakproxy.pyx", line 35, in kivy.weakproxy.WeakProxy.__setattr__
+  File "kivy\properties.pyx", line 497, in kivy.properties.Property.__set__
+  File "kivy\properties.pyx", line 544, in kivy.properties.Property.set
+  File "kivy\properties.pyx", line 599, in kivy.properties.Property.dispatch
+  File "kivy\_event.pyx", line 1214, in kivy._event.EventObservers.dispatch
+  File "kivy\_event.pyx", line 1096, in kivy._event.EventObservers._dispatch
+  File "C:\Users\Chris\AppData\Local\Programs\Python\Python37\lib\site-packages\kivy\lang\builder.py", line 73, in call_fn
+    e_value = eval(value, idmap)
+  File "<string>", line 13, in <module>
+
+=======
 [2019-08-23 15:57:02] Traceback (most recent call last):
   File "main.py", line 98, in <module>
     LoginApp().run()
@@ -274,4 +522,5 @@ AttributeError: 'Thread' object has no attribute 'stop'
   File "/home/darknites/shared/Defendr/src/Interfaces_v2/Metrics.py", line 60, in stop
     thread.stop()
 AttributeError: 'Thread' object has no attribute 'stop'
+>>>>>>> development
 
