@@ -73,15 +73,15 @@ class database():
         return "Fail"
 
     #Function to get packets
-    def find_packets(self,db, ip):
+    def find_packets(self,db, input, searchOn, insort, sort, skipNr, limitNr):
         col = db["packets_list"]
         data =[]
-        if ip=="":
-            for x in col.find({},{"_id": 0}).sort("timestamp", -1):
+        if input=="":
+            for x in col.find({},{"_id": 0}).skip(skipNr).limit(limitNr):
                 data.append(x)
         else:
-            query = {"ip_source":{"$regex" : ip}}
-            for x in col.find(query,{"_id": 0}).sort("timestamp", -1):
+            query = {searchOn: input}
+            for x in col.find(query,{"_id": 0}).sort(insort, sort.skip(skipNr)).limit(limitNr):
                 data.append(x)
         return data
 
@@ -176,15 +176,15 @@ class database():
         col.delete_many(query)
 
     #Function to get all user for the database
-    def print_user(self,db, name):
+    def print_user(self,db, name, searchOn, insort, sort):
         col = db["user"]
         data =[]
         if name == "":
             for x in col.find({}, {"_id": 0, "salt": 0, "password": 0}).sort("lastname", 1):
                 data.append(x)
         else:
-            query = {"lastname": name }
-            for x in col.find(query, {"_id": 0, "salt": 0, "password": 0}).sort("lastname",1):
+            query = {searchOn: name }
+            for x in col.find(query, {"_id": 0, "salt": 0, "password": 0}).sort(insort,sort):
                 data.append(x)
         return data
 
