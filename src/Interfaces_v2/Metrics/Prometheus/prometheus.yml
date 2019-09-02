@@ -44,4 +44,4 @@ scrape_configs:
     # scheme defaults to 'http'.
 
     static_configs:
-    - targets: ['localhost:8000']
+    - targets: ['localhost:8000','localhost:5000','localhost:9091']

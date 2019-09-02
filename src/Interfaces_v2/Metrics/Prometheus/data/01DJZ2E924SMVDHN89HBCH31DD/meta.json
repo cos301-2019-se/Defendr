@@ -1,0 +1,17 @@
+{
+	"ulid": "01DJZ2E924SMVDHN89HBCH31DD",
+	"minTime": 1566086400000,
+	"maxTime": 1566093600000,
+	"stats": {
+		"numSamples": 694324,
+		"numSeries": 999,
+		"numChunks": 2947
+	},
+	"compaction": {
+		"level": 1,
+		"sources": [
+			"01DJZ2E924SMVDHN89HBCH31DD"
+		]
+	},
+	"version": 1
+}
