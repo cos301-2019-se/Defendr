@@ -7,7 +7,8 @@ import sys
 class Home(Screen):
 
     def load_website(self,web_url):
-        sys.excepthook = cef.ExceptHook  # To shutdown all CEF processes on error
+        # To shutdown all CEF processes on error.
+        sys.excepthook = cef.ExceptHook  
         cef.Initialize()
         cef.CreateBrowserSync(url=web_url,
                               window_title="Hello World!")
@@ -21,4 +22,4 @@ class Home(Screen):
 
     def load_message(self):
         app = App.get_running_app()
-        self.ids['lbl_welcome_masseg'].text="Welcome To Defendr, "+str(app.facade.get_name(app.username))+". Your are login as an "+str(app.facade.get_roll(app.username))
+        self.ids['lbl_welcome_masseg'].text="Welcome To Defendr, "+str(app.facade.get_name(app.username))+". Your are login as an "+str(app.facade.get_roll(app.username)+".")

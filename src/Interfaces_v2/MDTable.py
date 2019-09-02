@@ -49,6 +49,7 @@ Builder.load_string('''
         text:root.text
 <Cell>
     padding:[10,10,10,10]
+    color: 1, 1, 1, 0.9
     canvas.before:
         Color:
             rgba: app.theme_cls.accent_color

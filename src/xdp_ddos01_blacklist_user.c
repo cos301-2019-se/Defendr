@@ -49,9 +49,9 @@ static int ifindex = -1;
 #define NR_MAPS 12
 int maps_marked_for_export[MAX_MAPS] = { 0 };
 
+// Retreives sum of values on each cpu for given map file descriptor and key.
 
-static __u64 get_key32_value64_percpu(int fd, __u32 key)
-{
+static __u64 get_key32_value64_percpu(int fd, __u32 key){
 
 	unsigned int nr_cpus = bpf_num_possible_cpus();
 	__u64 values[nr_cpus];
@@ -64,7 +64,6 @@ static __u64 get_key32_value64_percpu(int fd, __u32 key)
 		return 0;
 	}
 
-	/* Sum values from each CPU */
 	for (i = 0; i < nr_cpus; i++) {
 		sum += values[i];
 	}
@@ -74,8 +73,6 @@ static __u64 get_key32_value64_percpu(int fd, __u32 key)
 static void print_ipv4(__u32 ip, __u64 count)
 {
 	char ip_txt[INET_ADDRSTRLEN] = {0};
-
-	/* Convert IPv4 addresses from binary to text form */
 	if (!inet_ntop(AF_INET, &ip, ip_txt, sizeof(ip_txt))) {
 		fprintf(stderr,
 			"ERR: Cannot convert u32 IP:0x%X to IP-txt\n", ip);
@@ -88,42 +85,42 @@ static const char* map_idx_to_export_filename(int idx)
 {
 	const char *file = NULL;
 
-	/* Mapping map_fd[idx] to export filenames */
+	// Mapping map_fd[idx] to filenames.
 	switch (idx) {
-	case 0: /* map_fd[0]: blacklist */
+	case 0: 
 		file =   file_blacklist;
 		break;
-	case 1: /* map_fd[0]: blacklist */
+	case 1: 
 		file =   file_whitelist;
 		break;
-	case 2: /* map_fd[1]: ip_watchlist */
+	case 2: 
 		file =   file_ip_watchlist;
 		break;
-	case 3: /* map_fd[2]: enter_logs */
+	case 3: 
 		file =   file_logs;
 		break;
-	case 4: /* map_fd[5]: verdict_cnt */
+	case 4: 
 		file =   file_servers;
 		break;
-	case 5: /* map_fd[5]: verdict_cnt */
+	case 5: 
 		file =   file_services;
 		break;
-	case 6: /* map_fd[5]: verdict_cnt */
+	case 6: 
 		file =   file_destinations;
 		break;
-	case 7: /* map_fd[5]: verdict_cnt */
+	case 7: 
 		file =   file_system_stats;
 		break;
-	case 8: /* map_fd[5]: verdict_cnt */
+	case 8: 
 		file =   file_verdict;
 		break;
-	case 9: /* map_fd[6]: port_blacklist */
+	case 9: 
 		file =   file_port_blacklist;
 		break;
-	case 10: /* map_fd[7]: port_blacklist_drop_count_tcp */
+	case 10: 
 		file =   file_port_blacklist_count[DDOS_FILTER_TCP];
 		break;
-	case 11: /* map_fd[8]: port_blacklist_drop_count_udp */
+	case 11: 
 		file =   file_port_blacklist_count[DDOS_FILTER_UDP];
 		break;
 	default:
@@ -132,8 +129,7 @@ static const char* map_idx_to_export_filename(int idx)
 	return file;
 }
 
-static void remove_xdp_program(int ifindex, const char *ifname, __u32 xdp_flags)
-{
+static void remove_xdp_program(int ifindex, const char *ifname, __u32 xdp_flags){
 	int i;
 	fprintf(stderr, "Removing XDP program on ifindex:%d device:%s\n",
 		ifindex, ifname);
@@ -160,8 +156,7 @@ static const struct option long_options[] = {
 	{0, 0, NULL,  0 }
 };
 
-static void usage(char *argv[])
-{
+static void usage(char *argv[]){
 	int i;
 	printf("\nDOCUMENTATION:\n%s\n", __doc__);
 	printf(" Usage: %s (options-see-below)\n",
@@ -184,9 +179,8 @@ static void usage(char *argv[])
 # define BPF_FS_MAGIC   0xcafe4a11
 #endif
 
-/* Verify BPF-filesystem is mounted on given file path */
-static int bpf_fs_check_path(const char *path)
-{
+// Verifies that BPF-filesystem is mounted on given file path.
+static int bpf_fs_check_path(const char *path){
 	struct statfs st_fs;
 	char *dname, *dir;
 	int err = 0;
@@ -218,9 +212,8 @@ static int bpf_fs_check_path(const char *path)
 	return err;
 }
 
-/* Load existing map via filesystem, if possible */
-int load_map_file(const char *file, struct bpf_map_data *map_data)
-{
+// Load existing map via filesystem.
+int load_map_file(const char *file, struct bpf_map_data *map_data){
 	int fd;
 
 	if (bpf_fs_check_path(file) < 0) {
@@ -228,9 +221,7 @@ int load_map_file(const char *file, struct bpf_map_data *map_data)
 	}
 
 	fd = bpf_obj_get(file);
-	if (fd > 0) { /* Great: map file already existed use it */
-		// FIXME: Verify map size etc is the same before returning it!
-		// data available via map->def.XXX and fdinfo
+	if (fd > 0) { 
 		if (verbose)
 			printf(" - Loaded bpf-map:%-30s from file:%s\n",
 			       map_data->name, file);
@@ -239,22 +230,8 @@ int load_map_file(const char *file, struct bpf_map_data *map_data)
 	return -1;
 }
 
-/* Map callback
- * ------------
- * The bpf-ELF loader (bpf_load.c) got support[1] for a callback, just
- * before creating the map (via bpf_create_map()).  It allow assigning
- * another FD and skips map creation.
- *
- * Using this to load map FD from via filesystem, if possible.  One
- * problem, cannot handle exporting the map here, as creation happens
- * after this step.
- *
- * [1] kernel commit 6979bcc731f9 ("samples/bpf: load_bpf.c make
- * callback fixup more flexible")
- */
-void pre_load_maps_via_fs(struct bpf_map_data *map_data, int idx)
-{
-	// Callback invoked for every map in ELF file.
+void pre_load_maps_via_fs(struct bpf_map_data *map_data, int idx){
+	
 	const char *file;
 	int fd;
 
@@ -268,8 +245,7 @@ void pre_load_maps_via_fs(struct bpf_map_data *map_data, int idx)
 	}
 }
 
-int export_map_idx(int map_idx)
-{
+int export_map_idx(int map_idx){
 	const char *file;
 
 	file = map_idx_to_export_filename(map_idx);
@@ -285,8 +261,7 @@ int export_map_idx(int map_idx)
 	return 0;
 }
 
-void export_maps(void)
-{
+void export_maps(void){
 	int i;
 
 	for (i = 0; i < NR_MAPS; i++) {
@@ -295,8 +270,7 @@ void export_maps(void)
 	}
 }
 
-void chown_maps(uid_t owner, gid_t group)
-{
+void chown_maps(uid_t owner, gid_t group){
 	const char *file;
 	int i;
 
@@ -310,8 +284,7 @@ void chown_maps(uid_t owner, gid_t group)
 	}
 }
 
-int main(int argc, char **argv)
-{	
+int main(int argc, char **argv){	
 	struct rlimit r = {RLIM_INFINITY, RLIM_INFINITY};
 	bool rm_xdp_prog = false;
 	struct passwd *pwd = NULL;

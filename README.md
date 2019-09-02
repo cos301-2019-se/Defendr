@@ -13,32 +13,32 @@ Defendr is a blackbox implementation of a DoS protection service, as well as a n
 `
 `
 
-### <a href="https://drive.google.com/file/d/12lWlNqLMakbBdxp8IxxH6u5-TMqxnW7D/view?usp=sharing" target="_blank">Architectural Design Documentation</a>
+### <a href="https://drive.google.com/file/d/1hR0j3fSVDyHWPes38qg3WsU3CEKUnghQ/view?usp=sharing" target="_blank">Software Requirements Document (Demo 3)</a>
 
 `
 `
 
-### <a href="https://drive.google.com/file/d/1LASrOt7MnLXvpOV89-Eq7HVsKEluTsTM/view?usp=sharing" target="_blank">Software Requirements Document (Demo 1)</a>
+### <a href="https://drive.google.com/file/d/1KIa0Rp27dmP_SayKDEoJ897g3Y9T9_E6/view?usp=sharing" target="_blank">Software Requirements Document (Demo 2)</a>
 
 `
 `
 
-### <a href="https://drive.google.com/file/d/1lQrsK80WkzSHFOb_ew1RPfzolIgkVlmZ/view?usp=sharing" target="_blank">Software Requirements Document (Demo 2)</a>
+### <a href="https://drive.google.com/file/d/1iBiAUn9Z2I8EpoNARxNiEECTwpGjxXim/view?usp=sharing" target="_blank">Software Requirements Document (Demo 1)</a>
 
 `
 `
 
-### <a href="https://drive.google.com/file/d/1TRBQrFRx0iwxMMUtkGlSVumI3VkQ3ZjG/view?usp=sharing" target="_blank">Coding Standard Document</a>
+### <a href="https://drive.google.com/file/d/1ozC61SHbWyGSOasmRO3glmpFbCWPG8-t/view?usp=sharing" target="_blank">User Manual</a>
 
 `
 `
 
-### <a href="https://drive.google.com/file/d/1GaG2lYligBqRzxT4GrjQeNrCG4T2j0UW/view?usp=sharing" target="_blank">Testing Policy Document</a>
+### <a href="https://drive.google.com/file/d/1e0YlB_-IqQ3uM476uTTa4XBMNXe2gJPN/view?usp=sharing" target="_blank">Coding Standard</a>
 
 `
 `
 
-### <a href="https://drive.google.com/file/d/1gekeanJVubRhE5_ukOjBSQMi16hlI7eb/view?usp=sharing" target="_blank">User Manual Document</a>
+### <a href="https://drive.google.com/file/d/1khAOdUIoiPt9F8vz61K2TXLu7uXjTsiB/view?usp=sharing" target="_blank">Testing Policy</a>
 
 `
 `
@@ -71,6 +71,9 @@ Defendr is a blackbox implementation of a DoS protection service, as well as a n
 
 ###### **Link to LinkedIn account:**
 > *[Jeandre Botha](https://www.linkedin.com/in/jeandre-botha-654053b7/)*
+
+###### **Link to Github account:**
+> *[Jeandre Botha](https://github.com/jeandre-botha)*
 
 ###### **Interests:**
 >*  Exploring new technologies
@@ -120,6 +123,9 @@ Defendr is a blackbox implementation of a DoS protection service, as well as a n
 
 ###### **Link to LinkedIn account:**
 > *[Christiaan Opperman](https://www.linkedin.com/in/christiaan-opperman-7a369b184/)*
+
+###### **Link to Github account:**
+> *[Christiaan Opperman](https://github.com/Christo08)*
 
 ###### **Interests:**
 > - Fly fishing
@@ -185,6 +191,9 @@ stead. Negativity never accomplishes much.
 ###### **Link to LinkedIn account:**
 > *[Muhammed Carrim](https://www.linkedin.com/in/muhammed-ismail-carrim/)*
 
+###### **Link to Github account:**
+> *[Muhammed Carrim](https://github.com/MoeCarrim)*
+
 ###### **Interests:**
 > *I am a proud final year student at the University of Pretoria studying BSc IT (Software Development).
 I have always been fascinated with computers ever since I was a child. It started out because I wished to be like my mother who is also a programmer.
@@ -237,6 +246,9 @@ I like playing Tennis and Squash.*
 ###### **Link to LinkedIn account:**
 > *[Sisa Khoza](https://www.linkedin.com/in/sisa-khoza-1b54a9100/)*
 
+###### **Link to Github account:**
+> *[Sisa Khoza](https://github.com/SisaKhoza)*
+
 ###### **Interests:**
 > - Music (playing and reading)
 > - Gaming
@@ -287,6 +299,9 @@ My duties were the same in the adult ministry, except my position was that of a 
 
 ###### **Link to LinkedIn account:**
 > *[Ruslynn Appana](https://www.linkedin.com/in/ruslynn-appana-77a019155/)*
+
+###### **Link to Github account:**
+> *[Ruslynn Appana](https://github.com/Ryperior)*
 
 ###### **Interests:**
 > - Gaming

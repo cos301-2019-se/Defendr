@@ -1,5 +1,8 @@
 {
     "files.associations": {
-        "Database.C": "cpp"
+        "Database.C": "cpp",
+        "DatabaseTest.C": "cpp",
+        "Test.C": "cpp",
+        "iostream": "cpp"
     }
 }

@@ -38,11 +38,14 @@ sudo pip3 install pygments
 sudo pip3 install docutils
 sudo pip3 install cython
 sudo pip3 install kivy
+sudo pip3 install prometheus-client
+sudo pip3 install IP2Location
 sudo apt install -y gradle
 sudo apt install -y net-tools
 sudo apt install -y apache2
 sudo apt-get install -y libtool
 sudo apt-get install -y autoconf
+sudo apt-get install -y arptables
 cd src
 sudo rm -r IP2Location-C-Library-master
 unzip IP2Location-C-Library-master.zip
@@ -55,9 +58,7 @@ cd data
 sudo perl ip-country.pl
 cd ../../
 make
-sudo chmod +x /Interfaces/Metrics/Prometheus/prometheus
-sudo chmod +x /Interfaces/Metrics/node_exporter/node_exporter
-sudo chmod +x /Interfaces/Metrics/Grafana/bin/grafana-server
+sudo ldconfig
 cd Interfaces_v2
 wget https://github.com/chrislim2888/IP2Location-Python/archive/master.zip
 unzip master.zip

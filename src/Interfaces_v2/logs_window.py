@@ -16,7 +16,7 @@ from MDTable import Table
 
 class Logs_Window(Screen):
     table =""
-    def add_table(self,id,list):
+    def add_table(self,id):
         ip =self.ids["log_search_text"].text
         app = App.get_running_app()
         if(not(self.table=="")):

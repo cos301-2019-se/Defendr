@@ -80,7 +80,7 @@ class database():
             for x in col.find({},{"_id": 0}).sort("timestamp", -1):
                 data.append(x)
         else:
-            query = {"ip_source": ip}
+            query = {"ip_source":{"$regex" : ip}}
             for x in col.find(query,{"_id": 0}).sort("timestamp", -1):
                 data.append(x)
         return data
@@ -176,11 +176,16 @@ class database():
         col.delete_many(query)
 
     #Function to get all user for the database
-    def print_user(self,db):
-        my_col = db["user"]
+    def print_user(self,db, name):
+        col = db["user"]
         data =[]
-        for x in my_col.find({}, {"_id": 0, "salt": 0, "password": 0}):
-            data.append(x)
+        if name == "":
+            for x in col.find({}, {"_id": 0, "salt": 0, "password": 0}).sort("lastname", 1):
+                data.append(x)
+        else:
+            query = {"lastname": name }
+            for x in col.find(query, {"_id": 0, "salt": 0, "password": 0}).sort("lastname",1):
+                data.append(x)
         return data
 
     #Function to check in an user is in the database

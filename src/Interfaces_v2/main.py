@@ -38,7 +38,8 @@ class LoginApp(App):
     roll="user"
     email="12"
     facade="start"
-    sys.excepthook = cef.ExceptHook  # To shutdown all CEF processes on error
+    # To shutdown all CEF processes on error.
+    sys.excepthook = cef.ExceptHook  
     cef.Initialize()
     Metrics.start()
 
@@ -91,12 +92,6 @@ class LoginApp(App):
         cef.CreateBrowserSync(url=web_url,
                               window_title=title)
         cef.MessageLoop()
-
-
-
-
-
-
 
 
 if __name__ == '__main__':

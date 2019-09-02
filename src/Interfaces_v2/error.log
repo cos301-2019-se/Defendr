@@ -86,242 +86,177 @@ AttributeError: 'LoginApp' object has no attribute 'cef'
 AttributeError: 'bool' object has no attribute 'CreateBrowserSync'
 
 
-[2019-08-19 14:53:05] Traceback (most recent call last):
-  File "main.py", line 29, in <module>
-    class LoginApp(App):
-  File "main.py", line 43, in LoginApp
-    Metrics.start()
-  File "/home/sisa/Documents/COS301/Defendr/src/Interfaces_v2/Metrics.py", line 27, in start
-    subprocess.Popen('./node_exporter', cwd='Metrics/node_exporter')
-  File "/usr/lib/python3.6/subprocess.py", line 729, in __init__
-    restore_signals, start_new_session)
-  File "/usr/lib/python3.6/subprocess.py", line 1364, in _execute_child
-    raise child_exception_type(errno_num, err_msg, err_filename)
-FileNotFoundError: [Errno 2] No such file or directory: 'Metrics/node_exporter': 'Metrics/node_exporter'
-
-
-[2019-08-19 14:55:25] Traceback (most recent call last):
-  File "main.py", line 29, in <module>
-    class LoginApp(App):
-  File "main.py", line 43, in LoginApp
-    Metrics.start()
-  File "/home/sisa/Documents/COS301/Defendr/src/Interfaces_v2/Metrics.py", line 27, in start
-    subprocess.Popen('./node_exporter', cwd='Metrics/node_exporter')
-  File "/usr/lib/python3.6/subprocess.py", line 729, in __init__
-    restore_signals, start_new_session)
-  File "/usr/lib/python3.6/subprocess.py", line 1364, in _execute_child
-    raise child_exception_type(errno_num, err_msg, err_filename)
-FileNotFoundError: [Errno 2] No such file or directory: 'Metrics/node_exporter': 'Metrics/node_exporter'
-
-
-[2019-08-22 02:29:43] Traceback (most recent call last):
-  File "main.py", line 103, in <module>
+[2019-08-23 15:57:02] Traceback (most recent call last):
+  File "main.py", line 98, in <module>
     LoginApp().run()
-  File "/usr/lib/python3/dist-packages/kivy/app.py", line 856, in run
-    self.stop()
-  File "/usr/lib/python3/dist-packages/kivy/app.py", line 864, in stop
-    self.dispatch('on_stop')
-  File "kivy/_event.pyx", line 707, in kivy._event.EventDispatcher.dispatch
-  File "main.py", line 47, in on_stop
-    Metrics.stop()
-  File "/home/sisa/Documents/COS301/Defendr/src/Interfaces_v2/Metrics.py", line 70, in stop
-    thread.stop()
-AttributeError: 'Thread' object has no attribute 'stop'
-
-
-[2019-08-22 02:35:18] Traceback (most recent call last):
-  File "main.py", line 103, in <module>
-    LoginApp().run()
-  File "/usr/lib/python3/dist-packages/kivy/app.py", line 856, in run
-    self.stop()
-  File "/usr/lib/python3/dist-packages/kivy/app.py", line 864, in stop
-    self.dispatch('on_stop')
-  File "kivy/_event.pyx", line 707, in kivy._event.EventDispatcher.dispatch
-  File "main.py", line 47, in on_stop
-    Metrics.stop()
-  File "/home/sisa/Documents/COS301/Defendr/src/Interfaces_v2/Metrics.py", line 69, in stop
-    thread.stop()
-AttributeError: 'Thread' object has no attribute 'stop'
-
-
-[2019-08-22 03:04:38] Traceback (most recent call last):
-  File "main.py", line 103, in <module>
-    LoginApp().run()
-  File "/usr/lib/python3/dist-packages/kivy/app.py", line 856, in run
-    self.stop()
-  File "/usr/lib/python3/dist-packages/kivy/app.py", line 864, in stop
-    self.dispatch('on_stop')
-  File "kivy/_event.pyx", line 707, in kivy._event.EventDispatcher.dispatch
-  File "main.py", line 47, in on_stop
-    Metrics.stop()
-  File "/home/sisa/Documents/COS301/Defendr/src/Interfaces_v2/Metrics.py", line 67, in stop
-    thread.stop()
-AttributeError: 'Thread' object has no attribute 'stop'
-
-
-[2019-08-22 03:06:29] Traceback (most recent call last):
-  File "main.py", line 103, in <module>
-    LoginApp().run()
-  File "/usr/lib/python3/dist-packages/kivy/app.py", line 856, in run
-    self.stop()
-  File "/usr/lib/python3/dist-packages/kivy/app.py", line 864, in stop
-    self.dispatch('on_stop')
-  File "kivy/_event.pyx", line 707, in kivy._event.EventDispatcher.dispatch
-  File "main.py", line 47, in on_stop
-    Metrics.stop()
-  File "/home/sisa/Documents/COS301/Defendr/src/Interfaces_v2/Metrics.py", line 67, in stop
-    thread.stop()
-AttributeError: 'Thread' object has no attribute 'stop'
-
-
-[2019-08-22 03:18:20] Traceback (most recent call last):
-  File "main.py", line 103, in <module>
-    LoginApp().run()
-  File "/usr/lib/python3/dist-packages/kivy/app.py", line 856, in run
-    self.stop()
-  File "/usr/lib/python3/dist-packages/kivy/app.py", line 864, in stop
-    self.dispatch('on_stop')
-  File "kivy/_event.pyx", line 707, in kivy._event.EventDispatcher.dispatch
-  File "main.py", line 47, in on_stop
-    Metrics.stop()
-  File "/home/sisa/Documents/COS301/Defendr/src/Interfaces_v2/Metrics.py", line 67, in stop
-    thread.stop()
-AttributeError: 'Thread' object has no attribute 'stop'
-
-
-[2019-08-22 03:42:58] Traceback (most recent call last):
-  File "main.py", line 103, in <module>
-    LoginApp().run()
-  File "/usr/lib/python3/dist-packages/kivy/app.py", line 856, in run
-    self.stop()
-  File "/usr/lib/python3/dist-packages/kivy/app.py", line 864, in stop
-    self.dispatch('on_stop')
-  File "kivy/_event.pyx", line 707, in kivy._event.EventDispatcher.dispatch
-  File "main.py", line 47, in on_stop
-    Metrics.stop()
-  File "/home/sisa/Documents/COS301/Defendr/src/Interfaces_v2/Metrics.py", line 67, in stop
-    thread.stop()
-AttributeError: 'Thread' object has no attribute 'stop'
-
-
-[2019-08-22 03:46:15] Traceback (most recent call last):
-  File "main.py", line 103, in <module>
-    LoginApp().run()
-  File "/usr/lib/python3/dist-packages/kivy/app.py", line 856, in run
-    self.stop()
-  File "/usr/lib/python3/dist-packages/kivy/app.py", line 864, in stop
-    self.dispatch('on_stop')
-  File "kivy/_event.pyx", line 707, in kivy._event.EventDispatcher.dispatch
-  File "main.py", line 47, in on_stop
-    Metrics.stop()
-  File "/home/sisa/Documents/COS301/Defendr/src/Interfaces_v2/Metrics.py", line 67, in stop
-    thread.stop()
-AttributeError: 'Thread' object has no attribute 'stop'
-
-
-[2019-08-22 03:50:40] Traceback (most recent call last):
-  File "main.py", line 103, in <module>
-    LoginApp().run()
-  File "/usr/lib/python3/dist-packages/kivy/app.py", line 856, in run
-    self.stop()
-  File "/usr/lib/python3/dist-packages/kivy/app.py", line 864, in stop
-    self.dispatch('on_stop')
-  File "kivy/_event.pyx", line 707, in kivy._event.EventDispatcher.dispatch
-  File "main.py", line 47, in on_stop
-    Metrics.stop()
-  File "/home/sisa/Documents/COS301/Defendr/src/Interfaces_v2/Metrics.py", line 67, in stop
-    thread.stop()
-AttributeError: 'Thread' object has no attribute 'stop'
-
-
-[2019-08-22 03:56:38] Traceback (most recent call last):
-  File "main.py", line 103, in <module>
-    LoginApp().run()
-  File "/usr/lib/python3/dist-packages/kivy/app.py", line 856, in run
-    self.stop()
-  File "/usr/lib/python3/dist-packages/kivy/app.py", line 864, in stop
-    self.dispatch('on_stop')
-  File "kivy/_event.pyx", line 707, in kivy._event.EventDispatcher.dispatch
-  File "main.py", line 47, in on_stop
-    Metrics.stop()
-  File "/home/sisa/Documents/COS301/Defendr/src/Interfaces_v2/Metrics.py", line 67, in stop
-    thread.stop()
-AttributeError: 'Thread' object has no attribute 'stop'
-
-
-[2019-08-22 04:30:57] Traceback (most recent call last):
-  File "main.py", line 103, in <module>
-    LoginApp().run()
-  File "/usr/lib/python3/dist-packages/kivy/app.py", line 856, in run
-    self.stop()
-  File "/usr/lib/python3/dist-packages/kivy/app.py", line 864, in stop
-    self.dispatch('on_stop')
-  File "kivy/_event.pyx", line 707, in kivy._event.EventDispatcher.dispatch
-  File "main.py", line 47, in on_stop
-    Metrics.stop()
-  File "/home/sisa/Documents/COS301/Defendr/src/Interfaces_v2/Metrics.py", line 60, in stop
-    thread.stop()
-AttributeError: 'Thread' object has no attribute 'stop'
-
-
-[2019-08-22 09:20:27] Traceback (most recent call last):
-  File "/usr/lib/python3.6/smtplib.py", line 387, in getreply
-    line = self.file.readline(_MAXLINE + 1)
-  File "/usr/lib/python3.6/socket.py", line 586, in readinto
-    return self._sock.recv_into(b)
-ConnectionResetError: [Errno 104] Connection reset by peer
-
-During handling of the above exception, another exception occurred:
-
-Traceback (most recent call last):
-  File "main.py", line 103, in <module>
-    LoginApp().run()
-  File "/usr/lib/python3/dist-packages/kivy/app.py", line 829, in run
-    root = self.build()
-  File "main.py", line 51, in build
-    self.manager.add_widget(Login(name='login'))
-  File "/usr/lib/python3/dist-packages/kivy/uix/screenmanager.py", line 992, in add_widget
-    self.current = screen.name
-  File "kivy/properties.pyx", line 497, in kivy.properties.Property.__set__
-  File "kivy/properties.pyx", line 544, in kivy.properties.Property.set
-  File "kivy/properties.pyx", line 599, in kivy.properties.Property.dispatch
-  File "kivy/_event.pyx", line 1214, in kivy._event.EventObservers.dispatch
-  File "kivy/_event.pyx", line 1120, in kivy._event.EventObservers._dispatch
-  File "/usr/lib/python3/dist-packages/kivy/uix/screenmanager.py", line 1054, in on_current
-    screen.dispatch('on_pre_enter')
-  File "kivy/_event.pyx", line 703, in kivy._event.EventDispatcher.dispatch
-  File "kivy/_event.pyx", line 1214, in kivy._event.EventObservers.dispatch
-  File "kivy/_event.pyx", line 1098, in kivy._event.EventObservers._dispatch
-  File "/usr/lib/python3/dist-packages/kivy/lang/builder.py", line 64, in custom_callback
+  File "/home/darknites/.local/lib/python3.6/site-packages/kivy/app.py", line 950, in run
+    runTouchApp()
+  File "/home/darknites/.local/lib/python3.6/site-packages/kivy/base.py", line 560, in runTouchApp
+    EventLoop.mainloop()
+  File "/home/darknites/.local/lib/python3.6/site-packages/kivy/base.py", line 334, in mainloop
+    self.idle()
+  File "/home/darknites/.local/lib/python3.6/site-packages/kivy/base.py", line 378, in idle
+    self.dispatch_input()
+  File "/home/darknites/.local/lib/python3.6/site-packages/kivy/base.py", line 329, in dispatch_input
+    post_dispatch_input(*pop(0))
+  File "/home/darknites/.local/lib/python3.6/site-packages/kivy/base.py", line 235, in post_dispatch_input
+    listener.dispatch('on_motion', etype, me)
+  File "kivy/_event.pyx", line 709, in kivy._event.EventDispatcher.dispatch
+  File "/home/darknites/.local/lib/python3.6/site-packages/kivy/core/window/__init__.py", line 1407, in on_motion
+    self.dispatch('on_touch_down', me)
+  File "kivy/_event.pyx", line 709, in kivy._event.EventDispatcher.dispatch
+  File "/home/darknites/.local/lib/python3.6/site-packages/kivy/core/window/__init__.py", line 1423, in on_touch_down
+    if w.dispatch('on_touch_down', touch):
+  File "kivy/_event.pyx", line 709, in kivy._event.EventDispatcher.dispatch
+  File "/home/darknites/.local/lib/python3.6/site-packages/kivy/uix/screenmanager.py", line 1193, in on_touch_down
+    return super(ScreenManager, self).on_touch_down(touch)
+  File "/home/darknites/.local/lib/python3.6/site-packages/kivy/uix/widget.py", line 545, in on_touch_down
+    if child.dispatch('on_touch_down', touch):
+  File "kivy/_event.pyx", line 709, in kivy._event.EventDispatcher.dispatch
+  File "/home/darknites/.local/lib/python3.6/site-packages/kivy/uix/relativelayout.py", line 297, in on_touch_down
+    ret = super(RelativeLayout, self).on_touch_down(touch)
+  File "/home/darknites/.local/lib/python3.6/site-packages/kivy/uix/widget.py", line 545, in on_touch_down
+    if child.dispatch('on_touch_down', touch):
+  File "kivy/_event.pyx", line 709, in kivy._event.EventDispatcher.dispatch
+  File "/home/darknites/.local/lib/python3.6/site-packages/kivy/uix/widget.py", line 545, in on_touch_down
+    if child.dispatch('on_touch_down', touch):
+  File "kivy/_event.pyx", line 709, in kivy._event.EventDispatcher.dispatch
+  File "/home/darknites/.local/lib/python3.6/site-packages/kivy/uix/widget.py", line 545, in on_touch_down
+    if child.dispatch('on_touch_down', touch):
+  File "kivy/_event.pyx", line 709, in kivy._event.EventDispatcher.dispatch
+  File "/home/darknites/.local/lib/python3.6/site-packages/kivy/uix/widget.py", line 545, in on_touch_down
+    if child.dispatch('on_touch_down', touch):
+  File "kivy/_event.pyx", line 709, in kivy._event.EventDispatcher.dispatch
+  File "/home/darknites/.local/lib/python3.6/site-packages/kivy/uix/widget.py", line 545, in on_touch_down
+    if child.dispatch('on_touch_down', touch):
+  File "kivy/_event.pyx", line 709, in kivy._event.EventDispatcher.dispatch
+  File "/home/darknites/.local/lib/python3.6/site-packages/kivy/uix/widget.py", line 545, in on_touch_down
+    if child.dispatch('on_touch_down', touch):
+  File "kivy/_event.pyx", line 709, in kivy._event.EventDispatcher.dispatch
+  File "/home/darknites/.local/lib/python3.6/site-packages/kivy/uix/widget.py", line 545, in on_touch_down
+    if child.dispatch('on_touch_down', touch):
+  File "kivy/_event.pyx", line 709, in kivy._event.EventDispatcher.dispatch
+  File "/home/darknites/.local/lib/python3.6/site-packages/kivy/uix/widget.py", line 545, in on_touch_down
+    if child.dispatch('on_touch_down', touch):
+  File "kivy/_event.pyx", line 709, in kivy._event.EventDispatcher.dispatch
+  File "/home/darknites/.local/lib/python3.6/site-packages/kivy/uix/behaviors/button.py", line 151, in on_touch_down
+    self.dispatch('on_press')
+  File "kivy/_event.pyx", line 705, in kivy._event.EventDispatcher.dispatch
+  File "kivy/_event.pyx", line 1248, in kivy._event.EventObservers.dispatch
+  File "kivy/_event.pyx", line 1132, in kivy._event.EventObservers._dispatch
+  File "/home/darknites/.local/lib/python3.6/site-packages/kivy/lang/builder.py", line 57, in custom_callback
     exec(__kvlang__.co_value, idmap)
-  File "/home/sisa/Documents/COS301/Defendr/src/Interfaces_v2/login.kv", line 6, in <module>
-    on_pre_enter: root.connect()
-  File "/home/sisa/Documents/COS301/Defendr/src/Interfaces_v2/login.py", line 30, in connect
-    facade = FacadeClass()
-  File "/home/sisa/Documents/COS301/Defendr/src/Interfaces_v2/Facade.py", line 19, in __init__
-    self.smpt_connects = self.smpt.connectToSMTPserver()
-  File "/home/sisa/Documents/COS301/Defendr/src/Interfaces_v2/emailSender.py", line 32, in connectToSMTPserver
-    server = smtplib.SMTP('mail.darknites.co.za', 587 )
-  File "/usr/lib/python3.6/smtplib.py", line 251, in __init__
-    (code, msg) = self.connect(host, port)
-  File "/usr/lib/python3.6/smtplib.py", line 338, in connect
-    (code, msg) = self.getreply()
-  File "/usr/lib/python3.6/smtplib.py", line 391, in getreply
-    + str(e))
-smtplib.SMTPServerDisconnected: Connection unexpectedly closed: [Errno 104] Connection reset by peer
+  File "/home/darknites/Documents/master/Defendr/src/Interfaces_v2/blacklist_window.kv", line 67, in <module>
+    on_press: root.remove_IP(txt_ip_addr.text)
+  File "/home/darknites/Documents/master/Defendr/src/Interfaces_v2/blacklist_window.py", line 33, in remove_IP
+    app.remove_black_ip(ip_addr)
+AttributeError: 'LoginApp' object has no attribute 'remove_black_ip'
 
 
-[2019-08-28 13:31:46] Traceback (most recent call last):
-  File "main.py", line 103, in <module>
+[2019-08-23 16:06:12] Traceback (most recent call last):
+  File "main.py", line 98, in <module>
     LoginApp().run()
-  File "/usr/lib/python3/dist-packages/kivy/app.py", line 856, in run
+  File "/home/darknites/.local/lib/python3.6/site-packages/kivy/app.py", line 951, in run
     self.stop()
-  File "/usr/lib/python3/dist-packages/kivy/app.py", line 864, in stop
+  File "/home/darknites/.local/lib/python3.6/site-packages/kivy/app.py", line 971, in stop
     self.dispatch('on_stop')
-  File "kivy/_event.pyx", line 707, in kivy._event.EventDispatcher.dispatch
-  File "main.py", line 47, in on_stop
+  File "kivy/_event.pyx", line 709, in kivy._event.EventDispatcher.dispatch
+  File "main.py", line 48, in on_stop
     Metrics.stop()
-  File "/home/sisa/Documents/COS301/Defendr/src/Interfaces_v2/Metrics.py", line 60, in stop
+  File "/home/darknites/Documents/master/Defendr/src/Interfaces_v2/Metrics.py", line 60, in stop
+    thread.stop()
+AttributeError: 'Thread' object has no attribute 'stop'
+
+
+[2019-08-23 16:48:15] Traceback (most recent call last):
+  File "main.py", line 98, in <module>
+    LoginApp().run()
+  File "/home/darknites/.local/lib/python3.6/site-packages/kivy/app.py", line 950, in run
+    runTouchApp()
+  File "/home/darknites/.local/lib/python3.6/site-packages/kivy/base.py", line 560, in runTouchApp
+    EventLoop.mainloop()
+  File "/home/darknites/.local/lib/python3.6/site-packages/kivy/base.py", line 334, in mainloop
+    self.idle()
+  File "/home/darknites/.local/lib/python3.6/site-packages/kivy/base.py", line 378, in idle
+    self.dispatch_input()
+  File "/home/darknites/.local/lib/python3.6/site-packages/kivy/base.py", line 329, in dispatch_input
+    post_dispatch_input(*pop(0))
+  File "/home/darknites/.local/lib/python3.6/site-packages/kivy/base.py", line 235, in post_dispatch_input
+    listener.dispatch('on_motion', etype, me)
+  File "kivy/_event.pyx", line 709, in kivy._event.EventDispatcher.dispatch
+  File "/home/darknites/.local/lib/python3.6/site-packages/kivy/core/window/__init__.py", line 1407, in on_motion
+    self.dispatch('on_touch_down', me)
+  File "kivy/_event.pyx", line 709, in kivy._event.EventDispatcher.dispatch
+  File "/home/darknites/.local/lib/python3.6/site-packages/kivy/core/window/__init__.py", line 1423, in on_touch_down
+    if w.dispatch('on_touch_down', touch):
+  File "kivy/_event.pyx", line 709, in kivy._event.EventDispatcher.dispatch
+  File "/home/darknites/.local/lib/python3.6/site-packages/kivy/uix/screenmanager.py", line 1193, in on_touch_down
+    return super(ScreenManager, self).on_touch_down(touch)
+  File "/home/darknites/.local/lib/python3.6/site-packages/kivy/uix/widget.py", line 545, in on_touch_down
+    if child.dispatch('on_touch_down', touch):
+  File "kivy/_event.pyx", line 709, in kivy._event.EventDispatcher.dispatch
+  File "/home/darknites/.local/lib/python3.6/site-packages/kivy/uix/relativelayout.py", line 297, in on_touch_down
+    ret = super(RelativeLayout, self).on_touch_down(touch)
+  File "/home/darknites/.local/lib/python3.6/site-packages/kivy/uix/widget.py", line 545, in on_touch_down
+    if child.dispatch('on_touch_down', touch):
+  File "kivy/_event.pyx", line 709, in kivy._event.EventDispatcher.dispatch
+  File "/home/darknites/.local/lib/python3.6/site-packages/kivy/uix/widget.py", line 545, in on_touch_down
+    if child.dispatch('on_touch_down', touch):
+  File "kivy/_event.pyx", line 709, in kivy._event.EventDispatcher.dispatch
+  File "/home/darknites/.local/lib/python3.6/site-packages/kivy/uix/widget.py", line 545, in on_touch_down
+    if child.dispatch('on_touch_down', touch):
+  File "kivy/_event.pyx", line 709, in kivy._event.EventDispatcher.dispatch
+  File "/home/darknites/.local/lib/python3.6/site-packages/kivy/uix/widget.py", line 545, in on_touch_down
+    if child.dispatch('on_touch_down', touch):
+  File "kivy/_event.pyx", line 709, in kivy._event.EventDispatcher.dispatch
+  File "/home/darknites/.local/lib/python3.6/site-packages/kivy/uix/widget.py", line 545, in on_touch_down
+    if child.dispatch('on_touch_down', touch):
+  File "kivy/_event.pyx", line 709, in kivy._event.EventDispatcher.dispatch
+  File "/home/darknites/.local/lib/python3.6/site-packages/kivy/uix/widget.py", line 545, in on_touch_down
+    if child.dispatch('on_touch_down', touch):
+  File "kivy/_event.pyx", line 709, in kivy._event.EventDispatcher.dispatch
+  File "/home/darknites/.local/lib/python3.6/site-packages/kivy/uix/behaviors/button.py", line 151, in on_touch_down
+    self.dispatch('on_press')
+  File "kivy/_event.pyx", line 705, in kivy._event.EventDispatcher.dispatch
+  File "kivy/_event.pyx", line 1248, in kivy._event.EventObservers.dispatch
+  File "kivy/_event.pyx", line 1132, in kivy._event.EventObservers._dispatch
+  File "/home/darknites/.local/lib/python3.6/site-packages/kivy/lang/builder.py", line 57, in custom_callback
+    exec(__kvlang__.co_value, idmap)
+  File "/home/darknites/Documents/master/Defendr/src/Interfaces_v2/register.kv", line 138, in <module>
+    on_press: root.do_go_to_login(name.text,surname.text,email.text,password.text,confirm_pass.text)
+  File "/home/darknites/Documents/master/Defendr/src/Interfaces_v2/register.py", line 14, in do_go_to_login
+    output=facade.register(name,surname,email,password,confirm_pass)
+  File "/home/darknites/Documents/master/Defendr/src/Interfaces_v2/Facade.py", line 75, in register
+    if (not self.database.print_user(self.db_connects)):
+TypeError: print_user() missing 1 required positional argument: 'name'
+
+
+[2019-08-23 17:13:24] Traceback (most recent call last):
+  File "main.py", line 98, in <module>
+    LoginApp().run()
+  File "/home/darknites/.local/lib/python3.6/site-packages/kivy/app.py", line 951, in run
+    self.stop()
+  File "/home/darknites/.local/lib/python3.6/site-packages/kivy/app.py", line 971, in stop
+    self.dispatch('on_stop')
+  File "kivy/_event.pyx", line 709, in kivy._event.EventDispatcher.dispatch
+  File "main.py", line 48, in on_stop
+    Metrics.stop()
+  File "/home/darknites/Documents/master/Defendr/src/Interfaces_v2/Metrics.py", line 60, in stop
+    thread.stop()
+AttributeError: 'Thread' object has no attribute 'stop'
+
+
+[2019-08-26 13:30:27] Traceback (most recent call last):
+  File "main.py", line 98, in <module>
+    LoginApp().run()
+  File "/home/darknites/.local/lib/python3.6/site-packages/kivy/app.py", line 951, in run
+    self.stop()
+  File "/home/darknites/.local/lib/python3.6/site-packages/kivy/app.py", line 971, in stop
+    self.dispatch('on_stop')
+  File "kivy/_event.pyx", line 709, in kivy._event.EventDispatcher.dispatch
+  File "main.py", line 48, in on_stop
+    Metrics.stop()
+  File "/home/darknites/shared/Defendr/src/Interfaces_v2/Metrics.py", line 60, in stop
     thread.stop()
 AttributeError: 'Thread' object has no attribute 'stop'
 
