@@ -13,32 +13,22 @@ Defendr is a blackbox implementation of a DoS protection service, as well as a n
 `
 `
 
-### <a href="https://drive.google.com/file/d/1hR0j3fSVDyHWPes38qg3WsU3CEKUnghQ/view?usp=sharing" target="_blank">Software Requirements Document (Demo 3)</a>
+### <a href="https://drive.google.com/file/d/1_syMPQGBAT6020fEeqEiUO-8ArlYwjXO/view?usp=sharing" target="_blank">Software Requirements Document (Demo 1)</a>
 
 `
 `
 
-### <a href="https://drive.google.com/file/d/1KIa0Rp27dmP_SayKDEoJ897g3Y9T9_E6/view?usp=sharing" target="_blank">Software Requirements Document (Demo 2)</a>
+### <a href="https://drive.google.com/file/d/1AWSwSsIuIKsj7wd_CvkUBbHMW9_cLq4Z/view?usp=sharing" target="_blank">User Manual</a>
 
 `
 `
 
-### <a href="https://drive.google.com/file/d/1iBiAUn9Z2I8EpoNARxNiEECTwpGjxXim/view?usp=sharing" target="_blank">Software Requirements Document (Demo 1)</a>
+### <a href="https://drive.google.com/file/d/1hm-trz5-VJ8yMaATb7RwewtH19qgfXDL/view?usp=sharing" target="_blank">Coding Standard</a>
 
 `
 `
 
-### <a href="https://drive.google.com/file/d/1ozC61SHbWyGSOasmRO3glmpFbCWPG8-t/view?usp=sharing" target="_blank">User Manual</a>
-
-`
-`
-
-### <a href="https://drive.google.com/file/d/1e0YlB_-IqQ3uM476uTTa4XBMNXe2gJPN/view?usp=sharing" target="_blank">Coding Standard</a>
-
-`
-`
-
-### <a href="https://drive.google.com/file/d/1khAOdUIoiPt9F8vz61K2TXLu7uXjTsiB/view?usp=sharing" target="_blank">Testing Policy</a>
+### <a href="https://drive.google.com/file/d/1hm-trz5-VJ8yMaATb7RwewtH19qgfXDL/view?usp=sharing" target="_blank">Testing Policy</a>
 
 `
 `

@@ -5,6 +5,6 @@ import sys
 database = database()
 db_connection = database.connect()
 smpt = email()
-smpt_connection = smpt.connectToSMTPserver()
+smpt_connection = smpt.connect_To_SMTP_server()
 
-smpt.emailForAttack(db_connection,database,smpt_connection,sys.argv[1])
+smpt.email_for_attack(db_connection,database,smpt_connection,sys.argv[1])

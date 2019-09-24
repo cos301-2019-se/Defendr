@@ -293,7 +293,7 @@ class User_Management_Window(Screen):
         app = App.get_running_app()
         if (not (self.table == "")):
             id.remove_widget(self.table)
-        self.table = Table(table_content=app.facade.list_user(""))
+        self.table = Table(table_content=app.facade.list_user("", "lastname", "lastname", 1))
         id.add_widget(self.table)
 
     def add_user(self,id,name,surename,email,password,rePassword, admin):
