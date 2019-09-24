@@ -24,7 +24,7 @@ Defendr is designed to detect, and mitigate DoS attacks and provide network load
 `
 `
 
-### <a href="https://drive.google.com/file/d/1zKKXXlj0iC_5qDFrrzqUtydXXk36k0DC/view?usp=sharing" target="_blank">Testing Policy</a>
+### <a href="https://drive.google.com/file/d/1j293JdGP1QUi_ff7CvEgtP97Bmv8o7aQ/view?usp=sharing" target="_blank">Testing Policy</a>
 
 `
 `
@@ -34,7 +34,7 @@ Defendr is designed to detect, and mitigate DoS attacks and provide network load
 `
 `
 
-### <a href="https://drive.google.com/file/d/1WZKE07yoB0pUymPCG68ym-PaL3p60Qzq/view?usp=sharing" target="_blank">User Manual</a>
+### <a href="https://drive.google.com/file/d/1ptcZbr9XHPUS-0Ha-k9Zbyp_vp3IGT8P/view?usp=sharing" target="_blank">User Manual</a>
 
 `
 `
