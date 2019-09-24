@@ -47,7 +47,7 @@ Defendr is designed to detect, and mitigate DoS attacks and provide network load
  `
 
  
-![image](https://media.licdn.com/dms/image/C4D03AQFWIUl2J6e8wQ/profile-displayphoto-shrink_800_800/0?e=1568246400&v=beta&t=PRpolwWr9AKJhMN5BfrHZYuepV8JYWW6wXRAHQ8mMzI)
+![image](https://media.licdn.com/dms/image/C4D03AQFWIUl2J6e8wQ/profile-displayphoto-shrink_800_800/0?e=1574899200&v=beta&t=krofZOaeC6GqdilzlmAojZdkwCALQwBa9VaUUFN_n2M)
 
 ###### **Name and surname:**
 >   *Jeandre Botha*
@@ -102,7 +102,7 @@ Defendr is designed to detect, and mitigate DoS attacks and provide network load
 `
 `
 
-![image](https://media.licdn.com/dms/image/C5603AQEcRaGu0KZwUg/profile-displayphoto-shrink_800_800/0?e=1568246400&v=beta&t=p--RAkds7f-HHZbdNsYkG22_fKuUjQtNebe51gyoah4)
+![image](https://media.licdn.com/dms/image/C5603AQEcRaGu0KZwUg/profile-displayphoto-shrink_800_800/0?e=1574899200&v=beta&t=5SY9evVTs4pMFZAUzK-lV02OOdlXw1WqXN5MopyWx6c)
 
 ###### **Name and surname:**
 > *Christiaan Opperman*
@@ -169,7 +169,7 @@ stead. Negativity never accomplishes much.
 `
 `
 
-![image](https://media.licdn.com/dms/image/C4D03AQFTSE8JZvAYxg/profile-displayphoto-shrink_800_800/0?e=1568246400&v=beta&t=Gkpn2YEJ0pipopHcOXVtECx8cVktZvoMvXCVS9vGbSI)
+![image](https://media.licdn.com/dms/image/C4D03AQFTSE8JZvAYxg/profile-displayphoto-shrink_800_800/0?e=1574899200&v=beta&t=ueA38HNoUYwqkJeTh2ikSN4RHcnD-EvqsRG07pY_5D0)
 
 ###### **Name and surname:**
 >*Muhammed Carrim*
