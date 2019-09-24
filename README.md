@@ -8,27 +8,23 @@ COS 301: Software Engineering
 
 ---
 
-Defendr is a blackbox implementation of a DoS protection service, as well as a net-work load-balancer for various back-end applications.The service is to be situated between the client and server where requests from the clients are to pass through the service, dropping/blacklisting offending packets/IPs.  The service should employ direct server return andresponses from the server are to be sent directly back to the client, and not routed back via the service
+"Technology breeds crime and we are trying... to stay one step ahead of the person trying to use it negatively."
+Defendr is designed to detect, and mitigate DoS attacks and provide network load-balancing services to various backend applications and ensure their accessibility.  The DoS protection subsystem makes use of XDP and eBPF to monitor and discriminate network traffic to the backend applications.  Offending packets/IPs are dropped/blacklisted, whereas legal traffic is balanced.  Balancing will be governed by algorithms, e.g. (weighted) round-robin.  Defendr will be situated between the end-user and applications, with Direct Server Return being used to handle responses.
 
 `
 `
 
-### <a href="https://drive.google.com/file/d/1_syMPQGBAT6020fEeqEiUO-8ArlYwjXO/view?usp=sharing" target="_blank">Software Requirements Document (Demo 1)</a>
+### <a href="https://drive.google.com/file/d/1K2iq5DzOlEoWvbfIUt58wIV24K9ICMrU/view?usp=sharing" target="_blank">Software Requirements Document</a>
 
 `
 `
 
-### <a href="https://drive.google.com/file/d/1AWSwSsIuIKsj7wd_CvkUBbHMW9_cLq4Z/view?usp=sharing" target="_blank">User Manual</a>
+### <a href="https://drive.google.com/open?id=1u98TD07OY_Z0MsCJBIDWWHhN7VclcqDI" target="_blank">Coding Standard</a>
 
 `
 `
 
-### <a href="https://drive.google.com/file/d/1hm-trz5-VJ8yMaATb7RwewtH19qgfXDL/view?usp=sharing" target="_blank">Coding Standard</a>
-
-`
-`
-
-### <a href="https://drive.google.com/file/d/1hm-trz5-VJ8yMaATb7RwewtH19qgfXDL/view?usp=sharing" target="_blank">Testing Policy</a>
+### <a href="https://drive.google.com/file/d/1zKKXXlj0iC_5qDFrrzqUtydXXk36k0DC/view?usp=sharing" target="_blank">Testing Policy</a>
 
 `
 `
@@ -38,7 +34,10 @@ Defendr is a blackbox implementation of a DoS protection service, as well as a n
 `
 `
 
-### <a href="https://github.com/cos301-2019-se/Defendr" target="_blank">Git Repository</a>
+### <a href="https://drive.google.com/file/d/1WZKE07yoB0pUymPCG68ym-PaL3p60Qzq/view?usp=sharing" target="_blank">User Manual</a>
+
+`
+`
 
 ---
 
