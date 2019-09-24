@@ -75,9 +75,6 @@ Defendr is a blackbox implementation of a DoS protection service, as well as a n
 ###### **Link to Github account:**
 > *[Jeandre Botha](https://github.com/jeandre-botha)*
 
-###### **Copy of CV:**
-> *[Jeandre Botha](https://drive.google.com/file/d/1C71YLmRQVO9On9bNyvF2YfuSPQHNtOEL/view?usp=sharing)*
-
 ###### **Interests:**
 >*  Exploring new technologies
 >*  Programming
@@ -129,9 +126,6 @@ Defendr is a blackbox implementation of a DoS protection service, as well as a n
 
 ###### **Link to Github account:**
 > *[Christiaan Opperman](https://github.com/Christo08)*
-
-###### **Copy of CV:**
-> *[Christiaan Opperman](https://drive.google.com/file/d/14aDleP3uZ7zk367cwanTbqaPenbPpxTg/view?usp=sharing)*
 
 ###### **Interests:**
 > - Fly fishing
@@ -200,9 +194,6 @@ stead. Negativity never accomplishes much.
 ###### **Link to Github account:**
 > *[Muhammed Carrim](https://github.com/MoeCarrim)*
 
-###### **Copy of CV:**
-> *[Muhammed Carrim](https://drive.google.com/open?id=1r2OypdLW9lv_RjaGCraPO5cHs1ALXOw3)*
-
 ###### **Interests:**
 > *I am a proud final year student at the University of Pretoria studying BSc IT (Software Development).
 I have always been fascinated with computers ever since I was a child. It started out because I wished to be like my mother who is also a programmer.
@@ -258,9 +249,6 @@ I like playing Tennis and Squash.*
 ###### **Link to Github account:**
 > *[Sisa Khoza](https://github.com/SisaKhoza)*
 
-###### **Copy of CV:**
-> *[Sisa Khoza](https://drive.google.com/open?id=16Gv93IYO1dNwYMerbp2RabJLO-w43q_U)*
-
 ###### **Interests:**
 > - Music (playing and reading)
 > - Gaming
@@ -314,9 +302,6 @@ My duties were the same in the adult ministry, except my position was that of a 
 
 ###### **Link to Github account:**
 > *[Ruslynn Appana](https://github.com/Ryperior)*
-
-###### **Copy of CV:**
-> *[Ruslynn Appana](https://drive.google.com/open?id=1NgDsuq4nV8j_v7v5IBZbBUSxfqz20NaM)*
 
 ###### **Interests:**
 > - Gaming
