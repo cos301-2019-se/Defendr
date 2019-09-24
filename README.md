@@ -8,37 +8,23 @@ COS 301: Software Engineering
 
 ---
 
-Defendr is a blackbox implementation of a DoS protection service, as well as a net-work load-balancer for various back-end applications.The service is to be situated between the client and server where requests from the clients are to pass through the service, dropping/blacklisting offending packets/IPs.  The service should employ direct server return andresponses from the server are to be sent directly back to the client, and not routed back via the service
+"Technology breeds crime and we are trying... to stay one step ahead of the person trying to use it negatively."
+Defendr is designed to detect, and mitigate DoS attacks and provide network load-balancing services to various backend applications and ensure their accessibility.  The DoS protection subsystem makes use of XDP and eBPF to monitor and discriminate network traffic to the backend applications.  Offending packets/IPs are dropped/blacklisted, whereas legal traffic is balanced.  Balancing will be governed by algorithms, e.g. (weighted) round-robin.  Defendr will be situated between the end-user and applications, with Direct Server Return being used to handle responses.
 
 `
 `
 
-### <a href="https://drive.google.com/file/d/1hR0j3fSVDyHWPes38qg3WsU3CEKUnghQ/view?usp=sharing" target="_blank">Software Requirements Document (Demo 3)</a>
+### <a href="https://drive.google.com/file/d/1K2iq5DzOlEoWvbfIUt58wIV24K9ICMrU/view?usp=sharing" target="_blank">Software Requirements Document</a>
 
 `
 `
 
-### <a href="https://drive.google.com/file/d/1KIa0Rp27dmP_SayKDEoJ897g3Y9T9_E6/view?usp=sharing" target="_blank">Software Requirements Document (Demo 2)</a>
+### <a href="https://drive.google.com/open?id=1u98TD07OY_Z0MsCJBIDWWHhN7VclcqDI" target="_blank">Coding Standard</a>
 
 `
 `
 
-### <a href="https://drive.google.com/file/d/1iBiAUn9Z2I8EpoNARxNiEECTwpGjxXim/view?usp=sharing" target="_blank">Software Requirements Document (Demo 1)</a>
-
-`
-`
-
-### <a href="https://drive.google.com/file/d/1ozC61SHbWyGSOasmRO3glmpFbCWPG8-t/view?usp=sharing" target="_blank">User Manual</a>
-
-`
-`
-
-### <a href="https://drive.google.com/file/d/1e0YlB_-IqQ3uM476uTTa4XBMNXe2gJPN/view?usp=sharing" target="_blank">Coding Standard</a>
-
-`
-`
-
-### <a href="https://drive.google.com/file/d/1khAOdUIoiPt9F8vz61K2TXLu7uXjTsiB/view?usp=sharing" target="_blank">Testing Policy</a>
+### <a href="https://drive.google.com/file/d/1j293JdGP1QUi_ff7CvEgtP97Bmv8o7aQ/view?usp=sharing" target="_blank">Testing Policy</a>
 
 `
 `
@@ -48,7 +34,10 @@ Defendr is a blackbox implementation of a DoS protection service, as well as a n
 `
 `
 
-### <a href="https://github.com/cos301-2019-se/Defendr" target="_blank">Git Repository</a>
+### <a href="https://drive.google.com/file/d/1ptcZbr9XHPUS-0Ha-k9Zbyp_vp3IGT8P/view?usp=sharing" target="_blank">User Manual</a>
+
+`
+`
 
 ---
 
@@ -58,7 +47,7 @@ Defendr is a blackbox implementation of a DoS protection service, as well as a n
  `
 
  
-![image](https://media.licdn.com/dms/image/C4D03AQFWIUl2J6e8wQ/profile-displayphoto-shrink_800_800/0?e=1568246400&v=beta&t=PRpolwWr9AKJhMN5BfrHZYuepV8JYWW6wXRAHQ8mMzI)
+![image](https://media.licdn.com/dms/image/C4D03AQFWIUl2J6e8wQ/profile-displayphoto-shrink_800_800/0?e=1574899200&v=beta&t=krofZOaeC6GqdilzlmAojZdkwCALQwBa9VaUUFN_n2M)
 
 ###### **Name and surname:**
 >   *Jeandre Botha*
@@ -74,9 +63,6 @@ Defendr is a blackbox implementation of a DoS protection service, as well as a n
 
 ###### **Link to Github account:**
 > *[Jeandre Botha](https://github.com/jeandre-botha)*
-
-###### **Copy of CV:**
-> *[Jeandre Botha](https://drive.google.com/file/d/1C71YLmRQVO9On9bNyvF2YfuSPQHNtOEL/view?usp=sharing)*
 
 ###### **Interests:**
 >*  Exploring new technologies
@@ -116,7 +102,7 @@ Defendr is a blackbox implementation of a DoS protection service, as well as a n
 `
 `
 
-![image](https://media.licdn.com/dms/image/C5603AQEcRaGu0KZwUg/profile-displayphoto-shrink_800_800/0?e=1568246400&v=beta&t=p--RAkds7f-HHZbdNsYkG22_fKuUjQtNebe51gyoah4)
+![image](https://media.licdn.com/dms/image/C5603AQEcRaGu0KZwUg/profile-displayphoto-shrink_800_800/0?e=1574899200&v=beta&t=5SY9evVTs4pMFZAUzK-lV02OOdlXw1WqXN5MopyWx6c)
 
 ###### **Name and surname:**
 > *Christiaan Opperman*
@@ -129,9 +115,6 @@ Defendr is a blackbox implementation of a DoS protection service, as well as a n
 
 ###### **Link to Github account:**
 > *[Christiaan Opperman](https://github.com/Christo08)*
-
-###### **Copy of CV:**
-> *[Christiaan Opperman](https://drive.google.com/file/d/14aDleP3uZ7zk367cwanTbqaPenbPpxTg/view?usp=sharing)*
 
 ###### **Interests:**
 > - Fly fishing
@@ -186,7 +169,7 @@ stead. Negativity never accomplishes much.
 `
 `
 
-![image](https://media.licdn.com/dms/image/C4D03AQFTSE8JZvAYxg/profile-displayphoto-shrink_800_800/0?e=1568246400&v=beta&t=Gkpn2YEJ0pipopHcOXVtECx8cVktZvoMvXCVS9vGbSI)
+![image](https://media.licdn.com/dms/image/C4D03AQFTSE8JZvAYxg/profile-displayphoto-shrink_800_800/0?e=1574899200&v=beta&t=ueA38HNoUYwqkJeTh2ikSN4RHcnD-EvqsRG07pY_5D0)
 
 ###### **Name and surname:**
 >*Muhammed Carrim*
@@ -199,9 +182,6 @@ stead. Negativity never accomplishes much.
 
 ###### **Link to Github account:**
 > *[Muhammed Carrim](https://github.com/MoeCarrim)*
-
-###### **Copy of CV:**
-> *[Muhammed Carrim](https://drive.google.com/open?id=1r2OypdLW9lv_RjaGCraPO5cHs1ALXOw3)*
 
 ###### **Interests:**
 > *I am a proud final year student at the University of Pretoria studying BSc IT (Software Development).
@@ -258,9 +238,6 @@ I like playing Tennis and Squash.*
 ###### **Link to Github account:**
 > *[Sisa Khoza](https://github.com/SisaKhoza)*
 
-###### **Copy of CV:**
-> *[Sisa Khoza](https://drive.google.com/open?id=16Gv93IYO1dNwYMerbp2RabJLO-w43q_U)*
-
 ###### **Interests:**
 > - Music (playing and reading)
 > - Gaming
@@ -314,9 +291,6 @@ My duties were the same in the adult ministry, except my position was that of a 
 
 ###### **Link to Github account:**
 > *[Ruslynn Appana](https://github.com/Ryperior)*
-
-###### **Copy of CV:**
-> *[Ruslynn Appana](https://drive.google.com/open?id=1NgDsuq4nV8j_v7v5IBZbBUSxfqz20NaM)*
 
 ###### **Interests:**
 > - Gaming

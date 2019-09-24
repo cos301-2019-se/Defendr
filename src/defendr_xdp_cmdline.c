@@ -31,7 +31,7 @@ static const char *__doc__=
 #include "IP2Location.h"
 #include "libbpf.h"
 #include "bpf_util.h"
-#include "xdp_ddos01_blacklist_common.h"
+#include "defendr_xdp_common.h"
 #include "structs.h"
 
 #define BPF_ANY       0 /* create new element or update existing */
@@ -75,11 +75,6 @@ static const char *xdp_action_names[XDP_ACTION_MAX] = {
 	[XDP_TX]	= "XDP_TX",
 };
 
-static const char *xdp_proto_filter_names[DDOS_FILTER_MAX] = {
-	[DDOS_FILTER_TCP]	= "TCP",
-	[DDOS_FILTER_UDP]	= "UDP",
-};
-
 static const char *action2str(int action)
 {
 	if (action < XDP_ACTION_MAX)
@@ -92,9 +87,6 @@ struct record {
 	__u64 timestamp;
 };
 
-struct stats_record {
-	struct record xdp_action[XDP_ACTION_MAX];
-};
 
 static void usage(char *argv[]){
 	int i;
@@ -271,37 +263,6 @@ int mailing_list (char* results[]){
 	return num_results;
 }
 
-int open_bpf_map(const char *file){
-	int fd;
-
-	fd = bpf_obj_get(file);
-	if (fd < 0) {
-		printf("ERR: Failed to open bpf map file:%s err(%d):%s\n",
-		       file, errno, strerror(errno));
-		exit(EXIT_FAIL_MAP_FILE);
-	}
-	return fd;
-}
-
-static __u64 get_key32_value64_percpu(int fd, __u32 key){
-	/* For percpu maps, userspace gets a value per possible CPU */
-	unsigned int nr_cpus = bpf_num_possible_cpus();
-	__u64 values[nr_cpus];
-	__u64 sum = 0;
-	int i;
-
-	if ((bpf_map_lookup_elem(fd, &key, values)) != 0) {
-		fprintf(stderr,
-			"ERR: bpf_map_lookup_elem failed key:0x%X\n", key);
-		return 0;
-	}
-
-	/* Sum values from each CPU */
-	for (i = 0; i < nr_cpus; i++) {
-		sum += values[i];
-	}
-	return sum;
-}
 
 static void blacklist_print_ipv4(__u32 ip){
 	char ip_txt[INET_ADDRSTRLEN] = {0};
@@ -315,27 +276,7 @@ static void blacklist_print_ipv4(__u32 ip){
 	printf("\n \"%s\"", ip_txt);
 }
 
-static void blacklist_print_proto(int key, __u64 count){
-	printf("\n\t\"%s\" : %llu", xdp_proto_filter_names[key], count);
-}
 
-static void blacklist_print_port(int key, __u32 val, int countfds[]){
-	int i;
-	__u64 count;
-	bool started = false;
-
-	printf("\n \"%d\" : ", key);
-	for (i = 0; i < DDOS_FILTER_MAX; i++) {
-		if (val & (1 << i)) {
-			printf("%s", started ? "," : "{");
-			started = true;
-			count = get_key32_value64_percpu(countfds[i], key);
-			blacklist_print_proto(i, count);
-		}
-	}
-	if (started)
-		printf("\n }");
-}
 
 static void blacklist_list_all_ipv4(int fd){
 	__u32 key, *prev_key = NULL;
@@ -350,26 +291,6 @@ static void blacklist_list_all_ipv4(int fd){
 
 }
 
-static void blacklist_list_all_ports(int portfd, int countfds[]){
-	__u32 key, *prev_key = NULL;
-	__u64 value;
-	bool started = false;
-
-	/* printf("{\n"); */
-	while (bpf_map_get_next_key(portfd, prev_key, &key) == 0) {
-		if ((bpf_map_lookup_elem(portfd, &key, &value)) != 0) {
-			fprintf(stderr,
-				"ERR: bpf_map_lookup_elem(%d) failed key:0x%X\n", portfd, key);
-		}
-
-		if (value) {
-			printf("%s", started ? "," : "");
-			started = true;
-			blacklist_print_port(key, value, countfds);
-		}
-		prev_key = &key;
-	}
-}
 
 static void clear_system_stats(){
 	int fd_system_stats = open_bpf_map(file_system_stats);	
@@ -382,20 +303,36 @@ static void clear_system_stats(){
 	__u64 key, *prev_key = NULL;	
 	key = NULL;
 	prev_key = NULL;
-	int fd_servers= open_bpf_map(file_servers);
-	while (bpf_map_get_next_key(fd_servers, prev_key, &key) == 0) {
-		 struct dest_info *backend =(struct dest_info*)malloc(sizeof(struct dest_info));
-		int res = bpf_map_lookup_elem(fd_servers,&key,backend); 
-		if(res==0){
-			backend->pkts = 0;
-			backend->cons = 0;
-			backend->bytes = 0;
-			bpf_map_update_elem(fd_servers, &key, backend, BPF_EXIST);
-		}
-		
-		prev_key = &key;
+	
+	__u64 service_key, *service_prev_key = NULL;	
+	service_key = NULL;
+	service_prev_key = NULL;
+	int fd_services = open_bpf_map(file_services);
+	while (bpf_map_get_next_key(fd_services, service_prev_key, &service_key) == 0) {
+		char service_ip_txt[INET_ADDRSTRLEN] = {0};
+		if (inet_ntop(AF_INET, &service_key, service_ip_txt, sizeof(service_ip_txt))){
+			printf("\"%s\":{\n",service_ip_txt);
+			printf("\"backends\":[\n");
+				 struct service *app = (struct service*)malloc(sizeof(struct service)); 
+				 int res = bpf_map_lookup_elem(fd_services,&service_key,app); 
+				 if(res == 0){
+					struct dest_info *backend = NULL;
+					for(int i = 0;i < MAX_INSTANCES;++i){
+						if(app->backend_active[i] == 1){
+							backend = &(app->backends[i]);
+							backend->pkts = 0;
+							backend->cons = 0;
+							backend->bytes = 0;
+											
+						}
+
+					}	
+					bpf_map_update_elem(fd_services, &service_key, app, BPF_EXIST);
+				 }
+		}			
+		service_prev_key = &service_key;
 	}
-	close(fd_servers);
+	close(fd_services);
 }
 
 static  void activate_dynamic_blacklist(){
@@ -630,20 +567,16 @@ static  void start_logging(){
 static void addBackend(char* service_ip,char* backend_ip,char* backend_port,char* mac_addr){
 	if (verbose) printf("adding backend with ip %s and mac %s listening on port %s to service %s\n",backend_ip,mac_addr,backend_port,service_ip);
     int fd_services = open_bpf_map(file_services); 
-    int fd_servers = open_bpf_map(file_servers);  
-	service_modify(fd_services,fd_servers, service_ip,backend_ip, atoi(backend_port),mac_addr,ACTION_ADD);
+	service_modify(fd_services, service_ip,backend_ip, atoi(backend_port),mac_addr,ACTION_ADD);
 	close(fd_services);
-	close(fd_servers);
 }
 
 /* Remove backend server*/
 static void removeBackend(char* service_ip,char* backend_ip){
 	if (verbose) printf("removing backend with ip %s from service %s\n",backend_ip,service_ip);	
 	int fd_services = open_bpf_map(file_services); 
-    int fd_servers = open_bpf_map(file_servers);  
-	service_modify(fd_services,fd_servers, service_ip,backend_ip,0,"",ACTION_DEL);
+	service_modify(fd_services, service_ip,backend_ip,0,"",ACTION_DEL);
 	close(fd_services);
-	close(fd_servers);
 }
 
 /* Print all back-end instanses for particular service */
@@ -663,7 +596,6 @@ static void printServiceBackends(char* service_ip){
 	 
 	 struct service *value = (struct service*)malloc(sizeof(struct service));
 	 int fd_services = open_bpf_map(file_services);  
-	 int fd_servers = open_bpf_map(file_servers);  
 	 res = bpf_map_lookup_elem(fd_services,&key,value); 
 	 if(res == 0){
 		struct dest_info *backend = NULL;
@@ -688,7 +620,6 @@ static void printServiceBackends(char* service_ip){
 		 }	
 	 }
 	 close(fd_services);
-	 close(fd_servers);
 }
 
 static void get_stats(){
@@ -720,8 +651,7 @@ static void get_stats(){
 		if (inet_ntop(AF_INET, &service_key, service_ip_txt, sizeof(service_ip_txt))){
 			printf("\"%s\":{\n",service_ip_txt);
 			printf("\"backends\":[\n");
-				 struct service *app = (struct service*)malloc(sizeof(struct service));
-				 int fd_servers = open_bpf_map(file_servers);  
+				 struct service *app = (struct service*)malloc(sizeof(struct service)); 
 				 int res = bpf_map_lookup_elem(fd_services,&service_key,app); 
 				 if(res == 0){
 					struct dest_info *backend = NULL;
@@ -767,9 +697,6 @@ int main(int argc, char **argv)
 	bool stats = false;
 	int interval = 1;
 	int fd_blacklist;
-	int fd_verdict;
-	int fd_port_blacklist;
-	int fd_port_blacklist_count;
 	int longindex = 0;
 	bool do_list = false;
 	bool dynamic_blacklist = false;
@@ -778,8 +705,6 @@ int main(int argc, char **argv)
 	bool modify_whitelist = false;
 	int opt;
 	int dport = 0;
-	int proto = IPPROTO_TCP;
-	int filter = DDOS_FILTER_TCP;
 	while ((opt = getopt_long(argc, argv, "adshi:t:u:",
 				  long_options, &longindex)) != -1) {
 		switch (opt) {
@@ -827,13 +752,6 @@ int main(int argc, char **argv)
 			mac_addr = (char *)&_mac_addr_buf;
 			strncpy(mac_addr, optarg, STR_MAX);
 			break;
-		case 'u':
-			proto = IPPROTO_UDP;
-			filter = DDOS_FILTER_UDP;
-		case 't':
-			if (optarg)
-				dport = atoi(optarg);
-			break;
 		case 's': 
 			stats = true;
 			if (optarg)
@@ -855,7 +773,6 @@ int main(int argc, char **argv)
 			return EXIT_FAIL_OPTION;
 		}
 	}
-	fd_verdict = open_bpf_map(file_verdict);
 
 	// Update blacklist
 	if (action) {
@@ -884,13 +801,6 @@ int main(int argc, char **argv)
 			
 		}
 
-		if (dport) {
-			fd_port_blacklist = open_bpf_map(file_port_blacklist);
-			fd_port_blacklist_count = open_bpf_map(file_port_blacklist_count[filter]);
-			res = blacklist_port_modify(fd_port_blacklist, fd_port_blacklist_count, dport, action, proto);
-			close(fd_port_blacklist);
-			close(fd_port_blacklist_count);
-		}
 		return res;
 	}
 
@@ -905,8 +815,6 @@ int main(int argc, char **argv)
 			printServiceBackends(service_ip);
 		}else{
 			printf("{");
-			int fd_port_blacklist_count_array[DDOS_FILTER_MAX];
-			int i;
 			if(modify_whitelist){
 				fd_blacklist = open_bpf_map(file_whitelist);
 			}else{
@@ -916,14 +824,6 @@ int main(int argc, char **argv)
 			blacklist_list_all_ipv4(fd_blacklist);
 			close(fd_blacklist);
 
-			fd_port_blacklist = open_bpf_map(file_port_blacklist);
-			for (i = 0; i < DDOS_FILTER_MAX; i++)
-				fd_port_blacklist_count_array[i] = open_bpf_map(file_port_blacklist_count[i]);
-			blacklist_list_all_ports(fd_port_blacklist, fd_port_blacklist_count_array);
-			close(fd_port_blacklist);
-			printf("\n}\n");
-			for (i = 0; i < DDOS_FILTER_MAX; i++)
-			close(fd_port_blacklist_count_array[i]);
 		}
 	}
 
@@ -939,7 +839,6 @@ int main(int argc, char **argv)
 		start_logging();
 	}
 
-	close(fd_verdict);
 }
 
 static void display_all(){
