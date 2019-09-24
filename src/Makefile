@@ -4,7 +4,7 @@
 #
 # Still depend on a kernel source tree.
 #
-TARGETS := xdp_ddos01_blacklist
+TARGETS := defendr_xdp
 TARGETS += unitTest
 
 
@@ -16,7 +16,7 @@ TARGETS += unitTest
 # Experimental targets
 ###TARGETS += xdp_rxhash
 
-CMDLINE_TOOLS := xdp_ddos01_blacklist_cmdline
+CMDLINE_TOOLS := defendr_xdp_cmdline
 COMMON_H      =  ${CMDLINE_TOOLS:_cmdline=_common.h}
 
 # Targets that use the library bpf/libbpf

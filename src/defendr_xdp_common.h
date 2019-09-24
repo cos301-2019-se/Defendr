@@ -25,20 +25,10 @@ static int verbose = 1;
 static const char *file_blacklist = "/sys/fs/bpf/defendr_blacklist";
 static const char *file_whitelist = "/sys/fs/bpf/defendr_whitelist";
 static const char *file_system_stats   = "/sys/fs/bpf/defendr_system_stats";
-static const char *file_verdict   = "/sys/fs/bpf/defendr_stat_verdict";
 static const char *file_ip_watchlist   = "/sys/fs/bpf/defendr_ip_watchlist";
 static const char *file_logs   = "/sys/fs/bpf/defendr_logs";
-static const char *file_servers   = "/sys/fs/bpf/defendr_servers";
 static const char *file_services   = "/sys/fs/bpf/defendr_services";
 static const char *file_destinations   = "/sys/fs/bpf/defendr_destinations";
-
-
-static const char *file_port_blacklist = "/sys/fs/bpf/ddos_port_blacklist";
-static const char *file_port_blacklist_count[] = {
-	"/sys/fs/bpf/ddos_port_blacklist_count_tcp",
-	"/sys/fs/bpf/ddos_port_blacklist_count_udp"
-};
-
 
 
 /* gettime returns the current time of day in nanoseconds.
@@ -67,6 +57,38 @@ enum {
 	DDOS_FILTER_UDP,
 	DDOS_FILTER_MAX
 };
+
+int open_bpf_map(const char *file)
+{
+	int fd;
+
+	fd = bpf_obj_get(file);
+	if (fd < 0) {
+		printf("ERR: Failed to open bpf map file:%s err(%d):%s\n",
+		       file, errno, strerror(errno));
+		exit(EXIT_FAIL_MAP_FILE);
+	}
+	return fd;
+}
+
+static __u64 get_key32_value64_percpu(int fd, __u32 key){
+
+	unsigned int nr_cpus = bpf_num_possible_cpus();
+	__u64 values[nr_cpus];
+	__u64 sum = 0;
+	int i;
+
+	if ((bpf_map_lookup_elem(fd, &key, values)) != 0) {
+		fprintf(stderr,
+			"ERR: bpf_map_lookup_elem failed key:0x%X\n", key);
+		return 0;
+	}
+
+	for (i = 0; i < nr_cpus; i++) {
+		sum += values[i];
+	}
+	return sum;
+}
 
 // Helper function for modifying blacklist map.
 static int blacklist_modify(int fd, char *ip_string, unsigned int action){
@@ -117,7 +139,7 @@ static int blacklist_modify(int fd, char *ip_string, unsigned int action){
 }
 
 // Helper function for modifying services map.
-static int service_modify(int fd_services,int fd_servers, char *service_ip,char *backend_ip,unsigned int port,char* mac_addr, unsigned int action){
+static int service_modify(int fd_services, char *service_ip,char *backend_ip,unsigned int port,char* mac_addr, unsigned int action){
 	int server_id;
    	FILE *fptr;
 	fptr = fopen("id.txt","r");
