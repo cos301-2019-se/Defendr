@@ -14,17 +14,17 @@ Defendr is designed to detect, and deflect DoS attacks and provide network load-
 `
 `
 
-### <a href="https://drive.google.com/file/d/1K2iq5DzOlEoWvbfIUt58wIV24K9ICMrU/view?usp=sharing" target="_blank">Software Requirements Document</a>
+### <a href="https://darknites.co.za/defendr/pdf/Defendr%20-%20Software%20Requirements%20Specification.pdf" target="_blank">Software Requirements Document</a>
 
 `
 `
 
-### <a href="https://drive.google.com/open?id=1u98TD07OY_Z0MsCJBIDWWHhN7VclcqDI" target="_blank">Coding Standard</a>
+### <a href="https://darknites.co.za/defendr/pdf/Defendr%20-%20Coding%20Standard%20.pdf" target="_blank">Coding Standard</a>
 
 `
 `
 
-### <a href="https://drive.google.com/file/d/1j293JdGP1QUi_ff7CvEgtP97Bmv8o7aQ/view?usp=sharing" target="_blank">Testing Policy</a>
+### <a href="https://darknites.co.za/defendr/pdf/Defendr%20-%20Testing%20Policy.pdf" target="_blank">Testing Policy</a>
 
 `
 `
@@ -34,7 +34,7 @@ Defendr is designed to detect, and deflect DoS attacks and provide network load-
 `
 `
 
-### <a href="https://drive.google.com/file/d/1ptcZbr9XHPUS-0Ha-k9Zbyp_vp3IGT8P/view?usp=sharing" target="_blank">User Manual</a>
+### <a href="https://darknites.co.za/defendr/pdf/Defendr%20-%20User%20manual.pdf" target="_blank">User Manual</a>
 
 `
 `
