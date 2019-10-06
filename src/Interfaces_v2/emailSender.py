@@ -4,7 +4,7 @@ import smtplib
 # Implementation of email sending for alerts.
 class email():
     gmail_sender='info@darknites.co.za'
-    gmail_password='D@rkN1t3s'
+    gmail_password='D@rkN1t3s!@#$'
     # Send email to new user.
     def email_Add_New_User(self,db, database,server,name, email):
         sub ='Verify user'
