@@ -210,9 +210,10 @@ I like playing Tennis and Squash.*
 > - Self-motivated
 
 ###### **Work Experience:**
-> - AV tech @ Outlook Church (Jan 2010 - Nov 2014): I was in charge of creating and displaying visual media, and control of sound equipment in children&#39;s ministry. I would set up equipment before, and manage it during and after the service. My duties also covered training related to AV in children&#39;s ministry.
+> - *AV tech @ Outlook Church (Jan 2010 - Nov 2014): I was in charge of creating and displaying visual media, and control of sound equipment in children&#39;s ministry. I would set up equipment before, and manage it during and after the service. My duties also covered training related to AV in children&#39;s ministry.
 My duties were the same in the adult ministry, except my position was that of a junior technician in the committee.
-> - Camarero @ Aandklas (Feb 2017 - Jul 2017) - A small stint in the hospitality industry, whilst at university, to earn some extra pocket money as well as to try to take on new responsibilities, and experience a working world environment with duties and deadlines.  The responsibilities of a waiter included hosting and tending to guest needs by; ensuring the general seating areas were clean and tidy before, during and after shifts, reception of new patrons, bridging the bar, kitchen, and main guest areas as well as tending to performing artists or members that would require the venue for events.
+> - *Receiver of Rotaty Community Service award (Nov 2014): Social responsibility is something I believe goes beyond the duties of corporates, and would be much more beneficial with many small contributions by many instead of a few large ones by a smaller group.  The act of giving has always been a founding teaching in the house, and so if there's nothing I can give of there's always my time.
+> - Camarero @ Aandklas (Feb 2017 - Jul 2017): A small stint in the hospitality industry, whilst at university, to earn some extra pocket money as well as to try to take on new responsibilities, and experience a working world environment with duties and deadlines.  The responsibilities of a waiter included hosting and tending to guest needs by; ensuring the general seating areas were clean and tidy before, during and after shifts, reception of new patrons, bridging the bar, kitchen, and main guest areas as well as tending to performing artists or members that would require the venue for events.
 
 ###### **Attitudes:**
 > ***"In every mistake I make is a nugget of learning I can take"***
