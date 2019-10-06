@@ -71,7 +71,7 @@
 > *[Christiaan Opperman](https://www.linkedin.com/in/christiaan-opperman-7a369b184/)*
 
 ###### **Link to Github account:**
-> *[Christiaan Opperman](https://github.com/Christo08)*
+> *[Christiaan Opperman](https://github.com/Christo08)* 
 
 ###### **Interests:**
 > - Fly fishing
