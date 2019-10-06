@@ -14,17 +14,17 @@ Defendr is designed to detect, and deflect DoS attacks and provide network load-
 `
 `
 
-### <a href="https://darknites.co.za/defendr/pdf/Defendr%20-%20Software%20Requirements%20Specification.pdf" target="_blank">Software Requirements Document</a>
+### <a href="https://darknites.co.za/pdf/Defendr%20-%20Software%20Requirements%20Specification.pdf" target="_blank">Software Requirements Document</a>
 
 `
 `
 
-### <a href="https://darknites.co.za/defendr/pdf/Defendr%20-%20Coding%20Standard%20.pdf" target="_blank">Coding Standard</a>
+### <a href="https://darknites.co.za/pdf/Defendr%20-%20Coding%20Standard%20.pdf" target="_blank">Coding Standard</a>
 
 `
 `
 
-### <a href="https://darknites.co.za/defendr/pdf/Defendr%20-%20Testing%20Policy.pdf" target="_blank">Testing Policy</a>
+### <a href="https://darknites.co.za/pdf/Defendr%20-%20Testing%20Policy.pdf" target="_blank">Testing Policy</a>
 
 `
 `
@@ -34,7 +34,7 @@ Defendr is designed to detect, and deflect DoS attacks and provide network load-
 `
 `
 
-### <a href="https://darknites.co.za/defendr/pdf/Defendr%20-%20User%20manual.pdf" target="_blank">User Manual</a>
+### <a href="https://darknites.co.za/pdf/Defendr%20-%20User%20manual.pdf" target="_blank">User Manual</a>
 
 `
 `
@@ -46,4 +46,4 @@ Defendr is designed to detect, and deflect DoS attacks and provide network load-
 `
 `
 
-### <a href="https://darknites.co.za/" target="_blank">View our website</a>
+### <a href="https://www.darknites.co.za/" target="_blank">View our website</a>
