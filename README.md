@@ -41,7 +41,7 @@ Defendr is designed to detect, and deflect DoS attacks and provide network load-
 
 ---
 
-### <a href="https://github.com/cos301-2019-se/Defendr/blob/VirtualDemo/SRS/team.md" target="_blank">Meet our Team</a> :smiley:
+### <a href="https://github.com/cos301-2019-se/Defendr/blob/master/SRS/team.md" target="_blank">Meet our Team</a> :smiley:
 
 `
 `
