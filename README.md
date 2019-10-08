@@ -32,7 +32,7 @@ If the system is already installed:
 > -  <a href="http://app.zenhub.com/workspaces/dark-nites-capstone-project-5cc616ec67dcfa43a66a40f3/board?repos=182156942" target="_blank">Project Management Tool</a>
 > -  <a href="http://darknites.co.za/pdf/Defendr%20-%20User%20manual.pdf" target="_blank">User Manual</a>
 > -  <a href="http://darknites.co.za/documents/Virtual%20Demo.pptx" target="_blank">Project presentation</a>
-> -  <a href="http://darknites.co.za/documents/Demo%20Video.ppsx" target="_blank">Project video</a>
+> -  <a href="http://darknites.co.za/documents/demo.html" target="_blank">Project video</a>
 > -  <a href="http://darknites.co.za/documents" target="_blank">Research material</a>
 
 ---
