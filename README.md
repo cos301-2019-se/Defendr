@@ -27,7 +27,7 @@ If the system is already installed:
 `
 `
 
-### <a href="https://darknites.co.za/pdf/Defendr%20-%20Software%20Requirements%20Specification.pdf" target="_blank">Software Requirements Document</a>
+### <a href="https://darknites.co.za/pdf/Defendr%20-%20Software%20Requirements%20Specification.pdf" target="_blank">Software Requirements Specification Document</a>
 
 `
 `
