@@ -39,12 +39,12 @@ Defendr is designed to detect, and deflect DoS attacks and provide network load-
 `
 `
 
-### <a href="http://darknites.co.za/documents/Virtual%20Demo.pptx" target="_blank">Project presentation</a>
+### <a href="https://darknites.co.za/documents/Virtual%20Demo.pptx" target="_blank">Project presentation</a>
 
 `
 `
 
-### <a href="http://darknites.co.za/documents/Demo%20Video.ppsx" target="_blank">Project video</a>
+### <a href="https://darknites.co.za/documents/Demo%20Video.ppsx" target="_blank">Project video</a>
 
 `
 `
