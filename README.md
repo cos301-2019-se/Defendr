@@ -36,5 +36,5 @@ If the system is already installed:
 
 ---
 
-> -  <a href="https://github.com/cos301-2019-se/Defendr/blob/master/SRS/team.md" target="_blank">Meet our Team</a> :smiley:
-> -  <a href="https://www.darknites.co.za/" target="_blank">View our website</a>
+### <a href="https://github.com/cos301-2019-se/Defendr/blob/master/SRS/team.md" target="_blank">Meet our Team</a> :smiley:
+### <a href="https://www.darknites.co.za/" target="_blank">View our website</a>
