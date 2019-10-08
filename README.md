@@ -11,8 +11,6 @@ COS 301: Software Engineering
 "Technology breeds crime and we are trying... to stay one step ahead of the person trying to use it negatively."
 Defendr is designed to detect, and deflect DoS attacks and provide network load-balancing services to various backend applications and ensure their accessibility.  The DoS protection subsystem makes use of XDP and eBPF to monitor and discriminate network traffic to the backend applications.  Offending packets/IPs are dropped/blacklisted, whereas legal traffic is balanced.  Balancing will be governed by algorithms, e.g. (weighted) round-robin.  Defendr will be situated between the end-user and applications, with Direct Server Return being used to handle responses.
 
-`
-`
 
 ## **Instructions:**
 If installation is required:
@@ -24,8 +22,7 @@ If the system is already installed:
 > - Navigate to **Defendr/src/Interfaces_v2/**
 > - Run the terminal command **sudo python3 main.py**
 
-`
-`
+---
 
 ### <a href="https://darknites.co.za/pdf/Defendr%20-%20Software%20Requirements%20Specification.pdf" target="_blank">Software Requirements Specification Document</a>
 
