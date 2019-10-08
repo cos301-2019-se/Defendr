@@ -26,14 +26,14 @@ If the system is already installed:
 ---
 
 ## Links
-> -  <a href="https://darknites.co.za/pdf/Defendr%20-%20Software%20Requirements%20Specification.pdf" target="_blank">Software Requirements Specification Document</a>
-> -  <a href="https://darknites.co.za/pdf/Defendr%20-%20Coding%20Standard%20.pdf" target="_blank">Coding Standard</a>
-> -  <a href="https://darknites.co.za/pdf/Defendr%20-%20Testing%20Policy.pdf" target="_blank">Testing Policy</a>
-> -  <a href="https://app.zenhub.com/workspaces/dark-nites-capstone-project-5cc616ec67dcfa43a66a40f3/board?repos=182156942" target="_blank">Project Management Tool</a>
-> -  <a href="https://darknites.co.za/pdf/Defendr%20-%20User%20manual.pdf" target="_blank">User Manual</a>
-> -  <a href="https://darknites.co.za/documents/Virtual%20Demo.pptx" target="_blank">Project presentation</a>
-> -  <a href="https://darknites.co.za/documents/Demo%20Video.ppsx" target="_blank">Project video</a>
-> -  <a href="https://darknites.co.za/documents" target="_blank">Research material</a>
+> -  <a href="http://darknites.co.za/pdf/Defendr%20-%20Software%20Requirements%20Specification.pdf" target="_blank">Software Requirements Specification Document</a>
+> -  <a href="http://darknites.co.za/pdf/Defendr%20-%20Coding%20Standard%20.pdf" target="_blank">Coding Standard</a>
+> -  <a href="http://darknites.co.za/pdf/Defendr%20-%20Testing%20Policy.pdf" target="_blank">Testing Policy</a>
+> -  <a href="http://app.zenhub.com/workspaces/dark-nites-capstone-project-5cc616ec67dcfa43a66a40f3/board?repos=182156942" target="_blank">Project Management Tool</a>
+> -  <a href="http://darknites.co.za/pdf/Defendr%20-%20User%20manual.pdf" target="_blank">User Manual</a>
+> -  <a href="http://darknites.co.za/documents/Virtual%20Demo.pptx" target="_blank">Project presentation</a>
+> -  <a href="http://darknites.co.za/documents/Demo%20Video.ppsx" target="_blank">Project video</a>
+> -  <a href="http://darknites.co.za/documents" target="_blank">Research material</a>
 
 ---
 
