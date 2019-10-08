@@ -17,12 +17,12 @@ Defendr is designed to detect, and deflect DoS attacks and provide network load-
 ## **Instructions:**
 If installation is required:
 > - Download the repository, and navigate to it's root
-> - Run **./installcommands.sh**.  Ensure the script has the requisite permission with **chmod +x installcommands.sh**
+> - Run **./installcommands.sh** in terminal.  Ensure the script has the requisite permission with **chmod +x installcommands.sh**
 > - On the first window that appears, please insert **include /usr/local/lib**, save and exit
 
 If the system is already installed:
 > - Navigate to **Defendr/src/Interfaces_v2/**
-> - Run the command **sudo python3 main.py**
+> - Run the terminal command **sudo python3 main.py**
 
 `
 `
