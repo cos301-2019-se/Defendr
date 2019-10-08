@@ -8,7 +8,8 @@ COS 301: Software Engineering
 
 ---
 
-"Technology breeds crime and we are trying... to stay one step ahead of the person trying to use it negatively."
+"Technology breeds crime and we are trying... to stay one step ahead of the person trying to use it negatively." - Frank Abagnale
+
 Defendr is designed to detect, and deflect DoS attacks and provide network load-balancing services to various backend applications and ensure their accessibility.  The DoS protection subsystem makes use of XDP and eBPF to monitor and discriminate network traffic to the backend applications.  Offending packets/IPs are dropped/blacklisted, whereas legal traffic is balanced.  Balancing will be governed by algorithms, e.g. (weighted) round-robin.  Defendr will be situated between the end-user and applications, with Direct Server Return being used to handle responses.
 
 
