@@ -329,20 +329,6 @@ int  xdp_program(struct xdp_md *ctx)
 	ip_src = ntohl(ip_src); 
 	__u32 destination_ip = ntohl(iph->daddr);
 
-	struct log enter_log = {};
-	enter_log.src_ip = ip_src;
-	enter_log.status = LOG_ENTER;
-	enter_log.reason = REASON_NONE;
-	enter_log.destination_ip = destination_ip;
-	enter_log.server[0] = eth->h_dest[0];
-	enter_log.server[1] = eth->h_dest[0];
-	enter_log.server[2] = eth->h_dest[0];
-	enter_log.server[3] = eth->h_dest[0];
-	enter_log.server[4] = eth->h_dest[0];
-	enter_log.server[5] = eth->h_dest[0];
-	time = bpf_ktime_get_ns();
-	bpf_map_update_elem(&logs,&time,&enter_log,BPF_ANY);
-
 	pkt_size = (__u16)(data_end - data);
 	add_to_system_stats(TOTAL_PPS,1);
 	add_to_system_stats(TOTAL_CPS,0);
@@ -383,38 +369,41 @@ int  xdp_program(struct xdp_md *ctx)
 			bpf_map_update_elem(&ip_watchlist,&ip_src,&initialValue,BPF_NOEXIST);
 		}
 		
-		// Non IPPROTO_TCP protocols not yet supported so just let pass.
-		if (iph->protocol != IPPROTO_TCP) {
-				struct log pass_log = {};
-				pass_log.src_ip = ip_src;
-				pass_log.status = LOG_PASS;
-				pass_log.reason = REASON_NON_TCP;
-				pass_log.destination_ip = destination_ip;
-				pass_log.server[0] = eth->h_dest[0];
-				pass_log.server[1] = eth->h_dest[0];
-				pass_log.server[2] = eth->h_dest[0];
-				pass_log.server[3] = eth->h_dest[0];
-				pass_log.server[4] = eth->h_dest[0];
-				pass_log.server[5] = eth->h_dest[0];
-				time = bpf_ktime_get_ns();
-				bpf_map_update_elem(&logs,&time,&pass_log,BPF_ANY);
-		   return XDP_PASS;
-		}
-		
-		pkt.src = iph->saddr;
-		pkt.dst = iph->daddr;
-		pkt.port16[0] = tcph->source;
-		pkt.port16[1] = tcph->dest;		
-		
-		if(tcph->syn == 1){
-			add_to_system_stats(TOTAL_CPS,1);
-		}else if (tcph->fin == 1){
-			//deduct_from_system_stats(TOTAL_CPS,1);
-		}
+
 		
 		__u32 ip_dest = ntohl(iph->daddr); 
 		struct service *app = bpf_map_lookup_elem(&services,&ip_dest);
 		if(app){
+			
+			// Non IPPROTO_TCP protocols not yet supported so just let pass.
+			if (iph->protocol != IPPROTO_TCP) {
+					struct log pass_log = {};
+					pass_log.src_ip = ip_src;
+					pass_log.status = LOG_PASS;
+					pass_log.reason = REASON_NON_TCP;
+					pass_log.destination_ip = destination_ip;
+					pass_log.server[0] = eth->h_dest[0];
+					pass_log.server[1] = eth->h_dest[0];
+					pass_log.server[2] = eth->h_dest[0];
+					pass_log.server[3] = eth->h_dest[0];
+					pass_log.server[4] = eth->h_dest[0];
+					pass_log.server[5] = eth->h_dest[0];
+					time = bpf_ktime_get_ns();
+					bpf_map_update_elem(&logs,&time,&pass_log,BPF_ANY);
+			   return XDP_PASS;
+			}
+			
+			pkt.src = iph->saddr;
+			pkt.dst = iph->daddr;
+			pkt.port16[0] = tcph->source;
+			pkt.port16[1] = tcph->dest;		
+			
+			if(tcph->syn == 1){
+				add_to_system_stats(TOTAL_CPS,1);
+			}else if (tcph->fin == 1){
+				//deduct_from_system_stats(TOTAL_CPS,1);
+			}
+			
 			app = NULL;
 	
 			tnl = NULL;		
@@ -468,7 +457,7 @@ int  xdp_program(struct xdp_md *ctx)
 			return XDP_TX;
 			
 		}else{
-			struct log pass_log = {};
+			/*struct log pass_log = {};
 			pass_log.src_ip = ip_src;
 			pass_log.status = LOG_PASS;
 			pass_log.reason = REASON_NONE;
@@ -480,7 +469,7 @@ int  xdp_program(struct xdp_md *ctx)
 			pass_log.server[4] = eth->h_dest[4];
 			pass_log.server[5] = eth->h_dest[5];
 			time = bpf_ktime_get_ns();
-			bpf_map_update_elem(&logs,&time,&pass_log,BPF_ANY);
+			bpf_map_update_elem(&logs,&time,&pass_log,BPF_ANY);*/
 		}
 		return XDP_PASS;
 		
