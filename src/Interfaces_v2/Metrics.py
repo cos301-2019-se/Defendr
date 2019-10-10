@@ -20,6 +20,7 @@ locator = IP2Location.IP2Location()
 locator.open("Metrics/IP-COUNTRY.BIN")
 countries = dict()
 thread = ""
+stopThread = False
 
 #Initial information metrics
 h = Histogram('request_latency_seconds', 'Histogram depicting the latency in seconds per request')
@@ -47,6 +48,9 @@ def start():
 	time.sleep(2)
 	subprocess.Popen('./grafana-server', cwd='Metrics/Grafana/bin')
 	#subprocess.run("rm Metrics.tar.gz")
+	stopThread = False
+	thread = threading.Thread(target=worker, args=(database,database_connects, now, ips, locator, countries, connections_per_country, stopThread))
+	thread.start()
 
 def stop():
 	#commands = ["killall grafana-server", "killall prometheus", "killall node_exporter", "tput setaf 1; \"Please do not close this window, the system is performing Metrics system compression\";tput sgr0", "tar -czf Metrics.tar.gz Metrics", "tput setaf 2; \"Metrics compression complete; it is now safe to close this window.\";tput sgr0", "rm -r Metrics"]
@@ -64,10 +68,7 @@ def worker(database,database_connects, now, ips, locator, countries, metric, sto
 	database_connects = database.connect()
 	ips = database.get_connection_ips(database_connects, now)
 
-	while True:
-		if stopThread == True:
-			break
-
+	while stopThread == False:
 		for x in ips:
 			print(x)
 			country_code = locator.get_all(x).country_short
@@ -87,7 +88,4 @@ def worker(database,database_connects, now, ips, locator, countries, metric, sto
 		ips = ""
 		database_connects = database.connect()
 		ips = database.get_connection_ips(database_connects, now)
-	
-stopThread = False
-thread = threading.Thread(target=worker, args=(database,database_connects, now, ips, locator, countries, connections_per_country,stopThread))
-thread.start()
+	print("Stopping***********************************")
