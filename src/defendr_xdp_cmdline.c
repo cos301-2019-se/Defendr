@@ -111,7 +111,7 @@ static void usage(char *argv[]){
 const int LOW = 1;
 const int MED = 0;
 const int HIGH = -1;
-const char *uri_str = "mongodb+srv://darknites:D%40rkN1t3s@defendr-1vnvv.azure.mongodb.net/test?retryWrites=true&ssl=true";
+const char *uri_str = "mongodb+srv://darknites:D%40rkN1t3s@defendr-1vnvv.azure.mongodb.net/admin?retryWrites=true&w=majority";
 mongoc_client_t *client = NULL;
 mongoc_database_t *database = NULL;
 mongoc_collection_t *collection = NULL;
@@ -509,9 +509,7 @@ static  void start_logging(){
 					else if(packet_log->reason == REASON_NON_TCP) reason = "not_tcp";
 					else reason = "unknown";
 
-					if(packet_log->status == LOG_ENTER){
-						status= "enter";
-					}else if(packet_log->status == LOG_PASS){
+					if(packet_log->status == LOG_PASS){
 						status= "pass";
 					}else if(packet_log->status == LOG_DROP){
 						status= "drop";

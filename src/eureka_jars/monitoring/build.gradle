@@ -1,0 +1,43 @@
+plugins {
+	id 'org.springframework.boot' version '2.1.6.RELEASE'
+	id 'java'
+}
+
+apply plugin: 'io.spring.dependency-management'
+
+group = 'com.defender'
+version = '0.0.1-SNAPSHOT'
+sourceCompatibility = '1.8'
+
+repositories {
+	mavenCentral()
+}
+
+ext {
+	set('springCloudVersion', "Greenwich.SR1")
+}
+
+dependencies {
+	implementation 'org.springframework.cloud:spring-cloud-starter-netflix-eureka-client'
+	implementation 'org.springframework.boot:spring-boot-starter-web'
+	testImplementation 'org.springframework.boot:spring-boot-starter-test'
+	implementation 'org.springframework.boot:spring-boot-starter-actuator'
+	runtime 'io.micrometer:micrometer-registry-prometheus'
+	implementation 'org.springframework.boot:spring-boot-starter-web'
+}
+
+dependencyManagement {
+	imports {
+		mavenBom "org.springframework.cloud:spring-cloud-dependencies:${springCloudVersion}"
+	}
+}
+
+task deploy(dependsOn: jar, type: Copy) {
+    from "src/main/resources/node_exporter"
+    into "build/libs"
+	include "node_exporter"
+}
+
+jar {
+	deploy
+}
