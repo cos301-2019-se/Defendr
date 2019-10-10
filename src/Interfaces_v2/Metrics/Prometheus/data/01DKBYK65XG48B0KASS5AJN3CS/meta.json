@@ -1,0 +1,17 @@
+{
+	"ulid": "01DKBYK65XG48B0KASS5AJN3CS",
+	"minTime": 1566453600000,
+	"maxTime": 1566460800000,
+	"stats": {
+		"numSamples": 479134,
+		"numSeries": 1091,
+		"numChunks": 4803
+	},
+	"compaction": {
+		"level": 1,
+		"sources": [
+			"01DKBYK65XG48B0KASS5AJN3CS"
+		]
+	},
+	"version": 1
+}
