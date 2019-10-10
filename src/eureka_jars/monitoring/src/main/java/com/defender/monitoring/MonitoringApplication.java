@@ -78,6 +78,8 @@ public class MonitoringApplication {
 		try{
 			Worker worker = new Worker();
 			worker.start();
+		}catch(Exception e){
+			System.out.println("An exception has occurred in main in MonitoringApplication.");
 		}finally{
 			ProcessBuilder pb = new ProcessBuilder("killall node_exporter");
 			System.out.println("Back-end metrics shutdown successful");
