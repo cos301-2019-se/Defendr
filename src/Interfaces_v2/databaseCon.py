@@ -77,11 +77,12 @@ class database():
         col = db["packets_list"]
         data =[]
         if input=="":
-            for x in col.find({},{"_id": 0}).skip(skipNr).limit(limitNr):
+            for x in col.find({},{"_id": 0}).skip(skipNr).limit(limitNr).sort(insort, sort):
                 data.append(x)
         else:
             query = {searchOn: input}
-            for x in col.find(query,{"_id": 0}).sort(insort, sort.skip(skipNr)).limit(limitNr):
+            print( col.find(query,{"_id": 0}))
+            for x in col.find(query,{"_id": 0}).skip(skipNr).limit(limitNr).sort(insort, sort):
                 data.append(x)
         return data
 
