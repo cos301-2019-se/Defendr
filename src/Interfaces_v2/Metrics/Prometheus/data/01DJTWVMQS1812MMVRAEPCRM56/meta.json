@@ -1,0 +1,17 @@
+{
+	"ulid": "01DJTWVMQS1812MMVRAEPCRM56",
+	"minTime": 1566403200000,
+	"maxTime": 1566410400000,
+	"stats": {
+		"numSamples": 1843989,
+		"numSeries": 1148,
+		"numChunks": 6800
+	},
+	"compaction": {
+		"level": 1,
+		"sources": [
+			"01DJTWVMQS1812MMVRAEPCRM56"
+		]
+	},
+	"version": 1
+}
