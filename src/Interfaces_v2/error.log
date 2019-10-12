@@ -721,3 +721,18 @@ AttributeError: 'str' object has no attribute 'stop'
     thread.stop()
 AttributeError: 'str' object has no attribute 'stop'
 
+                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                       
+[2019-10-12 22:45:37] Traceback (most recent call last):
+  File "main.py", line 98, in <module>
+    LoginApp().run()
+  File "/usr/local/lib/python3.6/dist-packages/kivy/app.py", line 856, in run
+    self.stop()
+  File "/usr/local/lib/python3.6/dist-packages/kivy/app.py", line 864, in stop
+    self.dispatch('on_stop')
+  File "kivy/_event.pyx", line 707, in kivy._event.EventDispatcher.dispatch
+  File "main.py", line 48, in on_stop
+    Metrics.stop()
+  File "/home/darknites/Documents/Defendr/src/Interfaces_v2/Metrics.py", line 64, in stop
+    thread.stop()
+AttributeError: 'str' object has no attribute 'stop'
+
