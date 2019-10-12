@@ -1,4 +1,5 @@
 #! /bin/bash
+sudo chown -R $USER
 sudo apt-get install -y scite
 sudo scite /etc/ld.so.conf
 cd src/mongoDriver
@@ -27,6 +28,7 @@ sudo apt install -y linux-headers-$(uname -r)
 sudo apt install -y bcc bpfcc-tools
 sudo apt install -y python3
 sudo apt install -y python3-pip
+sudo apt install -y python3-tk
 sudo apt-get install -y libsdl2-dev libsdl2-image-dev libsdl2-mixer-dev libsdl2-ttf-dev 
 sudo apt-get install -y zlib1g-dev
 sudo apt-get install -y libportmidi-dev libswscale-dev libavformat-dev libavcodec-dev zlib1g-dev
@@ -45,21 +47,26 @@ sudo apt install -y net-tools
 sudo apt install -y apache2
 sudo apt-get install -y libtool
 sudo apt-get install -y autoconf
+pip3 install prometheus_client
+pip3 install flask_prometheus_metrics
+pip3 install flas_prometheus_metrics[flask]
 sudo apt-get install -y arptables
 cd src
-sudo rm -r IP2Location-C-Library-master
 unzip IP2Location-C-Library-master.zip
 cd IP2Location-C-Library-master
 sudo autoreconf -i -v --force
 sudo ./configure
 sudo make
-sudo make install
+sudo make install -y
 cd data
 sudo perl ip-country.pl
 cd ../../
 make
 sudo ldconfig
 cd Interfaces_v2
+sudo add-apt-repository ppa:kivy-team/kivy
+sudo apt-get update 
+sudo apt-get install python-kivy python3-kivy python-kivy-examples
 wget https://github.com/chrislim2888/IP2Location-Python/archive/master.zip
 unzip master.zip
 rm master.zip
@@ -67,4 +74,6 @@ sudo IP2Location-Python-master/python3 setup.py build
 sudo python3 IP2Location-Python-master/setup.py install
 mv IP2Location-Python-master/bin/IP-COUNTRY.BIN Metrics
 rm -r IP2Location-Python-master
-python3 main.py
+sudo chmod +wrx Metrics/permissions.sh
+./Metrics/permissions.sh
+sudo python3 main.py
