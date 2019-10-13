@@ -78,8 +78,7 @@ mv IP2Location-Python-master/data/IP-COUNTR*.BIN Metrics
 sudo rm -r IP2Location-Python-master
 cd Metrics
 sudo chmod +wrx permissions.sh
-chmod +wrx node_exporter/node_exporter
-chmod +wrx Prometheus/prometheus
-chmod +wrx Grafana/bin/grafana-server
+sudo ./permissions.sh
+chmod +wrx ../../eureka_jars/monitoring/src/main/resources/node_exporter
 cd ..
-sudo python3 main.py
+python3 main.py
