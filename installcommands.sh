@@ -57,7 +57,7 @@ cd IP2Location-C-Library-master
 sudo autoreconf -i -v --force
 sudo ./configure
 sudo make
-sudo make install -y
+sudo make install
 cd data
 sudo perl ip-country.pl
 cd ../../
