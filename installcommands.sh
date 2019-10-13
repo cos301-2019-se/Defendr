@@ -69,13 +69,17 @@ sudo apt-get update
 sudo apt-get install python-kivy python3-kivy python-kivy-examples
 wget https://github.com/chrislim2888/IP2Location-Python/archive/master.zip
 unzip master.zip
-rm master.zip
+sudo rm master.zip
 cd IP2Location-Python-master/
 sudo python3 setup.py build
 sudo python3 setup.py install
 cd ..
-mv IP2Location-Python-master/bin/IP-COUNTRY.BIN Metrics
-rm -r IP2Location-Python-master
-sudo chmod +wrx Metrics/permissions.sh
-./Metrics/permissions.sh
+mv IP2Location-Python-master/data/IP-COUNTR*.BIN Metrics
+sudo rm -r IP2Location-Python-master
+cd Metrics
+sudo chmod +wrx permissions.sh
+chmod +wrx node_exporter/node_exporter
+chmod +wrx Prometheus/prometheus
+chmod +wrx Grafana/bin/grafana-server
+cd ..
 sudo python3 main.py
