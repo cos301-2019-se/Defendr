@@ -5,7 +5,8 @@ sudo scite /etc/ld.so.conf
 cd src/mongoDriver
 sudo apt-key adv --keyserver hkp://keyserver.ubuntu.com:80 --recv 9DA31620334BD75D9DCB49F368818C72E52529D4
 echo "deb http://repo.mongodb.org/apt/debian stretch/mongodb-org/4.0 main" | sudo tee /etc/apt/sources.list.d/mongodb-org-4.0.list
-sudo apt-get update
+sudo add-apt-repository ppa:kivy-team/kivy
+sudo apt-get update 
 sudo apt-get install -y libcurl4
 sudo apt-get install -y cmake
 sudo apt-get install -y -y mongodb-org
@@ -64,8 +65,6 @@ cd ../../
 make
 sudo ldconfig
 cd Interfaces_v2
-sudo add-apt-repository ppa:kivy-team/kivy
-sudo apt-get update 
 sudo apt-get install python-kivy python3-kivy python-kivy-examples
 wget https://github.com/chrislim2888/IP2Location-Python/archive/master.zip
 unzip master.zip
@@ -79,6 +78,6 @@ sudo rm -r IP2Location-Python-master
 cd Metrics
 sudo chmod +wrx permissions.sh
 sudo ./permissions.sh
-chmod +wrx ../../eureka_jars/monitoring/src/main/resources/node_exporter
+sudo chmod +wrx ../../eureka_jars/monitoring/src/main/resources/node_exporter
 cd ..
 python3 main.py
