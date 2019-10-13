@@ -53,6 +53,7 @@ pip3 install flask_prometheus_metrics
 pip3 install flask_prometheus_metrics[flask]
 sudo apt-get install -y arptables
 cd src
+cd IP2Location-C-Library-master.zip
 unzip IP2Location-C-Library-master.zip
 cd IP2Location-C-Library-master
 sudo autoreconf -i -v --force
@@ -65,6 +66,7 @@ cd ../../
 make
 sudo ldconfig
 cd Interfaces_v2
+sudo rm -r IP2Location-Python-master
 sudo apt-get install python-kivy python3-kivy python-kivy-examples
 wget https://github.com/chrislim2888/IP2Location-Python/archive/master.zip
 unzip master.zip
@@ -80,4 +82,4 @@ sudo chmod +wrx permissions.sh
 sudo ./permissions.sh
 sudo chmod +wrx ../../eureka_jars/monitoring/src/main/resources/node_exporter
 cd ..
-python3 main.py
+sudo python3 main.py
