@@ -5,7 +5,8 @@ sudo scite /etc/ld.so.conf
 cd src/mongoDriver
 sudo apt-key adv --keyserver hkp://keyserver.ubuntu.com:80 --recv 9DA31620334BD75D9DCB49F368818C72E52529D4
 echo "deb http://repo.mongodb.org/apt/debian stretch/mongodb-org/4.0 main" | sudo tee /etc/apt/sources.list.d/mongodb-org-4.0.list
-sudo apt-get update
+sudo add-apt-repository ppa:kivy-team/kivy
+sudo apt-get update 
 sudo apt-get install -y libcurl4
 sudo apt-get install -y cmake
 sudo apt-get install -y -y mongodb-org
@@ -20,7 +21,7 @@ mkdir cmake-build
 cd cmake-build
 cmake -DENABLE_AUTOMATIC_INIT_AND_CLEANUP=OFF ..
 make
-sudo make install
+sudo make install -y
 cd ../../../../
 sudo apt install -y clang llvm libelf-dev
 sudo apt install -y linux-tools-$(uname -r)
@@ -49,31 +50,36 @@ sudo apt-get install -y libtool
 sudo apt-get install -y autoconf
 pip3 install prometheus_client
 pip3 install flask_prometheus_metrics
-pip3 install flas_prometheus_metrics[flask]
+pip3 install flask_prometheus_metrics[flask]
 sudo apt-get install -y arptables
 cd src
+cd IP2Location-C-Library-master.zip
 unzip IP2Location-C-Library-master.zip
 cd IP2Location-C-Library-master
 sudo autoreconf -i -v --force
 sudo ./configure
 sudo make
-sudo make install -y
+sudo make install
 cd data
 sudo perl ip-country.pl
 cd ../../
 make
 sudo ldconfig
 cd Interfaces_v2
-sudo add-apt-repository ppa:kivy-team/kivy
-sudo apt-get update 
+sudo rm -r IP2Location-Python-master
 sudo apt-get install python-kivy python3-kivy python-kivy-examples
 wget https://github.com/chrislim2888/IP2Location-Python/archive/master.zip
 unzip master.zip
-rm master.zip
-sudo IP2Location-Python-master/python3 setup.py build
-sudo python3 IP2Location-Python-master/setup.py install
-mv IP2Location-Python-master/bin/IP-COUNTRY.BIN Metrics
-rm -r IP2Location-Python-master
-sudo chmod +wrx Metrics/permissions.sh
-./Metrics/permissions.sh
+sudo rm master.zip
+cd IP2Location-Python-master/
+sudo python3 setup.py build
+sudo python3 setup.py install
+cd ..
+mv IP2Location-Python-master/data/IP-COUNTR*.BIN Metrics
+sudo rm -r IP2Location-Python-master
+cd Metrics
+sudo chmod +wrx permissions.sh
+sudo ./permissions.sh
+sudo chmod +wrx ../../eureka_jars/monitoring/src/main/resources/node_exporter
+cd ..
 sudo python3 main.py
