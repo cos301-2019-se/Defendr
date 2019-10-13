@@ -53,7 +53,7 @@ pip3 install flask_prometheus_metrics
 pip3 install flask_prometheus_metrics[flask]
 sudo apt-get install -y arptables
 cd src
-cd IP2Location-C-Library-master.zip
+sudo rm -r IP2Location-C-Library-master
 unzip IP2Location-C-Library-master.zip
 cd IP2Location-C-Library-master
 sudo autoreconf -i -v --force
