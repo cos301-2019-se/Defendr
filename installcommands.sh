@@ -20,7 +20,7 @@ mkdir cmake-build
 cd cmake-build
 cmake -DENABLE_AUTOMATIC_INIT_AND_CLEANUP=OFF ..
 make
-sudo make install
+sudo make install -y
 cd ../../../../
 sudo apt install -y clang llvm libelf-dev
 sudo apt install -y linux-tools-$(uname -r)
@@ -49,7 +49,7 @@ sudo apt-get install -y libtool
 sudo apt-get install -y autoconf
 pip3 install prometheus_client
 pip3 install flask_prometheus_metrics
-pip3 install flas_prometheus_metrics[flask]
+pip3 install flask_prometheus_metrics[flask]
 sudo apt-get install -y arptables
 cd src
 unzip IP2Location-C-Library-master.zip
@@ -70,8 +70,10 @@ sudo apt-get install python-kivy python3-kivy python-kivy-examples
 wget https://github.com/chrislim2888/IP2Location-Python/archive/master.zip
 unzip master.zip
 rm master.zip
-sudo IP2Location-Python-master/python3 setup.py build
-sudo python3 IP2Location-Python-master/setup.py install
+cd IP2Location-Python-master/
+sudo python3 setup.py build
+sudo python3 setup.py install
+cd ..
 mv IP2Location-Python-master/bin/IP-COUNTRY.BIN Metrics
 rm -r IP2Location-Python-master
 sudo chmod +wrx Metrics/permissions.sh
