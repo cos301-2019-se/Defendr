@@ -281,12 +281,17 @@ static void blacklist_print_ipv4(__u32 ip){
 static void blacklist_list_all_ipv4(int fd){
 	__u32 key, *prev_key = NULL;
 	__u64 value;
-
+	bool first = true;
 	while (bpf_map_get_next_key(fd, prev_key, &key) == 0) {
 		//value = get_key32_value64_percpu(fd, key);
+		if (!first){
+			printf("%s", key ? "," : "" );
+		}else{
+			first = false;		
+		}
 		blacklist_print_ipv4(key);
 		prev_key = &key;
-		printf("%s", key ? "," : "" );
+		
 	}
 
 }
@@ -674,7 +679,18 @@ static void get_stats(){
 		service_prev_key = &service_key;
 	}
 	close(fd_services);
-	printf("]\n");
+	printf("],\n");
+	printf("blacklist:[");
+	int fd_list = open_bpf_map(file_blacklist);			
+	blacklist_list_all_ipv4(fd_list);
+	close(fd_list);
+
+	printf("\n],\n");
+	printf("whitelist:[");
+	fd_list = open_bpf_map(file_whitelist);			
+	blacklist_list_all_ipv4(fd_list);
+	close(fd_list);
+	printf("\n]\n");
 	printf("}\n");
 }
 

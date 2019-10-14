@@ -1,5 +1,5 @@
 #! /bin/bash
-sudo chown -R $USER
+sudo chown -R $USER src
 sudo echo "include /usr/local/lib" >> /etc/ld.so.conf
 cd src/mongoDriver
 sudo apt-key adv --keyserver hkp://keyserver.ubuntu.com:80 --recv 9DA31620334BD75D9DCB49F368818C72E52529D4
@@ -19,7 +19,7 @@ mkdir cmake-build
 cd cmake-build
 cmake -DENABLE_AUTOMATIC_INIT_AND_CLEANUP=OFF ..
 make
-sudo make install -y
+sudo make install
 cd ../../../../
 sudo apt install -y clang llvm libelf-dev
 sudo apt install -y linux-tools-$(uname -r)
@@ -65,7 +65,6 @@ make
 sudo ldconfig
 cd Interfaces_v2
 sudo rm -r IP2Location-Python-master
-sudo apt-get install python-kivy python3-kivy python-kivy-examples
 wget https://github.com/chrislim2888/IP2Location-Python/archive/master.zip
 unzip master.zip
 sudo rm master.zip
@@ -76,8 +75,13 @@ cd ..
 mv IP2Location-Python-master/data/IP-COUNTR*.BIN Metrics
 sudo rm -r IP2Location-Python-master
 cd Metrics
-sudo chmod +wrx permissions.sh
-sudo ./permissions.sh
-sudo chmod +wrx ../../eureka_jars/monitoring/src/main/resources/node_exporter
-cd ..
+cd node_exporter
+sudo chmod +wrx node_exporter
+cd ../Prometheus
+sudo chmod +wrx prometheus
+cd ../Grafana/bin
+sudo chmod +wrx grafana-server
+cd ../../../../eureka_jars/monitoring/src/main/resources
+sudo chmod +wrx node_exporter
+cd ../../../../../Interfaces_v2
 sudo python3 main.py
