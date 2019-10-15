@@ -737,6 +737,7 @@ AttributeError: 'str' object has no attribute 'stop'
 AttributeError: 'str' object has no attribute 'stop'
 
 
+<<<<<<< HEAD
 [2019-10-15 17:31:54] Traceback (most recent call last):
   File "main.py", line 98, in <module>
     LoginApp().run()
@@ -861,4 +862,109 @@ Invalid data after declaration
   File "/usr/lib/python3.6/socket.py", line 713, in create_connection
     sock.connect(sa)
 TimeoutError: [Errno 110] Connection timed out
+=======
+[2019-10-15 13:13:32] Traceback (most recent call last):
+  File "C:/Users/Chris/OneDrive/tuks/COS 301/capstone/Git/Defendr2/Defendr/src/Interfaces_v2/main.py", line 26, in <module>
+    class LoginApp(App):
+  File "C:/Users/Chris/OneDrive/tuks/COS 301/capstone/Git/Defendr2/Defendr/src/Interfaces_v2/main.py", line 39, in LoginApp
+    Metrics.start()
+NameError: name 'Metrics' is not defined
+
+
+[2019-10-15 13:31:17] Traceback (most recent call last):
+  File "C:/Users/Chris/OneDrive/tuks/COS 301/capstone/Git/Defendr2/Defendr/src/Interfaces_v2/main.py", line 93, in <module>
+    LoginApp().run()
+  File "C:\Users\Chris\AppData\Local\Programs\Python\Python37\lib\site-packages\kivy\app.py", line 855, in run
+    runTouchApp()
+  File "C:\Users\Chris\AppData\Local\Programs\Python\Python37\lib\site-packages\kivy\base.py", line 504, in runTouchApp
+    EventLoop.window.mainloop()
+  File "C:\Users\Chris\AppData\Local\Programs\Python\Python37\lib\site-packages\kivy\core\window\window_sdl2.py", line 747, in mainloop
+    self._mainloop()
+  File "C:\Users\Chris\AppData\Local\Programs\Python\Python37\lib\site-packages\kivy\core\window\window_sdl2.py", line 479, in _mainloop
+    EventLoop.idle()
+  File "C:\Users\Chris\AppData\Local\Programs\Python\Python37\lib\site-packages\kivy\base.py", line 342, in idle
+    self.dispatch_input()
+  File "C:\Users\Chris\AppData\Local\Programs\Python\Python37\lib\site-packages\kivy\base.py", line 327, in dispatch_input
+    post_dispatch_input(*pop(0))
+  File "C:\Users\Chris\AppData\Local\Programs\Python\Python37\lib\site-packages\kivy\base.py", line 293, in post_dispatch_input
+    wid.dispatch('on_touch_up', me)
+  File "kivy\_event.pyx", line 707, in kivy._event.EventDispatcher.dispatch
+  File "C:\Users\Chris\AppData\Local\Programs\Python\Python37\lib\site-packages\kivy\uix\behaviors\button.py", line 179, in on_touch_up
+    self.dispatch('on_release')
+  File "kivy\_event.pyx", line 703, in kivy._event.EventDispatcher.dispatch
+  File "kivy\_event.pyx", line 1214, in kivy._event.EventObservers.dispatch
+  File "kivy\_event.pyx", line 1098, in kivy._event.EventObservers._dispatch
+  File "C:\Users\Chris\AppData\Local\Programs\Python\Python37\lib\site-packages\kivy\lang\builder.py", line 64, in custom_callback
+    exec(__kvlang__.co_value, idmap)
+  File "C:\Users\Chris\OneDrive\tuks\COS 301\capstone\Git\Defendr2\Defendr\src\Interfaces_v2\blacklist_window.kv", line 70, in <module>
+    on_release: root.add_IP(txt_ip_addr.text)
+  File "C:\Users\Chris\OneDrive\tuks\COS 301\capstone\Git\Defendr2\Defendr\src\Interfaces_v2\blacklist_window.py", line 24, in add_IP
+    self.ids['btn_info'].visible = True
+KeyError: 'btn_info'
+
+
+[2019-10-15 13:41:24] Traceback (most recent call last):
+  File "C:/Users/Chris/OneDrive/tuks/COS 301/capstone/Git/Defendr2/Defendr/src/Interfaces_v2/main.py", line 93, in <module>
+    LoginApp().run()
+  File "C:\Users\Chris\AppData\Local\Programs\Python\Python37\lib\site-packages\kivy\app.py", line 828, in run
+    self.load_kv(filename=self.kv_file)
+  File "C:\Users\Chris\AppData\Local\Programs\Python\Python37\lib\site-packages\kivy\app.py", line 599, in load_kv
+    root = Builder.load_file(rfilename)
+  File "C:\Users\Chris\AppData\Local\Programs\Python\Python37\lib\site-packages\kivy\lang\builder.py", line 301, in load_file
+    return self.load_string(data, **kwargs)
+  File "C:\Users\Chris\AppData\Local\Programs\Python\Python37\lib\site-packages\kivy\lang\builder.py", line 368, in load_string
+    parser = Parser(content=string, filename=fn)
+  File "C:\Users\Chris\AppData\Local\Programs\Python\Python37\lib\site-packages\kivy\lang\parser.py", line 401, in __init__
+    self.parse(content)
+  File "C:\Users\Chris\AppData\Local\Programs\Python\Python37\lib\site-packages\kivy\lang\parser.py", line 507, in parse
+    self.execute_directives()
+  File "C:\Users\Chris\AppData\Local\Programs\Python\Python37\lib\site-packages\kivy\lang\parser.py", line 461, in execute_directives
+    kivy.lang.builder.Builder.load_file(ref)
+  File "C:\Users\Chris\AppData\Local\Programs\Python\Python37\lib\site-packages\kivy\lang\builder.py", line 301, in load_file
+    return self.load_string(data, **kwargs)
+  File "C:\Users\Chris\AppData\Local\Programs\Python\Python37\lib\site-packages\kivy\lang\builder.py", line 368, in load_string
+    parser = Parser(content=string, filename=fn)
+  File "C:\Users\Chris\AppData\Local\Programs\Python\Python37\lib\site-packages\kivy\lang\parser.py", line 401, in __init__
+    self.parse(content)
+  File "C:\Users\Chris\AppData\Local\Programs\Python\Python37\lib\site-packages\kivy\lang\parser.py", line 507, in parse
+    self.execute_directives()
+  File "C:\Users\Chris\AppData\Local\Programs\Python\Python37\lib\site-packages\kivy\lang\parser.py", line 461, in execute_directives
+    kivy.lang.builder.Builder.load_file(ref)
+  File "C:\Users\Chris\AppData\Local\Programs\Python\Python37\lib\site-packages\kivy\lang\builder.py", line 301, in load_file
+    return self.load_string(data, **kwargs)
+  File "C:\Users\Chris\AppData\Local\Programs\Python\Python37\lib\site-packages\kivy\lang\builder.py", line 368, in load_string
+    parser = Parser(content=string, filename=fn)
+  File "C:\Users\Chris\AppData\Local\Programs\Python\Python37\lib\site-packages\kivy\lang\parser.py", line 401, in __init__
+    self.parse(content)
+  File "C:\Users\Chris\AppData\Local\Programs\Python\Python37\lib\site-packages\kivy\lang\parser.py", line 507, in parse
+    self.execute_directives()
+  File "C:\Users\Chris\AppData\Local\Programs\Python\Python37\lib\site-packages\kivy\lang\parser.py", line 461, in execute_directives
+    kivy.lang.builder.Builder.load_file(ref)
+  File "C:\Users\Chris\AppData\Local\Programs\Python\Python37\lib\site-packages\kivy\lang\builder.py", line 301, in load_file
+    return self.load_string(data, **kwargs)
+  File "C:\Users\Chris\AppData\Local\Programs\Python\Python37\lib\site-packages\kivy\lang\builder.py", line 368, in load_string
+    parser = Parser(content=string, filename=fn)
+  File "C:\Users\Chris\AppData\Local\Programs\Python\Python37\lib\site-packages\kivy\lang\parser.py", line 401, in __init__
+    self.parse(content)
+  File "C:\Users\Chris\AppData\Local\Programs\Python\Python37\lib\site-packages\kivy\lang\parser.py", line 510, in parse
+    objects, remaining_lines = self.parse_level(0, lines)
+  File "C:\Users\Chris\AppData\Local\Programs\Python\Python37\lib\site-packages\kivy\lang\parser.py", line 614, in parse_level
+    level + 1, lines[i:], spaces)
+  File "C:\Users\Chris\AppData\Local\Programs\Python\Python37\lib\site-packages\kivy\lang\parser.py", line 614, in parse_level
+    level + 1, lines[i:], spaces)
+  File "C:\Users\Chris\AppData\Local\Programs\Python\Python37\lib\site-packages\kivy\lang\parser.py", line 614, in parse_level
+    level + 1, lines[i:], spaces)
+  [Previous line repeated 4 more times]
+  File "C:\Users\Chris\AppData\Local\Programs\Python\Python37\lib\site-packages\kivy\lang\parser.py", line 568, in parse_level
+    '%s spaces' % spaces)
+kivy.lang.parser.ParserException: Parser: File "C:\Users\Chris\OneDrive\tuks\COS 301\capstone\Git\Defendr2\Defendr\src\Interfaces_v2\whitelist_window.kv", line 42:
+...
+     40:                                halign: 'left'
+     41:                                size_hint_x:0.4
+>>   42:                             MDLabel:
+     43:                                id: lbl_error
+     44:                                theme_text_color: 'Primary'
+...
+Invalid indentation, must be a multiple of 4 spaces
+>>>>>>> development
 

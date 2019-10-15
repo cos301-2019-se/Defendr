@@ -1,5 +1,4 @@
 import os
-import json
 
 # Class XDP Controller(Allows front end to communicate with backend).
 class controller:

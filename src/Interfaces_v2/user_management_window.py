@@ -1,14 +1,9 @@
 from kivy.app import App
-from kivy.uix.screenmanager import Screen, SlideTransition
-from cefpython3 import cefpython as cef
-import platform
-import sys
+from kivy.uix.screenmanager import Screen
 from kivy.uix.popup import Popup
 from kivy.lang import Builder
-from kivy.uix.button import Button
 
 from MDTable import Table
-import re
 
 Builder.load_string('''
 
@@ -211,8 +206,6 @@ Builder.load_string('''
 
 ''')
 
-import databaseCon
-
 class Edit_User_Popup(Popup):
     details=[]
     def start(self):
@@ -267,7 +260,7 @@ class Edit_User_Popup(Popup):
             else:
                 if (self.details[4] == "no" and self.ids['edit_email_notification_check'].active):
                     output=app.facade.update_user_detail(self.details[2], "sendEmail", "yes")
-        if (output == "Add"):
+        if (output == "Updated"):
             self.dismiss()
         else:
             if(output == ""):
@@ -308,23 +301,35 @@ class User_Management_Window(Screen):
     def edit_user(self,user_email_to_modify):
         app = App.get_running_app()
         app.email = user_email_to_modify
-        popup = Edit_User_Popup()
-        popup.start()
-        popup.open()
-        self.reset_other()
+        if app.facade.check_email(app.email):
+            self.reset_other()
+            popup = Edit_User_Popup()
+            popup.start()
+            popup.open()
+        else:
+            self.ids['lbl_error'].text = "Invalid email. "
+            self.ids['btn_info'].visible = True
 
     def remove_user(self, user_email_to_delete):
         app = App.get_running_app()
         if(app.facade.check_email(user_email_to_delete)):
             app.email=user_email_to_delete
+            self.reset_other()
             popup = Delete_User_Popup()
             popup.open()
-        self.reset_other()
+        else:
+            self.ids['lbl_error'].text = "Invalid email."
+            self.ids['btn_info'].visible = True
 
     def verify_user(self, user_email_to_verify):
         app = App.get_running_app()
-        app.facade.verify_user(user_email_to_verify)
         self.reset_other()
+        if (app.facade.check_email(user_email_to_verify)):
+            app.facade.verify_user(user_email_to_verify)
+            self.reset_other()
+        else:
+            self.ids['lbl_error'].text = "Invalid email. "
+            self.ids['btn_info'].visible = True
 
     def reset_add(self):
         self.ids['user_name'].text = ""
@@ -333,7 +338,10 @@ class User_Management_Window(Screen):
         self.ids['user_password'].text = ""
         self.ids['user_password_confirm'].text = ""
         self.ids['lbl_error'].text = ""
+        self.ids['lbl_error'].text = ""
         self.ids['btn_info'].visible = False
 
     def reset_other(self):
         self.ids['user_email_to_modify'].text=""
+        self.ids['lbl_error'].text = ""
+        self.ids['btn_info'].visible = False

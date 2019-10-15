@@ -1,7 +1,7 @@
 from kivy.app import App
 from kivy.uix.screenmanager import Screen, SlideTransition
 from cefpython3 import cefpython as cef
-import platform
+
 import sys
 
 class Home(Screen):

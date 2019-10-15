@@ -34,9 +34,9 @@ class email():
                                     '',
                                     body])
                 server.sendmail(self.gmail_sender, [TO], BODY)
-                #print('Email sent to ' + TO)
         except:
-            print('Mail not send.')
+            msf ='Mail not send.'
+
     # Connect to SMTP server.
     def connect_To_SMTP_server(self):
         server = smtplib.SMTP('mail.darknites.co.za', 587 )
