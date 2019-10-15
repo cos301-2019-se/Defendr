@@ -33,7 +33,8 @@
 >*    Can adopt new skills fairly quickly
 
 ###### **Work Experience:**
-> **
+>* Research assistant for the Nature Inspired Computing Optimization Group at the University of Pretoria under Prof. Nelishia Pillay.
+
 
 ###### **Attitudes:**
 >*   Diligent worker
