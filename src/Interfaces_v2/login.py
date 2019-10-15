@@ -1,22 +1,9 @@
-from kivy.core.window import Window
-from kivy.app import App
-from kivy.properties import StringProperty
-from kivy.uix.screenmanager import ScreenManager, Screen, SlideTransition
-from kivy.lang import Builder
-from kivy.properties import ObjectProperty, StringProperty
-from kivymd.theming import ThemeManager
-from navigationdrawer import NavigationDrawer
-from cefpython3 import cefpython as cef
-import sys
 
-from home import Home
-from blacklist_window import Blacklist_Window
-from logs_window import  Logs_Window
-from user_management_window import User_Management_Window
-from kivy.core.window import Window
+from kivy.app import App
+from kivy.uix.screenmanager import  Screen, SlideTransition
+
 
 from Facade import FacadeClass
-import time
 import datetime
 
 class Login(Screen):
@@ -31,24 +18,8 @@ class Login(Screen):
             app.facade = facade
 
     def do_login(self, loginText, passwordText):
-        # users = ["Jeandre", "Muhammed","Sisa","Christiaan","Ruslynn","Chris"]
-        # passwds = ["jPass1","mPass1","sPass1","cPass1","rPass1","cPass1"]
-        # last = ["Botha","Carrim","Khoza","Opperman","Appana","Osbrone"]
-        # email = ["u17094446@tuks.co.za","u15019854@tuks.co.za","u15034993@tuks.co.za","u17023239@tuks.co.za","u14016304@tuks.co.za","Chris@gmail.com"]
-
         self.ids['txt_login_email'].text = ""
         self.ids['txt_login_password'].text = ""
-        #app = App.get_running_app()
-        #app.roll = "admin"
-
-        #app.username = loginText
-        #app.password = passwordText
-
-        #self.manager.transition = SlideTransition(direction="left")
-        #self.manager.current = 'home'
-
-        #app.config.read(app.get_application_config())
-        #app.config.write()
 
         app = App.get_running_app()
         output= app.facade.login(loginText,passwordText)
@@ -94,5 +65,4 @@ class Login(Screen):
     def resetForm(self):
         self.ids['txt_login_email'].text = ""
         self.ids['txt_login_password'].text = ""
-        self.ids['lbl_error'].text = ""
         self.ids['btn_info'].visible = False

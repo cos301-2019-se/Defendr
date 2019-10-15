@@ -1,10 +1,7 @@
 import os
 os.environ['KIVY_GL_BACKEND'] = 'sdl2'
-from kivy.core.window import Window
 from kivy.app import App
-from kivy.properties import StringProperty
-from kivy.uix.screenmanager import ScreenManager, Screen, SlideTransition
-from kivy.lang import Builder
+from kivy.uix.screenmanager import ScreenManager, SlideTransition
 from kivy.properties import ObjectProperty, StringProperty
 from kivymd.theming import ThemeManager
 from navigationdrawer import NavigationDrawer
@@ -19,7 +16,7 @@ from logs_window import  Logs_Window
 from login import Login
 from register import Register
 from user_management_window import User_Management_Window
-import Metrics
+#import Metrics
 
 
 class Navigator(NavigationDrawer):
@@ -28,8 +25,6 @@ class Navigator(NavigationDrawer):
 
 class LoginApp(App):
     theme_cls = ThemeManager()
-    #theme_cls.theme_style = 'Dark'
-    #theme_cls.primary_palette = 'DeepPurple'
     theme_cls.accent_palette = 'Grey'
     nav_drawer = ObjectProperty()
     username = StringProperty(None)
@@ -41,11 +36,11 @@ class LoginApp(App):
     # To shutdown all CEF processes on error.
     sys.excepthook = cef.ExceptHook  
     cef.Initialize()
-    Metrics.start()
+    #Metrics.start()
 
     def on_stop(self):
         cef.Shutdown()
-        Metrics.stop()
+        #Metrics.stop()
 
     def build(self):
         self.title = "Defendr"

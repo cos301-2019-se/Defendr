@@ -1,11 +1,6 @@
 from kivy.lang import Builder
-from kivy.uix.gridlayout import GridLayout
 from kivy.uix.boxlayout import BoxLayout
-from kivymd.label import MDLabel
-from kivy.uix.button import Button
 from kivy.properties import NumericProperty, ListProperty,StringProperty
-from kivy.graphics import Color
-from kivy.metrics import dp
 
 Builder.load_string('''
 #:import MDLabel kivymd.label.MDLabel
@@ -67,13 +62,8 @@ Builder.load_string('''
 class Header(BoxLayout):
     text = StringProperty()
 
-
-
 class Cell(BoxLayout):
     text = StringProperty()
-
-
-
 
 class Table(BoxLayout):
     cols = NumericProperty(1)
