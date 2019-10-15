@@ -1,9 +1,4 @@
-cd node_exporter
-sudo chmod +wrx node_exporter
-cd ../Prometheus
-sudo chmod +wrx prometheus
-cd ../Grafana/bin
-sudo chmod +wrx grafana-server
-cd ../../../../eureka_jars/monitoring/src/main/resources
-sudo chmod +wrx node_exporter
-cd ../../../../../Metrics
+sudo chmod +wrx node_exporter/node_exporter
+sudo chmod +wrx Prometheus/prometheus
+sudo chmod +wrx Grafana/bin/grafana-server
+sudo chmod +wrx ../../eureka_jars/monitoring/src/main/resources/node_exporter
