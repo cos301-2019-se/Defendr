@@ -4,7 +4,7 @@
  `
 
  
-![image](https://media.licdn.com/dms/image/C4D03AQFWIUl2J6e8wQ/profile-displayphoto-shrink_800_800/0?e=1574899200&v=beta&t=krofZOaeC6GqdilzlmAojZdkwCALQwBa9VaUUFN_n2M)
+![image](https://media.licdn.com/dms/image/C4D03AQFYXH-Mn56F0g/profile-displayphoto-shrink_200_200/0?e=1576713600&v=beta&t=xKPXLC1mwW2DFIzh1n0OqKwKua2yL_hbBG5DIkkNRBA)
 
 ###### **Name and surname:**
 >   *Jeandre Botha*
