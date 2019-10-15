@@ -299,9 +299,9 @@ static void blacklist_list_all_ipv4(int fd){
 
 static void clear_system_stats(){
 	int fd_system_stats = open_bpf_map(file_system_stats);	
-	for (int i = 0; i < STATS_CATAGORIES_MAX; i++) {
-		long zero = 0;
-		bpf_map_update_elem(fd_system_stats, &i, &zero, BPF_EXIST);
+	for (__u32 i = 0; i < STATS_CATAGORIES_MAX; i++) {
+		__u64 zero = 0;
+		int r = bpf_map_update_elem(fd_system_stats, &i, &zero, BPF_EXIST);
 	}
 	close(fd_system_stats);
 	
@@ -386,15 +386,15 @@ static  void activate_dynamic_blacklist(){
 		
 		int fd_system_stats = open_bpf_map(file_system_stats);	
 		__u64 cps = 0;
-		int index = TOTAL_CPS;
+		/*int index = TOTAL_CPS;
 		cps = get_key32_value64_percpu(fd_system_stats,index);
-		if(cps > 15){
+		if(cps > 25){
 			char cmd[100] = "";
 			strcat(cmd, send_notification_command);
 			strcat(cmd, "cps");
 			system(cmd);			
 		}
-		close(fd_system_stats);
+		close(fd_system_stats);*/
 		
 		fd_watchlist = open_bpf_map(file_ip_watchlist);
 		fd_whitelist = open_bpf_map(file_whitelist);
@@ -410,7 +410,7 @@ static  void activate_dynamic_blacklist(){
 			char ip_txt[INET_ADDRSTRLEN] = {0};
 			if (inet_ntop(AF_INET, &key, ip_txt, sizeof(ip_txt))) {	
 				//printf("%s %s %llu \n","monitor ", ip_txt,value);							
-				if(value > 250){
+				if(value > 500){
 					IP2LocationRecord *record = IP2Location_get_all(IP2LocationObj,ip_txt);
 					char* country = record->country_short;
 					init_db();
@@ -425,7 +425,7 @@ static  void activate_dynamic_blacklist(){
 							insert_into_blacklist(ip_txt);	
 							ip_blacklisted = true;
 							blacklisted_ip = ip_txt;
-						}else if (risk == MED && value > 500){
+						}else if (risk == MED && value > 1000){
 							int fd_blacklist = open_bpf_map(file_blacklist);						
 							blacklist_modify(fd_blacklist,ip_txt, ACTION_ADD);
 							close(fd_blacklist);	
@@ -433,7 +433,7 @@ static  void activate_dynamic_blacklist(){
 							insert_into_blacklist(ip_txt);		
 							ip_blacklisted = true;
 							blacklisted_ip = ip_txt;							
-						}else if (risk == LOW && value > 1000){
+						}else if (risk == LOW && value > 2000){
 							int fd_blacklist = open_bpf_map(file_blacklist);						
 							blacklist_modify(fd_blacklist,ip_txt, ACTION_ADD);
 							close(fd_blacklist);	
@@ -459,6 +459,7 @@ static  void activate_dynamic_blacklist(){
 				++numToRemove;	
 			}				
 			prev_key = &key;
+			cps++;
 		}
 		for(int i = 0; i < numToRemove;++i){
 			watchlist_modify(fd_watchlist,ipsToRemove[i], ACTION_DEL);
@@ -467,6 +468,13 @@ static  void activate_dynamic_blacklist(){
 		close(fd_watchlist);
 		close(fd_whitelist);
 		clear_system_stats();
+		
+		if(cps > 15){
+			char cmd[100] = "";
+			strcat(cmd, send_notification_command);
+			strcat(cmd, "cps");
+			system(cmd);			
+		}
 		
 	}		
 	IP2Location_close(IP2LocationObj);
@@ -637,8 +645,9 @@ static void get_stats(){
 	printf("{\n");
 	
 	printf("\"system\":{\n");
-	for (int i = 0; i < STATS_CATAGORIES_MAX; i++) {
-		value = get_key32_value64_percpu(fd_system_stats,i);
+	for (__u32 i = 0; i < STATS_CATAGORIES_MAX; i++) {
+		//value = get_key32_value64_percfd_system_stats,i);pu(
+		bpf_map_lookup_elem(fd_system_stats, &i, &value);
 		printf("\%s\": %d\n",catagories[i],value);
 	}
 	printf("},\n");
