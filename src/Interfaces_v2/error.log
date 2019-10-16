@@ -737,6 +737,7 @@ AttributeError: 'str' object has no attribute 'stop'
 AttributeError: 'str' object has no attribute 'stop'
 
 
+<<<<<<< Updated upstream
 <<<<<<< HEAD
 [2019-10-15 17:31:54] Traceback (most recent call last):
   File "main.py", line 98, in <module>
@@ -1512,5 +1513,19 @@ AttributeError: 'super' object has no attribute '__getattr__'
     Metrics.stop()
   File "/home/darknites/Documents/Defendr/src/Interfaces_v2/Metrics.py", line 55, in stop
     thread.stop()
+=======
+[2019-10-15 06:14:38] Traceback (most recent call last):
+  File "main.py", line 98, in <module>
+    LoginApp().run()
+  File "/usr/lib/python3/dist-packages/kivy/app.py", line 856, in run
+    self.stop()
+  File "/usr/lib/python3/dist-packages/kivy/app.py", line 864, in stop
+    self.dispatch('on_stop')
+  File "kivy/_event.pyx", line 707, in kivy._event.EventDispatcher.dispatch
+  File "main.py", line 48, in on_stop
+    Metrics.stop()
+  File "/home/sisa/Documents/COS301/Defendr/src/Interfaces_v2/Metrics.py", line 72, in stop
+    connections_per_country_thread.stop()
+>>>>>>> Stashed changes
 AttributeError: 'str' object has no attribute 'stop'
 
