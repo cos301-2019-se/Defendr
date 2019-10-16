@@ -50,7 +50,7 @@ def start():
 	time.sleep(2)
 	subprocess.Popen('./grafana-server', cwd='Metrics/Grafana/bin')
 	stopThread = False
-	connections_per_country_thread = threading.Thread (target=countries_heatmap_metrics, args= (database,database_connects, "15000000", ips, locator, countries, connections_per_country, stopThread))
+	connections_per_country_thread = threading.Thread (target=countries_heatmap_metrics, args= (database,database_connects, now, ips, locator, countries, connections_per_country, stopThread))
 	connections_per_country_thread.start()
 
 def stop():
