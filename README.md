@@ -19,7 +19,7 @@ If installation is required:
 > - Download the repository, and navigate to it's root
 > - Run **./installcommands.sh** in terminal.  Ensure the script has the requisite permission with **chmod +x installcommands.sh**
 > - On the first window that appears, please insert **include /usr/local/lib**, save and exit
-> - If you see the error **bash: ./installcommands.sh: /bin/bash^M: bad interpreter: No such file or directory**. Run the command **sed -i -e 's/\r$//' installcommands.sh** in terminal. Thereafter follow the previous point.
+> - If you see the error **bash: ./installcommands.sh: /bin/bash^M: bad interpreter: No such file or directory**. Run the command **sed -i -e 's/\r$//' installcommands.sh** in terminal, thereafter return to the previous step.
 
 If the system is already installed:
 > - Navigate to **Defendr/src/Interfaces_v2/**
