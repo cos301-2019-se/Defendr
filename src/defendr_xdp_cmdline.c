@@ -689,13 +689,13 @@ static void get_stats(){
 	}
 	close(fd_services);
 	printf("],\n");
-	printf("blacklist:[");
+	printf("\"blacklist\":[");
 	int fd_list = open_bpf_map(file_blacklist);			
 	blacklist_list_all_ipv4(fd_list);
 	close(fd_list);
 
 	printf("\n],\n");
-	printf("whitelist:[");
+	printf("\"whitelist\":[");
 	fd_list = open_bpf_map(file_whitelist);			
 	blacklist_list_all_ipv4(fd_list);
 	close(fd_list);

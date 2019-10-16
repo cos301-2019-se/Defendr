@@ -1552,3 +1552,60 @@ AttributeError: 'str' object has no attribute 'stop'
 AttributeError: 'str' object has no attribute 'stop'
 
 >>>>>>> Monitoring
+
+[2019-10-16 20:17:42] Traceback (most recent call last):
+  File "main.py", line 93, in <module>
+    LoginApp().run()
+  File "/usr/local/lib/python3.6/dist-packages/kivy/app.py", line 829, in run
+    root = self.build()
+  File "main.py", line 47, in build
+    self.manager.add_widget(Login(name='login'))
+  File "/usr/local/lib/python3.6/dist-packages/kivy/uix/screenmanager.py", line 992, in add_widget
+    self.current = screen.name
+  File "kivy/properties.pyx", line 497, in kivy.properties.Property.__set__
+  File "kivy/properties.pyx", line 544, in kivy.properties.Property.set
+  File "kivy/properties.pyx", line 599, in kivy.properties.Property.dispatch
+  File "kivy/_event.pyx", line 1214, in kivy._event.EventObservers.dispatch
+  File "kivy/_event.pyx", line 1120, in kivy._event.EventObservers._dispatch
+  File "/usr/local/lib/python3.6/dist-packages/kivy/uix/screenmanager.py", line 1054, in on_current
+    screen.dispatch('on_pre_enter')
+  File "kivy/_event.pyx", line 703, in kivy._event.EventDispatcher.dispatch
+  File "kivy/_event.pyx", line 1214, in kivy._event.EventObservers.dispatch
+  File "kivy/_event.pyx", line 1098, in kivy._event.EventObservers._dispatch
+  File "/usr/local/lib/python3.6/dist-packages/kivy/lang/builder.py", line 64, in custom_callback
+    exec(__kvlang__.co_value, idmap)
+  File "/home/darknites/Documents/Defendr/src/Interfaces_v2/login.kv", line 7, in <module>
+    on_pre_enter: root.connect()
+  File "/home/darknites/Documents/Defendr/src/Interfaces_v2/login.py", line 17, in connect
+    facade = FacadeClass()
+  File "/home/darknites/Documents/Defendr/src/Interfaces_v2/Facade.py", line 19, in __init__
+    self.smpt_connects = self.smpt.connect_To_SMTP_server()
+  File "/home/darknites/Documents/Defendr/src/Interfaces_v2/emailSender.py", line 42, in connect_To_SMTP_server
+    server = smtplib.SMTP('mail.darknites.co.za', 587 )
+  File "/usr/lib/python3.6/smtplib.py", line 251, in __init__
+    (code, msg) = self.connect(host, port)
+  File "/usr/lib/python3.6/smtplib.py", line 336, in connect
+    self.sock = self._get_socket(host, port, self.timeout)
+  File "/usr/lib/python3.6/smtplib.py", line 307, in _get_socket
+    self.source_address)
+  File "/usr/lib/python3.6/socket.py", line 724, in create_connection
+    raise err
+  File "/usr/lib/python3.6/socket.py", line 713, in create_connection
+    sock.connect(sa)
+TimeoutError: [Errno 110] Connection timed out
+
+
+[2019-10-16 20:29:17] Traceback (most recent call last):
+  File "main.py", line 93, in <module>
+    LoginApp().run()
+  File "/usr/local/lib/python3.6/dist-packages/kivy/app.py", line 856, in run
+    self.stop()
+  File "/usr/local/lib/python3.6/dist-packages/kivy/app.py", line 864, in stop
+    self.dispatch('on_stop')
+  File "kivy/_event.pyx", line 707, in kivy._event.EventDispatcher.dispatch
+  File "main.py", line 43, in on_stop
+    Metrics.stop()
+  File "/home/darknites/Documents/Defendr/src/Interfaces_v2/Metrics.py", line 63, in stop
+    connections_per_country_thread.stop()
+AttributeError: 'str' object has no attribute 'stop'
+
