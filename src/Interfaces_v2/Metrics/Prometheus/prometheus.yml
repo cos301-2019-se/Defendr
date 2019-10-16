@@ -54,7 +54,7 @@ scrape_configs:
     # scheme defaults to 'http'.
 
     static_configs:
-    - targets: ['192.168.8.105:8080']
+    - targets: ['192.168.8.109:8080', '192.168.8.111:8080']
 
   # The job name is added as a label `job=<job_name>` to any timeseries scraped from this config.
   - job_name: 'Backend-Node'
@@ -63,4 +63,4 @@ scrape_configs:
     # scheme defaults to 'http'.
 
     static_configs:
-    - targets: ['192.168.8.105:9100']
+    - targets: ['192.168.8.109:9100', '192.168.8.111:9100']
