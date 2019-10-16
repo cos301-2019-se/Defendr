@@ -1,17 +1,5 @@
 from kivy.app import App
-from kivy.uix.screenmanager import Screen, SlideTransition
-from cefpython3 import cefpython as cef
-import platform
-import sys
-from kivy.uix.boxlayout import BoxLayout
-from kivy.uix.recycleview.views import RecycleDataViewBehavior
-from kivy.uix.button import Button
-from kivy.properties import BooleanProperty, ListProperty, StringProperty, ObjectProperty
-from kivy.uix.recyclegridlayout import RecycleGridLayout
-from kivy.uix.behaviors import FocusBehavior
-from kivy.uix.recycleview.layout import LayoutSelectionBehavior
-from kivy.uix.popup import Popup
-import databaseCon
+from kivy.uix.screenmanager import Screen
 from MDTable import Table
 
 class Logs_Window(Screen):

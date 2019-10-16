@@ -104,9 +104,9 @@ struct bpf_map_def SEC("maps") destinations = {
 
 // MAp that keeps track of system wide metrics.
 struct bpf_map_def SEC("maps") system_stats = {
-	.type = BPF_MAP_TYPE_PERCPU_ARRAY,
+	.type = BPF_MAP_TYPE_ARRAY,
 	.key_size = sizeof(u32),
-	.value_size = sizeof(long),
+	.value_size = sizeof(u64),
 	.max_entries = STATS_CATAGORIES_MAX,
 };
 
@@ -175,13 +175,13 @@ static inline unsigned short checksumIP(unsigned short *buf, int buf_size) {
 void add_to_system_stats(u32 stat_catagory,u64 value_to_add)
 {
 	u64 *value;
-
 	if (stat_catagory >= STATS_CATAGORIES_MAX)
 		return;
 
 	value = bpf_map_lookup_elem(&system_stats, &stat_catagory);
-	if (value)
+	if (value){
 		*value += value_to_add;
+	}
 }
 
 /* Adds destination for new tcp connection.

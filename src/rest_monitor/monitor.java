@@ -107,11 +107,11 @@ class Monitor extends Thread{
 							servers.put(mac,newServer);
 							Runtime rt = Runtime.getRuntime();
 							System.out.println("service: "+newServer.app_ip);
-							Process proc = rt.exec("sudo .././xdp_ddos01_blacklist_cmdline --add --service "+newServer.app_ip+" --ip " +newServer.ip+" --mac "+newServer.mac+" --port "+newServer.port);
-						    /*errorReported = getStreamWrapper(proc.getErrorStream(), "ERROR");
+							Process proc = rt.exec("sudo .././defendr_xdp_cmdline --add --service "+newServer.app_ip+" --ip " +newServer.ip+" --mac "+newServer.mac+" --port "+newServer.port);
+						    errorReported = getStreamWrapper(proc.getErrorStream(), "ERROR");
 							outputMessage = getStreamWrapper(proc.getInputStream(), "OUTPUT");
 							errorReported.start();
-							outputMessage.start();*/
+							outputMessage.start();
 						}
 					}
 				}
@@ -127,7 +127,11 @@ class Monitor extends Thread{
 				for (String key: toRemove) {
 					Server server = servers.get(key);
 					Runtime rt = Runtime.getRuntime();
-					Process proc = rt.exec("sudo .././xdp_ddos01_blacklist_cmdline --del --service "+server.app_ip+" --ip " +server.ip+" --mac "+server.mac+" --port "+server.port);
+					Process proc = rt.exec("sudo .././defendr_xdp_cmdline --del --service "+server.app_ip+" --ip " +server.ip+" --mac "+server.mac+" --port "+server.port);
+					errorReported = getStreamWrapper(proc.getErrorStream(), "ERROR");
+					outputMessage = getStreamWrapper(proc.getInputStream(), "OUTPUT");
+					errorReported.start();
+					outputMessage.start();
 					server =null;
 					servers.remove(key);
 				}	

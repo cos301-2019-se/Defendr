@@ -13,7 +13,7 @@
             title: 'Defendr'
             background_color: app.theme_cls.primary_dark
             left_action_items: [['menu', lambda x: app.nav_drawer.toggle()]]
-        BoxLayout
+        BoxLayout:
             id: home_layout
             orientation: 'vertical'
 
@@ -22,6 +22,27 @@
                 theme_text_color: 'Primary'
                 text: "Welcome To Defendr"
                 font_size: 38
+                size_hint_y: 0.43
                 halign: 'center'
-
+            BoxLayout:
+                id: on_off_switch
+                orientation: 'horizontal'
+                size_hint_y: 0.14
+                MDLabel:
+                    size_hint_x: 0.34
+                ToggleButton:
+                    text: 'Start Defending'
+                    group: 'system_status'
+                    size_hint_x: 0.16
+                    on_release: root.start_xdp()
+                ToggleButton:
+                    text: 'Stop Defending'
+                    state: 'down'
+                    group: 'system_status'
+                    size_hint_x: 0.16
+                    on_release: root.stop_xdp()
+                MDLabel:
+                    size_hint_x: 0.34
+            MDLabel:
+                size_hint_y: 0.43
 

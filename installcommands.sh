@@ -1,10 +1,10 @@
 #! /bin/bash
-sudo apt-get install -y scite
-sudo scite /etc/ld.so.conf
+sudo chown -R $USER src
+sudo gedit /etc/ld.so.conf
 cd src/mongoDriver
 sudo apt-key adv --keyserver hkp://keyserver.ubuntu.com:80 --recv 9DA31620334BD75D9DCB49F368818C72E52529D4
 echo "deb http://repo.mongodb.org/apt/debian stretch/mongodb-org/4.0 main" | sudo tee /etc/apt/sources.list.d/mongodb-org-4.0.list
-sudo apt-get update
+sudo apt-get update 
 sudo apt-get install -y libcurl4
 sudo apt-get install -y cmake
 sudo apt-get install -y -y mongodb-org
@@ -27,6 +27,7 @@ sudo apt install -y linux-headers-$(uname -r)
 sudo apt install -y bcc bpfcc-tools
 sudo apt install -y python3
 sudo apt install -y python3-pip
+sudo apt install -y python3-tk
 sudo apt-get install -y libsdl2-dev libsdl2-image-dev libsdl2-mixer-dev libsdl2-ttf-dev 
 sudo apt-get install -y zlib1g-dev
 sudo apt-get install -y libportmidi-dev libswscale-dev libavformat-dev libavcodec-dev zlib1g-dev
@@ -45,6 +46,9 @@ sudo apt install -y net-tools
 sudo apt install -y apache2
 sudo apt-get install -y libtool
 sudo apt-get install -y autoconf
+pip3 install prometheus_client
+pip3 install flask_prometheus_metrics
+pip3 install flask_prometheus_metrics[flask]
 sudo apt-get install -y arptables
 cd src
 sudo rm -r IP2Location-C-Library-master
@@ -60,11 +64,24 @@ cd ../../
 make
 sudo ldconfig
 cd Interfaces_v2
+sudo rm -r IP2Location-Python-master
 wget https://github.com/chrislim2888/IP2Location-Python/archive/master.zip
 unzip master.zip
-rm master.zip
-sudo IP2Location-Python-master/python3 setup.py build
-sudo python3 IP2Location-Python-master/setup.py install
-mv IP2Location-Python-master/bin/IP-COUNTRY.BIN Metrics
-rm -r IP2Location-Python-master
-python3 main.py
+sudo rm master.zip
+cd IP2Location-Python-master/
+sudo python3 setup.py build
+sudo python3 setup.py install
+cd ..
+mv IP2Location-Python-master/data/IP-COUNTR*.BIN Metrics
+sudo rm -r IP2Location-Python-master
+cd Metrics
+cd node_exporter
+sudo chmod +wrx node_exporter
+cd ../Prometheus
+sudo chmod +wrx prometheus
+cd ../Grafana/bin
+sudo chmod +wrx grafana-server
+cd ../../../../eureka_jars/monitoring/src/main/resources
+sudo chmod +wrx node_exporter
+cd ../../../../../Interfaces_v2
+sudo python3 main.py

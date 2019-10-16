@@ -1,7 +1,12 @@
 #! /bin/bash
 sudo mount -t bpf bpf /sys/fs/bpf
-sudo chmod +x /Interfaces/Metrics/Prometheus/prometheus
-sudo chmod +x /Interfaces/Metrics/Prometheus/node_exporter
-sudo chmod +x /Interfaces/Metrics/Prometheus/grafana-server
-cd src/Interfaces_v2
-python3 main.py
+cd src/Interfaces_v2/Metrics/node_exporter
+sudo chmod +wrx node_exporter
+cd ../Prometheus
+sudo chmod +wrx prometheus
+cd ../Grafana/bin
+sudo chmod +wrx grafana-server
+cd ../../../../eureka_jars/monitoring/src/main/resources
+sudo chmod +wrx node_exporter
+cd ../../../../../Interfaces_v2
+sudo python3 main.py

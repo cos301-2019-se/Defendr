@@ -311,12 +311,3 @@ class database():
         for x in result:
             countries.append(str(x))
         return countries
-
-    
-
-#db = connect()
-#print(print_user(db))
-#changeState(db,"u17094446@tuks.co.za","no")
-#changeState(db,"u14016304@tuks.co.za","no")
-#change_state(db,"u15034993@tuks.co.za","no")
-#changeState(db,"u15019854@tuks.co.za","no")

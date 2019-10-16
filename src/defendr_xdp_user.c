@@ -1,6 +1,3 @@
-/* Copyright(c) 2017 Jesper Dangaard Brouer, Red Hat, Inc.
- *  Copyright(c) 2017 Andy Gospodarek, Broadcom Limited, Inc.
- */
 static const char *__doc__=
  " XDP: DDoS protection via IPv4 blacklist\n"
  "\n"
