@@ -35,6 +35,7 @@ If the system is already installed:
 > -  <a href="http://darknites.co.za/pdf/Defendr%20-%20User%20manual.pdf" target="_blank">User Manual</a>
 > -  <a href="http://darknites.co.za/documents/Virtual%20Demo.pptx" target="_blank">Project presentation</a>
 > -  <a href="http://darknites.co.za/documents" target="_blank">Research material</a>
+> -  <a href="http://darknites.co.za/documents/defendr.html" target="_blank">Defendr video</a>
 
 ---
 
