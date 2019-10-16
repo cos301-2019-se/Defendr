@@ -1,11 +1,8 @@
 import unittest
 from controller import controller
 import random
-from datetime import date
 
 c = controller("../")
-
-
 
 class Test_Unit(unittest.TestCase):
     
@@ -98,12 +95,6 @@ class Test_Unit(unittest.TestCase):
                 
    
     f.close()          
-
-#if __name__ == '__main__':
-   
-    #unittest.main()
-#suite = unittest.TestLoader().loadTestsFromTestCase(Test_Unit)
-#unittest.TextTestRunner(verbosity=2).run(suite)
 
 if __name__ == '__main__':
     log_file = 'log_file.txt'

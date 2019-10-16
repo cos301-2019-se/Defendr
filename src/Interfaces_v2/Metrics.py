@@ -1,7 +1,6 @@
 from prometheus_client import start_http_server
 from prometheus_client import Histogram
 from prometheus_client import Info
-from prometheus_client import Summary
 from prometheus_client import Gauge
 
 import subprocess
@@ -42,11 +41,6 @@ def install(package):
 
 def start():
 	h.observe(4.7)
-	#s.observe(4.7)
-	#commands = ["tar -xf Metrics.tar.gz", "rm Metrics.tar.gz"]
-	#for command in commands:
-	#	os.popen(command)
-	#time.sleep(5)
 
 	start_http_server(8000)
 
@@ -55,19 +49,16 @@ def start():
 	subprocess.Popen('./prometheus', cwd='Metrics/Prometheus')
 	time.sleep(2)
 	subprocess.Popen('./grafana-server', cwd='Metrics/Grafana/bin')
-	#subprocess.run("rm Metrics.tar.gz")
 	stopThread = False
 	connections_per_country_thread = threading.Thread (target=countries_heatmap_metrics, args= (database,database_connects, now, ips, locator, countries, connections_per_country, stopThread))
 	connections_per_country_thread.start()
 
 def stop():
-	#commands = ["killall grafana-server", "killall prometheus", "killall node_exporter", "tput setaf 1; \"Please do not close this window, the system is performing Metrics system compression\";tput sgr0", "tar -czf Metrics.tar.gz Metrics", "tput setaf 2; \"Metrics compression complete; it is now safe to close this window.\";tput sgr0", "rm -r Metrics"]
 
 	commands = ["killall grafana-server", "killall prometheus", "killall node_exporter"]
 
 	for command in commands:
 		subprocess.call([command], shell=True)
-	#os.popen("rm -r Metrics")
 	stopThread = True
 	connections_per_country_thread.stop()
 

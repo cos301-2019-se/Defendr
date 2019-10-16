@@ -45,18 +45,38 @@ class FacadeClass():
         if(self.check_IP(ip)):
             self.xdp.remove_Blacklisted_IP(ip)
             self.database.rem_Blacklisted_IP(self.db_connects, ip)
+            return "IP is removed."
+        else:
+            return "Invalid IP."
+
     # Blacklist an IP.
     def add_black_ip(self, ip):
         if(self.check_IP(ip)):
             if not self.database.find_Blacklisted_IP(self.db_connects, ip) and not self.database.find_whiteListed_IP(self.db_connects, ip):
                 self.xdp.black_list_IP(ip)
                 self.database.add_ip(self.db_connects, ip)
+                return "IP is black listed."
+            else:
+                return "IP on the blacklisted."
+        else:
+            return "Invalid IP."
     # Get the logs from database.
     def get_logs(self,  input, searchOn, insort, sort, skipNr, limitNr):
         return self.database.find_packets(self.db_connects,input, searchOn, insort, sort, skipNr, limitNr)
     # List the whitelist.
     def list_white_ip(self, ip):
         return self.database.find_whiteListed_IP(self.db_connects, ip)
+
+    # Stop xdp services.
+    def start_xdp(self):
+        self.xdp.load_xdp()
+        return
+    
+    # Start sdp services/
+    def stop_xdp(self):
+        self.xdp.unload_xdp()
+        return   
+
     # Whitelist an IP.
     def add_white_ip(self,ip):
         if self.check_IP(ip):
@@ -65,11 +85,20 @@ class FacadeClass():
                 self.database.add_whiteListed_ip(self.db_connects, ip)
                 self.xdp.remove_Blacklisted_IP(ip)
                 self.xdp.white_list_IP(ip)
+                return "IP is white listed."
+            else:
+                return "IP on the whitelisted."
+        else:
+            return "Invalid IP."
+
     #Remove an IP from whitelist.
     def remove_white_ip(self,ip):
         if self.check_IP(ip):
             self.database.rem_Whitelisted_IP(self.db_connects, ip)
             self.xdp.remove_whitelisted_IP(ip)
+            return "IP is removed."
+        else:
+            return "Invalid IP."
     # Function to register a new user.
     def register(self,name, surname, email, password, confirm_pass):
         if (not self.database.print_user(self.db_connects,surname, "lastname", "lastname", 1)):
@@ -184,7 +213,7 @@ class FacadeClass():
             self.database.change_roll(self.db_connects,email,new_data)
         if(wait_to_chacnges=="sendEmail"):
             self.database.change_state(self.db_connects,email,new_data)
-        return "Update"
+        return "Updated"
 
     def get_name(self, email):
         return self.database.get_name(self.db_connects, email)
@@ -196,7 +225,6 @@ class FacadeClass():
     def check_email(self, email):
         mail = email
         if (mail == ""):
-            print("Enter an email")
             return False
         check = re.search(
             "([a-z]|[A-Z]|[0-9])+\@([a-z]|[A-Z]|[0-9])+((\.(([A-Z]|[a-z]|[0-9])+))|(\.(([A-Z]|[a-z]|[0-9])+)){2})$",
@@ -204,7 +232,6 @@ class FacadeClass():
         if (check):
             return True
         else:
-            print("Invalid email.")
             return False
 
     def check_password(self, psw):
@@ -234,7 +261,6 @@ class FacadeClass():
 
     def check_IP(self, IP):
         if(IP==""):
-            print("Enter an ip")
             return False
         check = re.search(
             "([0-9])+\.([0-9])+\.([0-9])+\.([0-9])+",
@@ -242,5 +268,4 @@ class FacadeClass():
         if (check):
             return True
         else:
-            print("Invalid ip.")
             return False
