@@ -66,6 +66,17 @@ class FacadeClass():
     # List the whitelist.
     def list_white_ip(self, ip):
         return self.database.find_whiteListed_IP(self.db_connects, ip)
+
+    # Stop xdp services.
+    def start_xdp(self):
+        self.xdp.load_xdp()
+        return
+    
+    # Start sdp services/
+    def stop_xdp(self):
+        self.xdp.unload_xdp()
+        return   
+
     # Whitelist an IP.
     def add_white_ip(self,ip):
         if self.check_IP(ip):

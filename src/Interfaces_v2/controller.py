@@ -7,11 +7,18 @@ class controller:
 	def __init__(self, pathToSource):
 		self.pathToSource = pathToSource
 		
-	# Load the XDP program to start running.
+	# Load the XDP program.
 	def load_xdp(self):
-		my_Cmd = os.popen("cd " + self.pathToSource + " && sudo mount -t bpf bpf /sys/fs/bpf/").read()
-		my_Cmd = os.popen("cd " + self.pathToSource + " && sudo ./defendr_xdp_cmdline --dev enp0s3 --remove --owner $USER").read()
-		my_Cmd = os.popen("cd " + self.pathToSource + " && sudo ./defendr_xdp_cmdline --dev enp0s3 --owner $USER").read()
+		os.popen("cd " + self.pathToSource + " && sudo mount -t bpf bpf /sys/fs/bpf/")
+		os.popen("cd " + self.pathToSource + " && sudo ./defendr_xdp --dev enp0s3 --owner $USER --remove")
+		os.popen("cd " + self.pathToSource + " && sudo ./defendr_xdp --dev enp0s3 --owner $USER")
+		os.popen("cd " + self.pathToSource + " && sudo ./defendr_xdp_cmdline --log")
+		os.popen("cd " + self.pathToSource + " && sudo ./defendr_xdp_cmdline --dynamic")
+		return;
+
+	# Unload the XDP program.
+	def unload_xdp(self):
+		os.popen("cd " + self.pathToSource + " && sudo ./defendr_xdp --dev enp0s3 --owner $USER --remove")
 		return;
 		
 	# Function to add blacklisted IP's to blacklisted map.	
